@@ -1,0 +1,2008 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a0d14" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Exos" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png" />
+  <link rel="shortcut icon" href="favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <title>Dofus Exos</title>
+  <style>
+    :root {
+      --bg: #0a0d14;
+      --bg-soft: #0f131c;
+      --bg-card: #161b27;
+      --bg-card-hi: #1d2331;
+      --bg-elev: #1a2030;
+      --border: rgba(255, 255, 255, 0.07);
+      --border-hi: rgba(255, 255, 255, 0.14);
+      --text: #f0e7d4;
+      --text-soft: #b8b0a0;
+      --text-dim: #75705f;
+      --gold: #d9a648;
+      --gold-bright: #f5c668;
+      --gold-deep: #a07d2d;
+      --gold-soft: rgba(217, 166, 72, 0.12);
+      --gold-glow: rgba(245, 198, 104, 0.28);
+      --green: #4ade80;
+      --green-soft: rgba(74, 222, 128, 0.12);
+      --red: #ef4444;
+      --red-soft: rgba(239, 68, 68, 0.12);
+      --blue: #6090e8;
+      --blue-soft: rgba(96, 144, 232, 0.12);
+      --purple: #b288e8;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --radius-lg: 22px;
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      --shadow-gold: 0 6px 20px rgba(217, 166, 72, 0.22);
+      --font-display: 'Cinzel', 'Times New Roman', serif;
+      --font-body: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      overscroll-behavior-y: contain;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      font-size: 16px;
+      line-height: 1.5;
+      background-image:
+        radial-gradient(ellipse 90% 50% at 50% 0%, rgba(217, 166, 72, 0.07), transparent 60%),
+        radial-gradient(ellipse 80% 60% at 100% 100%, rgba(96, 144, 232, 0.04), transparent 60%);
+      background-attachment: fixed;
+      padding-top: env(safe-area-inset-top);
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+      padding-bottom: env(safe-area-inset-bottom);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button, input, select, textarea {
+      font-family: inherit;
+      font-size: 16px;
+      color: var(--text);
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      background: none;
+      touch-action: manipulation;
+    }
+
+    input, select, textarea {
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      width: 100%;
+      transition: border-color .15s ease, background .15s ease;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--gold);
+      background: var(--bg-card);
+    }
+    input[type="number"] { -moz-appearance: textfield; }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none; margin: 0;
+    }
+    input.invalid, select.invalid, textarea.invalid {
+      border-color: var(--red) !important;
+      background: var(--red-soft);
+      animation: shake .3s ease;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-5px); }
+      40%, 80% { transform: translateX(5px); }
+    }
+    @keyframes countPulse {
+      0% { transform: scale(1); }
+      40% { transform: scale(1.18); color: var(--gold-bright); }
+      100% { transform: scale(1); }
+    }
+    .pulse { animation: countPulse .28s ease; }
+
+    /* ===== Header ===== */
+    .app-header {
+      padding: 20px 18px 14px;
+      position: sticky;
+      top: 0;
+      background: linear-gradient(180deg, var(--bg) 70%, transparent);
+      z-index: 50;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .brand-title {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .gear-btn {
+      flex: none;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-soft);
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .15s ease;
+    }
+    .gear-btn:active {
+      transform: scale(0.92);
+      color: var(--gold-bright);
+      border-color: var(--gold-deep);
+    }
+
+    .brand h1 {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 28px;
+      margin: 0;
+      letter-spacing: 0.04em;
+      background: linear-gradient(180deg, var(--gold-bright), var(--gold-deep));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 30px var(--gold-glow);
+    }
+
+    .brand .sub {
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      font-weight: 500;
+    }
+
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .stat {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      position: relative;
+      overflow: hidden;
+    }
+    .stat::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--gold-soft) 0%, transparent 50%);
+      pointer-events: none;
+      opacity: 0.6;
+    }
+    .stat .label {
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      font-weight: 600;
+    }
+    .stat .value {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--gold-bright);
+      margin-top: 2px;
+      position: relative;
+    }
+
+    /* ===== Tabs ===== */
+    .tabs {
+      display: flex;
+      gap: 4px;
+      padding: 6px;
+      margin: 8px 18px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+    .tab {
+      flex: 1;
+      padding: 9px 8px;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--text-soft);
+      transition: all .2s ease;
+      text-align: center;
+      letter-spacing: 0.02em;
+    }
+    .tab.active {
+      background: linear-gradient(180deg, var(--gold), var(--gold-deep));
+      color: #18120a;
+      box-shadow: var(--shadow-gold), inset 0 1px 0 rgba(255,255,255,0.3);
+    }
+
+    /* ===== Main ===== */
+    main {
+      padding: 0 18px 110px;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .view { display: none; }
+    .view.active { display: block; }
+
+    /* ===== Empty state ===== */
+    .empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-dim);
+    }
+    .empty .icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+      opacity: 0.5;
+    }
+    .empty .title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      color: var(--text-soft);
+      margin-bottom: 6px;
+    }
+
+    /* ===== Item cards ===== */
+    .item-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      position: relative;
+      transition: transform .15s ease, border-color .15s ease;
+    }
+    .item:active { transform: scale(0.99); }
+    .item.obtained { opacity: 0.7; }
+    .item.obtained::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--green-soft), transparent 60%);
+      pointer-events: none;
+    }
+
+    .item-body {
+      display: flex;
+      align-items: stretch;
+      min-height: 100px;
+    }
+
+    .item-info {
+      flex: 1;
+      padding: 14px 12px 14px 16px;
+      min-width: 0;
+      cursor: pointer;
+    }
+
+    .item-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .item-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;
+      letter-spacing: 0.02em;
+    }
+    .badge {
+      font-size: 10px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      background: var(--gold-soft);
+      color: var(--gold-bright);
+      border: 1px solid var(--gold-deep);
+      flex-shrink: 0;
+    }
+    .badge.success {
+      background: var(--green-soft);
+      color: var(--green);
+      border-color: rgba(74, 222, 128, 0.3);
+    }
+
+    .item-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--text-soft);
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+    .meta-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      padding: 2px 7px;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.04);
+      color: var(--text-soft);
+      font-weight: 500;
+    }
+    .meta-chip .k { color: var(--text-dim); font-weight: 400; }
+
+    .progress {
+      height: 5px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold-deep), var(--gold-bright));
+      border-radius: 999px;
+      transition: width .3s ease;
+      box-shadow: 0 0 8px var(--gold-glow);
+    }
+    .progress-bar.over { background: linear-gradient(90deg, var(--red), #ff7a7a); box-shadow: 0 0 8px rgba(239,68,68,0.4); }
+
+    .item-counter {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .counter-num {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 22px;
+      color: var(--gold-bright);
+      line-height: 1;
+    }
+    .counter-target {
+      font-size: 13px;
+      color: var(--text-dim);
+      font-weight: 500;
+    }
+
+    .item-plus {
+      width: 78px;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-deep) 100%);
+      color: #18120a;
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: filter .1s ease, transform .1s ease;
+      position: relative;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .item-plus:active {
+      filter: brightness(1.15);
+      transform: scale(0.96);
+    }
+    .item-plus::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, transparent 40%);
+      pointer-events: none;
+    }
+    .item.obtained .item-plus {
+      background: linear-gradient(135deg, var(--green) 0%, #2d9b54 100%);
+      font-size: 24px;
+    }
+
+    /* ===== Ranking ===== */
+    .rank-section {
+      margin-bottom: 22px;
+    }
+    .rank-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .rank-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--gold-deep), transparent);
+    }
+    .rank-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .rank-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+    }
+    .rank-pos {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 18px;
+      color: var(--text-dim);
+      min-width: 22px;
+      text-align: center;
+    }
+    .rank-pos.top { color: var(--gold-bright); }
+    .rank-info { flex: 1; min-width: 0; }
+    .rank-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .rank-sub {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 1px;
+    }
+    .rank-value {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--gold-bright);
+      text-align: right;
+    }
+    .rank-value.green { color: var(--green); }
+    .rank-value.red { color: var(--red); }
+    .rank-value .unit {
+      font-size: 10px;
+      color: var(--text-dim);
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      display: block;
+      margin-top: -2px;
+    }
+
+    /* ===== FAB ===== */
+    .fab {
+      position: fixed;
+      right: 20px;
+      bottom: calc(20px + env(safe-area-inset-bottom));
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold-bright), var(--gold-deep));
+      color: #18120a;
+      font-size: 30px;
+      font-weight: 900;
+      box-shadow: var(--shadow-gold), 0 4px 14px rgba(0,0,0,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 30;
+      transition: transform .15s ease;
+    }
+    .fab:active { transform: scale(0.93); }
+    .fab::before {
+      content: '+';
+      transform: translateY(-1px);
+    }
+
+    /* ===== Modal ===== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 7, 12, 0.7);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 100;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      padding-top: env(safe-area-inset-top);
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      background: var(--bg-elev);
+      border: 1px solid var(--border-hi);
+      border-bottom: none;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      width: 100%;
+      max-width: 640px;
+      max-height: 92vh;
+      overflow-y: auto;
+      padding: 20px 18px calc(20px + env(safe-area-inset-bottom));
+      animation: slideUp .25s ease;
+      -webkit-overflow-scrolling: touch;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .modal-grip {
+      width: 40px;
+      height: 4px;
+      background: var(--border-hi);
+      border-radius: 999px;
+      margin: 0 auto 14px;
+    }
+
+    .modal h2 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 20px;
+      letter-spacing: 0.04em;
+      margin: 0 0 18px;
+      color: var(--gold-bright);
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+    .field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 6px;
+    }
+    .field .hint {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 4px;
+      letter-spacing: 0.02em;
+    }
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .chance-input {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .chance-input .frac {
+      font-family: var(--font-display);
+      font-size: 18px;
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    .presets {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+    .preset {
+      font-size: 11px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      color: var(--text-soft);
+      font-weight: 500;
+      transition: all .15s ease;
+    }
+    .preset:active {
+      background: var(--gold-soft);
+      border-color: var(--gold-deep);
+      color: var(--gold-bright);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .btn {
+      flex: 1;
+      padding: 13px;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.04em;
+      transition: filter .1s ease, transform .1s ease;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary {
+      background: linear-gradient(180deg, var(--gold), var(--gold-deep));
+      color: #18120a;
+      box-shadow: var(--shadow-gold);
+    }
+    .btn-secondary {
+      background: var(--bg-card);
+      color: var(--text-soft);
+      border: 1px solid var(--border);
+    }
+    .btn-danger {
+      background: var(--red-soft);
+      color: var(--red);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    .btn-success {
+      background: linear-gradient(180deg, var(--green), #2d9b54);
+      color: #0a1a10;
+    }
+
+    /* ===== Detail view ===== */
+    .detail-hero {
+      text-align: center;
+      padding: 16px 0 22px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 18px;
+    }
+    .detail-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 22px;
+      letter-spacing: 0.04em;
+      margin: 0 0 6px;
+    }
+    .detail-exo {
+      display: inline-block;
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: var(--gold-soft);
+      color: var(--gold-bright);
+      border: 1px solid var(--gold-deep);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .counter-big {
+      text-align: center;
+      margin: 24px 0;
+    }
+    .counter-big .num {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 72px;
+      line-height: 1;
+      background: linear-gradient(180deg, var(--gold-bright), var(--gold-deep));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 40px var(--gold-glow);
+    }
+    .counter-big .lbl {
+      font-size: 11px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      font-weight: 600;
+      margin-top: 6px;
+    }
+
+    .counter-controls {
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .counter-btn {
+      padding: 16px 0;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 18px;
+      transition: filter .1s ease, transform .1s ease;
+    }
+    .counter-btn:active { transform: scale(0.95); }
+    .counter-btn.minus {
+      background: var(--bg-card);
+      color: var(--text-soft);
+      border: 1px solid var(--border);
+    }
+    .counter-btn.plus-big {
+      background: linear-gradient(180deg, var(--gold), var(--gold-deep));
+      color: #18120a;
+      font-size: 24px;
+      box-shadow: var(--shadow-gold);
+    }
+    .counter-btn.plus-ten {
+      background: var(--bg-card);
+      color: var(--gold-bright);
+      border: 1px solid var(--gold-deep);
+    }
+
+    .detail-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .dstat {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+    }
+    .dstat .lbl {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      font-weight: 600;
+    }
+    .dstat .val {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--text);
+      margin-top: 4px;
+    }
+    .dstat .val.gold { color: var(--gold-bright); }
+    .dstat .val.green { color: var(--green); }
+    .dstat .val.red { color: var(--red); }
+    .dstat .val.small { font-size: 14px; }
+    .dstat .val .u { font-size: 11px; color: var(--text-dim); font-weight: 500; letter-spacing: 0.1em; }
+    .dstat.wide { grid-column: 1 / -1; }
+
+    .profit-box {
+      padding: 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid;
+      text-align: center;
+      margin-bottom: 14px;
+    }
+    .profit-box.green {
+      background: var(--green-soft);
+      border-color: rgba(74, 222, 128, 0.3);
+    }
+    .profit-box.red {
+      background: var(--red-soft);
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+    .profit-box .lbl {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--text-soft);
+      margin-bottom: 4px;
+    }
+    .profit-box .val {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 22px;
+    }
+    .profit-box.green .val { color: var(--green); }
+    .profit-box.red .val { color: var(--red); }
+
+    .warn-box {
+      background: var(--red-soft);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: var(--red);
+      border-radius: var(--radius-sm);
+      padding: 11px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 14px;
+    }
+    .data-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    /* ===== Toast ===== */
+    .toast {
+      position: fixed;
+      bottom: calc(90px + env(safe-area-inset-bottom));
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--bg-elev);
+      border: 1px solid var(--gold-deep);
+      color: var(--gold-bright);
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 600;
+      opacity: 0;
+      transition: all .25s ease;
+      pointer-events: none;
+      z-index: 200;
+      box-shadow: var(--shadow-gold);
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Small helpers */
+    .hidden { display: none !important; }
+    .kamas-num { font-variant-numeric: tabular-nums; }
+
+    /* === Carte explicative de probabilité === */
+    .prob-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      margin-bottom: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+    .prob-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--gold-soft) 0%, transparent 60%);
+      pointer-events: none;
+      opacity: 0.5;
+    }
+    .prob-card .lbl {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      font-weight: 600;
+      margin-bottom: 6px;
+      position: relative;
+    }
+    .prob-card .big {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 30px;
+      color: var(--gold-bright);
+      line-height: 1.1;
+      position: relative;
+    }
+    .prob-card .ctx {
+      font-size: 13px;
+      color: var(--text-soft);
+      margin-top: 6px;
+      line-height: 1.45;
+      position: relative;
+    }
+    .prob-card .ctx b { color: var(--text); font-weight: 600; }
+
+    /* === Section achats de runes === */
+    .purchases-section {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+    .purchases-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      gap: 10px;
+    }
+    .purchases-head .title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .btn-buy {
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, var(--gold), var(--gold-deep));
+      color: #18120a;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.03em;
+      box-shadow: 0 2px 8px rgba(217, 166, 72, 0.2);
+      transition: filter .1s ease, transform .1s ease;
+    }
+    .btn-buy:active { transform: scale(0.95); filter: brightness(1.1); }
+
+    .purchases-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 220px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .purchase-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+    }
+    .purchase-amount {
+      font-family: var(--font-display);
+      font-weight: 700;
+      color: var(--gold-bright);
+      font-size: 15px;
+    }
+    .purchase-date {
+      color: var(--text-dim);
+      font-size: 11px;
+      margin-left: auto;
+      letter-spacing: 0.02em;
+    }
+    .purchase-del {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(239, 68, 68, 0.12);
+      color: var(--red);
+      font-size: 18px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: filter .1s ease, transform .1s ease;
+      line-height: 1;
+    }
+    .purchase-del:active { filter: brightness(1.3); transform: scale(0.9); }
+
+    .purchases-empty {
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 13px;
+      padding: 14px;
+      background: var(--bg-card);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius-sm);
+    }
+
+    @media (max-width: 380px) {
+      .brand h1 { font-size: 24px; }
+      .stat .value { font-size: 17px; }
+      .item-plus { width: 64px; font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-title">
+        <h1>Dofus Exos</h1>
+        <span class="sub">Forgemagie</span>
+      </div>
+      <button class="gear-btn" id="open-data" aria-label="Données et sauvegarde">⚙︎</button>
+    </div>
+    <div class="stats-bar">
+      <div class="stat">
+        <div class="label">En cours</div>
+        <div class="value" id="stat-items">0</div>
+      </div>
+      <div class="stat">
+        <div class="label">Tentatives</div>
+        <div class="value" id="stat-attempts">0</div>
+      </div>
+      <div class="stat">
+        <div class="label">Dépensé</div>
+        <div class="value kamas-num" id="stat-kamas">0</div>
+      </div>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab active" data-view="current">En cours</button>
+    <button class="tab" data-view="ranking">Classement</button>
+    <button class="tab" data-view="archive">Réussis</button>
+  </nav>
+
+  <main>
+    <!-- En cours -->
+    <section class="view active" id="view-current">
+      <div class="item-list" id="list-current"></div>
+      <div class="empty hidden" id="empty-current">
+        <div class="icon">⚒️</div>
+        <div class="title">Aucun exo en cours</div>
+        <div>Touche le + pour commencer une tenta</div>
+      </div>
+    </section>
+
+    <!-- Classement -->
+    <section class="view" id="view-ranking">
+      <div class="rank-section">
+        <div class="rank-title">Le plus de tentas</div>
+        <div class="rank-list" id="rank-most"></div>
+      </div>
+      <div class="rank-section">
+        <div class="rank-title">Le moins de tentas</div>
+        <div class="rank-list" id="rank-least"></div>
+      </div>
+      <div class="rank-section">
+        <div class="rank-title">Plus rentable</div>
+        <div class="rank-list" id="rank-profit"></div>
+      </div>
+      <div class="rank-section">
+        <div class="rank-title">Plus de kamas dépensés</div>
+        <div class="rank-list" id="rank-kamas"></div>
+      </div>
+      <div class="empty hidden" id="empty-ranking">
+        <div class="icon">📜</div>
+        <div class="title">Pas encore de classement</div>
+        <div>Ajoute des items pour voir les rankings</div>
+      </div>
+    </section>
+
+    <!-- Archive -->
+    <section class="view" id="view-archive">
+      <div class="item-list" id="list-archive"></div>
+      <div class="empty hidden" id="empty-archive">
+        <div class="icon">🏆</div>
+        <div class="title">Aucun exo réussi</div>
+        <div>Tes succès apparaîtront ici</div>
+      </div>
+    </section>
+  </main>
+
+  <button class="fab" id="fab-add" aria-label="Ajouter un item"></button>
+
+  <!-- Modal: Add/Edit -->
+  <div class="modal-overlay" id="modal-form">
+    <div class="modal">
+      <div class="modal-grip"></div>
+      <h2 id="form-title">Nouvel exo</h2>
+
+      <div class="field">
+        <label>Nom de l'item</label>
+        <input type="text" id="f-name" placeholder="Ex : Coiffe Royale Bouftou" maxlength="60" />
+      </div>
+
+      <div class="field">
+        <label>Exo recherché</label>
+        <input type="text" id="f-exo" placeholder="Ex : PA + PM + PO" maxlength="40" />
+        <div class="presets">
+          <button class="preset" data-preset="PA">PA</button>
+          <button class="preset" data-preset="PM">PM</button>
+          <button class="preset" data-preset="PO">PO</button>
+          <button class="preset" data-preset="Invocation">Invoc</button>
+          <button class="preset" data-preset="Critique">Crit</button>
+          <button class="preset" data-preset="Dommages">Do</button>
+          <button class="preset" data-preset="Soins">Soins</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Chance par tentative</label>
+        <div class="chance-input">
+          <span class="frac">1 /</span>
+          <input type="number" id="f-chance" placeholder="100" min="1" inputmode="numeric" />
+        </div>
+        <div class="hint">Ex : 100 pour 1 chance sur 100</div>
+      </div>
+
+      <div class="field">
+        <label>Coût de base (kamas)</label>
+        <input type="text" id="f-base" placeholder="0" inputmode="numeric" autocomplete="off" />
+        <div class="hint">Prix d'achat ou de craft de l'item nu. Tu pourras ajouter chaque achat de runes ensuite, au fur et à mesure.</div>
+      </div>
+
+      <div class="field">
+        <label>Valeur HDV (kamas)</label>
+        <input type="text" id="f-hdv" placeholder="0" inputmode="numeric" autocomplete="off" />
+        <div class="hint">Combien tu peux le revendre une fois exo réussi</div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="form-cancel">Annuler</button>
+        <button class="btn btn-primary" id="form-save">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Detail -->
+  <div class="modal-overlay" id="modal-detail">
+    <div class="modal">
+      <div class="modal-grip"></div>
+
+      <div class="detail-hero">
+        <h2 class="detail-name" id="d-name">—</h2>
+        <span class="detail-exo" id="d-exo">—</span>
+      </div>
+
+      <div class="counter-big">
+        <div class="num kamas-num" id="d-count">0</div>
+        <div class="lbl">Tentatives sur <span id="d-chance">100</span></div>
+      </div>
+
+      <div class="counter-controls">
+        <button class="counter-btn minus" id="d-minus">−1</button>
+        <button class="counter-btn plus-big" id="d-plus">+1</button>
+        <button class="counter-btn plus-ten" id="d-plus10">+10</button>
+      </div>
+
+      <div class="progress" style="margin-bottom: 14px;">
+        <div class="progress-bar" id="d-progress"></div>
+      </div>
+
+      <div class="prob-card">
+        <div class="lbl">Probabilité statistique</div>
+        <div class="big" id="d-prob">0%</div>
+        <div class="ctx" id="d-prob-ctx">Aucune tentative pour le moment.</div>
+      </div>
+
+      <div class="detail-stats">
+        <div class="dstat">
+          <div class="lbl">Kamas dépensés</div>
+          <div class="val gold small kamas-num" id="d-spent">0</div>
+        </div>
+        <div class="dstat">
+          <div class="lbl">Valeur HDV</div>
+          <div class="val small kamas-num" id="d-hdv">0</div>
+        </div>
+        <div class="dstat">
+          <div class="lbl">Coût / tenta</div>
+          <div class="val small kamas-num" id="d-avg">—</div>
+        </div>
+        <div class="dstat">
+          <div class="lbl">Estimé pour réussir</div>
+          <div class="val small kamas-num" id="d-estimate">—</div>
+        </div>
+      </div>
+
+      <div class="warn-box hidden" id="d-warn">⚠️ Tu as dépassé la valeur HDV : l'exo n'est plus rentable.</div>
+
+      <div class="profit-box" id="d-profit-box">
+        <div class="lbl" id="d-profit-lbl">Rentabilité estimée</div>
+        <div class="val kamas-num" id="d-profit">—</div>
+      </div>
+
+      <div class="purchases-section">
+        <div class="purchases-head">
+          <div class="title">💰 Achats de runes</div>
+          <button class="btn-buy" id="d-buy">+ Acheter</button>
+        </div>
+        <div class="purchases-list" id="d-purchases"></div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="d-edit">Modifier</button>
+        <button class="btn btn-success" id="d-obtain">✓ Obtenu</button>
+      </div>
+      <div class="modal-actions" style="margin-top: 8px;">
+        <button class="btn btn-secondary" id="d-close">Fermer</button>
+        <button class="btn btn-danger" id="d-delete">Supprimer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Confirm -->
+  <div class="modal-overlay" id="modal-confirm">
+    <div class="modal" style="max-width: 400px;">
+      <div class="modal-grip"></div>
+      <h2 id="confirm-title">Confirmer</h2>
+      <p id="confirm-msg" style="color: var(--text-soft); margin: 0 0 18px;">—</p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="confirm-no">Annuler</button>
+        <button class="btn btn-danger" id="confirm-yes">Confirmer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Achat de runes -->
+  <div class="modal-overlay" id="modal-purchase">
+    <div class="modal" style="max-width: 400px;">
+      <div class="modal-grip"></div>
+      <h2>Acheter des runes</h2>
+      <div class="field">
+        <label>Montant en kamas</label>
+        <input type="text" id="p-amount" placeholder="0" inputmode="numeric" autocomplete="off" />
+        <div class="hint">Saisis ce que tu viens de dépenser pour cet achat. Le total se met à jour automatiquement.</div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="p-cancel">Annuler</button>
+        <button class="btn btn-primary" id="p-save">Ajouter</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Données / Sauvegarde -->
+  <div class="modal-overlay" id="modal-data">
+    <div class="modal" style="max-width: 440px;">
+      <div class="modal-grip"></div>
+      <h2>Données &amp; sauvegarde</h2>
+      <p style="color: var(--text-soft); margin: 0 0 16px; font-size: 14px;">
+        Exporte régulièrement : les données vivent dans le navigateur et peuvent être effacées si tu retires la PWA.
+      </p>
+      <div class="data-actions">
+        <button class="btn btn-primary" id="data-export">⬇︎ Exporter (JSON)</button>
+        <button class="btn btn-secondary" id="data-import">⬆︎ Importer</button>
+      </div>
+      <input type="file" id="data-file" accept="application/json,.json" style="display:none;" />
+      <button class="btn btn-danger" id="data-clear" style="width:100%; margin-top: 10px;">🗑 Tout effacer</button>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="data-close">Fermer</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ============================================================
+    // ÉTAT & PERSISTANCE
+    // ============================================================
+    const STORAGE_KEY = 'dofus-exos-v1';
+    let state = { items: [] };
+    let currentDetailId = null;
+    let editingId = null;
+    let confirmCb = null;
+
+    function load() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) state = JSON.parse(raw);
+        if (!state.items) state.items = [];
+        // Migration : convertit l'ancien costPerAttempt en achat unique
+        let migrated = false;
+        state.items.forEach(item => {
+          if (!item.purchases) { item.purchases = []; migrated = true; }
+          if (item.costPerAttempt != null) {
+            if (item.costPerAttempt > 0 && (item.attempts || 0) > 0) {
+              item.purchases.push({
+                id: 'mig_' + item.id,
+                amount: item.costPerAttempt * item.attempts,
+                ts: item.createdAt || Date.now(),
+              });
+            }
+            delete item.costPerAttempt;
+            migrated = true;
+          }
+        });
+        if (migrated) save();
+      } catch (e) { state = { items: [] }; }
+    }
+    function save() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+    function uid() {
+      return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+    }
+
+    // ---- Saisie kamas avec séparateur de milliers ----
+    function parseKamas(str) {
+      return parseInt(String(str == null ? '' : str).replace(/\D/g, ''), 10) || 0;
+    }
+    function groupThousands(digits) {
+      return String(digits).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    }
+    function kamasInputValue(n) {
+      n = Math.round(n || 0);
+      return n > 0 ? groupThousands(n) : '';
+    }
+    // Reformate en direct le champ pendant la frappe, en gardant le curseur
+    function attachKamasFormat(id) {
+      const el = document.getElementById(id);
+      el.addEventListener('input', () => {
+        const caret = el.selectionStart;
+        const digitsBefore = el.value.slice(0, caret).replace(/\D/g, '').length;
+        const digits = el.value.replace(/\D/g, '');
+        const formatted = digits ? groupThousands(digits) : '';
+        el.value = formatted;
+        // repositionne le curseur après le même nombre de chiffres
+        let count = 0, pos = formatted.length;
+        if (digitsBefore === 0) { pos = 0; }
+        else {
+          for (let i = 0; i < formatted.length; i++) {
+            if (/\d/.test(formatted[i])) count++;
+            if (count === digitsBefore) { pos = i + 1; break; }
+          }
+        }
+        try { el.setSelectionRange(pos, pos); } catch (e) {}
+      });
+    }
+
+    // ============================================================
+    // CALCULS
+    // ============================================================
+    function totalKamas(item) {
+      const purchasesSum = (item.purchases || []).reduce((s, p) => s + (p.amount || 0), 0);
+      return (item.baseCost || 0) + purchasesSum;
+    }
+    function cumulativeChance(item) {
+      if (!item.chance || item.chance < 1) return 0;
+      return 1 - Math.pow(1 - 1 / item.chance, item.attempts || 0);
+    }
+    function profit(item) {
+      return (item.hdvValue || 0) - totalKamas(item);
+    }
+    // Coût moyen d'une tentative = total des runes achetées / nb de tentatives
+    function avgCostPerAttempt(item) {
+      const runes = (item.purchases || []).reduce((s, p) => s + (p.amount || 0), 0);
+      const n = item.attempts || 0;
+      if (n <= 0 || runes <= 0) return 0;
+      return runes / n;
+    }
+    // Coût total estimé pour réussir l'exo (espérance ≈ "chance" tentatives)
+    function estimatedCostToSucceed(item) {
+      const avg = avgCostPerAttempt(item);
+      if (avg <= 0 || !item.chance) return null;
+      return (item.baseCost || 0) + avg * item.chance;
+    }
+    function fmtK(n) {
+      n = Math.round(n || 0);
+      if (Math.abs(n) >= 1000000) return (n / 1000000).toFixed(n % 1000000 === 0 ? 0 : 2).replace(/\.?0+$/, '') + 'M';
+      if (Math.abs(n) >= 1000) return (n / 1000).toFixed(n % 1000 === 0 ? 0 : 1).replace(/\.?0+$/, '') + 'k';
+      return String(n);
+    }
+    function fmtFull(n) {
+      return Math.round(n || 0).toLocaleString('fr-FR');
+    }
+    function fmtPct(p) {
+      if (p >= 0.999) return '99.9%';
+      if (p < 0.01) return (p * 100).toFixed(2) + '%';
+      if (p < 0.1) return (p * 100).toFixed(1) + '%';
+      return Math.round(p * 100) + '%';
+    }
+
+    // ============================================================
+    // RENDU
+    // ============================================================
+    function render() {
+      renderStats();
+      renderCurrent();
+      renderArchive();
+      renderRanking();
+    }
+
+    function renderStats() {
+      const active = state.items.filter(i => !i.obtained);
+      const totalAttempts = state.items.reduce((s, i) => s + (i.attempts || 0), 0);
+      const totalSpent = state.items.reduce((s, i) => s + totalKamas(i), 0);
+      document.getElementById('stat-items').textContent = active.length;
+      document.getElementById('stat-attempts').textContent = totalAttempts;
+      document.getElementById('stat-kamas').textContent = fmtK(totalSpent);
+    }
+
+    function renderCurrent() {
+      const list = document.getElementById('list-current');
+      const empty = document.getElementById('empty-current');
+      const items = state.items.filter(i => !i.obtained).sort((a, b) => (b.attempts || 0) - (a.attempts || 0));
+      list.innerHTML = '';
+      if (items.length === 0) {
+        empty.classList.remove('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+      items.forEach(item => list.appendChild(renderCard(item)));
+    }
+
+    function renderArchive() {
+      const list = document.getElementById('list-archive');
+      const empty = document.getElementById('empty-archive');
+      const items = state.items.filter(i => i.obtained).sort((a, b) => (b.completedAt || 0) - (a.completedAt || 0));
+      list.innerHTML = '';
+      if (items.length === 0) {
+        empty.classList.remove('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+      items.forEach(item => list.appendChild(renderCard(item)));
+    }
+
+    function renderCard(item) {
+      const card = document.createElement('div');
+      card.className = 'item' + (item.obtained ? ' obtained' : '');
+      const cum = cumulativeChance(item);
+      const overEx = (item.attempts || 0) > (item.chance || 0);
+      const spent = totalKamas(item);
+
+      card.innerHTML = `
+        <div class="item-body">
+          <div class="item-info">
+            <div class="item-head">
+              <div class="item-name">${escapeHtml(item.name)}</div>
+              ${item.obtained
+                ? '<span class="badge success">Obtenu</span>'
+                : `<span class="badge">1/${item.chance}</span>`}
+            </div>
+            <div class="item-meta">
+              <span class="meta-chip">${escapeHtml(item.exoLabel)}</span>
+              ${spent > 0 ? `<span class="meta-chip kamas-num"><span class="k">💰</span>${fmtK(spent)}</span>` : ''}
+              ${item.hdvValue ? `<span class="meta-chip kamas-num"><span class="k">🏷️</span>${fmtK(item.hdvValue)}</span>` : ''}
+            </div>
+            <div class="item-counter">
+              <span class="counter-num">${item.attempts || 0}</span>
+              <span class="counter-target">/ ${item.chance}${item.obtained || (item.attempts || 0) === 0 ? '' : ` · ${fmtPct(cum)}`}</span>
+            </div>
+            <div class="progress">
+              <div class="progress-bar ${overEx ? 'over' : ''}" style="width: ${Math.min(100, cum * 100)}%"></div>
+            </div>
+          </div>
+          ${item.obtained
+            ? '<div class="item-plus" data-action="detail">✓</div>'
+            : '<div class="item-plus" data-action="plus">+</div>'}
+        </div>
+      `;
+
+      // Détail (tap sur infos)
+      card.querySelector('.item-info').addEventListener('click', () => openDetail(item.id));
+      // Plus rapide ou ouverture détail (pour obtenu)
+      const plusBtn = card.querySelector('.item-plus');
+      plusBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (item.obtained) openDetail(item.id);
+        else quickIncrement(item.id);
+      });
+      return card;
+    }
+
+    function renderRanking() {
+      const all = state.items;
+      const empty = document.getElementById('empty-ranking');
+      if (all.length === 0) {
+        empty.classList.remove('hidden');
+        ['rank-most', 'rank-least', 'rank-profit', 'rank-kamas'].forEach(id => {
+          document.getElementById(id).innerHTML = '';
+        });
+        return;
+      }
+      empty.classList.add('hidden');
+
+      const sortedMost = [...all].sort((a, b) => (b.attempts || 0) - (a.attempts || 0)).slice(0, 5);
+      const sortedLeast = [...all].filter(i => (i.attempts || 0) > 0).sort((a, b) => (a.attempts || 0) - (b.attempts || 0)).slice(0, 5);
+      const sortedProfit = [...all].sort((a, b) => profit(b) - profit(a)).slice(0, 5);
+      const sortedKamas = [...all].sort((a, b) => totalKamas(b) - totalKamas(a)).slice(0, 5);
+
+      fillRank('rank-most', sortedMost, item => ({
+        value: item.attempts || 0,
+        unit: 'tentas',
+        sub: `${item.exoLabel} · 1/${item.chance}`,
+      }));
+      fillRank('rank-least', sortedLeast, item => ({
+        value: item.attempts || 0,
+        unit: 'tentas',
+        sub: `${item.exoLabel} · 1/${item.chance}`,
+      }));
+      fillRank('rank-profit', sortedProfit, item => {
+        const p = profit(item);
+        return {
+          value: (p >= 0 ? '+' : '') + fmtK(p),
+          unit: 'kamas',
+          sub: `${item.exoLabel} · ${item.attempts || 0} tentas`,
+          cls: p >= 0 ? 'green' : 'red',
+        };
+      });
+      fillRank('rank-kamas', sortedKamas, item => ({
+        value: fmtK(totalKamas(item)),
+        unit: 'kamas',
+        sub: `${item.exoLabel} · ${item.attempts || 0} tentas`,
+      }));
+    }
+
+    function fillRank(id, items, fmt) {
+      const el = document.getElementById(id);
+      el.innerHTML = '';
+      if (items.length === 0) {
+        el.innerHTML = '<div style="color: var(--text-dim); font-size: 13px; padding: 8px 4px;">—</div>';
+        return;
+      }
+      items.forEach((item, i) => {
+        const d = fmt(item);
+        const row = document.createElement('div');
+        row.className = 'rank-row';
+        row.innerHTML = `
+          <div class="rank-pos ${i === 0 ? 'top' : ''}">${i + 1}</div>
+          <div class="rank-info">
+            <div class="rank-name">${escapeHtml(item.name)}${item.obtained ? ' ✓' : ''}</div>
+            <div class="rank-sub">${escapeHtml(d.sub)}</div>
+          </div>
+          <div class="rank-value ${d.cls || ''} kamas-num">
+            ${typeof d.value === 'string' ? d.value : fmtK(d.value)}
+            <span class="unit">${d.unit}</span>
+          </div>
+        `;
+        row.addEventListener('click', () => openDetail(item.id));
+        el.appendChild(row);
+      });
+    }
+
+    function escapeHtml(s) {
+      if (s == null) return '';
+      return String(s).replace(/[&<>"']/g, c => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      })[c]);
+    }
+
+    // ============================================================
+    // ACTIONS
+    // ============================================================
+    function quickIncrement(id) {
+      const item = state.items.find(i => i.id === id);
+      if (!item || item.obtained) return;
+      item.attempts = (item.attempts || 0) + 1;
+      save();
+      render();
+      haptic();
+    }
+
+    function haptic() {
+      if (navigator.vibrate) navigator.vibrate(8);
+    }
+
+    function openDetail(id) {
+      const item = state.items.find(i => i.id === id);
+      if (!item) return;
+      currentDetailId = id;
+      refreshDetail();
+      document.getElementById('modal-detail').classList.add('active');
+    }
+
+    function refreshDetail() {
+      const item = state.items.find(i => i.id === currentDetailId);
+      if (!item) return;
+      document.getElementById('d-name').textContent = item.name;
+      document.getElementById('d-exo').textContent = item.exoLabel;
+      document.getElementById('d-count').textContent = item.attempts || 0;
+      document.getElementById('d-chance').textContent = item.chance;
+      const cum = cumulativeChance(item);
+      const N = item.attempts || 0;
+      document.getElementById('d-prob').textContent = fmtPct(cum);
+
+      // Phrase explicative
+      const ctxEl = document.getElementById('d-prob-ctx');
+      if (N === 0) {
+        ctxEl.innerHTML = `Chaque essai a <b>1 chance sur ${item.chance}</b> de passer. Lance-toi !`;
+      } else if (item.obtained) {
+        ctxEl.innerHTML = `Tu l'as eu en <b>${N} tenta${N > 1 ? 's' : ''}</b> sur les <b>${item.chance}</b> attendues en moyenne.`;
+      } else {
+        const cumStr = fmtPct(cum);
+        const remStr = fmtPct(1 - cum);
+        let extra;
+        if (cum >= 0.95) {
+          extra = ` Tu fais partie des <b>${remStr}</b> les plus malchanceux.`;
+        } else if (cum >= 0.70) {
+          extra = ` Statistiquement, ça commence à traîner.`;
+        } else if (cum >= 0.30) {
+          extra = ` Tu es dans la zone d'attente normale.`;
+        } else {
+          extra = ` Encore tôt, c'est dans la moyenne.`;
+        }
+        ctxEl.innerHTML = `<b>${N} tenta${N > 1 ? 's' : ''}</b> faites · espérance <b>${item.chance}</b>. Probabilité cumulée d'avoir réussi : <b>${cumStr}</b>.${extra}`;
+      }
+
+      document.getElementById('d-spent').textContent = fmtFull(totalKamas(item));
+      document.getElementById('d-hdv').textContent = fmtFull(item.hdvValue || 0);
+
+      const avg = avgCostPerAttempt(item);
+      document.getElementById('d-avg').textContent = avg > 0 ? fmtFull(avg) : '—';
+      const est = estimatedCostToSucceed(item);
+      document.getElementById('d-estimate').textContent = est != null ? fmtFull(est) : '—';
+
+      // Alerte rentabilité : dépensé > valeur HDV (et HDV renseignée)
+      const warn = document.getElementById('d-warn');
+      const overBudget = (item.hdvValue || 0) > 0 && totalKamas(item) > item.hdvValue && !item.obtained;
+      warn.classList.toggle('hidden', !overBudget);
+
+      const overEx = (item.attempts || 0) > (item.chance || 0);
+      const bar = document.getElementById('d-progress');
+      bar.style.width = Math.min(100, cum * 100) + '%';
+      bar.classList.toggle('over', overEx);
+
+      const p = profit(item);
+      const box = document.getElementById('d-profit-box');
+      const lbl = document.getElementById('d-profit-lbl');
+      const val = document.getElementById('d-profit');
+      box.classList.remove('green', 'red');
+      box.classList.add(p >= 0 ? 'green' : 'red');
+      lbl.textContent = item.obtained ? 'Rentabilité finale' : 'Rentabilité estimée';
+      val.textContent = (p >= 0 ? '+' : '') + fmtFull(p) + ' k';
+
+      document.getElementById('d-obtain').textContent = item.obtained ? '↺ Remettre en cours' : '✓ Obtenu';
+      document.getElementById('d-obtain').classList.toggle('btn-success', !item.obtained);
+      document.getElementById('d-obtain').classList.toggle('btn-secondary', item.obtained);
+
+      renderPurchases(item);
+    }
+
+    function renderPurchases(item) {
+      const el = document.getElementById('d-purchases');
+      const list = (item.purchases || []).slice().sort((a, b) => b.ts - a.ts);
+      el.innerHTML = '';
+      if (list.length === 0) {
+        el.innerHTML = '<div class="purchases-empty">Aucun achat de runes pour le moment.<br>Touche <b>+ Acheter</b> à chaque fois que tu en rachètes.</div>';
+        return;
+      }
+      list.forEach(p => {
+        const row = document.createElement('div');
+        row.className = 'purchase-row';
+        row.innerHTML = `
+          <span class="purchase-amount kamas-num">+${fmtFull(p.amount)} k</span>
+          <span class="purchase-date">${fmtDate(p.ts)}</span>
+          <button class="purchase-del" aria-label="Supprimer">×</button>
+        `;
+        row.querySelector('.purchase-del').addEventListener('click', () => deletePurchase(p.id));
+        el.appendChild(row);
+      });
+    }
+
+    function fmtDate(ts) {
+      const d = new Date(ts);
+      const now = new Date();
+      const opts = { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' };
+      if (d.getFullYear() !== now.getFullYear()) opts.year = 'numeric';
+      return d.toLocaleString('fr-FR', opts).replace(',', ' ·');
+    }
+
+    function openPurchaseModal() {
+      const input = document.getElementById('p-amount');
+      input.value = '';
+      document.getElementById('modal-purchase').classList.add('active');
+      setTimeout(() => input.focus(), 100);
+    }
+
+    function savePurchase() {
+      const amount = parseKamas(document.getElementById('p-amount').value);
+      if (!amount || amount <= 0) { flagInvalid('p-amount'); toast('Montant invalide'); return; }
+      const item = state.items.find(i => i.id === currentDetailId);
+      if (!item) return;
+      if (!item.purchases) item.purchases = [];
+      item.purchases.push({
+        id: uid(),
+        amount,
+        ts: Date.now(),
+      });
+      save();
+      document.getElementById('modal-purchase').classList.remove('active');
+      refreshDetail();
+      renderStats();
+      renderCurrent();
+      renderArchive();
+      toast(`+${fmtFull(amount)} k ajoutés`);
+      haptic();
+    }
+
+    function deletePurchase(purchaseId) {
+      const item = state.items.find(i => i.id === currentDetailId);
+      if (!item || !item.purchases) return;
+      item.purchases = item.purchases.filter(p => p.id !== purchaseId);
+      save();
+      refreshDetail();
+      renderStats();
+      renderCurrent();
+      renderArchive();
+    }
+
+    function adjustAttempts(delta) {
+      const item = state.items.find(i => i.id === currentDetailId);
+      if (!item) return;
+      item.attempts = Math.max(0, (item.attempts || 0) + delta);
+      save();
+      refreshDetail();
+      renderStats();
+      const c = document.getElementById('d-count');
+      c.classList.remove('pulse');
+      void c.offsetWidth;
+      c.classList.add('pulse');
+      haptic();
+    }
+
+    function toggleObtained() {
+      const item = state.items.find(i => i.id === currentDetailId);
+      if (!item) return;
+      item.obtained = !item.obtained;
+      item.completedAt = item.obtained ? Date.now() : null;
+      save();
+      refreshDetail();
+      render();
+      toast(item.obtained ? '🏆 Exo réussi !' : 'Remis en cours');
+    }
+
+    function deleteCurrent() {
+      const item = state.items.find(i => i.id === currentDetailId);
+      if (!item) return;
+      confirmDialog(`Supprimer "${item.name}" ?`, 'Cette action est définitive.', () => {
+        state.items = state.items.filter(i => i.id !== currentDetailId);
+        save();
+        render();
+        closeAllModals();
+        toast('Item supprimé');
+      });
+    }
+
+    function openForm(id) {
+      editingId = id || null;
+      const title = document.getElementById('form-title');
+      title.textContent = id ? 'Modifier l\'exo' : 'Nouvel exo';
+      if (id) {
+        const item = state.items.find(i => i.id === id);
+        document.getElementById('f-name').value = item.name;
+        document.getElementById('f-exo').value = item.exoLabel;
+        document.getElementById('f-chance').value = item.chance;
+        document.getElementById('f-base').value = kamasInputValue(item.baseCost);
+        document.getElementById('f-hdv').value = kamasInputValue(item.hdvValue);
+      } else {
+        ['f-name', 'f-exo', 'f-base', 'f-hdv'].forEach(i => {
+          document.getElementById(i).value = '';
+        });
+        // Chance par défaut sur 100 (modifiable)
+        document.getElementById('f-chance').value = '100';
+      }
+      document.getElementById('modal-form').classList.add('active');
+      setTimeout(() => document.getElementById('f-name').focus(), 100);
+    }
+
+    function flagInvalid(id) {
+      const el = document.getElementById(id);
+      el.classList.remove('invalid');
+      // force reflow pour rejouer l'animation
+      void el.offsetWidth;
+      el.classList.add('invalid');
+      el.addEventListener('input', () => el.classList.remove('invalid'), { once: true });
+    }
+
+    function saveForm() {
+      const name = document.getElementById('f-name').value.trim();
+      const exo = document.getElementById('f-exo').value.trim();
+      const chance = parseInt(document.getElementById('f-chance').value, 10);
+      const base = parseKamas(document.getElementById('f-base').value);
+      const hdv = parseKamas(document.getElementById('f-hdv').value);
+
+      if (!name) { flagInvalid('f-name'); toast('Nom requis'); return; }
+      if (!exo) { flagInvalid('f-exo'); toast('Exo requis'); return; }
+      if (!chance || chance < 1) { flagInvalid('f-chance'); toast('Chance invalide'); return; }
+
+      if (editingId) {
+        const item = state.items.find(i => i.id === editingId);
+        Object.assign(item, { name, exoLabel: exo, chance, baseCost: base, hdvValue: hdv });
+      } else {
+        state.items.push({
+          id: uid(),
+          name, exoLabel: exo, chance,
+          attempts: 0,
+          obtained: false,
+          baseCost: base,
+          purchases: [],
+          hdvValue: hdv,
+          createdAt: Date.now(),
+          completedAt: null,
+        });
+      }
+      save();
+      render();
+      closeAllModals();
+      toast(editingId ? 'Item modifié' : 'Item ajouté');
+      editingId = null;
+    }
+
+    function confirmDialog(title, msg, cb) {
+      document.getElementById('confirm-title').textContent = title;
+      document.getElementById('confirm-msg').textContent = msg;
+      confirmCb = cb;
+      document.getElementById('modal-confirm').classList.add('active');
+    }
+
+    function closeAllModals() {
+      document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+    }
+
+    function toast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(toast._t);
+      toast._t = setTimeout(() => t.classList.remove('show'), 1800);
+    }
+
+    // ============================================================
+    // DONNÉES : EXPORT / IMPORT / RESET
+    // ============================================================
+    function exportData() {
+      const payload = JSON.stringify(state, null, 2);
+      const blob = new Blob([payload], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const stamp = new Date().toISOString().slice(0, 10);
+      a.href = url;
+      a.download = `dofus-exos-${stamp}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      toast('Sauvegarde exportée');
+    }
+
+    function importData(file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const data = JSON.parse(reader.result);
+          if (!data || !Array.isArray(data.items)) throw new Error('format');
+          confirmDialog(
+            'Importer cette sauvegarde ?',
+            `Elle contient ${data.items.length} item(s) et remplacera tes données actuelles.`,
+            () => {
+              state = { items: data.items };
+              // re-sécurise les champs essentiels
+              state.items.forEach(it => { if (!it.purchases) it.purchases = []; });
+              save();
+              render();
+              closeAllModals();
+              toast('Sauvegarde importée');
+            }
+          );
+        } catch (e) {
+          toast('Fichier invalide');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function clearAllData() {
+      confirmDialog('Tout effacer ?', 'Tous tes exos seront définitivement supprimés.', () => {
+        state = { items: [] };
+        save();
+        render();
+        closeAllModals();
+        toast('Données effacées');
+      });
+    }
+
+    // ============================================================
+    // ÉVÉNEMENTS
+    // ============================================================
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const v = tab.dataset.view;
+        document.querySelectorAll('.view').forEach(s => s.classList.remove('active'));
+        document.getElementById('view-' + v).classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+
+    document.getElementById('fab-add').addEventListener('click', () => openForm());
+
+    // Données / sauvegarde
+    document.getElementById('open-data').addEventListener('click', () => {
+      document.getElementById('modal-data').classList.add('active');
+    });
+    document.getElementById('data-close').addEventListener('click', closeAllModals);
+    document.getElementById('data-export').addEventListener('click', exportData);
+    document.getElementById('data-import').addEventListener('click', () => document.getElementById('data-file').click());
+    document.getElementById('data-file').addEventListener('change', (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (file) importData(file);
+      e.target.value = '';
+    });
+    document.getElementById('data-clear').addEventListener('click', clearAllData);
+
+    document.getElementById('form-cancel').addEventListener('click', () => { closeAllModals(); editingId = null; });
+    document.getElementById('form-save').addEventListener('click', saveForm);
+
+    document.getElementById('d-close').addEventListener('click', closeAllModals);
+    document.getElementById('d-minus').addEventListener('click', () => adjustAttempts(-1));
+    document.getElementById('d-plus').addEventListener('click', () => adjustAttempts(1));
+    document.getElementById('d-plus10').addEventListener('click', () => adjustAttempts(10));
+    document.getElementById('d-obtain').addEventListener('click', toggleObtained);
+    document.getElementById('d-delete').addEventListener('click', deleteCurrent);
+    document.getElementById('d-edit').addEventListener('click', () => {
+      const id = currentDetailId;
+      closeAllModals();
+      openForm(id);
+    });
+
+    document.getElementById('d-buy').addEventListener('click', openPurchaseModal);
+    document.getElementById('p-cancel').addEventListener('click', () => {
+      document.getElementById('modal-purchase').classList.remove('active');
+    });
+    document.getElementById('p-save').addEventListener('click', savePurchase);
+
+    document.getElementById('confirm-no').addEventListener('click', () => {
+      document.getElementById('modal-confirm').classList.remove('active');
+      confirmCb = null;
+    });
+    document.getElementById('confirm-yes').addEventListener('click', () => {
+      if (confirmCb) confirmCb();
+      document.getElementById('modal-confirm').classList.remove('active');
+      confirmCb = null;
+    });
+
+    // Click overlay = close
+    document.querySelectorAll('.modal-overlay').forEach(o => {
+      o.addEventListener('click', e => {
+        if (e.target === o) {
+          o.classList.remove('active');
+          if (o.id === 'modal-form') editingId = null;
+          if (o.id === 'modal-confirm') confirmCb = null;
+        }
+      });
+    });
+
+    // Presets exo
+    document.querySelectorAll('.preset').forEach(p => {
+      p.addEventListener('click', () => {
+        const input = document.getElementById('f-exo');
+        const val = input.value.trim();
+        const add = p.dataset.preset;
+        if (!val) input.value = add;
+        else if (!val.includes(add)) input.value = val + ' + ' + add;
+        haptic();
+      });
+    });
+
+    // Formatage des champs kamas (séparateur de milliers) pendant la saisie
+    ['f-base', 'f-hdv', 'p-amount'].forEach(attachKamasFormat);
+
+    // ============================================================
+    // BOOT
+    // ============================================================
+    load();
+    render();
+
+    // Service Worker pour le mode offline
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(err => console.warn('SW:', err));
+      });
+    }
+  </script>
+</body>
+</html>
