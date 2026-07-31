@@ -1015,6 +1015,268 @@
       border-radius: var(--radius-sm);
     }
 
+    /* ---- Saisie durée h / min / s ---- */
+    .dur-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .dur-cell {
+      position: relative;
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 6px 0 8px;
+      text-align: center;
+      transition: border-color .15s ease;
+    }
+    .dur-cell:focus-within { border-color: var(--gold); background: var(--bg-card); }
+    .dur-cell input {
+      background: transparent;
+      border: none;
+      padding: 0;
+      text-align: center;
+      font-size: 26px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      font-family: var(--font-display);
+      color: var(--text);
+      line-height: 1.15;
+    }
+    .dur-cell input:focus { background: transparent; border: none; }
+    .dur-cell .u {
+      display: block;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      font-weight: 600;
+    }
+
+    /* ---- Butin ---- */
+    .loot-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .loot-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 9px;
+    }
+    .lchip {
+      font-size: 11px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      color: var(--text-soft);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+    .lchip b { color: var(--text); font-weight: 600; }
+    .lchip.legend {
+      background: var(--gold-soft);
+      border-color: rgba(217, 166, 72, 0.35);
+      color: var(--gold-bright);
+      font-weight: 600;
+      box-shadow: 0 0 10px rgba(245, 198, 104, 0.15);
+    }
+
+    /* ---- Sélection de compo dans le formulaire de run ---- */
+    .compo-select { display: flex; flex-direction: column; gap: 6px; }
+    .compo-opt {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      text-align: left;
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      transition: all .14s ease;
+    }
+    .compo-opt.on {
+      background: var(--gold-soft);
+      border-color: var(--gold);
+    }
+    .compo-opt:active { transform: scale(0.99); }
+    .compo-opt .tick {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border-hi);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: transparent;
+    }
+    .compo-opt.on .tick {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: #14100a;
+    }
+    .compo-opt .body { flex: 1; min-width: 0; }
+    .compo-opt .nm {
+      font-size: 13.5px;
+      font-weight: 600;
+      margin-bottom: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .compo-opt.on .nm { color: var(--gold-bright); }
+    .compo-opt .cls {
+      font-size: 11px;
+      color: var(--text-dim);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .compo-name {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .compo-card.best .compo-name { color: var(--gold-bright); }
+    .compo-card.unplayed { opacity: 0.55; }
+    .orphan-note {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-dim);
+      padding: 10px;
+      margin-top: 4px;
+    }
+
+    /* ---- Filtre de période ---- */
+    .period-row {
+      display: flex;
+      gap: 5px;
+      margin-bottom: 12px;
+    }
+    .per-btn {
+      flex: 1;
+      padding: 8px 6px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-dim);
+      transition: all .14s ease;
+    }
+    .per-btn.on {
+      background: var(--gold-soft);
+      border-color: var(--gold);
+      color: var(--gold-bright);
+    }
+    .per-btn:active { transform: scale(0.96); }
+
+    /* ---- Interrupteurs de formulaire ---- */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      width: 100%;
+      text-align: left;
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 11px 13px;
+      transition: all .14s ease;
+    }
+    .toggle-row.on { background: var(--red-soft); border-color: rgba(239, 68, 68, 0.35); }
+    .toggle-row.on.neutral { background: var(--blue-soft); border-color: rgba(96, 144, 232, 0.35); }
+    .toggle-row .box {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1.5px solid var(--border-hi);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: transparent;
+    }
+    .toggle-row.on .box { background: var(--red); border-color: var(--red); color: #fff; }
+    .toggle-row.on.neutral .box { background: var(--blue); border-color: var(--blue); }
+    .toggle-row .txt { flex: 1; min-width: 0; }
+    .toggle-row .t1 { font-size: 13.5px; font-weight: 600; }
+    .toggle-row .t2 { font-size: 11.5px; color: var(--text-dim); margin-top: 2px; line-height: 1.4; }
+
+    /* ---- Run exclue ---- */
+    .run-card.excluded { opacity: 0.45; }
+    .run-card.excluded .run-wave { color: var(--text-dim); }
+    .excl-tag {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      color: var(--red);
+      background: var(--red-soft);
+      border-radius: 999px;
+      padding: 2px 8px;
+      margin-left: 8px;
+    }
+
+    /* ---- Compo masquée ---- */
+    .compo-card.hidden-compo { opacity: 0.5; }
+    .hidden-tag {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      color: var(--text-dim);
+      background: rgba(255,255,255,0.06);
+      border-radius: 999px;
+      padding: 2px 8px;
+    }
+    .section-sep {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+      margin: 18px 0 8px;
+      font-weight: 600;
+    }
+
+    /* ---- Réglage de l'objectif ---- */
+    .goal-cfg {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+    .goal-cfg .lbl {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--text-dim);
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+    .goal-cfg select, .goal-cfg input { padding: 9px 10px; font-size: 14px; }
+    .goal-cfg .wide { grid-column: 1 / -1; }
+
+    /* ---- Rendement par vague ---- */
+    .yield-row { display: flex; align-items: center; gap: 8px; font-size: 12px; margin-bottom: 5px; }
+    .yield-lbl { width: 34px; color: var(--text-dim); text-align: right; flex-shrink: 0; font-variant-numeric: tabular-nums; }
+    .yield-track { flex: 1; height: 16px; background: var(--bg-soft); border-radius: 999px; overflow: hidden; }
+    .yield-fill { height: 100%; background: linear-gradient(90deg, var(--gold-deep), var(--gold-bright)); border-radius: 999px; }
+    .yield-fill.peak { background: linear-gradient(90deg, #4ade80, #86efac); }
+    .yield-val { width: 62px; color: var(--text-soft); text-align: right; flex-shrink: 0; font-variant-numeric: tabular-nums; }
+    .yield-n { width: 30px; color: var(--text-dim); font-size: 11px; flex-shrink: 0; font-variant-numeric: tabular-nums; }
+
     /* ============ MODULE SWITCH ============ */
     .module-switch {
       display: flex;
@@ -1336,18 +1598,18 @@
   <header class="app-header">
     <div class="brand">
       <div class="brand-title">
-        <h1 id="app-title">Dofus Exos</h1>
-        <span class="sub" id="app-sub">Forgemagie</span>
+        <h1 id="app-title">Songes Infinis</h1>
+        <span class="sub" id="app-sub">Rendement &amp; compos</span>
       </div>
       <button class="gear-btn" id="open-data" aria-label="Données et sauvegarde">⚙︎</button>
     </div>
 
     <div class="module-switch">
-      <button class="mod-btn active" data-mod="exos">⚒ Exos</button>
-      <button class="mod-btn" data-mod="songes">☾ Songes</button>
+      <button class="mod-btn active" data-mod="songes">☾ Songes</button>
+      <button class="mod-btn" data-mod="exos">⚒ Exos</button>
     </div>
 
-    <div class="stats-bar" id="bar-exos">
+    <div class="stats-bar hidden" id="bar-exos">
       <div class="stat">
         <div class="label">En cours</div>
         <div class="value" id="stat-items">0</div>
@@ -1362,7 +1624,7 @@
       </div>
     </div>
 
-    <div class="stats-bar hidden" id="bar-songes">
+    <div class="stats-bar" id="bar-songes">
       <div class="stat">
         <div class="label">Runs</div>
         <div class="value" id="stat-runs">0</div>
@@ -1378,13 +1640,13 @@
     </div>
   </header>
 
-  <nav class="tabs" data-mod="exos">
+  <nav class="tabs hidden" data-mod="exos">
     <button class="tab active" data-view="current">En cours</button>
     <button class="tab" data-view="ranking">Classement</button>
     <button class="tab" data-view="archive">Réussis</button>
   </nav>
 
-  <nav class="tabs hidden" data-mod="songes">
+  <nav class="tabs" data-mod="songes">
     <button class="tab active" data-view="runs">Runs</button>
     <button class="tab" data-view="compos">Compos</button>
     <button class="tab" data-view="sstats">Stats</button>
@@ -1392,7 +1654,7 @@
 
   <main>
     <!-- En cours -->
-    <section class="view active" id="view-current">
+    <section class="view" id="view-current">
       <div class="item-list" id="list-current"></div>
       <div class="empty hidden" id="empty-current">
         <div class="icon">⚒️</div>
@@ -1437,7 +1699,7 @@
     </section>
 
     <!-- Songes : Runs -->
-    <section class="view" id="view-runs">
+    <section class="view active" id="view-runs">
       <div id="list-runs"></div>
       <div class="empty hidden" id="empty-runs">
         <div class="icon">☾</div>
@@ -1448,17 +1710,20 @@
 
     <!-- Songes : Compos -->
     <section class="view" id="view-compos">
+      <div class="period-row" id="period-compos"></div>
+      <button class="btn btn-primary" id="add-compo" style="width:100%;margin-bottom:12px;">+ Nouvelle compo</button>
       <div class="note-box" id="compo-note"></div>
       <div id="list-compos"></div>
       <div class="empty hidden" id="empty-compos">
         <div class="icon">⚔️</div>
-        <div class="title">Pas encore de compo</div>
-        <div>Renseigne ta compo sur tes runs pour les comparer</div>
+        <div class="title">Aucune compo enregistrée</div>
+        <div>Crée tes sets pour pouvoir les comparer</div>
       </div>
     </section>
 
     <!-- Songes : Stats -->
     <section class="view" id="view-sstats">
+      <div class="period-row" id="period-stats"></div>
       <div id="sstats-body"></div>
       <div class="empty hidden" id="empty-sstats">
         <div class="icon">📊</div>
@@ -1662,9 +1927,21 @@
 
       <div class="field">
         <label>Durée de la run</label>
-        <input type="text" id="r-dur" placeholder="1h23  ·  1:23:45  ·  83" inputmode="text" autocomplete="off" />
+        <div class="dur-row">
+          <div class="dur-cell">
+            <input type="number" id="r-h" min="0" max="99" placeholder="0" inputmode="numeric" />
+            <span class="u">heures</span>
+          </div>
+          <div class="dur-cell">
+            <input type="number" id="r-m" min="0" max="59" placeholder="0" inputmode="numeric" />
+            <span class="u">minutes</span>
+          </div>
+          <div class="dur-cell">
+            <input type="number" id="r-s" min="0" max="59" placeholder="0" inputmode="numeric" />
+            <span class="u">secondes</span>
+          </div>
+        </div>
         <div class="dur-preview" id="r-dur-preview"></div>
-        <div class="hint">Recopie le timer de fin de partie. <b>h:mm:ss</b> ou <b>h:mm</b> avec les deux-points, un nombre seul = minutes.</div>
       </div>
 
       <div class="field">
@@ -1673,15 +1950,31 @@
       </div>
 
       <div class="field">
-        <label>Bribes obtenues</label>
-        <input type="number" id="r-bribes" placeholder="0" min="0" inputmode="numeric" />
+        <label>Butin</label>
+        <div class="loot-grid">
+          <div>
+            <div class="hint" style="margin:0 0 5px;">Bribes</div>
+            <input type="number" id="r-bribes" placeholder="0" min="0" inputmode="numeric" />
+          </div>
+          <div>
+            <div class="hint" style="margin:0 0 5px;">Reflets</div>
+            <input type="number" id="r-reflets" placeholder="0" min="0" inputmode="numeric" />
+          </div>
+          <div>
+            <div class="hint" style="margin:0 0 5px;">Runes</div>
+            <input type="number" id="r-runes" placeholder="0" min="0" inputmode="numeric" />
+          </div>
+          <div>
+            <div class="hint" style="margin:0 0 5px;">Légendaires</div>
+            <input type="number" id="r-legend" placeholder="0" min="0" inputmode="numeric" />
+          </div>
+        </div>
       </div>
 
       <div class="field">
         <label>Composition</label>
-        <div class="slot-row" id="r-slots"></div>
-        <div class="class-picker" id="r-classes"></div>
-        <div class="hint">Jusqu'à 4 personnages. Retouche un slot pour le vider.</div>
+        <div class="compo-select" id="r-compo-list"></div>
+        <button class="btn btn-secondary" id="r-new-compo" style="width:100%;margin-top:8px;">+ Créer une compo</button>
       </div>
 
       <div class="field">
@@ -1689,12 +1982,64 @@
         <input type="text" id="r-note" placeholder="Ex : mauvais tirage de modificateurs" maxlength="80" />
       </div>
 
+      <div class="field">
+        <button class="toggle-row" id="r-excluded">
+          <span class="box">✓</span>
+          <span class="txt">
+            <span class="t1">Exclure des statistiques</span>
+            <span class="t2">La run reste dans l'historique mais ne compte ni dans les moyennes ni dans le comparatif de compos.</span>
+          </span>
+        </button>
+      </div>
+
       <div class="modal-actions">
         <button class="btn btn-secondary" id="run-cancel">Annuler</button>
         <button class="btn btn-primary" id="run-save">Enregistrer</button>
       </div>
+      <div class="modal-actions hidden" id="run-dup-row" style="margin-top: 8px;">
+        <button class="btn btn-secondary" id="run-duplicate" style="width:100%;">⧉ Dupliquer cette run</button>
+      </div>
       <div class="modal-actions hidden" id="run-delete-row" style="margin-top: 8px;">
         <button class="btn btn-danger" id="run-delete" style="width:100%;">🗑 Supprimer cette run</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Édition d'une compo -->
+  <div class="modal-overlay" id="modal-compo">
+    <div class="modal">
+      <div class="modal-grip"></div>
+      <h2 id="compo-title">Nouvelle compo</h2>
+
+      <div class="field">
+        <label>Nom</label>
+        <input type="text" id="c-name" placeholder="Ex : Team dégâts" maxlength="40" />
+        <div class="hint">Laisse vide pour reprendre la liste des classes.</div>
+      </div>
+
+      <div class="field">
+        <label>Personnages</label>
+        <div class="slot-row" id="c-slots"></div>
+        <div class="class-picker" id="c-classes"></div>
+        <div class="hint">Jusqu'à 4. Touche un slot rempli pour le vider.</div>
+      </div>
+
+      <div class="field">
+        <button class="toggle-row neutral" id="c-hidden">
+          <span class="box">✓</span>
+          <span class="txt">
+            <span class="t1">Masquer du comparatif</span>
+            <span class="t2">Pour les compos exceptionnelles ou jouées une seule fois. Ses runs comptent toujours dans les stats globales.</span>
+          </span>
+        </button>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="compo-cancel">Annuler</button>
+        <button class="btn btn-primary" id="compo-save">Enregistrer</button>
+      </div>
+      <div class="modal-actions hidden" id="compo-delete-row" style="margin-top: 8px;">
+        <button class="btn btn-danger" id="compo-delete" style="width:100%;">🗑 Supprimer cette compo</button>
       </div>
     </div>
   </div>
@@ -1706,11 +2051,11 @@
     // ÉTAT & PERSISTANCE
     // ============================================================
     const STORAGE_KEY = 'dofus-exos-v1';
-    let state = { items: [], songes: [] };
+    let state = { items: [], songes: [], compos: [], settings: {} };
     let currentDetailId = null;
     let editingId = null;
     let confirmCb = null;
-    let activeModule = 'exos';
+    let activeModule = 'songes';
 
     function load() {
       try {
@@ -1718,8 +2063,33 @@
         if (raw) state = JSON.parse(raw);
         if (!Array.isArray(state.items)) state.items = [];
         if (!Array.isArray(state.songes)) state.songes = [];
-        // Migration : convertit l'ancien costPerAttempt en achat unique
+        if (!Array.isArray(state.compos)) state.compos = [];
+        if (!state.settings || typeof state.settings !== 'object') state.settings = {};
+        if (state.settings.bribesOffset != null && !state.settings.goal) {
+          state.settings.goal = { metric: 'bribes', target: 25000, offset: state.settings.bribesOffset };
+          delete state.settings.bribesOffset;
+        }
+
         let migrated = false;
+
+        // Migration : les compos saisies à la volée deviennent des sets enregistrés
+        state.songes.forEach(r => {
+          if (r.compoId !== undefined) return;
+          if (Array.isArray(r.compo) && r.compo.length) {
+            const key = classesKey(r.compo);
+            let c = state.compos.find(x => classesKey(x.classes) === key);
+            if (!c) {
+              c = { id: uid(), name: '', classes: [...r.compo], createdAt: Date.now() };
+              state.compos.push(c);
+            }
+            r.compoId = c.id;
+          } else {
+            r.compoId = null;
+          }
+          delete r.compo;
+          migrated = true;
+        });
+        // Migration : convertit l'ancien costPerAttempt en achat unique
         state.items.forEach(item => {
           if (!item.purchases) { item.purchases = []; migrated = true; }
           if (item.costPerAttempt != null) {
@@ -1735,7 +2105,7 @@
           }
         });
         if (migrated) save();
-      } catch (e) { state = { items: [], songes: [] }; }
+      } catch (e) { state = { items: [], songes: [], compos: [], settings: {} }; }
     }
     function save() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -2303,17 +2673,41 @@
               state = {
                 items: Array.isArray(data.items) ? data.items : [],
                 songes: Array.isArray(data.songes) ? data.songes : [],
+                compos: Array.isArray(data.compos) ? data.compos : [],
+                settings: (data.settings && typeof data.settings === 'object') ? data.settings : {},
               };
               // re-sécurise les champs essentiels
               state.items.forEach(it => { if (!it.purchases) it.purchases = []; });
-              state.songes.forEach(r => {
-                if (!Array.isArray(r.compo)) r.compo = [];
-                r.wave = Math.min(MAX_WAVE, Math.max(0, parseInt(r.wave, 10) || 0));
-                r.bribes = parseInt(r.bribes, 10) || 0;
-                r.durationSec = parseInt(r.durationSec, 10) || 0;
+              state.compos.forEach(c => {
+                if (!Array.isArray(c.classes)) c.classes = [];
+                c.hidden = !!c.hidden;
               });
+              state.songes.forEach(r => {
+                if (r.compoId === undefined) {
+                  // sauvegarde antérieure aux compos enregistrées
+                  if (Array.isArray(r.compo) && r.compo.length) {
+                    const key = classesKey(r.compo);
+                    let c = state.compos.find(x => classesKey(x.classes) === key);
+                    if (!c) {
+                      c = { id: uid(), name: '', classes: [...r.compo], createdAt: Date.now() };
+                      state.compos.push(c);
+                    }
+                    r.compoId = c.id;
+                  } else r.compoId = null;
+                }
+                delete r.compo;
+                if (r.compoId && !state.compos.some(c => c.id === r.compoId)) r.compoId = null;
+                r.wave = Math.min(MAX_WAVE, Math.max(0, parseInt(r.wave, 10) || 0));
+                r.durationSec = parseInt(r.durationSec, 10) || 0;
+                ['bribes', 'reflets', 'runes', 'legend'].forEach(k => {
+                  r[k] = Math.max(0, parseInt(r[k], 10) || 0);
+                });
+                r.excluded = !!r.excluded;
+              });
+              draftCompoId = null;
               save();
               render();
+              renderCompoSelect();
               closeAllModals();
               toast('Sauvegarde importée');
             }
@@ -2326,10 +2720,12 @@
     }
 
     function clearAllData() {
-      confirmDialog('Tout effacer ?', 'Tous tes exos et toutes tes runs de songes seront définitivement supprimés.', () => {
-        state = { items: [], songes: [] };
+      confirmDialog('Tout effacer ?', 'Tous tes exos, tes compos et tes runs de songes seront définitivement supprimés.', () => {
+        state = { items: [], songes: [], compos: [], settings: {} };
+        draftCompoId = null;
         save();
         render();
+        renderCompoSelect();
         closeAllModals();
         toast('Données effacées');
       });
@@ -2342,38 +2738,31 @@
                      'Huppermage', 'Iop', 'Osamodas', 'Ouginak', 'Pandawa', 'Roublard', 'Sacrieur',
                      'Sadida', 'Sram', 'Steamer', 'Xélor', 'Zobal'];
     const MAX_WAVE = 15;
+    const GOAL_METRICS = {
+      bribes:  { label: 'Bribes',  target: 25000, reward: 'Coffre légendaire' },
+      reflets: { label: 'Reflets', target: 5000,  reward: 'Objectif reflets' },
+      runes:   { label: 'Runes',   target: 1000,  reward: 'Objectif runes' },
+    };
+    function goalCfg() {
+      const g = state.settings.goal || {};
+      const metric = GOAL_METRICS[g.metric] ? g.metric : 'bribes';
+      const target = Math.max(1, parseInt(g.target, 10) || GOAL_METRICS[metric].target);
+      const offset = Math.max(0, parseInt(g.offset, 10) || 0);
+      return { metric, target, offset };
+    }
     const MIN_SAMPLE = 3;     // en-dessous, une compo n'est pas interprétable
     const GOOD_SAMPLE = 8;    // à partir de là, la médiane commence à être solide
 
     let editingRunId = null;
+    let editingCompoId = null;
+    let compoReturnToRun = false;
     let draftCompo = [];
+    let draftCompoId = null;
     let draftWave = 0;
+    let draftExcluded = false;
+    let draftHidden = false;
 
-    // ---- Durée : parsing tolérant + formatage ----
-    function parseDuration(str) {
-      if (str == null) return null;
-      const s = String(str).trim().toLowerCase().replace(/\s+/g, '');
-      if (!s) return null;
-
-      if (s.includes('h')) {                       // 1h23, 1h, 1h23min
-        const hp = s.split('h');
-        if (hp.length !== 2 || !/^\d+$/.test(hp[0])) return null;
-        const mPart = hp[1].replace(/min|m/g, '');
-        if (mPart !== '' && !/^\d+$/.test(mPart)) return null;
-        const mins = mPart === '' ? 0 : parseInt(mPart, 10);
-        if (mins > 59) return null;
-        return parseInt(hp[0], 10) * 3600 + mins * 60;
-      }
-      if (/^\d+(min|m)$/.test(s)) return parseInt(s, 10) * 60;
-      if (s.includes(':')) {                       // h:mm ou h:mm:ss
-        const p = s.split(':');
-        if (p.length > 3 || p.some(x => !/^\d+$/.test(x))) return null;
-        if (p.length === 2) return (+p[0]) * 3600 + (+p[1]) * 60;
-        return (+p[0]) * 3600 + (+p[1]) * 60 + (+p[2]);
-      }
-      if (/^\d+$/.test(s)) return parseInt(s, 10) * 60;   // nombre seul = minutes
-      return null;
-    }
+    // ---- Durée : formatage ----
     function fmtDur(sec) {
       sec = Math.round(sec || 0);
       const h = Math.floor(sec / 3600);
@@ -2391,16 +2780,6 @@
       if (m) bits.push(m + ' min');
       if (s) bits.push(s + ' s');
       return bits.length ? bits.join(' ') : '0 s';
-    }
-    // Valeur réinjectable dans le champ de saisie (sans perte de secondes)
-    function fmtDurInput(sec) {
-      sec = Math.round(sec || 0);
-      const h = Math.floor(sec / 3600);
-      const m = Math.floor((sec % 3600) / 60);
-      const s = sec % 60;
-      if (s) return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-      if (h) return `${h}h${String(m).padStart(2, '0')}`;
-      return String(m);
     }
     function fmtDateShort(iso) {
       if (!iso) return '—';
@@ -2438,18 +2817,42 @@
       if (r >= 100) return Math.round(r).toLocaleString('fr-FR');
       return r.toFixed(1).replace('.', ',');
     }
+    function periodCutoff() {
+      const p = state.settings.period;
+      if (!p || p === 'all') return null;
+      const days = parseInt(p, 10);
+      if (!days) return null;
+      const d = new Date();
+      d.setDate(d.getDate() - days);
+      return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+    }
+    // Runs retenues pour toute analyse : ni exclues manuellement, ni hors période
+    function statRuns() {
+      const cut = periodCutoff();
+      return sortedRuns().filter(r => !r.excluded && (!cut || (r.date || '') >= cut));
+    }
     function sortedRuns() {
       return [...state.songes].sort((a, b) =>
         (a.date || '').localeCompare(b.date || '') || (a.createdAt || 0) - (b.createdAt || 0));
     }
-    function compoKey(compo) {
-      if (!compo || !compo.length) return null;
-      return [...compo].sort((a, b) => a.localeCompare(b, 'fr')).join(' + ');
+    function classesKey(classes) {
+      if (!classes || !classes.length) return '';
+      return [...classes].sort((a, b) => a.localeCompare(b, 'fr')).join(' + ');
+    }
+    function compoLabel(c) {
+      if (!c) return null;
+      return (c.name && c.name.trim()) ? c.name.trim() : c.classes.join(' · ');
+    }
+    function getCompo(id) {
+      return id ? state.compos.find(c => c.id === id) || null : null;
+    }
+    function runsOfCompo(id, all) {
+      return (all ? state.songes : statRuns()).filter(r => r.compoId === id);
     }
 
     // ---- Rendu : barre de stats ----
     function renderSongesBar() {
-      const runs = state.songes;
+      const runs = statRuns();
       document.getElementById('stat-runs').textContent = runs.length;
 
       const totalSec = runs.reduce((s, r) => s + (r.durationSec || 0), 0);
@@ -2461,6 +2864,26 @@
       document.getElementById('stat-best').textContent = bestWave == null ? '—' : bestWave + '/' + MAX_WAVE;
     }
 
+    // ---- Filtre de période (partagé entre Compos et Stats) ----
+    function renderPeriodControls() {
+      const cur = state.settings.period || 'all';
+      const opts = [['all', 'Tout'], ['90', '90 jours'], ['30', '30 jours']];
+      ['period-compos', 'period-stats'].forEach(cid => {
+        const el = document.getElementById(cid);
+        if (!el) return;
+        el.innerHTML = opts.map(([v, l]) =>
+          `<button class="per-btn${v === cur ? ' on' : ''}" data-p="${v}">${l}</button>`).join('');
+        el.querySelectorAll('.per-btn').forEach(b => {
+          b.addEventListener('click', () => {
+            state.settings.period = b.dataset.p;
+            save();
+            renderSonges();
+            haptic();
+          });
+        });
+      });
+    }
+
     // ---- Rendu : liste des runs ----
     function renderRuns() {
       const list = document.getElementById('list-runs');
@@ -2470,25 +2893,34 @@
       if (!runs.length) { empty.classList.remove('hidden'); return; }
       empty.classList.add('hidden');
 
-      const rates = state.songes.map(runRate).filter(r => r != null);
+      const rates = statRuns().map(runRate).filter(r => r != null);
       const med = median(rates);
 
       runs.forEach(r => {
         const rate = runRate(r);
         let cls = '';
-        if (med != null && rate != null && rates.length >= 3) {
+        if (med != null && rate != null && rates.length >= 3 && !r.excluded) {
           if (rate > med * 1.05) cls = ' green';
           else if (rate < med * 0.95) cls = ' red';
         }
-        const chips = (r.compo && r.compo.length)
-          ? r.compo.map(c => `<span class="cchip">${escapeHtml(c)}</span>`).join('')
+        const compo = getCompo(r.compoId);
+        const chips = compo
+          ? `<span class="cchip">${escapeHtml(compoLabel(compo))}</span>` +
+            (compo.name && compo.name.trim()
+              ? compo.classes.map(c => `<span class="cchip">${escapeHtml(c)}</span>`).join('')
+              : '')
           : '<span class="cchip empty">compo non renseignée</span>';
 
+        const loot = [];
+        if (r.legend) loot.push(`<span class="lchip legend">★ ${r.legend} légendaire${r.legend > 1 ? 's' : ''}</span>`);
+        if (r.reflets) loot.push(`<span class="lchip">Reflets <b>${r.reflets.toLocaleString('fr-FR')}</b></span>`);
+        if (r.runes) loot.push(`<span class="lchip">Runes <b>${r.runes.toLocaleString('fr-FR')}</b></span>`);
+
         const card = document.createElement('div');
-        card.className = 'run-card';
+        card.className = 'run-card' + (r.excluded ? ' excluded' : '');
         card.innerHTML = `
           <div class="run-top">
-            <span class="run-date">${fmtDateShort(r.date)}</span>
+            <span class="run-date">${fmtDateShort(r.date)}${r.excluded ? '<span class="excl-tag">hors stats</span>' : ''}</span>
             <span class="run-wave">${r.wave || 0}<span class="of">/${MAX_WAVE}</span></span>
           </div>
           <div class="run-metrics">
@@ -2497,6 +2929,7 @@
             <div class="rmetric"><div class="lbl">Bribes/h</div><div class="val${cls}">${fmtRate(rate)}</div></div>
           </div>
           <div class="comp-chips">${chips}</div>
+          ${loot.length ? `<div class="loot-chips">${loot.join('')}</div>` : ''}
           ${r.note ? `<div style="margin-top:9px;font-size:12px;color:var(--text-dim);">${escapeHtml(r.note)}</div>` : ''}
         `;
         card.addEventListener('click', () => openRunForm(r.id));
@@ -2504,44 +2937,36 @@
       });
     }
 
-    // ---- Rendu : comparaison des compos ----
-    function buildCompoGroups() {
-      const map = new Map();
-      state.songes.forEach(r => {
-        const key = compoKey(r.compo);
-        if (!key) return;
-        if (!map.has(key)) map.set(key, { key, compo: [...r.compo], runs: [] });
-        map.get(key).runs.push(r);
-      });
-      const groups = [...map.values()].map(g => {
-        const rates = g.runs.map(runRate).filter(x => x != null);
-        const waves = g.runs.map(r => r.wave || 0);
-        const totalSec = g.runs.reduce((s, r) => s + (r.durationSec || 0), 0);
-        const totalBribes = g.runs.reduce((s, r) => s + (r.bribes || 0), 0);
-        return {
-          ...g,
-          n: g.runs.length,
-          medRate: median(rates),
-          minRate: rates.length ? Math.min(...rates) : null,
-          maxRate: rates.length ? Math.max(...rates) : null,
-          pooled: totalSec > 0 ? totalBribes / (totalSec / 3600) : null,
-          avgWave: mean(waves),
-          bestWave: waves.length ? Math.max(...waves) : 0,
-          totalSec,
-        };
-      });
-      groups.sort((a, b) => (b.medRate || 0) - (a.medRate || 0));
-      return groups;
+    // ---- Rendu : comparaison des compos enregistrées ----
+    function compoStats(c) {
+      const runs = runsOfCompo(c.id);
+      const rates = runs.map(runRate).filter(x => x != null);
+      const waves = runs.map(r => r.wave || 0);
+      const totalSec = runs.reduce((s, r) => s + (r.durationSec || 0), 0);
+      const hours = totalSec / 3600;
+      const sum = k => runs.reduce((s, r) => s + (r[k] || 0), 0);
+      return {
+        compo: c,
+        n: runs.length,
+        medRate: median(rates),
+        minRate: rates.length ? Math.min(...rates) : null,
+        maxRate: rates.length ? Math.max(...rates) : null,
+        refletsH: hours > 0 ? sum('reflets') / hours : null,
+        runesH: hours > 0 ? sum('runes') / hours : null,
+        legends: sum('legend'),
+        avgWave: waves.length ? mean(waves) : null,
+        bestWave: waves.length ? Math.max(...waves) : 0,
+        totalSec,
+      };
     }
 
     function renderCompos() {
       const list = document.getElementById('list-compos');
       const empty = document.getElementById('empty-compos');
       const note = document.getElementById('compo-note');
-      const groups = buildCompoGroups();
       list.innerHTML = '';
 
-      if (!groups.length) {
+      if (!state.compos.length) {
         empty.classList.remove('hidden');
         note.classList.add('hidden');
         return;
@@ -2549,48 +2974,185 @@
       empty.classList.add('hidden');
       note.classList.remove('hidden');
 
-      // Verdict honnête sur la lisibilité des données
+      const sortFn = (a, b) => {
+        if (!a.n && !b.n) return 0;
+        if (!a.n) return 1;
+        if (!b.n) return -1;
+        return (b.medRate || 0) - (a.medRate || 0);
+      };
+      const all = state.compos.map(compoStats);
+      const groups = all.filter(g => !g.compo.hidden).sort(sortFn);
+      const hiddenGroups = all.filter(g => g.compo.hidden).sort(sortFn);
+
+      // Lisibilité des données : deux compos suffisamment jouées ?
       const solid = groups.filter(g => g.n >= MIN_SAMPLE);
       let msg;
-      if (solid.length < 2) {
-        msg = `Il te faut au moins <b>${MIN_SAMPLE} runs</b> sur au moins deux compos avant que la comparaison veuille dire quelque chose. En dessous, tu mesures surtout le tirage aléatoire.`;
+      if (!groups.length) {
+        msg = `Toutes tes compos sont masquées du comparatif. Rouvre-en une pour la réintégrer.`;
+      } else if (!groups.some(g => g.n > 0)) {
+        msg = `Tes compos sont enregistrées. Sélectionne-les sur tes runs et le comparatif se remplira tout seul.`;
+      } else if (solid.length < 2) {
+        msg = `Il te faut au moins <b>${MIN_SAMPLE} runs</b> sur au moins deux compos pour que la comparaison veuille dire quelque chose. En dessous, tu mesures surtout le tirage aléatoire.`;
       } else {
         const [a, b] = solid;
         const overlap = a.minRate != null && b.maxRate != null && a.minRate <= b.maxRate;
         if (overlap) {
-          msg = `<b>${escapeHtml(a.key)}</b> mène, mais son intervalle chevauche celui de <b>${escapeHtml(b.key)}</b> : l'écart n'est pas encore concluant. Continue à alterner les deux.`;
+          msg = `<b>${escapeHtml(compoLabel(a.compo))}</b> mène, mais son intervalle chevauche celui de <b>${escapeHtml(compoLabel(b.compo))}</b> : l'écart n'est pas encore concluant. Continue à alterner les deux.`;
         } else {
-          msg = `<b>${escapeHtml(a.key)}</b> sort devant sans chevauchement avec <b>${escapeHtml(b.key)}</b> sur ${a.n} run(s). Le signal commence à être réel${a.n < GOOD_SAMPLE ? `, mais ${GOOD_SAMPLE} runs le rendraient solide` : ''}.`;
+          msg = `<b>${escapeHtml(compoLabel(a.compo))}</b> sort devant sans chevauchement avec <b>${escapeHtml(compoLabel(b.compo))}</b> sur ${a.n} run(s). Le signal commence à être réel${a.n < GOOD_SAMPLE ? `, mais ${GOOD_SAMPLE} runs le rendraient solide` : ''}.`;
         }
       }
       note.innerHTML = msg;
 
       let bestMarked = false;
-      groups.forEach(g => {
-        const thin = g.n < MIN_SAMPLE;
-        const isBest = !thin && !bestMarked;
+      const renderCard = (g, isHidden) => {
+        const unplayed = g.n === 0;
+        const thin = !unplayed && g.n < MIN_SAMPLE;
+        const isBest = !isHidden && !unplayed && !thin && !bestMarked;
         if (isBest) bestMarked = true;
 
-        const nCls = g.n >= GOOD_SAMPLE ? 'ok' : (thin ? 'low' : '');
-        const range = (g.minRate != null && g.n > 1)
-          ? `${fmtRate(g.minRate)} – ${fmtRate(g.maxRate)}` : '—';
+        const nCls = g.n >= GOOD_SAMPLE ? 'ok' : ((thin || unplayed) ? 'low' : '');
+        const range = (g.minRate != null && g.n > 1) ? `${fmtRate(g.minRate)} – ${fmtRate(g.maxRate)}` : '—';
+        const named = g.compo.name && g.compo.name.trim();
 
         const card = document.createElement('div');
-        card.className = 'compo-card' + (isBest ? ' best' : '') + (thin ? ' thin' : '');
+        card.className = 'compo-card' + (isBest ? ' best' : '') + (thin ? ' thin' : '')
+          + (unplayed ? ' unplayed' : '') + (isHidden ? ' hidden-compo' : '');
         card.innerHTML = `
           <div class="compo-head">
-            <div class="comp-chips">${g.compo.map(c => `<span class="cchip">${escapeHtml(c)}</span>`).join('')}</div>
-            <span class="n-badge ${nCls}">${g.n} run${g.n > 1 ? 's' : ''}</span>
+            <div style="min-width:0;">
+              ${named ? `<div class="compo-name">${escapeHtml(g.compo.name.trim())}</div>` : ''}
+              <div class="comp-chips">${g.compo.classes.map(c => `<span class="cchip">${escapeHtml(c)}</span>`).join('') || '<span class="cchip empty">aucune classe</span>'}</div>
+            </div>
+            <span style="display:flex;flex-direction:column;gap:4px;align-items:flex-end;">
+              <span class="n-badge ${nCls}">${g.n} run${g.n > 1 ? 's' : ''}</span>
+              ${isHidden ? '<span class="hidden-tag">masquée</span>' : ''}
+            </span>
           </div>
-          <div class="compo-rate">${fmtRate(g.medRate)} <span class="u">bribes/h médian</span></div>
+          ${unplayed
+            ? `<div style="font-size:12.5px;color:var(--text-dim);margin-top:4px;">Jamais jouée pour l'instant.</div>`
+            : `<div class="compo-rate">${fmtRate(g.medRate)} <span class="u">bribes/h médian</span></div>
           <div class="compo-sub">
             <span>Fourchette <b>${range}</b></span>
+            <span>Reflets/h <b>${fmtRate(g.refletsH)}</b></span>
+            <span>Runes/h <b>${fmtRate(g.runesH)}</b></span>
             <span>Vague moy. <b>${g.avgWave != null ? g.avgWave.toFixed(1).replace('.', ',') : '—'}</b></span>
             <span>Record <b>${g.bestWave}/${MAX_WAVE}</b></span>
             <span>Joué <b>${fmtDur(g.totalSec)}</b></span>
-          </div>
+            ${g.legends ? `<span style="color:var(--gold-bright);">★ <b style="color:var(--gold-bright);">${g.legends}</b> légendaire${g.legends > 1 ? 's' : ''}</span>` : ''}
+          </div>`}
         `;
+        card.addEventListener('click', () => openCompoForm(g.compo.id));
         list.appendChild(card);
+      };
+
+      groups.forEach(g => renderCard(g, false));
+      if (hiddenGroups.length) {
+        const sep = document.createElement('div');
+        sep.className = 'section-sep';
+        sep.textContent = 'Masquées du comparatif';
+        list.appendChild(sep);
+        hiddenGroups.forEach(g => renderCard(g, true));
+      }
+
+      const orphans = statRuns().filter(r => !getCompo(r.compoId)).length;
+      if (orphans) {
+        const o = document.createElement('div');
+        o.className = 'orphan-note';
+        o.textContent = `${orphans} run(s) sans compo — non comptées dans ce comparatif.`;
+        list.appendChild(o);
+      }
+    }
+
+    // ---- Édition d'une compo ----
+    function openCompoForm(id, fromRun) {
+      editingCompoId = id || null;
+      compoReturnToRun = !!fromRun;
+      const c = id ? getCompo(id) : null;
+      document.getElementById('compo-title').textContent = c ? 'Modifier la compo' : 'Nouvelle compo';
+      document.getElementById('c-name').value = c ? (c.name || '') : '';
+      draftCompo = c ? [...c.classes] : [];
+      draftHidden = c ? !!c.hidden : false;
+      paintCompo();
+      paintCompoToggle();
+      document.getElementById('compo-delete-row').classList.toggle('hidden', !c);
+      document.getElementById('modal-compo').classList.add('active');
+    }
+
+    function saveCompo() {
+      if (!draftCompo.length) { toast('Ajoute au moins une classe'); return; }
+      const name = document.getElementById('c-name').value.trim();
+      let id = editingCompoId;
+      if (id) {
+        const c = getCompo(id);
+        if (c) { c.name = name; c.classes = [...draftCompo]; c.hidden = draftHidden; }
+      } else {
+        id = uid();
+        state.compos.push({ id, name, classes: [...draftCompo], hidden: draftHidden, createdAt: Date.now() });
+      }
+      save();
+      const wasFromRun = compoReturnToRun;
+      editingCompoId = null;
+      compoReturnToRun = false;
+      document.getElementById('modal-compo').classList.remove('active');
+      if (wasFromRun) {
+        draftCompoId = id;      // la compo tout juste créée devient celle de la run
+        renderCompoSelect();
+      } else {
+        renderSonges();
+      }
+      toast('Compo enregistrée');
+    }
+
+    function deleteCompo() {
+      const id = editingCompoId;
+      if (!id) return;
+      const used = runsOfCompo(id).length;
+      document.getElementById('modal-compo').classList.remove('active');
+      confirmDialog(
+        'Supprimer cette compo ?',
+        used
+          ? `${used} run(s) l'utilisent : elles seront conservées mais passeront en « compo non renseignée ».`
+          : 'Elle sera retirée du comparatif.',
+        () => {
+          state.compos = state.compos.filter(c => c.id !== id);
+          state.songes.forEach(r => { if (r.compoId === id) r.compoId = null; });
+          if (draftCompoId === id) draftCompoId = null;
+          save();
+          renderSonges();
+          renderCompoSelect();
+          editingCompoId = null;
+          toast('Compo supprimée');
+        }
+      );
+    }
+
+    function paintCompoToggle() {
+      document.getElementById('c-hidden').classList.toggle('on', draftHidden);
+    }
+
+    // ---- Sélecteur de compo dans le formulaire de run ----
+    function renderCompoSelect() {
+      const box = document.getElementById('r-compo-list');
+      box.innerHTML = '';
+
+      const mk = (id, label, sub) => {
+        const b = document.createElement('button');
+        b.className = 'compo-opt' + (draftCompoId === id ? ' on' : '');
+        b.innerHTML = `
+          <span class="tick">✓</span>
+          <span class="body">
+            <span class="nm">${escapeHtml(label)}</span>
+            ${sub ? `<span class="cls">${escapeHtml(sub)}</span>` : ''}
+          </span>`;
+        b.addEventListener('click', () => { draftCompoId = id; renderCompoSelect(); haptic(); });
+        box.appendChild(b);
+      };
+
+      mk(null, 'Non renseignée', '');
+      state.compos.forEach(c => {
+        const named = c.name && c.name.trim();
+        mk(c.id, named ? c.name.trim() : c.classes.join(' · '), named ? c.classes.join(' · ') : '');
       });
     }
 
@@ -2650,13 +3212,153 @@
       return `<div class="wave-hist">${rows}</div>`;
     }
 
+    // ---- Objectif configurable (coffre légendaire par défaut) ----
+    function projectFrom(runs, metric) {
+      const perRun = median(runs.map(r => r[metric] || 0));
+      const sec = runs.reduce((s, r) => s + (r.durationSec || 0), 0);
+      const got = runs.reduce((s, r) => s + (r[metric] || 0), 0);
+      return { perRun, perHour: sec > 0 ? got / (sec / 3600) : null };
+    }
+
+    function goalCardHTML(runs) {
+      const { metric, target, offset } = goalCfg();
+      const meta = GOAL_METRICS[metric];
+      const earned = runs.reduce((s, r) => s + (r[metric] || 0), 0);
+      const total = earned + offset;
+      const cycles = Math.floor(total / target);
+      const current = total % target;
+      const remaining = target - current;
+      const pct = (current / target) * 100;
+
+      const all = projectFrom(runs, metric);
+      const recent = runs.length >= 5 ? projectFrom(runs.slice(-5), metric) : null;
+
+      const runsLeft = (all.perRun > 0) ? Math.ceil(remaining / all.perRun) : null;
+      const hoursLeft = (all.perHour > 0) ? remaining / all.perHour : null;
+      const runsLeftRecent = (recent && recent.perRun > 0) ? Math.ceil(remaining / recent.perRun) : null;
+
+      let drift = '';
+      if (runsLeft != null && runsLeftRecent != null && runsLeft !== runsLeftRecent) {
+        const better = runsLeftRecent < runsLeft;
+        drift = `<div class="compo-sub" style="margin-top:10px;">
+          <span>Sur tes <b>5 dernières runs</b> uniquement : <b>${runsLeftRecent}</b> run(s) restante(s),
+          soit ${better ? 'mieux' : 'moins bien'} que ta moyenne globale.</span>
+        </div>`;
+      }
+
+      const opts = Object.entries(GOAL_METRICS)
+        .map(([k, v]) => `<option value="${k}"${k === metric ? ' selected' : ''}>${v.label}</option>`).join('');
+
+      return `
+        <div class="chart-card">
+          <div class="chart-title">${escapeHtml(meta.reward)}</div>
+          <div class="chart-sub">Palier à ${target.toLocaleString('fr-FR')} ${meta.label.toLowerCase()}${cycles > 0 ? ` · ${cycles} palier(s) déjà franchi(s)` : ''}</div>
+
+          <div class="counter-big" style="margin-bottom:12px;">
+            <div class="num kamas-num">${runsLeft != null ? runsLeft : '—'}</div>
+            <div class="lbl">run(s) restante(s) à ton rythme actuel</div>
+          </div>
+
+          <div class="progress" style="margin-bottom:8px;">
+            <div class="progress-bar" style="width:${pct.toFixed(1)}%"></div>
+          </div>
+          <div class="compo-sub" style="border-top:none;padding-top:0;margin-top:0;">
+            <span><b>${current.toLocaleString('fr-FR')}</b> / ${target.toLocaleString('fr-FR')}</span>
+            <span>Il te manque <b>${remaining.toLocaleString('fr-FR')}</b></span>
+            ${hoursLeft != null ? `<span>≈ <b>${fmtDur(hoursLeft * 3600)}</b> de jeu</span>` : ''}
+            <span>Médiane <b>${all.perRun != null ? Math.round(all.perRun).toLocaleString('fr-FR') : '—'}</b> /run</span>
+          </div>
+          ${drift}
+
+          <div class="goal-cfg">
+            <div>
+              <div class="lbl">Ressource</div>
+              <select id="goal-metric">${opts}</select>
+            </div>
+            <div>
+              <div class="lbl">Palier</div>
+              <input type="number" id="goal-target" min="1" inputmode="numeric" value="${target}" />
+            </div>
+            <div class="wide">
+              <div class="lbl">Déjà acquis avant le suivi</div>
+              <input type="number" id="goal-offset" min="0" inputmode="numeric" placeholder="0" value="${offset || ''}" />
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function bindGoalCard() {
+      const setGoal = patch => {
+        state.settings.goal = { ...goalCfg(), ...patch };
+        save();
+        renderSongesStats();
+      };
+      const metricEl = document.getElementById('goal-metric');
+      if (metricEl) {
+        metricEl.addEventListener('change', () => {
+          const m = metricEl.value;
+          // changer de ressource remet le palier et le report par défaut
+          state.settings.goal = { metric: m, target: GOAL_METRICS[m].target, offset: 0 };
+          save();
+          renderSongesStats();
+        });
+      }
+      const targetEl = document.getElementById('goal-target');
+      if (targetEl) targetEl.addEventListener('change', () => setGoal({ target: Math.max(1, parseInt(targetEl.value, 10) || 1) }));
+      const offsetEl = document.getElementById('goal-offset');
+      if (offsetEl) offsetEl.addEventListener('change', () => setGoal({ offset: Math.max(0, parseInt(offsetEl.value, 10) || 0) }));
+    }
+
+    // ---- Rendement selon la vague atteinte ----
+    function yieldByWave(runs) {
+      const buckets = new Map();
+      runs.forEach(r => {
+        const w = Math.min(MAX_WAVE, Math.max(0, r.wave || 0));
+        const rate = runRate(r);
+        if (rate == null) return;
+        if (!buckets.has(w)) buckets.set(w, []);
+        buckets.get(w).push(rate);
+      });
+      if (buckets.size < 2) return '';
+
+      const rows = [...buckets.entries()]
+        .map(([w, rates]) => ({ w, med: median(rates), n: rates.length }))
+        .sort((a, b) => a.w - b.w);
+      const max = Math.max(...rows.map(r => r.med));
+      const peak = rows.reduce((best, r) => (r.med > best.med ? r : best), rows[0]);
+      // Un retournement = le maximum n'est pas à la vague la plus haute atteinte
+      const turning = rows.length >= 3 && peak.w !== rows[rows.length - 1].w;
+
+      const html = rows.map(r => `
+        <div class="yield-row">
+          <span class="yield-lbl">${r.w === 0 ? '—' : 'V' + r.w}</span>
+          <span class="yield-track"><span class="yield-fill${r.w === peak.w ? ' peak' : ''}" style="width:${max > 0 ? (r.med / max) * 100 : 0}%"></span></span>
+          <span class="yield-val">${fmtRate(r.med)}</span>
+          <span class="yield-n">×${r.n}</span>
+        </div>`).join('');
+
+      return `<div class="chart-card">
+        <div class="chart-title">Rendement selon la vague atteinte</div>
+        <div class="chart-sub">Bribes/h médian des runs qui se sont arrêtées à chaque vague</div>
+        ${html}
+        <div class="note-box" style="margin:12px 0 0;">
+          ${turning
+            ? `Ton rendement culmine à la <b>vague ${peak.w}</b> puis redescend. C'est le signal intéressant : au-delà, les vagues te coûtent plus de temps qu'elles ne rapportent. <b>Vérifie-le sur plus de runs avant d'en faire une règle.</b>`
+            : `Attention à la lecture : une run où le tirage est clément va loin <b>et</b> rapporte bien, donc la courbe monte pour de mauvaises raisons. Ce qui serait vraiment informatif, c'est un <b>retournement</b> — un pic suivi d'une baisse. Tant que la courbe monte tout du long, elle ne dit pas que pousser est rentable.`}
+        </div>
+      </div>`;
+    }
+
     function renderSongesStats() {
       const body = document.getElementById('sstats-body');
       const empty = document.getElementById('empty-sstats');
-      const runs = sortedRuns();
+      const runs = statRuns();
       if (!runs.length) {
         body.innerHTML = '';
         empty.classList.remove('hidden');
+        empty.querySelector('.title').textContent = state.songes.length
+          ? 'Aucune run sur cette période' : 'Pas encore de données';
         return;
       }
       empty.classList.add('hidden');
@@ -2666,6 +3368,12 @@
       const totalSec = runs.reduce((s, r) => s + (r.durationSec || 0), 0);
       const totalBribes = runs.reduce((s, r) => s + (r.bribes || 0), 0);
       const pooled = totalSec > 0 ? totalBribes / (totalSec / 3600) : null;
+      const hours = totalSec / 3600;
+      const sumAll = k => runs.reduce((s, r) => s + (r[k] || 0), 0);
+      const totalReflets = sumAll('reflets');
+      const totalRunes = sumAll('runes');
+      const totalLegends = sumAll('legend');
+      const legendEvery = totalLegends > 0 ? hours / totalLegends : null;
       const med = median(rates);
       const sd = stdev(rates);
       const cv = (sd != null && med) ? (sd / mean(rates)) * 100 : null;
@@ -2675,6 +3383,7 @@
         ? ((mean(last5) - mean(prev5)) / mean(prev5)) * 100 : null;
 
       body.innerHTML = `
+        ${goalCardHTML(runs)}
         <div class="chart-card">
           <div class="chart-title">Synthèse</div>
           <div class="chart-sub">${runs.length} run(s) · ${fmtDur(totalSec)} de jeu cumulé</div>
@@ -2692,11 +3401,28 @@
           </div>` : ''}
         </div>
 
+        <div class="chart-card">
+          <div class="chart-title">Butin</div>
+          <div class="chart-sub">Cumul et taux horaire sur ${fmtDur(totalSec)} de jeu</div>
+          <div class="detail-stats">
+            <div class="dstat"><div class="lbl">Reflets</div><div class="val small">${totalReflets.toLocaleString('fr-FR')}</div></div>
+            <div class="dstat"><div class="lbl">Reflets/h</div><div class="val small">${fmtRate(hours > 0 ? totalReflets / hours : null)}</div></div>
+            <div class="dstat"><div class="lbl">Runes</div><div class="val small">${totalRunes.toLocaleString('fr-FR')}</div></div>
+            <div class="dstat"><div class="lbl">Runes/h</div><div class="val small">${fmtRate(hours > 0 ? totalRunes / hours : null)}</div></div>
+            <div class="dstat wide">
+              <div class="lbl">Légendaires</div>
+              <div class="val gold small">${totalLegends}${legendEvery != null ? ` <span class="u">· 1 toutes les ${fmtDur(legendEvery * 3600)}</span>` : ''}</div>
+            </div>
+          </div>
+        </div>
+
         ${rates.length >= 2 ? `<div class="chart-card">
           <div class="chart-title">Rendement par run</div>
           <div class="chart-sub">Barres = bribes/h de chaque run (chronologique) · ligne bleue = moyenne mobile sur 5</div>
           ${sparkBars(runs)}
         </div>` : ''}
+
+        ${yieldByWave(runs)}
 
         <div class="chart-card">
           <div class="chart-title">Vagues atteintes</div>
@@ -2710,9 +3436,12 @@
             : `Enregistre au moins 2 runs pour commencer à mesurer ta régularité.`}
         </div>
       `;
+
+      bindGoalCard();
     }
 
     function renderSonges() {
+      renderPeriodControls();
       renderSongesBar();
       renderRuns();
       renderCompos();
@@ -2737,7 +3466,7 @@
       });
     }
     function buildClassPicker() {
-      const picker = document.getElementById('r-classes');
+      const picker = document.getElementById('c-classes');
       picker.innerHTML = '';
       CLASSES.forEach(c => {
         const b = document.createElement('button');
@@ -2753,7 +3482,7 @@
       });
     }
     function paintCompo() {
-      const row = document.getElementById('r-slots');
+      const row = document.getElementById('c-slots');
       row.innerHTML = '';
       for (let i = 0; i < 4; i++) {
         const s = document.createElement('div');
@@ -2765,22 +3494,26 @@
         }
         row.appendChild(s);
       }
-      document.querySelectorAll('#r-classes .cls-btn').forEach(b => {
+      document.querySelectorAll('#c-classes .cls-btn').forEach(b => {
         b.classList.toggle('on', draftCompo.includes(b.textContent));
       });
     }
+    function clampInt(id, max) {
+      const raw = document.getElementById(id).value;
+      let v = parseInt(raw, 10);
+      if (isNaN(v) || v < 0) v = 0;
+      if (max != null && v > max) v = max;
+      return v;
+    }
+    function readDurationFields() {
+      return clampInt('r-h', 99) * 3600 + clampInt('r-m', 59) * 60 + clampInt('r-s', 59);
+    }
     function updateDurPreview() {
       const el = document.getElementById('r-dur-preview');
-      const raw = document.getElementById('r-dur').value.trim();
-      if (!raw) { el.textContent = ''; el.classList.remove('bad'); return; }
-      const sec = parseDuration(raw);
-      if (sec == null || sec <= 0) {
-        el.textContent = 'Format non reconnu';
-        el.classList.add('bad');
-      } else {
-        el.textContent = '→ ' + fmtDurLong(sec);
-        el.classList.remove('bad');
-      }
+      const sec = readDurationFields();
+      if (sec <= 0) { el.textContent = ''; el.classList.remove('bad'); return; }
+      el.textContent = '→ ' + fmtDurLong(sec);
+      el.classList.remove('bad');
     }
 
     function openRunForm(id) {
@@ -2788,35 +3521,79 @@
       const r = id ? state.songes.find(x => x.id === id) : null;
       document.getElementById('run-title').textContent = r ? 'Modifier la run' : 'Nouvelle run';
       document.getElementById('r-date').value = r ? (r.date || todayISO()) : todayISO();
-      document.getElementById('r-dur').value = r ? fmtDurInput(r.durationSec) : '';
-      document.getElementById('r-bribes').value = r ? (r.bribes || 0) : '';
+
+      const sec = r ? (r.durationSec || 0) : 0;
+      document.getElementById('r-h').value = r && sec ? Math.floor(sec / 3600) : '';
+      document.getElementById('r-m').value = r && sec ? Math.floor((sec % 3600) / 60) : '';
+      document.getElementById('r-s').value = r && sec % 60 ? sec % 60 : '';
+
+      document.getElementById('r-bribes').value = r && r.bribes ? r.bribes : '';
+      document.getElementById('r-reflets').value = r && r.reflets ? r.reflets : '';
+      document.getElementById('r-runes').value = r && r.runes ? r.runes : '';
+      document.getElementById('r-legend').value = r && r.legend ? r.legend : '';
       document.getElementById('r-note').value = r ? (r.note || '') : '';
+
       draftWave = r ? (r.wave || 0) : 0;
-      draftCompo = r && r.compo ? [...r.compo] : [];
+      draftExcluded = r ? !!r.excluded : false;
+      // Nouvelle run : on reprend par défaut la compo de la dernière run enregistrée
+      if (r) {
+        draftCompoId = r.compoId || null;
+      } else {
+        const last = sortedRuns()[state.songes.length - 1];
+        draftCompoId = (last && getCompo(last.compoId)) ? last.compoId : null;
+      }
       paintWaves();
-      paintCompo();
+      paintExcludedToggle();
+      renderCompoSelect();
       updateDurPreview();
       document.getElementById('run-delete-row').classList.toggle('hidden', !r);
+      document.getElementById('run-dup-row').classList.toggle('hidden', !r);
       document.getElementById('modal-run').classList.add('active');
     }
 
+    function paintExcludedToggle() {
+      document.getElementById('r-excluded').classList.toggle('on', draftExcluded);
+    }
+
+    // Repart de la run affichée pour en créer une nouvelle, datée d'aujourd'hui
+    function duplicateRun() {
+      const src = state.songes.find(x => x.id === editingRunId);
+      if (!src) return;
+      editingRunId = null;
+      document.getElementById('run-title').textContent = 'Nouvelle run';
+      document.getElementById('r-date').value = todayISO();
+      document.getElementById('run-delete-row').classList.add('hidden');
+      document.getElementById('run-dup-row').classList.add('hidden');
+      toast('Copie prête — ajuste et enregistre');
+    }
+
     function saveRun() {
-      const durRaw = document.getElementById('r-dur').value;
-      const sec = parseDuration(durRaw);
-      if (sec == null || sec <= 0) { flagInvalid('r-dur'); updateDurPreview(); return; }
-      const bribes = parseInt(document.getElementById('r-bribes').value, 10) || 0;
-      const date = document.getElementById('r-date').value || todayISO();
-      const note = document.getElementById('r-note').value.trim();
+      const sec = readDurationFields();
+      if (sec <= 0) {
+        ['r-h', 'r-m', 'r-s'].forEach(flagInvalid);
+        toast('Renseigne la durée de la run');
+        return;
+      }
+      const num = id => Math.max(0, parseInt(document.getElementById(id).value, 10) || 0);
+      const payload = {
+        date: document.getElementById('r-date').value || todayISO(),
+        durationSec: sec,
+        wave: draftWave,
+        bribes: num('r-bribes'),
+        reflets: num('r-reflets'),
+        runes: num('r-runes'),
+        legend: num('r-legend'),
+        compoId: draftCompoId,
+        excluded: draftExcluded,
+        note: document.getElementById('r-note').value.trim(),
+      };
 
       const wasEditing = !!editingRunId;
       if (editingRunId) {
         const r = state.songes.find(x => x.id === editingRunId);
-        if (r) Object.assign(r, { date, durationSec: sec, wave: draftWave, bribes, compo: [...draftCompo], note });
+        if (r) Object.assign(r, payload);
       } else {
-        state.songes.push({
-          id: uid(), date, durationSec: sec, wave: draftWave,
-          bribes, compo: [...draftCompo], note, createdAt: Date.now(),
-        });
+        state.songes.push({ id: uid(), ...payload, createdAt: Date.now() });
       }
       save();
       renderSonges();
@@ -2882,7 +3659,31 @@
     document.getElementById('run-cancel').addEventListener('click', () => { closeAllModals(); editingRunId = null; });
     document.getElementById('run-save').addEventListener('click', saveRun);
     document.getElementById('run-delete').addEventListener('click', deleteRun);
-    document.getElementById('r-dur').addEventListener('input', updateDurPreview);
+    ['r-h', 'r-m', 'r-s'].forEach(id => {
+      document.getElementById(id).addEventListener('input', updateDurPreview);
+    });
+
+    document.getElementById('r-excluded').addEventListener('click', () => {
+      draftExcluded = !draftExcluded;
+      paintExcludedToggle();
+      haptic();
+    });
+    document.getElementById('run-duplicate').addEventListener('click', duplicateRun);
+    document.getElementById('c-hidden').addEventListener('click', () => {
+      draftHidden = !draftHidden;
+      paintCompoToggle();
+      haptic();
+    });
+
+    document.getElementById('add-compo').addEventListener('click', () => openCompoForm());
+    document.getElementById('r-new-compo').addEventListener('click', () => openCompoForm(null, true));
+    document.getElementById('compo-save').addEventListener('click', saveCompo);
+    document.getElementById('compo-delete').addEventListener('click', deleteCompo);
+    document.getElementById('compo-cancel').addEventListener('click', () => {
+      document.getElementById('modal-compo').classList.remove('active');
+      editingCompoId = null;
+      compoReturnToRun = false;
+    });
 
     // Données / sauvegarde
     document.getElementById('open-data').addEventListener('click', () => {
@@ -2936,6 +3737,7 @@
           o.classList.remove('active');
           if (o.id === 'modal-form') editingId = null;
           if (o.id === 'modal-run') editingRunId = null;
+          if (o.id === 'modal-compo') { editingCompoId = null; compoReturnToRun = false; }
           if (o.id === 'modal-confirm') confirmCb = null;
         }
       });
@@ -2964,6 +3766,9 @@
     buildClassPicker();
     paintWaves();
     paintCompo();
+    paintCompoToggle();
+    paintExcludedToggle();
+    renderCompoSelect();
     render();
 
     // Service Worker pour le mode offline
