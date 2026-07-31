@@ -1015,10 +1015,319 @@
       border-radius: var(--radius-sm);
     }
 
+    /* ============ MODULE SWITCH ============ */
+    .module-switch {
+      display: flex;
+      gap: 4px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 4px;
+      margin: 0 0 14px;
+    }
+    .mod-btn {
+      flex: 1;
+      padding: 9px 10px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      color: var(--text-dim);
+      transition: all .18s ease;
+      font-family: var(--font-display);
+    }
+    .mod-btn.active {
+      background: linear-gradient(135deg, var(--gold-deep), var(--gold));
+      color: #14100a;
+      box-shadow: var(--shadow-gold);
+    }
+
+    /* ============ SONGES : RUNS ============ */
+    .run-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-bottom: 10px;
+      transition: transform .12s ease, border-color .12s ease;
+    }
+    .run-card:active { transform: scale(0.99); border-color: var(--border-hi); }
+    .run-top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .run-date {
+      font-size: 12px;
+      color: var(--text-dim);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .run-wave {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--gold-bright);
+      font-variant-numeric: tabular-nums;
+    }
+    .run-wave .of { font-size: 12px; color: var(--text-dim); font-weight: 500; }
+    .run-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .rmetric {
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      padding: 8px 6px;
+      text-align: center;
+    }
+    .rmetric .lbl {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+      margin-bottom: 3px;
+    }
+    .rmetric .val {
+      font-size: 15px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+    .rmetric .val.gold { color: var(--gold-bright); }
+    .rmetric .val.green { color: var(--green); }
+    .rmetric .val.red { color: var(--red); }
+
+    .comp-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+    .cchip {
+      font-size: 11px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: var(--blue-soft);
+      color: #a8c4f5;
+      border: 1px solid rgba(96, 144, 232, 0.25);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .cchip.empty { background: transparent; color: var(--text-dim); border-style: dashed; }
+
+    /* ============ SONGES : COMPOS ============ */
+    .compo-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-bottom: 10px;
+    }
+    .compo-card.best {
+      border-color: rgba(217, 166, 72, 0.4);
+      background: linear-gradient(160deg, var(--bg-card-hi), var(--bg-card));
+    }
+    .compo-card.thin { opacity: 0.75; }
+    .compo-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .compo-rate {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--gold-bright);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+    .compo-rate .u { font-size: 11px; color: var(--text-dim); font-weight: 500; }
+    .compo-sub {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 14px;
+      font-size: 12px;
+      color: var(--text-soft);
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+    .compo-sub b { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
+    .n-badge {
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-dim);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .n-badge.low { background: var(--red-soft); color: #f79999; }
+    .n-badge.ok { background: var(--green-soft); color: var(--green); }
+
+    .note-box {
+      background: var(--blue-soft);
+      border: 1px solid rgba(96, 144, 232, 0.25);
+      border-radius: var(--radius-sm);
+      padding: 11px 13px;
+      font-size: 12.5px;
+      line-height: 1.5;
+      color: #b9cdf0;
+      margin-bottom: 14px;
+    }
+    .note-box b { color: #dce8fb; }
+
+    /* ============ SONGES : STATS / CHARTS ============ */
+    .chart-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+    .chart-title {
+      font-family: var(--font-display);
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .chart-sub {
+      font-size: 11.5px;
+      color: var(--text-dim);
+      margin-bottom: 12px;
+    }
+    .chart-card svg { display: block; width: 100%; height: auto; }
+
+    .wave-hist { display: flex; flex-direction: column; gap: 5px; }
+    .wh-row { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+    .wh-lbl {
+      width: 44px;
+      color: var(--text-dim);
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .wh-track {
+      flex: 1;
+      height: 14px;
+      background: var(--bg-soft);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .wh-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold-deep), var(--gold-bright));
+      border-radius: 999px;
+      transition: width .3s ease;
+    }
+    .wh-n {
+      width: 26px;
+      color: var(--text-soft);
+      font-variant-numeric: tabular-nums;
+      flex-shrink: 0;
+    }
+
+    /* ============ FORMULAIRE RUN ============ */
+    .dur-preview {
+      font-size: 12.5px;
+      color: var(--gold);
+      margin-top: 6px;
+      font-variant-numeric: tabular-nums;
+      min-height: 18px;
+    }
+    .dur-preview.bad { color: var(--red); }
+
+    .wave-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 5px;
+    }
+    .wave-btn {
+      aspect-ratio: 1;
+      border-radius: var(--radius-sm);
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-soft);
+      font-variant-numeric: tabular-nums;
+      transition: all .12s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .wave-btn.on {
+      background: linear-gradient(135deg, var(--gold-deep), var(--gold));
+      color: #14100a;
+      border-color: var(--gold);
+    }
+    .wave-btn:active { transform: scale(0.92); }
+
+    .slot-row {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 10px;
+      min-height: 38px;
+    }
+    .slot {
+      flex: 1;
+      height: 38px;
+      border-radius: var(--radius-sm);
+      border: 1px dashed var(--border-hi);
+      background: var(--bg-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: var(--text-dim);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      padding: 0 4px;
+    }
+    .slot.filled {
+      border-style: solid;
+      border-color: rgba(96, 144, 232, 0.35);
+      background: var(--blue-soft);
+      color: #bdd2f7;
+      font-weight: 600;
+    }
+    .class-picker {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(78px, 1fr));
+      gap: 5px;
+      max-height: 190px;
+      overflow-y: auto;
+      padding: 2px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .cls-btn {
+      padding: 8px 4px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--text-soft);
+      transition: all .12s ease;
+    }
+    .cls-btn.on {
+      background: var(--blue-soft);
+      border-color: rgba(96, 144, 232, 0.4);
+      color: #cfdffc;
+      font-weight: 600;
+    }
+    .cls-btn:active { transform: scale(0.94); }
+
     @media (max-width: 380px) {
       .brand h1 { font-size: 24px; }
       .stat .value { font-size: 17px; }
       .item-plus { width: 64px; font-size: 28px; }
+      .wave-grid { grid-template-columns: repeat(6, 1fr); }
     }
   </style>
 </head>
@@ -1027,12 +1336,18 @@
   <header class="app-header">
     <div class="brand">
       <div class="brand-title">
-        <h1>Dofus Exos</h1>
-        <span class="sub">Forgemagie</span>
+        <h1 id="app-title">Dofus Exos</h1>
+        <span class="sub" id="app-sub">Forgemagie</span>
       </div>
       <button class="gear-btn" id="open-data" aria-label="Données et sauvegarde">⚙︎</button>
     </div>
-    <div class="stats-bar">
+
+    <div class="module-switch">
+      <button class="mod-btn active" data-mod="exos">⚒ Exos</button>
+      <button class="mod-btn" data-mod="songes">☾ Songes</button>
+    </div>
+
+    <div class="stats-bar" id="bar-exos">
       <div class="stat">
         <div class="label">En cours</div>
         <div class="value" id="stat-items">0</div>
@@ -1046,12 +1361,33 @@
         <div class="value kamas-num" id="stat-kamas">0</div>
       </div>
     </div>
+
+    <div class="stats-bar hidden" id="bar-songes">
+      <div class="stat">
+        <div class="label">Runs</div>
+        <div class="value" id="stat-runs">0</div>
+      </div>
+      <div class="stat">
+        <div class="label">Bribes/h</div>
+        <div class="value kamas-num" id="stat-rate">—</div>
+      </div>
+      <div class="stat">
+        <div class="label">Record</div>
+        <div class="value kamas-num" id="stat-best">—</div>
+      </div>
+    </div>
   </header>
 
-  <nav class="tabs">
+  <nav class="tabs" data-mod="exos">
     <button class="tab active" data-view="current">En cours</button>
     <button class="tab" data-view="ranking">Classement</button>
     <button class="tab" data-view="archive">Réussis</button>
+  </nav>
+
+  <nav class="tabs hidden" data-mod="songes">
+    <button class="tab active" data-view="runs">Runs</button>
+    <button class="tab" data-view="compos">Compos</button>
+    <button class="tab" data-view="sstats">Stats</button>
   </nav>
 
   <main>
@@ -1097,6 +1433,37 @@
         <div class="icon">🏆</div>
         <div class="title">Aucun exo réussi</div>
         <div>Tes succès apparaîtront ici</div>
+      </div>
+    </section>
+
+    <!-- Songes : Runs -->
+    <section class="view" id="view-runs">
+      <div id="list-runs"></div>
+      <div class="empty hidden" id="empty-runs">
+        <div class="icon">☾</div>
+        <div class="title">Aucune run enregistrée</div>
+        <div>Touche le + après ta prochaine session</div>
+      </div>
+    </section>
+
+    <!-- Songes : Compos -->
+    <section class="view" id="view-compos">
+      <div class="note-box" id="compo-note"></div>
+      <div id="list-compos"></div>
+      <div class="empty hidden" id="empty-compos">
+        <div class="icon">⚔️</div>
+        <div class="title">Pas encore de compo</div>
+        <div>Renseigne ta compo sur tes runs pour les comparer</div>
+      </div>
+    </section>
+
+    <!-- Songes : Stats -->
+    <section class="view" id="view-sstats">
+      <div id="sstats-body"></div>
+      <div class="empty hidden" id="empty-sstats">
+        <div class="icon">📊</div>
+        <div class="title">Pas encore de données</div>
+        <div>Enregistre quelques runs pour voir les tendances</div>
       </div>
     </section>
   </main>
@@ -1282,6 +1649,56 @@
     </div>
   </div>
 
+  <!-- Modal: Run de Songes -->
+  <div class="modal-overlay" id="modal-run">
+    <div class="modal">
+      <div class="modal-grip"></div>
+      <h2 id="run-title">Nouvelle run</h2>
+
+      <div class="field">
+        <label>Date</label>
+        <input type="date" id="r-date" />
+      </div>
+
+      <div class="field">
+        <label>Durée de la run</label>
+        <input type="text" id="r-dur" placeholder="1h23  ·  1:23:45  ·  83" inputmode="text" autocomplete="off" />
+        <div class="dur-preview" id="r-dur-preview"></div>
+        <div class="hint">Recopie le timer de fin de partie. <b>h:mm:ss</b> ou <b>h:mm</b> avec les deux-points, un nombre seul = minutes.</div>
+      </div>
+
+      <div class="field">
+        <label>Vague atteinte <span style="color:var(--text-dim);font-weight:400;">(0 = pas atteint l'étage final)</span></label>
+        <div class="wave-grid" id="r-waves"></div>
+      </div>
+
+      <div class="field">
+        <label>Bribes obtenues</label>
+        <input type="number" id="r-bribes" placeholder="0" min="0" inputmode="numeric" />
+      </div>
+
+      <div class="field">
+        <label>Composition</label>
+        <div class="slot-row" id="r-slots"></div>
+        <div class="class-picker" id="r-classes"></div>
+        <div class="hint">Jusqu'à 4 personnages. Retouche un slot pour le vider.</div>
+      </div>
+
+      <div class="field">
+        <label>Note <span style="color:var(--text-dim);font-weight:400;">(optionnel)</span></label>
+        <input type="text" id="r-note" placeholder="Ex : mauvais tirage de modificateurs" maxlength="80" />
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="run-cancel">Annuler</button>
+        <button class="btn btn-primary" id="run-save">Enregistrer</button>
+      </div>
+      <div class="modal-actions hidden" id="run-delete-row" style="margin-top: 8px;">
+        <button class="btn btn-danger" id="run-delete" style="width:100%;">🗑 Supprimer cette run</button>
+      </div>
+    </div>
+  </div>
+
   <div class="toast" id="toast"></div>
 
   <script>
@@ -1289,16 +1706,18 @@
     // ÉTAT & PERSISTANCE
     // ============================================================
     const STORAGE_KEY = 'dofus-exos-v1';
-    let state = { items: [] };
+    let state = { items: [], songes: [] };
     let currentDetailId = null;
     let editingId = null;
     let confirmCb = null;
+    let activeModule = 'exos';
 
     function load() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
         if (raw) state = JSON.parse(raw);
-        if (!state.items) state.items = [];
+        if (!Array.isArray(state.items)) state.items = [];
+        if (!Array.isArray(state.songes)) state.songes = [];
         // Migration : convertit l'ancien costPerAttempt en achat unique
         let migrated = false;
         state.items.forEach(item => {
@@ -1316,7 +1735,7 @@
           }
         });
         if (migrated) save();
-      } catch (e) { state = { items: [] }; }
+      } catch (e) { state = { items: [], songes: [] }; }
     }
     function save() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -1409,6 +1828,7 @@
       renderCurrent();
       renderArchive();
       renderRanking();
+      renderSonges();
     }
 
     function renderStats() {
@@ -1873,14 +2293,25 @@
       reader.onload = () => {
         try {
           const data = JSON.parse(reader.result);
-          if (!data || !Array.isArray(data.items)) throw new Error('format');
+          if (!data || (!Array.isArray(data.items) && !Array.isArray(data.songes))) throw new Error('format');
+          const nItems = Array.isArray(data.items) ? data.items.length : 0;
+          const nRuns = Array.isArray(data.songes) ? data.songes.length : 0;
           confirmDialog(
             'Importer cette sauvegarde ?',
-            `Elle contient ${data.items.length} item(s) et remplacera tes données actuelles.`,
+            `Elle contient ${nItems} exo(s) et ${nRuns} run(s) de songes, et remplacera tes données actuelles.`,
             () => {
-              state = { items: data.items };
+              state = {
+                items: Array.isArray(data.items) ? data.items : [],
+                songes: Array.isArray(data.songes) ? data.songes : [],
+              };
               // re-sécurise les champs essentiels
               state.items.forEach(it => { if (!it.purchases) it.purchases = []; });
+              state.songes.forEach(r => {
+                if (!Array.isArray(r.compo)) r.compo = [];
+                r.wave = Math.min(MAX_WAVE, Math.max(0, parseInt(r.wave, 10) || 0));
+                r.bribes = parseInt(r.bribes, 10) || 0;
+                r.durationSec = parseInt(r.durationSec, 10) || 0;
+              });
               save();
               render();
               closeAllModals();
@@ -1895,8 +2326,8 @@
     }
 
     function clearAllData() {
-      confirmDialog('Tout effacer ?', 'Tous tes exos seront définitivement supprimés.', () => {
-        state = { items: [] };
+      confirmDialog('Tout effacer ?', 'Tous tes exos et toutes tes runs de songes seront définitivement supprimés.', () => {
+        state = { items: [], songes: [] };
         save();
         render();
         closeAllModals();
@@ -1905,11 +2336,532 @@
     }
 
     // ============================================================
+    // MODULE : SONGES INFINIS
+    // ============================================================
+    const CLASSES = ['Crâ', 'Écaflip', 'Éliotrope', 'Éniripsa', 'Énutrof', 'Féca', 'Forgelance',
+                     'Huppermage', 'Iop', 'Osamodas', 'Ouginak', 'Pandawa', 'Roublard', 'Sacrieur',
+                     'Sadida', 'Sram', 'Steamer', 'Xélor', 'Zobal'];
+    const MAX_WAVE = 15;
+    const MIN_SAMPLE = 3;     // en-dessous, une compo n'est pas interprétable
+    const GOOD_SAMPLE = 8;    // à partir de là, la médiane commence à être solide
+
+    let editingRunId = null;
+    let draftCompo = [];
+    let draftWave = 0;
+
+    // ---- Durée : parsing tolérant + formatage ----
+    function parseDuration(str) {
+      if (str == null) return null;
+      const s = String(str).trim().toLowerCase().replace(/\s+/g, '');
+      if (!s) return null;
+
+      if (s.includes('h')) {                       // 1h23, 1h, 1h23min
+        const hp = s.split('h');
+        if (hp.length !== 2 || !/^\d+$/.test(hp[0])) return null;
+        const mPart = hp[1].replace(/min|m/g, '');
+        if (mPart !== '' && !/^\d+$/.test(mPart)) return null;
+        const mins = mPart === '' ? 0 : parseInt(mPart, 10);
+        if (mins > 59) return null;
+        return parseInt(hp[0], 10) * 3600 + mins * 60;
+      }
+      if (/^\d+(min|m)$/.test(s)) return parseInt(s, 10) * 60;
+      if (s.includes(':')) {                       // h:mm ou h:mm:ss
+        const p = s.split(':');
+        if (p.length > 3 || p.some(x => !/^\d+$/.test(x))) return null;
+        if (p.length === 2) return (+p[0]) * 3600 + (+p[1]) * 60;
+        return (+p[0]) * 3600 + (+p[1]) * 60 + (+p[2]);
+      }
+      if (/^\d+$/.test(s)) return parseInt(s, 10) * 60;   // nombre seul = minutes
+      return null;
+    }
+    function fmtDur(sec) {
+      sec = Math.round(sec || 0);
+      const h = Math.floor(sec / 3600);
+      const m = Math.floor((sec % 3600) / 60);
+      if (h > 0) return h + 'h' + String(m).padStart(2, '0');
+      return m + ' min';
+    }
+    function fmtDurLong(sec) {
+      sec = Math.round(sec || 0);
+      const h = Math.floor(sec / 3600);
+      const m = Math.floor((sec % 3600) / 60);
+      const s = sec % 60;
+      const bits = [];
+      if (h) bits.push(h + ' h');
+      if (m) bits.push(m + ' min');
+      if (s) bits.push(s + ' s');
+      return bits.length ? bits.join(' ') : '0 s';
+    }
+    // Valeur réinjectable dans le champ de saisie (sans perte de secondes)
+    function fmtDurInput(sec) {
+      sec = Math.round(sec || 0);
+      const h = Math.floor(sec / 3600);
+      const m = Math.floor((sec % 3600) / 60);
+      const s = sec % 60;
+      if (s) return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      if (h) return `${h}h${String(m).padStart(2, '0')}`;
+      return String(m);
+    }
+    function fmtDateShort(iso) {
+      if (!iso) return '—';
+      const d = new Date(iso + 'T12:00:00');
+      if (isNaN(d)) return iso;
+      return d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: '2-digit' });
+    }
+    function todayISO() {
+      const d = new Date();
+      return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+    }
+
+    // ---- Stats de base ----
+    function runRate(r) {                       // bribes par heure
+      if (!r.durationSec || r.durationSec <= 0) return null;
+      return (r.bribes || 0) / (r.durationSec / 3600);
+    }
+    function median(arr) {
+      if (!arr.length) return null;
+      const a = [...arr].sort((x, y) => x - y);
+      const mid = Math.floor(a.length / 2);
+      return a.length % 2 ? a[mid] : (a[mid - 1] + a[mid]) / 2;
+    }
+    function mean(arr) {
+      if (!arr.length) return null;
+      return arr.reduce((s, x) => s + x, 0) / arr.length;
+    }
+    function stdev(arr) {
+      if (arr.length < 2) return null;
+      const m = mean(arr);
+      return Math.sqrt(arr.reduce((s, x) => s + (x - m) * (x - m), 0) / (arr.length - 1));
+    }
+    function fmtRate(r) {
+      if (r == null) return '—';
+      if (r >= 100) return Math.round(r).toLocaleString('fr-FR');
+      return r.toFixed(1).replace('.', ',');
+    }
+    function sortedRuns() {
+      return [...state.songes].sort((a, b) =>
+        (a.date || '').localeCompare(b.date || '') || (a.createdAt || 0) - (b.createdAt || 0));
+    }
+    function compoKey(compo) {
+      if (!compo || !compo.length) return null;
+      return [...compo].sort((a, b) => a.localeCompare(b, 'fr')).join(' + ');
+    }
+
+    // ---- Rendu : barre de stats ----
+    function renderSongesBar() {
+      const runs = state.songes;
+      document.getElementById('stat-runs').textContent = runs.length;
+
+      const totalSec = runs.reduce((s, r) => s + (r.durationSec || 0), 0);
+      const totalBribes = runs.reduce((s, r) => s + (r.bribes || 0), 0);
+      const pooled = totalSec > 0 ? totalBribes / (totalSec / 3600) : null;
+      document.getElementById('stat-rate').textContent = fmtRate(pooled);
+
+      const bestWave = runs.length ? Math.max(...runs.map(r => r.wave || 0)) : null;
+      document.getElementById('stat-best').textContent = bestWave == null ? '—' : bestWave + '/' + MAX_WAVE;
+    }
+
+    // ---- Rendu : liste des runs ----
+    function renderRuns() {
+      const list = document.getElementById('list-runs');
+      const empty = document.getElementById('empty-runs');
+      const runs = sortedRuns().reverse();
+      list.innerHTML = '';
+      if (!runs.length) { empty.classList.remove('hidden'); return; }
+      empty.classList.add('hidden');
+
+      const rates = state.songes.map(runRate).filter(r => r != null);
+      const med = median(rates);
+
+      runs.forEach(r => {
+        const rate = runRate(r);
+        let cls = '';
+        if (med != null && rate != null && rates.length >= 3) {
+          if (rate > med * 1.05) cls = ' green';
+          else if (rate < med * 0.95) cls = ' red';
+        }
+        const chips = (r.compo && r.compo.length)
+          ? r.compo.map(c => `<span class="cchip">${escapeHtml(c)}</span>`).join('')
+          : '<span class="cchip empty">compo non renseignée</span>';
+
+        const card = document.createElement('div');
+        card.className = 'run-card';
+        card.innerHTML = `
+          <div class="run-top">
+            <span class="run-date">${fmtDateShort(r.date)}</span>
+            <span class="run-wave">${r.wave || 0}<span class="of">/${MAX_WAVE}</span></span>
+          </div>
+          <div class="run-metrics">
+            <div class="rmetric"><div class="lbl">Durée</div><div class="val">${fmtDur(r.durationSec)}</div></div>
+            <div class="rmetric"><div class="lbl">Bribes</div><div class="val gold">${(r.bribes || 0).toLocaleString('fr-FR')}</div></div>
+            <div class="rmetric"><div class="lbl">Bribes/h</div><div class="val${cls}">${fmtRate(rate)}</div></div>
+          </div>
+          <div class="comp-chips">${chips}</div>
+          ${r.note ? `<div style="margin-top:9px;font-size:12px;color:var(--text-dim);">${escapeHtml(r.note)}</div>` : ''}
+        `;
+        card.addEventListener('click', () => openRunForm(r.id));
+        list.appendChild(card);
+      });
+    }
+
+    // ---- Rendu : comparaison des compos ----
+    function buildCompoGroups() {
+      const map = new Map();
+      state.songes.forEach(r => {
+        const key = compoKey(r.compo);
+        if (!key) return;
+        if (!map.has(key)) map.set(key, { key, compo: [...r.compo], runs: [] });
+        map.get(key).runs.push(r);
+      });
+      const groups = [...map.values()].map(g => {
+        const rates = g.runs.map(runRate).filter(x => x != null);
+        const waves = g.runs.map(r => r.wave || 0);
+        const totalSec = g.runs.reduce((s, r) => s + (r.durationSec || 0), 0);
+        const totalBribes = g.runs.reduce((s, r) => s + (r.bribes || 0), 0);
+        return {
+          ...g,
+          n: g.runs.length,
+          medRate: median(rates),
+          minRate: rates.length ? Math.min(...rates) : null,
+          maxRate: rates.length ? Math.max(...rates) : null,
+          pooled: totalSec > 0 ? totalBribes / (totalSec / 3600) : null,
+          avgWave: mean(waves),
+          bestWave: waves.length ? Math.max(...waves) : 0,
+          totalSec,
+        };
+      });
+      groups.sort((a, b) => (b.medRate || 0) - (a.medRate || 0));
+      return groups;
+    }
+
+    function renderCompos() {
+      const list = document.getElementById('list-compos');
+      const empty = document.getElementById('empty-compos');
+      const note = document.getElementById('compo-note');
+      const groups = buildCompoGroups();
+      list.innerHTML = '';
+
+      if (!groups.length) {
+        empty.classList.remove('hidden');
+        note.classList.add('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+      note.classList.remove('hidden');
+
+      // Verdict honnête sur la lisibilité des données
+      const solid = groups.filter(g => g.n >= MIN_SAMPLE);
+      let msg;
+      if (solid.length < 2) {
+        msg = `Il te faut au moins <b>${MIN_SAMPLE} runs</b> sur au moins deux compos avant que la comparaison veuille dire quelque chose. En dessous, tu mesures surtout le tirage aléatoire.`;
+      } else {
+        const [a, b] = solid;
+        const overlap = a.minRate != null && b.maxRate != null && a.minRate <= b.maxRate;
+        if (overlap) {
+          msg = `<b>${escapeHtml(a.key)}</b> mène, mais son intervalle chevauche celui de <b>${escapeHtml(b.key)}</b> : l'écart n'est pas encore concluant. Continue à alterner les deux.`;
+        } else {
+          msg = `<b>${escapeHtml(a.key)}</b> sort devant sans chevauchement avec <b>${escapeHtml(b.key)}</b> sur ${a.n} run(s). Le signal commence à être réel${a.n < GOOD_SAMPLE ? `, mais ${GOOD_SAMPLE} runs le rendraient solide` : ''}.`;
+        }
+      }
+      note.innerHTML = msg;
+
+      let bestMarked = false;
+      groups.forEach(g => {
+        const thin = g.n < MIN_SAMPLE;
+        const isBest = !thin && !bestMarked;
+        if (isBest) bestMarked = true;
+
+        const nCls = g.n >= GOOD_SAMPLE ? 'ok' : (thin ? 'low' : '');
+        const range = (g.minRate != null && g.n > 1)
+          ? `${fmtRate(g.minRate)} – ${fmtRate(g.maxRate)}` : '—';
+
+        const card = document.createElement('div');
+        card.className = 'compo-card' + (isBest ? ' best' : '') + (thin ? ' thin' : '');
+        card.innerHTML = `
+          <div class="compo-head">
+            <div class="comp-chips">${g.compo.map(c => `<span class="cchip">${escapeHtml(c)}</span>`).join('')}</div>
+            <span class="n-badge ${nCls}">${g.n} run${g.n > 1 ? 's' : ''}</span>
+          </div>
+          <div class="compo-rate">${fmtRate(g.medRate)} <span class="u">bribes/h médian</span></div>
+          <div class="compo-sub">
+            <span>Fourchette <b>${range}</b></span>
+            <span>Vague moy. <b>${g.avgWave != null ? g.avgWave.toFixed(1).replace('.', ',') : '—'}</b></span>
+            <span>Record <b>${g.bestWave}/${MAX_WAVE}</b></span>
+            <span>Joué <b>${fmtDur(g.totalSec)}</b></span>
+          </div>
+        `;
+        list.appendChild(card);
+      });
+    }
+
+    // ---- Rendu : stats globales + graphiques ----
+    function sparkBars(runs) {
+      const vals = runs.map(runRate);
+      const valid = vals.filter(v => v != null);
+      if (valid.length < 2) return '';
+      const max = Math.max(...valid);
+      const W = 320, H = 110, pad = 4;
+      const n = vals.length;
+      const bw = (W - pad * 2) / n;
+
+      let bars = '';
+      vals.forEach((v, i) => {
+        if (v == null) return;
+        const h = max > 0 ? (v / max) * (H - 18) : 0;
+        const x = pad + i * bw + bw * 0.15;
+        const w = Math.max(1.5, bw * 0.7);
+        bars += `<rect x="${x.toFixed(2)}" y="${(H - 14 - h).toFixed(2)}" width="${w.toFixed(2)}" height="${h.toFixed(2)}" rx="1.5" fill="var(--gold)" opacity="0.75"/>`;
+      });
+
+      // moyenne mobile sur 5 runs
+      let pts = [];
+      for (let i = 0; i < n; i++) {
+        const win = vals.slice(Math.max(0, i - 4), i + 1).filter(v => v != null);
+        if (!win.length) continue;
+        const m = mean(win);
+        const x = pad + i * bw + bw / 2;
+        const y = H - 14 - (max > 0 ? (m / max) * (H - 18) : 0);
+        pts.push(`${x.toFixed(2)},${y.toFixed(2)}`);
+      }
+      const line = pts.length > 1
+        ? `<polyline points="${pts.join(' ')}" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>` : '';
+
+      return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img">
+        <line x1="${pad}" y1="${H - 14}" x2="${W - pad}" y2="${H - 14}" stroke="var(--border-hi)" stroke-width="1"/>
+        ${bars}${line}
+      </svg>`;
+    }
+
+    function waveHistogram(runs) {
+      const counts = new Array(MAX_WAVE + 1).fill(0);
+      runs.forEach(r => { counts[Math.min(MAX_WAVE, Math.max(0, r.wave || 0))]++; });
+      const max = Math.max(...counts);
+      if (max === 0) return '';
+      let rows = '';
+      for (let w = MAX_WAVE; w >= 0; w--) {
+        if (counts[w] === 0) continue;
+        const pct = (counts[w] / max) * 100;
+        rows += `<div class="wh-row">
+          <span class="wh-lbl">${w === 0 ? '—' : 'V' + w}</span>
+          <span class="wh-track"><span class="wh-fill" style="width:${pct.toFixed(1)}%"></span></span>
+          <span class="wh-n">${counts[w]}</span>
+        </div>`;
+      }
+      return `<div class="wave-hist">${rows}</div>`;
+    }
+
+    function renderSongesStats() {
+      const body = document.getElementById('sstats-body');
+      const empty = document.getElementById('empty-sstats');
+      const runs = sortedRuns();
+      if (!runs.length) {
+        body.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+
+      const rates = runs.map(runRate).filter(v => v != null);
+      const waves = runs.map(r => r.wave || 0);
+      const totalSec = runs.reduce((s, r) => s + (r.durationSec || 0), 0);
+      const totalBribes = runs.reduce((s, r) => s + (r.bribes || 0), 0);
+      const pooled = totalSec > 0 ? totalBribes / (totalSec / 3600) : null;
+      const med = median(rates);
+      const sd = stdev(rates);
+      const cv = (sd != null && med) ? (sd / mean(rates)) * 100 : null;
+      const last5 = rates.slice(-5);
+      const prev5 = rates.slice(-10, -5);
+      const trend = (last5.length >= 3 && prev5.length >= 3)
+        ? ((mean(last5) - mean(prev5)) / mean(prev5)) * 100 : null;
+
+      body.innerHTML = `
+        <div class="chart-card">
+          <div class="chart-title">Synthèse</div>
+          <div class="chart-sub">${runs.length} run(s) · ${fmtDur(totalSec)} de jeu cumulé</div>
+          <div class="detail-stats">
+            <div class="dstat"><div class="lbl">Bribes totales</div><div class="val gold small">${totalBribes.toLocaleString('fr-FR')}</div></div>
+            <div class="dstat"><div class="lbl">Bribes/h global</div><div class="val small">${fmtRate(pooled)}</div></div>
+            <div class="dstat"><div class="lbl">Médiane bribes/h</div><div class="val small">${fmtRate(med)}</div></div>
+            <div class="dstat"><div class="lbl">Dispersion</div><div class="val small">${cv != null ? Math.round(cv) + '%' : '—'}</div></div>
+            <div class="dstat"><div class="lbl">Vague médiane</div><div class="val small">${median(waves) != null ? String(median(waves)).replace('.', ',') : '—'}</div></div>
+            <div class="dstat"><div class="lbl">Meilleure vague</div><div class="val gold small">${Math.max(...waves)}/${MAX_WAVE}</div></div>
+          </div>
+          ${trend != null ? `<div class="profit-box ${trend >= 0 ? 'green' : 'red'}" style="margin-top:12px;">
+            <div class="lbl">5 dernières runs vs les 5 précédentes</div>
+            <div class="val">${trend >= 0 ? '+' : ''}${trend.toFixed(1).replace('.', ',')}%</div>
+          </div>` : ''}
+        </div>
+
+        ${rates.length >= 2 ? `<div class="chart-card">
+          <div class="chart-title">Rendement par run</div>
+          <div class="chart-sub">Barres = bribes/h de chaque run (chronologique) · ligne bleue = moyenne mobile sur 5</div>
+          ${sparkBars(runs)}
+        </div>` : ''}
+
+        <div class="chart-card">
+          <div class="chart-title">Vagues atteintes</div>
+          <div class="chart-sub">Répartition de tes runs · « — » = étage final non atteint</div>
+          ${waveHistogram(runs)}
+        </div>
+
+        <div class="note-box" style="margin-bottom:0;">
+          ${cv != null
+            ? `Ta dispersion est de <b>${Math.round(cv)}%</b>. Comme le contenu des songes est aléatoire, une partie de cet écart ne vient pas de toi. Ce qui compte, c'est de la voir <b>se resserrer</b> avec le temps : ça veut dire que les mauvais tirages te coûtent moins cher qu'avant.`
+            : `Enregistre au moins 2 runs pour commencer à mesurer ta régularité.`}
+        </div>
+      `;
+    }
+
+    function renderSonges() {
+      renderSongesBar();
+      renderRuns();
+      renderCompos();
+      renderSongesStats();
+    }
+
+    // ---- Formulaire de run ----
+    function buildWaveGrid() {
+      const grid = document.getElementById('r-waves');
+      grid.innerHTML = '';
+      for (let w = 0; w <= MAX_WAVE; w++) {
+        const b = document.createElement('button');
+        b.className = 'wave-btn';
+        b.textContent = w;
+        b.addEventListener('click', () => { draftWave = w; paintWaves(); haptic(); });
+        grid.appendChild(b);
+      }
+    }
+    function paintWaves() {
+      document.querySelectorAll('#r-waves .wave-btn').forEach((b, i) => {
+        b.classList.toggle('on', i === draftWave);
+      });
+    }
+    function buildClassPicker() {
+      const picker = document.getElementById('r-classes');
+      picker.innerHTML = '';
+      CLASSES.forEach(c => {
+        const b = document.createElement('button');
+        b.className = 'cls-btn';
+        b.textContent = c;
+        b.addEventListener('click', () => {
+          if (draftCompo.length >= 4) { toast('4 personnages maximum'); return; }
+          draftCompo.push(c);
+          paintCompo();
+          haptic();
+        });
+        picker.appendChild(b);
+      });
+    }
+    function paintCompo() {
+      const row = document.getElementById('r-slots');
+      row.innerHTML = '';
+      for (let i = 0; i < 4; i++) {
+        const s = document.createElement('div');
+        const filled = i < draftCompo.length;
+        s.className = 'slot' + (filled ? ' filled' : '');
+        s.textContent = filled ? draftCompo[i] : '+';
+        if (filled) {
+          s.addEventListener('click', () => { draftCompo.splice(i, 1); paintCompo(); haptic(); });
+        }
+        row.appendChild(s);
+      }
+      document.querySelectorAll('#r-classes .cls-btn').forEach(b => {
+        b.classList.toggle('on', draftCompo.includes(b.textContent));
+      });
+    }
+    function updateDurPreview() {
+      const el = document.getElementById('r-dur-preview');
+      const raw = document.getElementById('r-dur').value.trim();
+      if (!raw) { el.textContent = ''; el.classList.remove('bad'); return; }
+      const sec = parseDuration(raw);
+      if (sec == null || sec <= 0) {
+        el.textContent = 'Format non reconnu';
+        el.classList.add('bad');
+      } else {
+        el.textContent = '→ ' + fmtDurLong(sec);
+        el.classList.remove('bad');
+      }
+    }
+
+    function openRunForm(id) {
+      editingRunId = id || null;
+      const r = id ? state.songes.find(x => x.id === id) : null;
+      document.getElementById('run-title').textContent = r ? 'Modifier la run' : 'Nouvelle run';
+      document.getElementById('r-date').value = r ? (r.date || todayISO()) : todayISO();
+      document.getElementById('r-dur').value = r ? fmtDurInput(r.durationSec) : '';
+      document.getElementById('r-bribes').value = r ? (r.bribes || 0) : '';
+      document.getElementById('r-note').value = r ? (r.note || '') : '';
+      draftWave = r ? (r.wave || 0) : 0;
+      draftCompo = r && r.compo ? [...r.compo] : [];
+      paintWaves();
+      paintCompo();
+      updateDurPreview();
+      document.getElementById('run-delete-row').classList.toggle('hidden', !r);
+      document.getElementById('modal-run').classList.add('active');
+    }
+
+    function saveRun() {
+      const durRaw = document.getElementById('r-dur').value;
+      const sec = parseDuration(durRaw);
+      if (sec == null || sec <= 0) { flagInvalid('r-dur'); updateDurPreview(); return; }
+      const bribes = parseInt(document.getElementById('r-bribes').value, 10) || 0;
+      const date = document.getElementById('r-date').value || todayISO();
+      const note = document.getElementById('r-note').value.trim();
+
+      const wasEditing = !!editingRunId;
+      if (editingRunId) {
+        const r = state.songes.find(x => x.id === editingRunId);
+        if (r) Object.assign(r, { date, durationSec: sec, wave: draftWave, bribes, compo: [...draftCompo], note });
+      } else {
+        state.songes.push({
+          id: uid(), date, durationSec: sec, wave: draftWave,
+          bribes, compo: [...draftCompo], note, createdAt: Date.now(),
+        });
+      }
+      save();
+      renderSonges();
+      closeAllModals();
+      editingRunId = null;
+      toast(wasEditing ? 'Run mise à jour' : 'Run enregistrée');
+    }
+
+    function deleteRun() {
+      const id = editingRunId;
+      if (!id) return;
+      closeAllModals();
+      confirmDialog('Supprimer cette run ?', 'Elle ne sera plus comptée dans tes statistiques.', () => {
+        state.songes = state.songes.filter(x => x.id !== id);
+        save();
+        renderSonges();
+        editingRunId = null;
+        toast('Run supprimée');
+      });
+    }
+
+    // ---- Bascule de module ----
+    function setModule(mod) {
+      activeModule = mod;
+      document.querySelectorAll('.mod-btn').forEach(b => b.classList.toggle('active', b.dataset.mod === mod));
+      document.querySelectorAll('nav.tabs').forEach(n => n.classList.toggle('hidden', n.dataset.mod !== mod));
+      document.getElementById('bar-exos').classList.toggle('hidden', mod !== 'exos');
+      document.getElementById('bar-songes').classList.toggle('hidden', mod !== 'songes');
+      document.getElementById('app-title').textContent = mod === 'exos' ? 'Dofus Exos' : 'Songes Infinis';
+      document.getElementById('app-sub').textContent = mod === 'exos' ? 'Forgemagie' : 'Rendement & compos';
+
+      const nav = document.querySelector(`nav.tabs[data-mod="${mod}"]`);
+      const activeTab = nav.querySelector('.tab.active') || nav.querySelector('.tab');
+      activeTab.classList.add('active');
+      document.querySelectorAll('.view').forEach(s => s.classList.remove('active'));
+      document.getElementById('view-' + activeTab.dataset.view).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ============================================================
     // ÉVÉNEMENTS
     // ============================================================
     document.querySelectorAll('.tab').forEach(tab => {
       tab.addEventListener('click', () => {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab.parentElement.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
         const v = tab.dataset.view;
         document.querySelectorAll('.view').forEach(s => s.classList.remove('active'));
@@ -1918,7 +2870,19 @@
       });
     });
 
-    document.getElementById('fab-add').addEventListener('click', () => openForm());
+    document.querySelectorAll('.mod-btn').forEach(b => {
+      b.addEventListener('click', () => { setModule(b.dataset.mod); haptic(); });
+    });
+
+    document.getElementById('fab-add').addEventListener('click', () => {
+      if (activeModule === 'songes') openRunForm();
+      else openForm();
+    });
+
+    document.getElementById('run-cancel').addEventListener('click', () => { closeAllModals(); editingRunId = null; });
+    document.getElementById('run-save').addEventListener('click', saveRun);
+    document.getElementById('run-delete').addEventListener('click', deleteRun);
+    document.getElementById('r-dur').addEventListener('input', updateDurPreview);
 
     // Données / sauvegarde
     document.getElementById('open-data').addEventListener('click', () => {
@@ -1971,6 +2935,7 @@
         if (e.target === o) {
           o.classList.remove('active');
           if (o.id === 'modal-form') editingId = null;
+          if (o.id === 'modal-run') editingRunId = null;
           if (o.id === 'modal-confirm') confirmCb = null;
         }
       });
@@ -1995,6 +2960,10 @@
     // BOOT
     // ============================================================
     load();
+    buildWaveGrid();
+    buildClassPicker();
+    paintWaves();
+    paintCompo();
     render();
 
     // Service Worker pour le mode offline
