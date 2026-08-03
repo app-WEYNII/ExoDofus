@@ -2491,7 +2491,7 @@
           </div>
           <div>
             <div class="hint" style="margin:0 0 5px;">Runes</div>
-            <input type="text" id="r-runes" placeholder="0" maxlength="2" inputmode="numeric" autocomplete="off" />
+            <input type="text" id="r-runes" placeholder="0" maxlength="1" inputmode="numeric" autocomplete="off" />
           </div>
           <div>
             <div class="hint" style="margin:0 0 5px;">Légendaires</div>
@@ -2589,11 +2589,9 @@
       </div>
 
       <div class="field">
-        <label>Nombre de légendes obtenues</label>
-        <input type="text" id="ch-count" maxlength="2" placeholder="0" inputmode="numeric" autocomplete="off" />
+        <label>Légende obtenue</label>
+        <div class="qual-list" id="ch-legends"></div>
       </div>
-
-      <div class="qual-list" id="ch-legends"></div>
 
       <div class="field">
         <label>Note <span style="color:var(--text-dim);font-weight:400;">(optionnel)</span></label>
@@ -4275,6 +4273,7 @@
 
       grid.querySelectorAll('[data-pick]').forEach(b => {
         b.addEventListener('click', () => {
+          if (!pickCtx) { document.getElementById('modal-pick').classList.remove('active'); return; }
           const e = catById(b.dataset.pick);
           const arr = pickCtx.target === 'run' ? draftLegends : draftChestLegends;
           arr[pickCtx.index] = { catId: e.id, name: e.name };
@@ -4375,19 +4374,13 @@
       const box = document.getElementById('ch-legends');
       box.innerHTML = '';
       draftChestLegends.forEach((l, i) =>
-        box.appendChild(legendSlotEl(l, i, draftChestLegends.length, idx => openPicker('chest', idx))));
+        box.appendChild(legendSlotEl(l, i, 1, idx => openPicker('chest', idx))));
     }
 
+    // Un coffre contient toujours exactement une légende
     function syncChestLegends() {
-      const n = clampInt('ch-count', 20);
-      const before = draftChestLegends.length;
-      while (draftChestLegends.length < n) draftChestLegends.push({ catId: null, name: '' });
-      if (draftChestLegends.length > n) draftChestLegends.length = n;
+      if (draftChestLegends.length !== 1) draftChestLegends = [draftChestLegends[0] || { catId: null, name: '' }];
       paintChestLegends();
-      if (n > before) {
-        const idx = draftChestLegends.findIndex(l => !l.catId && !l.name);
-        if (idx >= 0) openPicker('chest', idx);
-      }
     }
 
     function openChestForm(id) {
@@ -4396,11 +4389,14 @@
       document.getElementById('chest-title').textContent = c ? 'Modifier le coffre' : 'Coffre légendaire';
       document.getElementById('ch-date').value = c ? (c.date || todayISO()) : todayISO();
       document.getElementById('ch-note').value = c ? (c.note || '') : '';
-      draftChestLegends = c ? (c.legends || []).map(l => ({ catId: l.catId || null, name: l.name || '' })) : [];
-      document.getElementById('ch-count').value = draftChestLegends.length || '';
+      draftChestLegends = c && (c.legends || []).length
+        ? [{ catId: c.legends[0].catId || null, name: c.legends[0].name || '' }]
+        : [{ catId: null, name: '' }];
       paintChestLegends();
       document.getElementById('chest-delete').classList.toggle('hidden', !c);
       document.getElementById('modal-chest').classList.add('active');
+      // à la création, on propose directement de choisir la légende
+      if (!c) openPicker('chest', 0);
     }
 
     function saveChest() {
@@ -4420,6 +4416,7 @@
       save();
       refreshNameList();
       renderSonges();
+      renderSongesStats();
       document.getElementById('modal-chest').classList.remove('active');
       editingChestId = null;
       toast(wasEditing ? 'Coffre mis à jour' : 'Coffre enregistré');
@@ -4433,6 +4430,7 @@
         state.chests = state.chests.filter(x => x.id !== id);
         save();
         renderSonges();
+        renderSongesStats();
         editingChestId = null;
         toast('Coffre supprimé');
       });
@@ -4447,7 +4445,7 @@
       if (!Array.isArray(state.chests)) state.chests = [];
       if (!Array.isArray(state.catalogue)) state.catalogue = [];
       const nChests = state.chests.length;
-      const perChest = nChests ? fromChest.length / nChests : null;
+
 
       // Cohérence entre les bribes cumulées et les coffres réellement ouverts
       const { metric, target, offset } = goalCfg();
@@ -4469,10 +4467,9 @@
         <div class="chart-card">
           <div class="chart-title">Coffres légendaires</div>
           <div class="chart-sub">Chaque palier de ${target.toLocaleString('fr-FR')} bribes en débloque un</div>
-          <div class="chest-counter">
-            <div class="dstat"><div class="lbl">Ouverts</div><div class="val gold small">${nChests}</div></div>
-            <div class="dstat"><div class="lbl">Légendes</div><div class="val small">${fromChest.length}</div></div>
-            <div class="dstat"><div class="lbl">Par coffre</div><div class="val small">${perChest != null ? perChest.toFixed(1).replace('.', ',') : '—'}</div></div>
+          <div class="counter-big" style="margin-bottom:4px;">
+            <div class="num kamas-num">${nChests}</div>
+            <div class="lbl">coffre${nChests > 1 ? 's' : ''} ouvert${nChests > 1 ? 's' : ''}</div>
           </div>
           ${gap != null && gap !== 0 ? `<div class="insight warn">Tes bribes cumulées correspondent à <b>${expected}</b> palier(s), mais tu as enregistré <b>${nChests}</b> coffre(s). ${gap > 0 ? `Il t'en manque ${gap} à saisir.` : `Tu en as saisi ${-gap} de plus — peut-être des coffres obtenus avant le suivi.`}</div>` : ''}
           <button class="btn btn-primary" id="add-chest" style="width:100%;margin-top:12px;">+ J'ai ouvert un coffre</button>
@@ -4811,15 +4808,25 @@
       const opts = Object.entries(GOAL_METRICS)
         .map(([k, v]) => `<option value="${k}"${k === metric ? ' selected' : ''}>${v.label}</option>`).join('');
 
+      // Le compteur repart à zéro à chaque palier ; on signale ceux qui n'ont
+      // pas encore été enregistrés comme coffres ouverts
+      const claimed = metric === 'bribes' ? (state.chests || []).length : cycles;
+      const due = Math.max(0, cycles - claimed);
+
       return `
         <div class="chart-card">
           <div class="chart-title">${escapeHtml(meta.reward)}</div>
-          <div class="chart-sub">Palier à ${target.toLocaleString('fr-FR')} ${meta.label.toLowerCase()}${cycles > 0 ? ` · ${cycles} palier(s) déjà franchi(s)` : ''}</div>
+          <div class="chart-sub">Palier n°${cycles + 1} · ${target.toLocaleString('fr-FR')} ${meta.label.toLowerCase()}${cycles > 0 ? ` · ${cycles} déjà atteint(s)` : ''}</div>
 
-          <div class="counter-big" style="margin-bottom:12px;">
+          ${due > 0 ? `<div class="profit-box green" style="margin-bottom:12px;">
+            <div class="lbl">Palier atteint</div>
+            <div class="val">${due} coffre${due > 1 ? 's' : ''} à récupérer</div>
+          </div>
+          <button class="btn btn-primary" id="goal-chest" style="width:100%;margin-bottom:12px;">+ J'ai ouvert le coffre</button>
+          ` : `<div class="counter-big" style="margin-bottom:12px;">
             <div class="num kamas-num">${runsLeft != null ? runsLeft : '—'}</div>
             <div class="lbl">run(s) restante(s) à ton rythme actuel</div>
-          </div>
+          </div>`}
 
           <div class="progress" style="margin-bottom:8px;">
             <div class="progress-bar" style="width:${pct.toFixed(1)}%"></div>
@@ -4856,6 +4863,8 @@
         save();
         renderSongesStats();
       };
+      const chestBtn = document.getElementById('goal-chest');
+      if (chestBtn) chestBtn.addEventListener('click', () => openChestForm());
       const metricEl = document.getElementById('goal-metric');
       if (metricEl) {
         metricEl.addEventListener('change', () => {
@@ -5025,17 +5034,6 @@
       if (isNaN(v) || v < 0) v = 0;
       if (max != null && v > max) v = max;
       return v;
-    }
-
-    // Champ numérique simple : chiffres seuls + rappel à chaque frappe
-    function setupCountInput(id, max, onChange) {
-      const el = document.getElementById(id);
-      el.addEventListener('input', () => {
-        el.value = el.value.replace(/\D/g, '');
-        if (parseInt(el.value, 10) > max) el.value = String(max);
-        onChange();
-      });
-      el.addEventListener('focus', () => { if (el.select) el.select(); });
     }
 
     // Saisie du butin : chiffres seuls, bascule quand le champ est plein ou sur Entrée
@@ -5324,7 +5322,6 @@
       haptic();
     });
 
-    setupCountInput('ch-count', 20, syncChestLegends);
     document.getElementById('chest-cancel').addEventListener('click', () => {
       document.getElementById('modal-chest').classList.remove('active');
       editingChestId = null;
