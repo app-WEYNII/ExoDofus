@@ -1018,7 +1018,7 @@
     /* ---- Saisie durée h / min / s ---- */
     .dur-row {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: 0.62fr 1fr 1fr;
       gap: 8px;
     }
     .dur-cell {
@@ -1044,6 +1044,7 @@
       line-height: 1.15;
     }
     .dur-cell input:focus { background: transparent; border: none; }
+    .dur-cell.narrow input { font-size: 26px; }
     .dur-cell .u {
       display: block;
       font-size: 10px;
@@ -1052,6 +1053,544 @@
       color: var(--text-dim);
       font-weight: 600;
     }
+
+    /* ---- En-tête de modale avec action destructive ---- */
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .modal-head h2 { margin-bottom: 0; }
+    .trash-btn {
+      width: 38px;
+      height: 38px;
+      flex-shrink: 0;
+      border-radius: var(--radius-sm);
+      background: var(--red-soft);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      font-size: 16px;
+      line-height: 1;
+      transition: all .14s ease;
+    }
+    .trash-btn:active { transform: scale(0.9); filter: brightness(1.25); }
+
+    /* ---- Qualité des légendaires ---- */
+    .qual-list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+    .qual-item {
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 9px 10px;
+    }
+    .qual-item .qi-lbl {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--text-dim);
+      font-weight: 600;
+      margin-bottom: 7px;
+    }
+    .qual-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
+    .qual-btn {
+      padding: 8px 2px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-dim);
+      transition: all .13s ease;
+    }
+    .qual-btn:active { transform: scale(0.94); }
+    .qual-btn.on { color: #14100a; border-color: transparent; }
+    .qual-btn.on[data-q="nul"]  { background: #8a8f98; }
+    .qual-btn.on[data-q="mid"]  { background: #6f9ed8; }
+    .qual-btn.on[data-q="bien"] { background: #58c47a; }
+    .qual-btn.on[data-q="exc"]  { background: linear-gradient(135deg, var(--gold-deep), var(--gold-bright)); box-shadow: var(--shadow-gold); }
+
+    .qbadge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #14100a;
+      white-space: nowrap;
+    }
+    .qbadge.nul  { background: #8a8f98; }
+    .qbadge.mid  { background: #6f9ed8; }
+    .qbadge.bien { background: #58c47a; }
+    .qbadge.exc  { background: linear-gradient(135deg, var(--gold-deep), var(--gold-bright)); }
+
+    /* ---- Filtres de runs ---- */
+    .filter-bar {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      margin-bottom: 10px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .filter-bar::-webkit-scrollbar { display: none; }
+    .fchip {
+      flex-shrink: 0;
+      padding: 7px 13px;
+      border-radius: 999px;
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-dim);
+      white-space: nowrap;
+      transition: all .13s ease;
+    }
+    .fchip.on {
+      background: var(--gold-soft);
+      border-color: var(--gold);
+      color: var(--gold-bright);
+    }
+    .fchip.clear { color: var(--red); border-style: dashed; }
+    .fchip:active { transform: scale(0.95); }
+    .filter-info {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-bottom: 12px;
+      padding: 9px 12px;
+      background: var(--blue-soft);
+      border: 1px solid rgba(96, 144, 232, 0.22);
+      border-radius: var(--radius-sm);
+      line-height: 1.45;
+    }
+    .filter-info b { color: #cfdffc; }
+
+    /* ---- Tiroir de filtres ---- */
+    .filter-row { display: flex; gap: 8px; margin-bottom: 10px; }
+    .filter-clear {
+      flex-shrink: 0;
+      width: 46px;
+      border-radius: var(--radius);
+      background: var(--red-soft);
+      border: 1px solid rgba(239, 68, 68, 0.32);
+      color: var(--red);
+      font-size: 15px;
+      font-weight: 700;
+      transition: all .14s ease;
+    }
+    .filter-clear:active { transform: scale(0.93); filter: brightness(1.2); }
+
+    .filter-toggle {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      flex: 1;
+      min-width: 0;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      transition: all .15s ease;
+    }
+    .filter-toggle.on { border-color: var(--gold); background: var(--bg-card-hi); }
+    .ft-label {
+      flex: 1;
+      text-align: left;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text-soft);
+      font-family: var(--font-display);
+      letter-spacing: 0.04em;
+    }
+    .filter-toggle.on .ft-label { color: var(--gold-bright); }
+    .ft-badge {
+      min-width: 21px;
+      height: 21px;
+      padding: 0 6px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--gold-deep), var(--gold));
+      color: #14100a;
+      font-size: 11.5px;
+      font-weight: 700;
+      line-height: 21px;
+      font-variant-numeric: tabular-nums;
+    }
+    .ft-caret { font-size: 10px; color: var(--text-dim); transition: transform .2s ease; }
+    .filter-toggle.open .ft-caret { transform: rotate(180deg); }
+
+    .filter-drawer {
+      background: var(--bg-card);
+      border: 1px solid var(--gold);
+      border-radius: var(--radius);
+      padding: 4px 14px 14px;
+      margin-bottom: 12px;
+    }
+    .fd-block { padding: 13px 0; border-bottom: 1px solid var(--border); }
+    .fd-block:last-of-type { border-bottom: none; }
+    .fd-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 9px;
+    }
+    .fd-name {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-soft);
+      letter-spacing: 0.03em;
+    }
+    .fd-val {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--gold-bright);
+      font-variant-numeric: tabular-nums;
+    }
+    .fd-val.off { color: var(--text-dim); font-weight: 500; }
+    .fd-flags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .fd-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 5px;
+      border-radius: 999px;
+      background: var(--bg-soft);
+      outline: none;
+      margin: 2px 0 9px;
+      padding: 0;
+      border: none;
+    }
+    .fd-slider::-webkit-slider-thumb {
+      -webkit-appearance: none; appearance: none;
+      width: 24px; height: 24px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold-deep), var(--gold-bright));
+      box-shadow: var(--shadow-gold); cursor: pointer;
+    }
+    .fd-slider::-moz-range-thumb {
+      width: 24px; height: 24px; border: none; border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold-deep), var(--gold-bright)); cursor: pointer;
+    }
+    .fd-presets { display: flex; gap: 5px; }
+    .fd-preset {
+      flex: 1;
+      padding: 6px 3px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      font-size: 10.5px;
+      font-weight: 600;
+      color: var(--text-dim);
+    }
+    .fd-preset.on { background: var(--gold-soft); border-color: var(--gold); color: var(--gold-bright); }
+    .fd-preset:active { transform: scale(0.95); }
+    .fd-actions { display: flex; gap: 8px; margin-top: 14px; }
+    .fd-actions .btn { flex: 1; }
+    .fd-count {
+      text-align: center;
+      font-size: 12.5px;
+      color: var(--text-dim);
+      padding: 10px 0 2px;
+    }
+    .fd-count b { color: var(--gold-bright); font-variant-numeric: tabular-nums; }
+
+    /* ---- Sélecteur de légende ---- */
+    .pick-search { margin-bottom: 12px; }
+    .pick-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+      gap: 8px;
+      max-height: 46vh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 2px;
+    }
+    .pick-card {
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 9px 6px;
+      text-align: center;
+      transition: all .13s ease;
+    }
+    .pick-card.on { border-color: var(--gold); background: var(--gold-soft); }
+    .pick-card:active { transform: scale(0.95); }
+    .pick-card .lg-name { min-height: 0; }
+    .pick-empty { text-align: center; color: var(--text-dim); font-size: 13px; padding: 22px 10px; }
+
+    /* ---- Panneau de seuil ---- */
+    .filter-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--gold);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-bottom: 10px;
+    }
+    .fp-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .fp-title {
+      font-family: var(--font-display);
+      font-size: 13px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .fp-count { font-size: 12px; color: var(--text-dim); }
+    .fp-count b { color: var(--gold-bright); font-variant-numeric: tabular-nums; }
+    .fp-value {
+      font-family: var(--font-display);
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--gold-bright);
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+      line-height: 1.1;
+      margin-bottom: 2px;
+    }
+    .fp-value .op { font-size: 17px; color: var(--text-dim); }
+    .fp-hint { text-align: center; font-size: 11px; color: var(--text-dim); margin-bottom: 12px; }
+    .fp-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 5px;
+      border-radius: 999px;
+      background: var(--bg-soft);
+      outline: none;
+      margin: 4px 0 14px;
+      padding: 0;
+      border: none;
+    }
+    .fp-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold-deep), var(--gold-bright));
+      box-shadow: var(--shadow-gold);
+      cursor: pointer;
+    }
+    .fp-slider::-moz-range-thumb {
+      width: 26px; height: 26px; border: none; border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold-deep), var(--gold-bright));
+      cursor: pointer;
+    }
+    .fp-presets { display: flex; gap: 5px; margin-bottom: 12px; }
+    .fp-preset {
+      flex: 1;
+      padding: 7px 3px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-dim);
+    }
+    .fp-preset.on { background: var(--gold-soft); border-color: var(--gold); color: var(--gold-bright); }
+    .fp-preset:active { transform: scale(0.95); }
+    .fp-actions { display: flex; gap: 8px; }
+    .fp-actions .btn { flex: 1; }
+
+    /* ---- Nom des légendaires ---- */
+    .qual-item input {
+      margin-top: 8px;
+      padding: 9px 10px;
+      font-size: 13.5px;
+    }
+    .lname {
+      font-size: 11.5px;
+      color: var(--text-soft);
+      font-style: italic;
+    }
+    .legend-list { display: flex; flex-direction: column; gap: 7px; margin-top: 4px; }
+    .legend-entry {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      padding: 9px 11px;
+    }
+    .legend-entry .nm { flex: 1; min-width: 0; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .legend-entry .nm.unnamed { color: var(--text-dim); font-style: italic; }
+    .legend-entry .dt { font-size: 11px; color: var(--text-dim); white-space: nowrap; }
+
+    /* ---- Catalogue & collection de légendes ---- */
+    .lg-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+      gap: 8px;
+    }
+    .lg-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 9px 7px;
+      text-align: center;
+      transition: all .14s ease;
+      position: relative;
+    }
+    .lg-card.owned { border-color: rgba(217, 166, 72, 0.45); background: linear-gradient(160deg, var(--bg-card-hi), var(--bg-card)); }
+    .lg-card.missing { opacity: 0.5; }
+    .lg-card:active { transform: scale(0.96); }
+    .lg-thumb {
+      width: 46px;
+      height: 46px;
+      margin: 0 auto 7px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      overflow: hidden;
+    }
+    .lg-thumb img { width: 100%; height: 100%; object-fit: contain; }
+    .lg-name {
+      font-size: 10.5px;
+      line-height: 1.3;
+      color: var(--text-soft);
+      word-break: break-word;
+      min-height: 27px;
+    }
+    .lg-card.owned .lg-name { color: var(--text); font-weight: 600; }
+    .lg-count {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      min-width: 19px;
+      height: 19px;
+      padding: 0 5px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--gold-deep), var(--gold));
+      color: #14100a;
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 19px;
+      font-variant-numeric: tabular-nums;
+    }
+    .src-dots { display: flex; gap: 3px; justify-content: center; margin-top: 5px; }
+    .src-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .src-dot.run { background: var(--blue); }
+    .src-dot.chest { background: var(--gold); }
+
+    .chest-counter {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .chest-entry {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 11px 12px;
+      margin-bottom: 8px;
+    }
+    .chest-entry .ic { font-size: 18px; flex-shrink: 0; }
+    .chest-entry .bd { flex: 1; min-width: 0; }
+    .chest-entry .t1 { font-size: 13px; font-weight: 600; }
+    .chest-entry .t2 { font-size: 11.5px; color: var(--text-dim); margin-top: 3px; }
+
+    textarea {
+      width: 100%;
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 11px 12px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 14px;
+      line-height: 1.5;
+      resize: vertical;
+    }
+    textarea:focus { outline: none; border-color: var(--gold); background: var(--bg-card); }
+
+    .sec-actions { display: flex; gap: 8px; margin-bottom: 12px; }
+    .sec-actions .btn { flex: 1; }
+
+    /* ---- Volet roulant des jours ---- */
+    .day-head { cursor: pointer; user-select: none; }
+    .day-left { display: flex; align-items: center; gap: 8px; min-width: 0; }
+    .day-caret {
+      font-size: 10px;
+      color: var(--text-dim);
+      transition: transform .2s ease;
+      flex-shrink: 0;
+      display: inline-block;
+    }
+    .day-group.collapsed .day-caret { transform: rotate(-90deg); }
+    .day-body { overflow: hidden; }
+    .day-group.collapsed .day-body { display: none; }
+
+    /* ---- Graphique combiné vagues ---- */
+    .wave-chart { margin-top: 4px; }
+    .wave-chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+    .chart-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 16px;
+      margin-top: 12px;
+      font-size: 11.5px;
+      color: var(--text-dim);
+    }
+    .chart-legend span { display: flex; align-items: center; gap: 6px; }
+    .lg-swatch { width: 11px; height: 11px; border-radius: 3px; flex-shrink: 0; }
+    .lg-line { width: 14px; height: 2.5px; border-radius: 2px; flex-shrink: 0; }
+
+    .insight {
+      background: var(--bg-soft);
+      border-left: 2px solid var(--gold);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 10px 13px;
+      font-size: 12.5px;
+      line-height: 1.5;
+      color: var(--text-soft);
+      margin-top: 12px;
+    }
+    .insight b { color: var(--text); }
+    .insight.warn { border-left-color: var(--blue); }
+
+    /* ---- Regroupement des runs par jour ---- */
+    .day-group { margin-bottom: 18px; }
+    .day-head {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 7px 2px 8px;
+      margin-bottom: 8px;
+      background: linear-gradient(to bottom, var(--bg) 62%, transparent);
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+    }
+    .day-label {
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .day-sum {
+      font-size: 11.5px;
+      color: var(--text-dim);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+    .day-sum b { color: var(--text-soft); font-weight: 600; }
 
     /* ---- Butin ---- */
     .loot-grid {
@@ -1465,35 +2004,6 @@
     }
     .chart-card svg { display: block; width: 100%; height: auto; }
 
-    .wave-hist { display: flex; flex-direction: column; gap: 5px; }
-    .wh-row { display: flex; align-items: center; gap: 8px; font-size: 12px; }
-    .wh-lbl {
-      width: 44px;
-      color: var(--text-dim);
-      font-variant-numeric: tabular-nums;
-      text-align: right;
-      flex-shrink: 0;
-    }
-    .wh-track {
-      flex: 1;
-      height: 14px;
-      background: var(--bg-soft);
-      border-radius: 999px;
-      overflow: hidden;
-    }
-    .wh-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--gold-deep), var(--gold-bright));
-      border-radius: 999px;
-      transition: width .3s ease;
-    }
-    .wh-n {
-      width: 26px;
-      color: var(--text-soft);
-      font-variant-numeric: tabular-nums;
-      flex-shrink: 0;
-    }
-
     /* ============ FORMULAIRE RUN ============ */
     .dur-preview {
       font-size: 12.5px;
@@ -1649,6 +2159,7 @@
   <nav class="tabs" data-mod="songes">
     <button class="tab active" data-view="runs">Runs</button>
     <button class="tab" data-view="compos">Compos</button>
+    <button class="tab" data-view="legends">Légendes</button>
     <button class="tab" data-view="sstats">Stats</button>
   </nav>
 
@@ -1700,6 +2211,16 @@
 
     <!-- Songes : Runs -->
     <section class="view active" id="view-runs">
+      <div class="filter-row">
+        <button class="filter-toggle" id="filter-toggle">
+          <span class="ft-label">⚙ Filtres</span>
+          <span class="ft-badge hidden" id="filter-badge">0</span>
+          <span class="ft-caret">▼</span>
+        </button>
+        <button class="filter-clear hidden" id="filter-clear" aria-label="Enlever tous les filtres">✕</button>
+      </div>
+      <div class="filter-drawer hidden" id="filter-drawer"></div>
+      <div class="filter-info hidden" id="filter-info"></div>
       <div id="list-runs"></div>
       <div class="empty hidden" id="empty-runs">
         <div class="icon">☾</div>
@@ -1719,6 +2240,11 @@
         <div class="title">Aucune compo enregistrée</div>
         <div>Crée tes sets pour pouvoir les comparer</div>
       </div>
+    </section>
+
+    <!-- Songes : Légendes & coffres -->
+    <section class="view" id="view-legends">
+      <div id="legends-body"></div>
     </section>
 
     <!-- Songes : Stats -->
@@ -1918,7 +2444,10 @@
   <div class="modal-overlay" id="modal-run">
     <div class="modal">
       <div class="modal-grip"></div>
-      <h2 id="run-title">Nouvelle run</h2>
+      <div class="modal-head">
+        <h2 id="run-title">Nouvelle run</h2>
+        <button class="trash-btn hidden" id="run-delete" aria-label="Supprimer cette run">🗑</button>
+      </div>
 
       <div class="field">
         <label>Date</label>
@@ -1928,17 +2457,17 @@
       <div class="field">
         <label>Durée de la run</label>
         <div class="dur-row">
-          <div class="dur-cell">
-            <input type="number" id="r-h" min="0" max="99" placeholder="0" inputmode="numeric" />
-            <span class="u">heures</span>
+          <div class="dur-cell narrow">
+            <input type="text" id="r-h" maxlength="1" placeholder="0" inputmode="numeric" autocomplete="off" />
+            <span class="u">h</span>
           </div>
           <div class="dur-cell">
-            <input type="number" id="r-m" min="0" max="59" placeholder="0" inputmode="numeric" />
-            <span class="u">minutes</span>
+            <input type="text" id="r-m" maxlength="2" placeholder="0" inputmode="numeric" autocomplete="off" />
+            <span class="u">min</span>
           </div>
           <div class="dur-cell">
-            <input type="number" id="r-s" min="0" max="59" placeholder="0" inputmode="numeric" />
-            <span class="u">secondes</span>
+            <input type="text" id="r-s" maxlength="2" placeholder="0" inputmode="numeric" autocomplete="off" />
+            <span class="u">sec</span>
           </div>
         </div>
         <div class="dur-preview" id="r-dur-preview"></div>
@@ -1954,21 +2483,23 @@
         <div class="loot-grid">
           <div>
             <div class="hint" style="margin:0 0 5px;">Bribes</div>
-            <input type="number" id="r-bribes" placeholder="0" min="0" inputmode="numeric" />
+            <input type="text" id="r-bribes" placeholder="0" maxlength="4" inputmode="numeric" autocomplete="off" />
           </div>
           <div>
             <div class="hint" style="margin:0 0 5px;">Reflets</div>
-            <input type="number" id="r-reflets" placeholder="0" min="0" inputmode="numeric" />
+            <input type="text" id="r-reflets" placeholder="0" maxlength="3" inputmode="numeric" autocomplete="off" />
           </div>
           <div>
             <div class="hint" style="margin:0 0 5px;">Runes</div>
-            <input type="number" id="r-runes" placeholder="0" min="0" inputmode="numeric" />
+            <input type="text" id="r-runes" placeholder="0" maxlength="2" inputmode="numeric" autocomplete="off" />
           </div>
           <div>
             <div class="hint" style="margin:0 0 5px;">Légendaires</div>
-            <input type="number" id="r-legend" placeholder="0" min="0" inputmode="numeric" />
+            <input type="text" id="r-legend" placeholder="0" maxlength="1" inputmode="numeric" autocomplete="off" />
           </div>
         </div>
+        <div class="hint" style="margin-top:7px;">Entrée passe au champ suivant.</div>
+        <div class="qual-list" id="r-qualities"></div>
       </div>
 
       <div class="field">
@@ -1999,9 +2530,7 @@
       <div class="modal-actions hidden" id="run-dup-row" style="margin-top: 8px;">
         <button class="btn btn-secondary" id="run-duplicate" style="width:100%;">⧉ Dupliquer cette run</button>
       </div>
-      <div class="modal-actions hidden" id="run-delete-row" style="margin-top: 8px;">
-        <button class="btn btn-danger" id="run-delete" style="width:100%;">🗑 Supprimer cette run</button>
-      </div>
+
     </div>
   </div>
 
@@ -2009,7 +2538,10 @@
   <div class="modal-overlay" id="modal-compo">
     <div class="modal">
       <div class="modal-grip"></div>
-      <h2 id="compo-title">Nouvelle compo</h2>
+      <div class="modal-head">
+        <h2 id="compo-title">Nouvelle compo</h2>
+        <button class="trash-btn hidden" id="compo-delete" aria-label="Supprimer cette compo">🗑</button>
+      </div>
 
       <div class="field">
         <label>Nom</label>
@@ -2038,11 +2570,101 @@
         <button class="btn btn-secondary" id="compo-cancel">Annuler</button>
         <button class="btn btn-primary" id="compo-save">Enregistrer</button>
       </div>
-      <div class="modal-actions hidden" id="compo-delete-row" style="margin-top: 8px;">
-        <button class="btn btn-danger" id="compo-delete" style="width:100%;">🗑 Supprimer cette compo</button>
+
+    </div>
+  </div>
+
+  <!-- Modal: Ouverture d'un coffre -->
+  <div class="modal-overlay" id="modal-chest">
+    <div class="modal">
+      <div class="modal-grip"></div>
+      <div class="modal-head">
+        <h2 id="chest-title">Coffre légendaire</h2>
+        <button class="trash-btn hidden" id="chest-delete" aria-label="Supprimer ce coffre">🗑</button>
+      </div>
+
+      <div class="field">
+        <label>Date d'ouverture</label>
+        <input type="date" id="ch-date" />
+      </div>
+
+      <div class="field">
+        <label>Nombre de légendes obtenues</label>
+        <input type="text" id="ch-count" maxlength="2" placeholder="0" inputmode="numeric" autocomplete="off" />
+      </div>
+
+      <div class="qual-list" id="ch-legends"></div>
+
+      <div class="field">
+        <label>Note <span style="color:var(--text-dim);font-weight:400;">(optionnel)</span></label>
+        <input type="text" id="ch-note" placeholder="Ex : premier coffre du mois" maxlength="80" />
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="chest-cancel">Annuler</button>
+        <button class="btn btn-primary" id="chest-save">Enregistrer</button>
       </div>
     </div>
   </div>
+
+  <!-- Modal: Catalogue des légendes -->
+  <div class="modal-overlay" id="modal-cat">
+    <div class="modal">
+      <div class="modal-grip"></div>
+      <div class="modal-head">
+        <h2 id="cat-title">Ajouter des légendes</h2>
+        <button class="trash-btn hidden" id="cat-delete" aria-label="Retirer du catalogue">🗑</button>
+      </div>
+
+      <div class="field" id="cat-single-wrap">
+        <label>Nom</label>
+        <input type="text" id="cat-name" placeholder="Ex : Légende de Bram Barbe-Monde" maxlength="60" />
+      </div>
+
+      <div class="field" id="cat-qual-wrap">
+        <label>Classement</label>
+        <div class="qual-row" id="cat-qual"></div>
+        <div class="hint">Ton propre jugement sur cette légende. Il s'applique à tous tes drops de cet objet.</div>
+      </div>
+
+      <div class="field" id="cat-img-wrap">
+        <label>Image <span style="color:var(--text-dim);font-weight:400;">(URL, optionnel)</span></label>
+        <input type="text" id="cat-img" placeholder="https://..." maxlength="300" />
+        <div class="hint">Colle l'adresse de l'icône depuis ton navigateur (clic droit → copier l'adresse de l'image).</div>
+      </div>
+
+      <div class="field" id="cat-bulk-wrap">
+        <label>Ajout en masse</label>
+        <textarea id="cat-bulk" rows="6" placeholder="Une légende par ligne&#10;Légende de…&#10;Légende du…"></textarea>
+        <div class="hint">Un nom par ligne. Les doublons sont ignorés.</div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="cat-cancel">Annuler</button>
+        <button class="btn btn-primary" id="cat-save">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Choisir une légende -->
+  <div class="modal-overlay" id="modal-pick">
+    <div class="modal">
+      <div class="modal-grip"></div>
+      <div class="modal-head">
+        <h2 id="pick-title">Quelle légende ?</h2>
+      </div>
+      <div class="field pick-search">
+        <input type="text" id="pick-q" placeholder="Rechercher…" autocomplete="off" />
+      </div>
+      <div class="pick-grid" id="pick-grid"></div>
+      <div class="modal-actions" style="margin-top:14px;">
+        <button class="btn btn-secondary" id="pick-cancel">Annuler</button>
+        <button class="btn btn-primary" id="pick-new">+ Nouvelle légende</button>
+      </div>
+    </div>
+  </div>
+
+  <datalist id="legend-names"></datalist>
 
   <div class="toast" id="toast"></div>
 
@@ -2051,7 +2673,7 @@
     // ÉTAT & PERSISTANCE
     // ============================================================
     const STORAGE_KEY = 'dofus-exos-v1';
-    let state = { items: [], songes: [], compos: [], settings: {} };
+    let state = { items: [], songes: [], compos: [], chests: [], catalogue: [], settings: {} };
     let currentDetailId = null;
     let editingId = null;
     let confirmCb = null;
@@ -2064,6 +2686,8 @@
         if (!Array.isArray(state.items)) state.items = [];
         if (!Array.isArray(state.songes)) state.songes = [];
         if (!Array.isArray(state.compos)) state.compos = [];
+        if (!Array.isArray(state.chests)) state.chests = [];
+        if (!Array.isArray(state.catalogue)) state.catalogue = [];
         if (!state.settings || typeof state.settings !== 'object') state.settings = {};
         if (state.settings.bribesOffset != null && !state.settings.goal) {
           state.settings.goal = { metric: 'bribes', target: 25000, offset: state.settings.bribesOffset };
@@ -2071,6 +2695,56 @@
         }
 
         let migrated = false;
+
+        // Migration : légendaires → références au catalogue
+        const ensureCat = (name, q) => {
+          if (!name) return null;
+          let e = state.catalogue.find(x => normName(x.name) === normName(name));
+          if (!e) {
+            e = { id: uid(), name: String(name).slice(0, 60), img: '', q: QMAP[q] ? q : 'mid' };
+            state.catalogue.push(e);
+          } else if (!QMAP[e.q] && QMAP[q]) e.q = q;
+          return e;
+        };
+        const migrateLegends = (holder) => {
+          const quals = Array.isArray(holder.qualities) ? holder.qualities : [];
+          if (!Array.isArray(holder.legends)) {
+            holder.legends = [];
+            for (let i = 0; i < (holder.legend || 0); i++) holder.legends.push({ q: quals[i], name: '' });
+          }
+          holder.legends = holder.legends.map(l => {
+            if (l && l.catId !== undefined) return l;
+            const e = ensureCat(l && l.name, l && l.q);
+            return { catId: e ? e.id : null, name: e ? e.name : ((l && l.name) || '') };
+          });
+          delete holder.qualities;
+        };
+        state.songes.forEach(r => {
+          if (Array.isArray(r.legends) && r.legends.every(l => l && l.catId !== undefined)) return;
+          migrateLegends(r);
+          r.legend = r.legends.length;
+          migrated = true;
+        });
+        (state.chests || []).forEach(c => {
+          if (Array.isArray(c.legends) && c.legends.every(l => l && l.catId !== undefined)) return;
+          migrateLegends(c);
+          migrated = true;
+        });
+        // les entrées de catalogue sans classement prennent une valeur neutre
+        state.catalogue.forEach(e => { if (!QMAP[e.q]) { e.q = 'mid'; migrated = true; } });
+
+        // Amorçage unique : les 26 légendes du jeu. Le drapeau évite de faire
+        // réapparaître celles que l'utilisateur aurait volontairement supprimées.
+        if (!state.settings.legendsSeeded) {
+          LEGENDS_DB.forEach(n => {
+            if (!state.catalogue.some(e => normName(e.name) === normName(n))) {
+              state.catalogue.push({ id: uid(), name: n, img: '', q: 'mid' });
+            }
+          });
+          state.catalogue.sort((a, b) => a.name.localeCompare(b.name, 'fr'));
+          state.settings.legendsSeeded = true;
+          migrated = true;
+        }
 
         // Migration : les compos saisies à la volée deviennent des sets enregistrés
         state.songes.forEach(r => {
@@ -2105,7 +2779,7 @@
           }
         });
         if (migrated) save();
-      } catch (e) { state = { items: [], songes: [], compos: [], settings: {} }; }
+      } catch (e) { state = { items: [], songes: [], compos: [], chests: [], catalogue: [], settings: {} }; }
     }
     function save() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -2666,6 +3340,7 @@
           if (!data || (!Array.isArray(data.items) && !Array.isArray(data.songes))) throw new Error('format');
           const nItems = Array.isArray(data.items) ? data.items.length : 0;
           const nRuns = Array.isArray(data.songes) ? data.songes.length : 0;
+          document.getElementById('modal-data').classList.remove('active');
           confirmDialog(
             'Importer cette sauvegarde ?',
             `Elle contient ${nItems} exo(s) et ${nRuns} run(s) de songes, et remplacera tes données actuelles.`,
@@ -2674,6 +3349,8 @@
                 items: Array.isArray(data.items) ? data.items : [],
                 songes: Array.isArray(data.songes) ? data.songes : [],
                 compos: Array.isArray(data.compos) ? data.compos : [],
+                chests: Array.isArray(data.chests) ? data.chests : [],
+                catalogue: Array.isArray(data.catalogue) ? data.catalogue : [],
                 settings: (data.settings && typeof data.settings === 'object') ? data.settings : {},
               };
               // re-sécurise les champs essentiels
@@ -2682,6 +3359,21 @@
                 if (!Array.isArray(c.classes)) c.classes = [];
                 c.hidden = !!c.hidden;
               });
+              state.catalogue = state.catalogue
+                .filter(e => e && typeof e === 'object' && e.name)
+                .map(e => ({ id: e.id || uid(), name: String(e.name).slice(0, 60),
+                             img: String(e.img || '').slice(0, 300), q: QMAP[e.q] ? e.q : 'mid' }));
+              state.chests = state.chests
+                .filter(c => c && typeof c === 'object')
+                .map(c => ({
+                  id: c.id || uid(),
+                  date: c.date || todayISO(),
+                  note: String(c.note || '').slice(0, 80),
+                  createdAt: c.createdAt || Date.now(),
+                  legends: (Array.isArray(c.legends) ? c.legends : [])
+                    .filter(l => l && typeof l === 'object')
+                    .map(l => ({ catId: l.catId || null, name: String(l.name || '').slice(0, 60), q: l.q })),
+                }));
               state.songes.forEach(r => {
                 if (r.compoId === undefined) {
                   // sauvegarde antérieure aux compos enregistrées
@@ -2703,25 +3395,66 @@
                   r[k] = Math.max(0, parseInt(r[k], 10) || 0);
                 });
                 r.excluded = !!r.excluded;
+                if (!Array.isArray(r.legends)) {
+                  const quals = Array.isArray(r.qualities) ? r.qualities : [];
+                  r.legends = [];
+                  for (let i = 0; i < (r.legend || 0); i++) r.legends.push({ name: '', q: quals[i] });
+                }
+                delete r.qualities;
+                r.legends = r.legends
+                  .filter(l => l && typeof l === 'object')
+                  .map(l => ({ catId: l.catId || null, name: String(l.name || '').slice(0, 60), q: l.q }));
+                r.legend = r.legends.length;
               });
+              // relie les drops importés au catalogue, en le complétant si besoin
+              const linkAfterImport = (holder) => {
+                holder.legends = (holder.legends || []).map(l => {
+                  if (l.catId && state.catalogue.some(e => e.id === l.catId)) return { catId: l.catId, name: l.name };
+                  let e = l.name ? state.catalogue.find(x => normName(x.name) === normName(l.name)) : null;
+                  if (!e && l.name) {
+                    e = { id: uid(), name: l.name, img: '', q: QMAP[l.q] ? l.q : 'mid' };
+                    state.catalogue.push(e);
+                  }
+                  return { catId: e ? e.id : null, name: e ? e.name : (l.name || '') };
+                });
+                holder.legend = holder.legends.length;
+              };
+              state.songes.forEach(linkAfterImport);
+              state.chests.forEach(linkAfterImport);
+              state.catalogue.sort((a, b) => a.name.localeCompare(b.name, 'fr'));
+
               draftCompoId = null;
+              activeFilters.clear();
+              numericFilters = {};
+              drawerOpen = false;
+              pendingFlags = pendingNums = null;
+              collapsedDays.clear();
               save();
-              render();
-              renderCompoSelect();
+              // on ferme AVANT de redessiner : si le rendu échoue sur des
+              // données importées inattendues, la modale ne reste pas coincée
               closeAllModals();
-              toast('Sauvegarde importée');
+              try {
+                render();
+                renderCompoSelect();
+                toast('Sauvegarde importée');
+              } catch (err) {
+                console.error(err);
+                toast('Importé, mais affichage incomplet');
+              }
             }
           );
         } catch (e) {
+          closeAllModals();
           toast('Fichier invalide');
         }
       };
+      reader.onerror = () => { closeAllModals(); toast('Lecture impossible'); };
       reader.readAsText(file);
     }
 
     function clearAllData() {
-      confirmDialog('Tout effacer ?', 'Tous tes exos, tes compos et tes runs de songes seront définitivement supprimés.', () => {
-        state = { items: [], songes: [], compos: [], settings: {} };
+      confirmDialog('Tout effacer ?', 'Tous tes exos, tes compos, tes runs, tes coffres et ton catalogue seront définitivement supprimés.', () => {
+        state = { items: [], songes: [], compos: [], chests: [], catalogue: [], settings: {} };
         draftCompoId = null;
         save();
         render();
@@ -2738,6 +3471,26 @@
                      'Huppermage', 'Iop', 'Osamodas', 'Ouginak', 'Pandawa', 'Roublard', 'Sacrieur',
                      'Sadida', 'Sram', 'Steamer', 'Xélor', 'Zobal'];
     const MAX_WAVE = 15;
+    const QUALITIES = [
+      { k: 'nul',  label: 'Nul',  score: 1 },
+      { k: 'mid',  label: 'Mid',  score: 2 },
+      { k: 'bien', label: 'Bien', score: 3 },
+      { k: 'exc',  label: 'Exceptionnel', short: 'Exc.', score: 4 },
+    ];
+    const QMAP = Object.fromEntries(QUALITIES.map(q => [q.k, q]));
+
+    // Les 26 légendes obtenables (coffre et drop)
+    const LEGENDS_DB = [
+      'Légende de Rykke Errel', 'Légende de Brâm Barbe-Monde', 'Légende de Misère',
+      'Légende de Fallanster', 'Légende du Destin', 'Légende de Dame Jhessica',
+      'Légende de Ganymède', 'Légende de Buhorado', 'Légende de Menalt',
+      'Légende de Dodge', 'Légende de Brumaire', "Légende d'Henual",
+      'Légende de Crocobur', 'Légende du Trompe-la-Mort', 'Légende de Thanatena',
+      'Légende de Corruption', 'Légende de Mériana', 'Légende de Mille Lieues',
+      'Légende du Miroir', "Légende d'Helséphine", 'Légende du Cul Botté',
+      'Légende de Jahash Jurgen', 'Légende de Guerre', "Légende d'Oto Mustam",
+      'Légende de Servitude', "Légende d'Amayiro",
+    ];
     const GOAL_METRICS = {
       bribes:  { label: 'Bribes',  target: 25000, reward: 'Coffre légendaire' },
       reflets: { label: 'Reflets', target: 5000,  reward: 'Objectif reflets' },
@@ -2761,6 +3514,8 @@
     let draftWave = 0;
     let draftExcluded = false;
     let draftHidden = false;
+    let draftLegends = [];
+    let collapsedDays = new Set();
 
     // ---- Durée : formatage ----
     function fmtDur(sec) {
@@ -2786,6 +3541,23 @@
       const d = new Date(iso + 'T12:00:00');
       if (isNaN(d)) return iso;
       return d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: '2-digit' });
+    }
+    // Libellé d'en-tête de jour : Aujourd'hui / Hier / date complète
+    function dayLabel(iso) {
+      if (!iso) return 'Sans date';
+      const t = todayISO();
+      if (iso === t) return "Aujourd'hui";
+      const y = new Date();
+      y.setDate(y.getDate() - 1);
+      const yIso = new Date(y.getTime() - y.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+      if (iso === yIso) return 'Hier';
+      const d = new Date(iso + 'T12:00:00');
+      if (isNaN(d)) return iso;
+      const now = new Date();
+      return d.toLocaleDateString('fr-FR', {
+        weekday: 'short', day: 'numeric', month: 'short',
+        ...(d.getFullYear() !== now.getFullYear() ? { year: 'numeric' } : {}),
+      });
     }
     function todayISO() {
       const d = new Date();
@@ -2884,56 +3656,304 @@
       });
     }
 
-    // ---- Rendu : liste des runs ----
+    // ---- Filtres de runs (cumulables, dans un tiroir) ----
+    let activeFilters = new Set();       // filtres oui/non
+    let numericFilters = {};             // { bribes: 900, ... } → « au moins N »
+    let drawerOpen = false;
+    let pendingFlags = null;             // état en cours d'édition dans le tiroir
+    let pendingNums = null;
+
+    const FLAG_FILTERS = {
+      legend:   { label: '★ Légendaire', test: r => (r.legend || 0) > 0 },
+      excluded: { label: 'Hors stats', test: r => !!r.excluded },
+    };
+
+    const NUM_FILTERS = {
+      bribes:  { label: 'Bribes',  get: r => r.bribes  || 0 },
+      reflets: { label: 'Reflets', get: r => r.reflets || 0 },
+      runes:   { label: 'Runes',   get: r => r.runes   || 0 },
+      wave:    { label: 'Vague',   get: r => r.wave    || 0, max: MAX_WAVE },
+      // Pour la durée, moins c'est long, mieux c'est : le seuil est un maximum
+      duration:{ label: 'Durée',   get: r => r.durationSec || 0, isTime: true, dir: 'max' },
+    };
+
+    function fmtFilterVal(key, v) {
+      return NUM_FILTERS[key].isTime ? fmtDur(v) : v.toLocaleString('fr-FR');
+    }
+    function filterCount() { return activeFilters.size + Object.keys(numericFilters).length; }
+
+    // Cumul en ET : une run doit satisfaire tous les critères actifs
+    function applyFilters(runs, flags, nums) {
+      const F = flags || activeFilters;
+      const N = nums || numericFilters;
+      let out = runs;
+      F.forEach(k => { if (FLAG_FILTERS[k]) out = out.filter(FLAG_FILTERS[k].test); });
+      Object.entries(N).forEach(([k, v]) => {
+        const f = NUM_FILTERS[k];
+        if (!f) return;
+        out = f.dir === 'max' ? out.filter(r => f.get(r) <= v) : out.filter(r => f.get(r) >= v);
+      });
+      return out;
+    }
+
+    function activeFilterLabels() {
+      const out = [...activeFilters].map(k => FLAG_FILTERS[k].label);
+      Object.entries(numericFilters).forEach(([k, v]) => {
+        out.push(`${NUM_FILTERS[k].label} ${NUM_FILTERS[k].dir === 'max' ? '≤' : '≥'} ${fmtFilterVal(k, v)}`);
+      });
+      return out;
+    }
+
+    // Le pas du curseur s'adapte à l'échelle, mais le maximum reste ta valeur exacte
+    function sliderStep(dataMax, isTime) {
+      if (isTime) return 60;                    // à la minute
+      if (dataMax <= 20) return 1;
+      if (dataMax <= 200) return 5;
+      return 25;
+    }
+
+    function renderFilterDrawer(allRuns) {
+      const btn = document.getElementById('filter-toggle');
+      const badge = document.getElementById('filter-badge');
+      const drawer = document.getElementById('filter-drawer');
+
+      const n = filterCount();
+      btn.classList.toggle('on', n > 0);
+      btn.classList.toggle('open', drawerOpen);
+      badge.classList.toggle('hidden', n === 0);
+      badge.textContent = n;
+      document.getElementById('filter-clear').classList.toggle('hidden', n === 0);
+
+      if (!drawerOpen) { drawer.classList.add('hidden'); drawer.innerHTML = ''; return; }
+
+      // On travaille sur une copie : rien n'est appliqué avant validation
+      if (!pendingFlags) pendingFlags = new Set(activeFilters);
+      if (!pendingNums) pendingNums = { ...numericFilters };
+
+      drawer.classList.remove('hidden');
+      drawer.innerHTML = `
+        <div class="fd-block">
+          <div class="fd-head"><span class="fd-name">Critères</span></div>
+          <div class="fd-flags">
+            ${Object.entries(FLAG_FILTERS).map(([k, f]) =>
+              `<button class="fchip${pendingFlags.has(k) ? ' on' : ''}" data-flag="${k}">${f.label}</button>`).join('')}
+          </div>
+        </div>
+        ${Object.entries(NUM_FILTERS).map(([k, f]) => {
+          const values = allRuns.map(f.get);
+          const dataMax = values.length ? Math.max(...values) : 0;
+          const dataMin = values.length ? Math.min(...values) : 0;
+          const isMax = f.dir === 'max';
+          const bound = f.max != null ? f.max : dataMax;          // borne haute du curseur
+          const step = f.max != null ? 1 : sliderStep(dataMax, f.isTime);
+          const off = isMax ? bound : 0;                           // valeur « pas de filtre »
+          const cur = pendingNums[k] != null ? Math.min(pendingNums[k], bound) : off;
+          const active = isMax ? cur < bound : cur > 0;
+          const sorted = [...values].sort((a, b) => a - b);
+          const q = p => sorted.length ? sorted[Math.floor((sorted.length - 1) * p)] : 0;
+          const presets = isMax
+            // pour la durée : le « record » est la run la plus rapide
+            ? [{ l: 'Tout', v: bound }, { l: 'Médiane', v: q(0.5) }, { l: 'Top 25%', v: q(0.25) }, { l: 'Record', v: dataMin }]
+            : f.max != null
+              ? [{ l: 'Tout', v: 0 }, { l: '≥ 5', v: 5 }, { l: '≥ 10', v: 10 }, { l: 'Max', v: bound }]
+              : [{ l: 'Tout', v: 0 }, { l: 'Médiane', v: q(0.5) }, { l: 'Top 25%', v: q(0.75) }, { l: 'Record', v: dataMax }];
+          return `
+          <div class="fd-block" data-num="${k}">
+            <div class="fd-head">
+              <span class="fd-name">${escapeHtml(f.label)}${isMax ? ' <span style="color:var(--text-dim);font-weight:400;">(au plus)</span>' : ''}</span>
+              <span class="fd-val${active ? '' : ' off'}" data-val="${k}">${active ? (isMax ? '≤ ' : '≥ ') + fmtFilterVal(k, cur) : 'tout'}</span>
+            </div>
+            <input type="range" class="fd-slider" data-range="${k}" data-off="${off}" data-dir="${isMax ? 'max' : 'min'}" min="0" max="${bound}" step="${step}" value="${cur}" />
+            <div class="fd-presets">
+              ${presets.map(p => `<button class="fd-preset${p.v === cur ? ' on' : ''}" data-preset="${k}" data-v="${p.v}">${p.l}</button>`).join('')}
+            </div>
+          </div>`;
+        }).join('')}
+        <div class="fd-count" id="fd-count"></div>
+        <div class="fd-actions">
+          <button class="btn btn-secondary" id="fd-reset">Tout effacer</button>
+          <button class="btn btn-primary" id="fd-apply">Appliquer</button>
+        </div>`;
+
+      const refreshCount = () => {
+        const m = applyFilters(allRuns, pendingFlags, pendingNums).length;
+        document.getElementById('fd-count').innerHTML = `<b>${m}</b> run(s) sur ${allRuns.length}`;
+      };
+      const setNum = (k, v) => {
+        const range = drawer.querySelector(`[data-range="${k}"]`);
+        const isMax = range.dataset.dir === 'max';
+        const off = parseInt(range.dataset.off, 10) || 0;
+        const active = isMax ? v < off : v > 0;
+        if (active) pendingNums[k] = v; else delete pendingNums[k];
+        const valEl = drawer.querySelector(`[data-val="${k}"]`);
+        valEl.textContent = active ? (isMax ? '≤ ' : '≥ ') + fmtFilterVal(k, v) : 'tout';
+        valEl.classList.toggle('off', !active);
+        drawer.querySelectorAll(`[data-preset="${k}"]`).forEach(b =>
+          b.classList.toggle('on', parseInt(b.dataset.v, 10) === v));
+        refreshCount();
+      };
+
+      drawer.querySelectorAll('[data-flag]').forEach(b => {
+        b.addEventListener('click', () => {
+          const k = b.dataset.flag;
+          pendingFlags.has(k) ? pendingFlags.delete(k) : pendingFlags.add(k);
+          b.classList.toggle('on');
+          refreshCount();
+          haptic();
+        });
+      });
+      drawer.querySelectorAll('[data-range]').forEach(r => {
+        r.addEventListener('input', () => setNum(r.dataset.range, parseInt(r.value, 10) || 0));
+      });
+      drawer.querySelectorAll('[data-preset]').forEach(b => {
+        b.addEventListener('click', () => {
+          const k = b.dataset.preset, v = parseInt(b.dataset.v, 10);
+          const range = drawer.querySelector(`[data-range="${k}"]`);
+          // le curseur peut ne pas tomber pile sur la valeur : on élargit son maximum
+          if (v > parseInt(range.max, 10)) range.max = String(v);
+          range.value = String(v);
+          setNum(k, parseInt(range.value, 10) || 0);
+          haptic();
+        });
+      });
+      document.getElementById('fd-apply').addEventListener('click', () => {
+        activeFilters = new Set(pendingFlags);
+        numericFilters = { ...pendingNums };
+        drawerOpen = false;
+        pendingFlags = pendingNums = null;
+        renderRuns();
+        haptic();
+      });
+      document.getElementById('fd-reset').addEventListener('click', () => {
+        pendingFlags = new Set();
+        pendingNums = {};
+        activeFilters = new Set();
+        numericFilters = {};
+        renderRuns();
+        haptic();
+      });
+      refreshCount();
+    }
+
+    // ---- Rendu : liste des runs, groupée par jour ----
+    function runCardEl(r, med, rates, ordinal) {
+      const rate = runRate(r);
+      let cls = '';
+      if (med != null && rate != null && rates.length >= 3 && !r.excluded) {
+        if (rate > med * 1.05) cls = ' green';
+        else if (rate < med * 0.95) cls = ' red';
+      }
+
+      const compo = getCompo(r.compoId);
+      const chips = compo
+        ? `<span class="cchip">${escapeHtml(compoLabel(compo))}</span>` +
+          (compo.name && compo.name.trim()
+            ? compo.classes.map(c => `<span class="cchip">${escapeHtml(c)}</span>`).join('')
+            : '')
+        : '<span class="cchip empty">compo non renseignée</span>';
+
+      const loot = [];
+      (r.legends || []).forEach(l => {
+        const info = resolveLegend(l);
+        const badge = info.q ? `<span class="qbadge ${info.q}">${QMAP[info.q].short || QMAP[info.q].label}</span> ` : '';
+        loot.push(`${badge}<span class="lname">★ ${escapeHtml(info.name || 'sans nom')}</span>`);
+      });
+      if (r.reflets) loot.push(`<span class="lchip">Reflets <b>${r.reflets.toLocaleString('fr-FR')}</b></span>`);
+      if (r.runes) loot.push(`<span class="lchip">Runes <b>${r.runes.toLocaleString('fr-FR')}</b></span>`);
+
+      const card = document.createElement('div');
+      card.className = 'run-card' + (r.excluded ? ' excluded' : '');
+      card.innerHTML = `
+        <div class="run-top">
+          <span class="run-date">${ordinal ? 'Run ' + ordinal : ''}${r.excluded ? '<span class="excl-tag">hors stats</span>' : ''}</span>
+          <span class="run-wave">${r.wave || 0}<span class="of">/${MAX_WAVE}</span></span>
+        </div>
+        <div class="run-metrics">
+          <div class="rmetric"><div class="lbl">Durée</div><div class="val">${fmtDur(r.durationSec)}</div></div>
+          <div class="rmetric"><div class="lbl">Bribes</div><div class="val gold">${(r.bribes || 0).toLocaleString('fr-FR')}</div></div>
+          <div class="rmetric"><div class="lbl">Bribes/h</div><div class="val${cls}">${fmtRate(rate)}</div></div>
+        </div>
+        <div class="comp-chips">${chips}</div>
+        ${loot.length ? `<div class="loot-chips">${loot.join('')}</div>` : ''}
+        ${r.note ? `<div style="margin-top:9px;font-size:12px;color:var(--text-dim);">${escapeHtml(r.note)}</div>` : ''}
+      `;
+      card.addEventListener('click', () => openRunForm(r.id));
+      return card;
+    }
+
     function renderRuns() {
       const list = document.getElementById('list-runs');
       const empty = document.getElementById('empty-runs');
-      const runs = sortedRuns().reverse();
+      const info = document.getElementById('filter-info');
+      const all = sortedRuns().reverse();
+      const runs = applyFilters(all);
       list.innerHTML = '';
-      if (!runs.length) { empty.classList.remove('hidden'); return; }
+      renderFilterDrawer(all);
+
+      if (filterCount()) {
+        const sec = runs.reduce((s, r) => s + (r.durationSec || 0), 0);
+        const bribes = runs.reduce((s, r) => s + (r.bribes || 0), 0);
+        info.classList.remove('hidden');
+        info.innerHTML = `<b>${runs.length}</b> run(s) sur ${all.length} · ${escapeHtml(activeFilterLabels().join(' + '))}`
+          + (runs.length ? ` — <b>${fmtDur(sec)}</b>, <b>${bribes.toLocaleString('fr-FR')}</b> bribes` : '');
+      } else {
+        info.classList.add('hidden');
+      }
+
+      if (!runs.length) {
+        empty.classList.remove('hidden');
+        empty.querySelector('.title').textContent = filterCount()
+          ? 'Aucune run ne correspond' : 'Aucune run enregistrée';
+        return;
+      }
       empty.classList.add('hidden');
 
       const rates = statRuns().map(runRate).filter(r => r != null);
       const med = median(rates);
 
+      // Un groupe par journée effectivement jouée — les jours sans run n'apparaissent pas
+      const days = [];
       runs.forEach(r => {
-        const rate = runRate(r);
-        let cls = '';
-        if (med != null && rate != null && rates.length >= 3 && !r.excluded) {
-          if (rate > med * 1.05) cls = ' green';
-          else if (rate < med * 0.95) cls = ' red';
-        }
-        const compo = getCompo(r.compoId);
-        const chips = compo
-          ? `<span class="cchip">${escapeHtml(compoLabel(compo))}</span>` +
-            (compo.name && compo.name.trim()
-              ? compo.classes.map(c => `<span class="cchip">${escapeHtml(c)}</span>`).join('')
-              : '')
-          : '<span class="cchip empty">compo non renseignée</span>';
+        const key = r.date || '';
+        const last = days[days.length - 1];
+        if (last && last.key === key) last.runs.push(r);
+        else days.push({ key, runs: [r] });
+      });
 
-        const loot = [];
-        if (r.legend) loot.push(`<span class="lchip legend">★ ${r.legend} légendaire${r.legend > 1 ? 's' : ''}</span>`);
-        if (r.reflets) loot.push(`<span class="lchip">Reflets <b>${r.reflets.toLocaleString('fr-FR')}</b></span>`);
-        if (r.runes) loot.push(`<span class="lchip">Runes <b>${r.runes.toLocaleString('fr-FR')}</b></span>`);
+      days.forEach(d => {
+        const counted = d.runs.filter(r => !r.excluded);
+        const sec = counted.reduce((s, r) => s + (r.durationSec || 0), 0);
+        const bribes = counted.reduce((s, r) => s + (r.bribes || 0), 0);
+        const parts = [`<b>${d.runs.length}</b> run${d.runs.length > 1 ? 's' : ''}`];
+        if (sec > 0) parts.push(`<b>${fmtDur(sec)}</b>`);
+        if (bribes > 0) parts.push(`<b>${bribes.toLocaleString('fr-FR')}</b> bribes`);
 
-        const card = document.createElement('div');
-        card.className = 'run-card' + (r.excluded ? ' excluded' : '');
-        card.innerHTML = `
-          <div class="run-top">
-            <span class="run-date">${fmtDateShort(r.date)}${r.excluded ? '<span class="excl-tag">hors stats</span>' : ''}</span>
-            <span class="run-wave">${r.wave || 0}<span class="of">/${MAX_WAVE}</span></span>
-          </div>
-          <div class="run-metrics">
-            <div class="rmetric"><div class="lbl">Durée</div><div class="val">${fmtDur(r.durationSec)}</div></div>
-            <div class="rmetric"><div class="lbl">Bribes</div><div class="val gold">${(r.bribes || 0).toLocaleString('fr-FR')}</div></div>
-            <div class="rmetric"><div class="lbl">Bribes/h</div><div class="val${cls}">${fmtRate(rate)}</div></div>
-          </div>
-          <div class="comp-chips">${chips}</div>
-          ${loot.length ? `<div class="loot-chips">${loot.join('')}</div>` : ''}
-          ${r.note ? `<div style="margin-top:9px;font-size:12px;color:var(--text-dim);">${escapeHtml(r.note)}</div>` : ''}
-        `;
-        card.addEventListener('click', () => openRunForm(r.id));
-        list.appendChild(card);
+        const collapsed = collapsedDays.has(d.key);
+        const group = document.createElement('div');
+        group.className = 'day-group' + (collapsed ? ' collapsed' : '');
+
+        const head = document.createElement('div');
+        head.className = 'day-head';
+        head.innerHTML = `
+          <span class="day-left">
+            <span class="day-caret">▼</span>
+            <span class="day-label">${escapeHtml(dayLabel(d.key))}</span>
+          </span>
+          <span class="day-sum">${parts.join(' · ')}</span>`;
+        head.addEventListener('click', () => {
+          collapsedDays.has(d.key) ? collapsedDays.delete(d.key) : collapsedDays.add(d.key);
+          group.classList.toggle('collapsed');
+          haptic();
+        });
+        group.appendChild(head);
+
+        const bodyEl = document.createElement('div');
+        bodyEl.className = 'day-body';
+        // numérotation dans l'ordre de saisie de la journée (la liste est antéchronologique)
+        d.runs.forEach((r, i) => bodyEl.appendChild(
+          runCardEl(r, med, rates, d.runs.length > 1 ? d.runs.length - i : null)));
+        group.appendChild(bodyEl);
+        list.appendChild(group);
       });
     }
 
@@ -3024,7 +4044,7 @@
               ${named ? `<div class="compo-name">${escapeHtml(g.compo.name.trim())}</div>` : ''}
               <div class="comp-chips">${g.compo.classes.map(c => `<span class="cchip">${escapeHtml(c)}</span>`).join('') || '<span class="cchip empty">aucune classe</span>'}</div>
             </div>
-            <span style="display:flex;flex-direction:column;gap:4px;align-items:flex-end;">
+            <span style="display:flex;flex-direction:column;gap:4px;align-items:flex-end;margin-top:30px;">
               <span class="n-badge ${nCls}">${g.n} run${g.n > 1 ? 's' : ''}</span>
               ${isHidden ? '<span class="hidden-tag">masquée</span>' : ''}
             </span>
@@ -3043,6 +4063,20 @@
           </div>`}
         `;
         card.addEventListener('click', () => openCompoForm(g.compo.id));
+        // accès direct à la suppression sans ouvrir l'éditeur
+        const del = document.createElement('button');
+        del.className = 'trash-btn';
+        del.setAttribute('aria-label', 'Supprimer cette compo');
+        del.textContent = '🗑';
+        del.style.cssText = 'position:absolute;top:10px;right:10px;width:32px;height:32px;font-size:14px;';
+        del.addEventListener('click', e => {
+          e.stopPropagation();
+          editingCompoId = g.compo.id;
+          deleteCompo();
+        });
+        card.style.position = 'relative';
+        card.style.paddingRight = '52px';
+        card.appendChild(del);
         list.appendChild(card);
       };
 
@@ -3075,7 +4109,7 @@
       draftHidden = c ? !!c.hidden : false;
       paintCompo();
       paintCompoToggle();
-      document.getElementById('compo-delete-row').classList.toggle('hidden', !c);
+      document.getElementById('compo-delete').classList.toggle('hidden', !c);
       document.getElementById('modal-compo').classList.add('active');
     }
 
@@ -3156,6 +4190,362 @@
       });
     }
 
+    // ============================================================
+    // LÉGENDES : catalogue, coffres, collection
+    // ============================================================
+    let editingChestId = null;
+    let editingCatId = null;
+    let draftChestLegends = [];
+    let draftCatQ = 'mid';
+
+    function paintCatQual() {
+      const row = document.getElementById('cat-qual');
+      row.innerHTML = QUALITIES.map(q =>
+        `<button class="qual-btn${q.k === draftCatQ ? ' on' : ''}" data-q="${q.k}">${q.short || q.label}</button>`).join('');
+      row.querySelectorAll('.qual-btn').forEach(b => {
+        b.addEventListener('click', () => { draftCatQ = b.dataset.q; paintCatQual(); haptic(); });
+      });
+    }
+
+    function normName(n) { return String(n || '').trim().toLowerCase(); }
+
+    function catById(id) { return id ? (state.catalogue || []).find(e => e.id === id) || null : null; }
+    function catByName(n) {
+      if (!n) return null;
+      return (state.catalogue || []).find(e => normName(e.name) === normName(n)) || null;
+    }
+    // Une légende droppée renvoie à une entrée du catalogue ; la qualité vient de là
+    function resolveLegend(l) {
+      const e = catById(l.catId) || catByName(l.name);
+      return { entry: e, name: e ? e.name : (l.name || ''), q: e && QMAP[e.q] ? e.q : null };
+    }
+
+    // Toutes les légendes obtenues, quelle qu'en soit la provenance
+    function allLegendDrops() {
+      const fromRuns = statRuns().flatMap(r =>
+        (r.legends || []).map(l => ({ ...l, ...resolveLegend(l), src: 'run', date: r.date, runId: r.id })));
+      const fromChests = (state.chests || []).flatMap(c =>
+        (c.legends || []).map(l => ({ ...l, ...resolveLegend(l), src: 'chest', date: c.date, chestId: c.id })));
+      return [...fromRuns, ...fromChests].sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+    }
+
+    function refreshNameList() {
+      const dl = document.getElementById('legend-names');
+      dl.innerHTML = state.catalogue
+        .map(e => `<option value="${escapeHtml(e.name)}"></option>`).join('');
+    }
+
+    // ---- Sélecteur de légende ----
+    let pickCtx = null;   // { target: 'run'|'chest', index }
+
+    function openPicker(target, index) {
+      pickCtx = { target, index };
+      document.getElementById('pick-q').value = '';
+      renderPickGrid('');
+      document.getElementById('modal-pick').classList.add('active');
+    }
+
+    function currentPickSlot() {
+      if (!pickCtx) return null;
+      const arr = pickCtx.target === 'run' ? draftLegends : draftChestLegends;
+      return arr[pickCtx.index] || null;
+    }
+
+    function renderPickGrid(query) {
+      const grid = document.getElementById('pick-grid');
+      const q = normName(query);
+      const slot = currentPickSlot();
+      const list = (state.catalogue || [])
+        .filter(e => !q || normName(e.name).includes(q));
+
+      if (!list.length) {
+        grid.innerHTML = `<div class="pick-empty">${
+          state.catalogue.length ? 'Aucun résultat' : 'Catalogue vide — crée ta première légende ci-dessous.'
+        }</div>`;
+        return;
+      }
+      grid.innerHTML = list.map(e => `
+        <button class="pick-card${slot && slot.catId === e.id ? ' on' : ''}" data-pick="${e.id}">
+          <span class="lg-thumb">${e.img
+            ? `<img src="${escapeHtml(e.img)}" alt="" onerror="this.parentNode.textContent='★'">`
+            : '★'}</span>
+          <span class="lg-name">${escapeHtml(e.name)}</span>
+          ${QMAP[e.q] ? `<span class="qbadge ${e.q}" style="margin-top:5px;display:inline-block;">${QMAP[e.q].short || QMAP[e.q].label}</span>` : ''}
+        </button>`).join('');
+
+      grid.querySelectorAll('[data-pick]').forEach(b => {
+        b.addEventListener('click', () => {
+          const e = catById(b.dataset.pick);
+          const arr = pickCtx.target === 'run' ? draftLegends : draftChestLegends;
+          arr[pickCtx.index] = { catId: e.id, name: e.name };
+          document.getElementById('modal-pick').classList.remove('active');
+          if (pickCtx.target === 'run') paintQualities(); else paintChestLegends();
+          pickCtx = null;
+          haptic();
+        });
+      });
+    }
+
+    // ---- Catalogue ----
+    function openCatForm(id, prefill) {
+      editingCatId = id || null;
+      const e = id ? state.catalogue.find(x => x.id === id) : null;
+      document.getElementById('cat-title').textContent = e ? 'Modifier la légende' : 'Ajouter des légendes';
+      document.getElementById('cat-name').value = e ? e.name : (prefill || '');
+      document.getElementById('cat-img').value = e ? (e.img || '') : '';
+      draftCatQ = e && QMAP[e.q] ? e.q : 'mid';
+      paintCatQual();
+      document.getElementById('cat-bulk').value = '';
+      // en édition, on masque l'ajout en masse
+      document.getElementById('cat-bulk-wrap').classList.toggle('hidden', !!e);
+      document.getElementById('cat-delete').classList.toggle('hidden', !e);
+      document.getElementById('modal-cat').classList.add('active');
+    }
+
+    function saveCat() {
+      const name = document.getElementById('cat-name').value.trim();
+      const img = document.getElementById('cat-img').value.trim();
+      const bulk = document.getElementById('cat-bulk').value;
+
+      if (editingCatId) {
+        const e = state.catalogue.find(x => x.id === editingCatId);
+        if (!name) { flagInvalid('cat-name'); return; }
+        if (e) { e.name = name; e.img = img; e.q = draftCatQ; }
+      } else {
+        const lines = [];
+        if (name) lines.push(name);
+        bulk.split('\n').map(l => l.trim()).filter(Boolean).forEach(l => lines.push(l));
+        if (!lines.length) { flagInvalid('cat-name'); return; }
+
+        let added = 0, skipped = 0;
+        lines.forEach(n => {
+          if (state.catalogue.some(e => normName(e.name) === normName(n))) { skipped++; return; }
+          state.catalogue.push({ id: uid(), name: n.slice(0, 60), img: (lines.length === 1 ? img : ''), q: draftCatQ });
+          added++;
+        });
+        toast(added
+          ? `${added} légende(s) ajoutée(s)${skipped ? ` · ${skipped} doublon(s) ignoré(s)` : ''}`
+          : 'Déjà dans le catalogue');
+      }
+      state.catalogue.sort((a, b) => a.name.localeCompare(b.name, 'fr'));
+      save();
+      refreshNameList();
+      renderLegends();
+      document.getElementById('modal-cat').classList.remove('active');
+      editingCatId = null;
+
+      // si on venait du sélecteur, on y retourne pour choisir la légende créée
+      if (pickCtx) {
+        const created = name ? catByName(name) : null;
+        if (created) {
+          const arr = pickCtx.target === 'run' ? draftLegends : draftChestLegends;
+          arr[pickCtx.index] = { catId: created.id, name: created.name };
+          if (pickCtx.target === 'run') paintQualities(); else paintChestLegends();
+          pickCtx = null;
+        } else {
+          openPicker(pickCtx.target, pickCtx.index);
+        }
+      }
+    }
+
+    function deleteCat() {
+      const id = editingCatId;
+      if (!id) return;
+      const e = state.catalogue.find(x => x.id === id);
+      if (!e) return;
+      const used = allLegendDrops().filter(l => normName(l.name) === normName(e.name)).length;
+      document.getElementById('modal-cat').classList.remove('active');
+      confirmDialog(
+        'Retirer du catalogue ?',
+        used ? `${used} drop(s) portent ce nom : ils sont conservés, seul le catalogue perd l'entrée.`
+             : 'Elle disparaîtra de ta collection.',
+        () => {
+          state.catalogue = state.catalogue.filter(x => x.id !== id);
+          save();
+          refreshNameList();
+          renderLegends();
+          editingCatId = null;
+          toast('Retirée du catalogue');
+        }
+      );
+    }
+
+    // ---- Coffres ----
+    function paintChestLegends() {
+      const box = document.getElementById('ch-legends');
+      box.innerHTML = '';
+      draftChestLegends.forEach((l, i) =>
+        box.appendChild(legendSlotEl(l, i, draftChestLegends.length, idx => openPicker('chest', idx))));
+    }
+
+    function syncChestLegends() {
+      const n = clampInt('ch-count', 20);
+      const before = draftChestLegends.length;
+      while (draftChestLegends.length < n) draftChestLegends.push({ catId: null, name: '' });
+      if (draftChestLegends.length > n) draftChestLegends.length = n;
+      paintChestLegends();
+      if (n > before) {
+        const idx = draftChestLegends.findIndex(l => !l.catId && !l.name);
+        if (idx >= 0) openPicker('chest', idx);
+      }
+    }
+
+    function openChestForm(id) {
+      editingChestId = id || null;
+      const c = id ? state.chests.find(x => x.id === id) : null;
+      document.getElementById('chest-title').textContent = c ? 'Modifier le coffre' : 'Coffre légendaire';
+      document.getElementById('ch-date').value = c ? (c.date || todayISO()) : todayISO();
+      document.getElementById('ch-note').value = c ? (c.note || '') : '';
+      draftChestLegends = c ? (c.legends || []).map(l => ({ catId: l.catId || null, name: l.name || '' })) : [];
+      document.getElementById('ch-count').value = draftChestLegends.length || '';
+      paintChestLegends();
+      document.getElementById('chest-delete').classList.toggle('hidden', !c);
+      document.getElementById('modal-chest').classList.add('active');
+    }
+
+    function saveChest() {
+      const payload = {
+        date: document.getElementById('ch-date').value || todayISO(),
+        note: document.getElementById('ch-note').value.trim(),
+        legends: draftChestLegends.filter(l => l.catId || l.name)
+          .map(l => ({ catId: l.catId || null, name: (l.name || '').trim() })),
+      };
+      const wasEditing = !!editingChestId;
+      if (editingChestId) {
+        const c = state.chests.find(x => x.id === editingChestId);
+        if (c) Object.assign(c, payload);
+      } else {
+        state.chests.push({ id: uid(), ...payload, createdAt: Date.now() });
+      }
+      save();
+      refreshNameList();
+      renderSonges();
+      document.getElementById('modal-chest').classList.remove('active');
+      editingChestId = null;
+      toast(wasEditing ? 'Coffre mis à jour' : 'Coffre enregistré');
+    }
+
+    function deleteChest() {
+      const id = editingChestId;
+      if (!id) return;
+      document.getElementById('modal-chest').classList.remove('active');
+      confirmDialog('Supprimer ce coffre ?', 'Les légendes qu\'il contenait ne seront plus comptées.', () => {
+        state.chests = state.chests.filter(x => x.id !== id);
+        save();
+        renderSonges();
+        editingChestId = null;
+        toast('Coffre supprimé');
+      });
+    }
+
+    // ---- Rendu de l'onglet Légendes ----
+    function renderLegends() {
+      const body = document.getElementById('legends-body');
+      const drops = allLegendDrops();
+      const fromChest = drops.filter(d => d.src === 'chest');
+      const fromRun = drops.filter(d => d.src === 'run');
+      if (!Array.isArray(state.chests)) state.chests = [];
+      if (!Array.isArray(state.catalogue)) state.catalogue = [];
+      const nChests = state.chests.length;
+      const perChest = nChests ? fromChest.length / nChests : null;
+
+      // Cohérence entre les bribes cumulées et les coffres réellement ouverts
+      const { metric, target, offset } = goalCfg();
+      const earned = statRuns().reduce((s, r) => s + (r.bribes || 0), 0) + (metric === 'bribes' ? offset : 0);
+      const expected = metric === 'bribes' ? Math.floor(earned / target) : null;
+      const gap = expected != null ? expected - nChests : null;
+
+      const catRows = state.catalogue.map(e => {
+        const mine = drops.filter(d => (d.entry && d.entry.id === e.id));
+        return { entry: e, n: mine.length, runs: mine.filter(m => m.src === 'run').length,
+                 chests: mine.filter(m => m.src === 'chest').length };
+      }).sort((a, b) => b.n - a.n || a.entry.name.localeCompare(b.entry.name, 'fr'));
+
+      const owned = catRows.filter(r => r.n > 0).length;
+      const unlisted = drops.filter(d => !d.entry && d.name);
+      const unnamed = drops.filter(d => !d.name).length;
+
+      body.innerHTML = `
+        <div class="chart-card">
+          <div class="chart-title">Coffres légendaires</div>
+          <div class="chart-sub">Chaque palier de ${target.toLocaleString('fr-FR')} bribes en débloque un</div>
+          <div class="chest-counter">
+            <div class="dstat"><div class="lbl">Ouverts</div><div class="val gold small">${nChests}</div></div>
+            <div class="dstat"><div class="lbl">Légendes</div><div class="val small">${fromChest.length}</div></div>
+            <div class="dstat"><div class="lbl">Par coffre</div><div class="val small">${perChest != null ? perChest.toFixed(1).replace('.', ',') : '—'}</div></div>
+          </div>
+          ${gap != null && gap !== 0 ? `<div class="insight warn">Tes bribes cumulées correspondent à <b>${expected}</b> palier(s), mais tu as enregistré <b>${nChests}</b> coffre(s). ${gap > 0 ? `Il t'en manque ${gap} à saisir.` : `Tu en as saisi ${-gap} de plus — peut-être des coffres obtenus avant le suivi.`}</div>` : ''}
+          <button class="btn btn-primary" id="add-chest" style="width:100%;margin-top:12px;">+ J'ai ouvert un coffre</button>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-title">Provenance des légendes</div>
+          <div class="chart-sub">${drops.length} légende(s) au total</div>
+          <div class="yield-row">
+            <span class="yield-lbl" style="width:52px;text-align:left;">Coffres</span>
+            <span class="yield-track"><span class="yield-fill" style="width:${drops.length ? (fromChest.length / drops.length) * 100 : 0}%"></span></span>
+            <span class="yield-val">${drops.length ? Math.round((fromChest.length / drops.length) * 100) : 0} %</span>
+            <span class="yield-n">${fromChest.length}</span>
+          </div>
+          <div class="yield-row">
+            <span class="yield-lbl" style="width:52px;text-align:left;">Runs</span>
+            <span class="yield-track"><span class="yield-fill" style="width:${drops.length ? (fromRun.length / drops.length) * 100 : 0}%;background:linear-gradient(90deg,#2f5aa8,var(--blue));"></span></span>
+            <span class="yield-val">${drops.length ? Math.round((fromRun.length / drops.length) * 100) : 0} %</span>
+            <span class="yield-n">${fromRun.length}</span>
+          </div>
+          ${nChests ? `<div class="chart-sub" style="margin-top:14px;">Historique des coffres</div>
+          <div style="margin-top:6px;">
+            ${[...state.chests].sort((a, b) => (b.date || '').localeCompare(a.date || '')).map(c => `
+              <div class="chest-entry" data-chest="${c.id}">
+                <span class="ic">🎁</span>
+                <span class="bd">
+                  <span class="t1">${fmtDateShort(c.date)} — ${(c.legends || []).length} légende(s)</span>
+                  <span class="t2">${(c.legends || []).map(l => escapeHtml(resolveLegend(l).name || 'sans nom')).join(', ') || 'aucune'}${c.note ? ' · ' + escapeHtml(c.note) : ''}</span>
+                </span>
+              </div>`).join('')}
+          </div>` : ''}
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-title">Collection</div>
+          <div class="chart-sub">${owned} / ${state.catalogue.length} légendes obtenues au moins une fois</div>
+          <div class="sec-actions">
+            <button class="btn btn-secondary" id="add-cat">+ Ajouter au catalogue</button>
+          </div>
+          ${state.catalogue.length ? `<div class="lg-grid">
+            ${catRows.map(r => `
+              <div class="lg-card ${r.n ? 'owned' : 'missing'}" data-cat="${r.entry.id}">
+                ${r.n ? `<span class="lg-count">${r.n}</span>` : ''}
+                <span class="lg-thumb">${r.entry.img
+                  ? `<img src="${escapeHtml(r.entry.img)}" alt="" onerror="this.parentNode.textContent='★'">`
+                  : '★'}</span>
+                <span class="lg-name">${escapeHtml(r.entry.name)}</span>
+                ${QMAP[r.entry.q] ? `<span class="qbadge ${r.entry.q}" style="margin-top:5px;display:inline-block;">${QMAP[r.entry.q].short || QMAP[r.entry.q].label}</span>` : ''}
+                ${r.n ? `<span class="src-dots">
+                  ${Array.from({ length: Math.min(r.runs, 6) }).map(() => '<span class="src-dot run"></span>').join('')}
+                  ${Array.from({ length: Math.min(r.chests, 6) }).map(() => '<span class="src-dot chest"></span>').join('')}
+                </span>` : ''}
+              </div>`).join('')}
+          </div>
+          <div class="chart-legend">
+            <span><span class="lg-swatch" style="background:var(--blue)"></span> obtenue en run</span>
+            <span><span class="lg-swatch" style="background:var(--gold)"></span> obtenue en coffre</span>
+          </div>` : `<div class="purchases-empty">Catalogue vide — ajoute tes légendes pour suivre ta collection.</div>`}
+          ${unlisted.length ? `<div class="insight warn"><b>${unlisted.length}</b> drop(s) portent un nom absent du catalogue. Ils comptent dans les stats mais pas dans la collection.</div>` : ''}
+          ${unnamed ? `<div class="insight warn"><b>${unnamed}</b> légende(s) sans nom. Ouvre les runs concernées pour compléter.</div>` : ''}
+        </div>
+      `;
+
+      const addChest = document.getElementById('add-chest');
+      if (addChest) addChest.addEventListener('click', () => openChestForm());
+      const addCat = document.getElementById('add-cat');
+      if (addCat) addCat.addEventListener('click', () => openCatForm());
+      body.querySelectorAll('[data-chest]').forEach(el =>
+        el.addEventListener('click', () => openChestForm(el.dataset.chest)));
+      body.querySelectorAll('[data-cat]').forEach(el =>
+        el.addEventListener('click', () => openCatForm(el.dataset.cat)));
+    }
+
     // ---- Rendu : stats globales + graphiques ----
     function sparkBars(runs) {
       const vals = runs.map(runRate);
@@ -3194,22 +4584,194 @@
       </svg>`;
     }
 
-    function waveHistogram(runs) {
-      const counts = new Array(MAX_WAVE + 1).fill(0);
-      runs.forEach(r => { counts[Math.min(MAX_WAVE, Math.max(0, r.wave || 0))]++; });
-      const max = Math.max(...counts);
-      if (max === 0) return '';
-      let rows = '';
-      for (let w = MAX_WAVE; w >= 0; w--) {
-        if (counts[w] === 0) continue;
-        const pct = (counts[w] / max) * 100;
-        rows += `<div class="wh-row">
-          <span class="wh-lbl">${w === 0 ? '—' : 'V' + w}</span>
-          <span class="wh-track"><span class="wh-fill" style="width:${pct.toFixed(1)}%"></span></span>
-          <span class="wh-n">${counts[w]}</span>
-        </div>`;
+    // ---- Progression dans les vagues : courbe de survie ----
+    // Bien plus lisible qu'un histogramme brut : « quelle part de mes runs atteint au moins la vague N »
+    function waveProgression(runs) {
+      const reached = runs.filter(r => (r.wave || 0) > 0);
+      if (reached.length < 2) return '';
+
+      const rows = [];
+      for (let w = 1; w <= MAX_WAVE; w++) {
+        const n = reached.filter(r => (r.wave || 0) >= w).length;
+        rows.push({ w, n, pct: (n / reached.length) * 100 });
       }
-      return `<div class="wave-hist">${rows}</div>`;
+      const lastReached = Math.max(...reached.map(r => r.wave || 0));
+      const visible = rows.filter(r => r.w <= Math.min(MAX_WAVE, lastReached + 1));
+
+      // Le mur : la vague où l'on perd le plus de monde d'un coup
+      let wall = null, biggestDrop = 0;
+      for (let i = 1; i < visible.length; i++) {
+        const drop = visible[i - 1].pct - visible[i].pct;
+        if (drop > biggestDrop) { biggestDrop = drop; wall = visible[i]; }
+      }
+
+      const bars = visible.map(r => {
+        const isWall = wall && r.w === wall.w;
+        return `<div class="yield-row">
+          <span class="yield-lbl">V${r.w}</span>
+          <span class="yield-track"><span class="yield-fill${isWall ? '' : ''}" style="width:${r.pct.toFixed(1)}%;${isWall ? 'background:linear-gradient(90deg,#b91c1c,#ef4444);' : ''}"></span></span>
+          <span class="yield-val">${Math.round(r.pct)} %</span>
+          <span class="yield-n">${r.n}</span>
+        </div>`;
+      }).join('');
+
+      const median = visible.filter(r => r.pct >= 50).pop();
+
+      return `<div class="chart-card">
+        <div class="chart-title">Progression dans les vagues</div>
+        <div class="chart-sub">Part de tes runs qui atteint <b>au moins</b> chaque vague · ${reached.length} run(s) arrivées à l'étage final</div>
+        ${bars}
+        <div class="chart-legend">
+          <span><span class="lg-swatch" style="background:linear-gradient(90deg,var(--gold-deep),var(--gold-bright))"></span> % de runs</span>
+          ${wall ? '<span><span class="lg-swatch" style="background:linear-gradient(90deg,#b91c1c,#ef4444)"></span> plus grosse chute</span>' : ''}
+          <span>le chiffre de droite = nombre de runs</span>
+        </div>
+        <div class="insight">
+          ${median ? `Tu passes la <b>vague ${median.w}</b> une fois sur deux. ` : ''}
+          ${wall ? `Ta plus grosse chute est à la <b>vague ${wall.w}</b> : tu y perds ${Math.round(biggestDrop)} points de pourcentage d'un coup. C'est là qu'un changement de compo ou de stratégie aurait le plus d'effet.` : ''}
+        </div>
+      </div>`;
+    }
+
+    // ---- Rendement selon la vague : barres + courbe, avec axes ----
+    function yieldByWave(runs) {
+      const buckets = new Map();
+      runs.forEach(r => {
+        const w = Math.min(MAX_WAVE, Math.max(0, r.wave || 0));
+        const rate = runRate(r);
+        if (rate == null) return;
+        if (!buckets.has(w)) buckets.set(w, []);
+        buckets.get(w).push(rate);
+      });
+      if (buckets.size < 2) return '';
+
+      const rows = [...buckets.entries()]
+        .map(([w, rates]) => ({ w, med: median(rates), n: rates.length }))
+        .sort((a, b) => a.w - b.w);
+
+      const maxRate = Math.max(...rows.map(r => r.med));
+      const maxN = Math.max(...rows.map(r => r.n));
+      const peak = rows.reduce((best, r) => (r.med > best.med ? r : best), rows[0]);
+      const turning = rows.length >= 3 && peak.w !== rows[rows.length - 1].w;
+
+      // Géométrie
+      const W = 340, H = 210, L = 40, R = 26, T = 14, B = 34;
+      const pw = W - L - R, ph = H - T - B;
+      const n = rows.length;
+      const slot = pw / n;
+      const yRate = v => T + ph - (maxRate > 0 ? (v / maxRate) * ph : 0);
+      const yCount = v => T + ph - (maxN > 0 ? (v / maxN) * ph * 0.55 : 0);
+
+      // Grille + graduations de gauche (bribes/h)
+      let grid = '';
+      for (let i = 0; i <= 3; i++) {
+        const v = (maxRate / 3) * i;
+        const y = yRate(v);
+        grid += `<line x1="${L}" y1="${y.toFixed(1)}" x2="${W - R}" y2="${y.toFixed(1)}" stroke="var(--border)" stroke-width="1" ${i ? 'stroke-dasharray="2 4"' : ''}/>`;
+        grid += `<text x="${L - 6}" y="${(y + 3.5).toFixed(1)}" text-anchor="end" font-size="9" fill="var(--text-dim)">${fmtRate(v)}</text>`;
+      }
+
+      // Barres d'effectif (en fond) + points de rendement
+      let bars = '', pts = [], labels = '', dots = '';
+      rows.forEach((r, i) => {
+        const cx = L + slot * i + slot / 2;
+        const bw = Math.min(26, slot * 0.55);
+        const by = yCount(r.n);
+        bars += `<rect x="${(cx - bw / 2).toFixed(1)}" y="${by.toFixed(1)}" width="${bw.toFixed(1)}" height="${(T + ph - by).toFixed(1)}" rx="2" fill="var(--blue)" opacity="0.18"/>`;
+        const y = yRate(r.med);
+        pts.push(`${cx.toFixed(1)},${y.toFixed(1)}`);
+        const isPeak = r.w === peak.w;
+        dots += `<circle cx="${cx.toFixed(1)}" cy="${y.toFixed(1)}" r="${isPeak ? 5 : 3.5}" fill="${isPeak ? 'var(--gold-bright)' : 'var(--gold)'}" stroke="var(--bg-card)" stroke-width="1.5"/>`;
+        labels += `<text x="${cx.toFixed(1)}" y="${(H - B + 14).toFixed(1)}" text-anchor="middle" font-size="9.5" fill="var(--text-dim)">${r.w === 0 ? '—' : r.w}</text>`;
+        labels += `<text x="${cx.toFixed(1)}" y="${(H - B + 25).toFixed(1)}" text-anchor="middle" font-size="8.5" fill="var(--blue)">×${r.n}</text>`;
+        if (isPeak) {
+          labels += `<text x="${cx.toFixed(1)}" y="${(y - 10).toFixed(1)}" text-anchor="middle" font-size="9.5" font-weight="700" fill="var(--gold-bright)">${fmtRate(r.med)}</text>`;
+        }
+      });
+
+      const line = `<polyline points="${pts.join(' ')}" fill="none" stroke="var(--gold)" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>`;
+
+      return `<div class="chart-card">
+        <div class="chart-title">Rendement selon la vague atteinte</div>
+        <div class="chart-sub">Bribes/h médian des runs arrêtées à chaque vague</div>
+        <div class="wave-chart">
+          <svg viewBox="0 0 ${W} ${H}" role="img">
+            ${grid}${bars}${line}${dots}${labels}
+            <text x="${W / 2}" y="${H - 2}" text-anchor="middle" font-size="9" fill="var(--text-dim)">vague atteinte</text>
+          </svg>
+        </div>
+        <div class="chart-legend">
+          <span><span class="lg-line" style="background:var(--gold)"></span> bribes/h médian</span>
+          <span><span class="lg-swatch" style="background:var(--blue);opacity:.35"></span> nombre de runs (×N)</span>
+        </div>
+        <div class="insight${turning ? '' : ' warn'}">
+          ${turning
+            ? `Ton rendement culmine à la <b>vague ${peak.w}</b> (${fmtRate(peak.med)} bribes/h) puis redescend. C'est le signal intéressant : au-delà, les vagues coûtent plus de temps qu'elles ne rapportent. <b>Confirme-le sur plus de runs avant d'en faire une règle</b> — les barres bleues te disent sur combien de runs repose chaque point.`
+            : `La courbe monte sans redescendre, et ça ne prouve pas que pousser est rentable : une run au tirage clément va loin <b>et</b> rapporte bien, donc la corrélation existe pour de mauvaises raisons. Ce qu'il faut guetter, c'est un <b>retournement</b> — un pic suivi d'une baisse.`}
+        </div>
+      </div>`;
+    }
+
+    // ---- Qualité des légendaires ----
+    function legendQualityCard(runs) {
+      const entries = allLegendDrops().filter(l => l.q && QMAP[l.q]);
+      const all = entries.map(l => l.q);
+      if (!all.length) return '';
+
+      const counts = QUALITIES.map(q => ({ ...q, n: all.filter(x => x === q.k).length }));
+      const total = all.length;
+      const avg = all.reduce((s, q) => s + QMAP[q].score, 0) / total;
+      const sec = runs.reduce((s, r) => s + (r.durationSec || 0), 0);
+      const hours = sec / 3600;
+      const good = entries.filter(l => l.src === 'run' && (l.q === 'bien' || l.q === 'exc')).length;
+      const nRun = entries.filter(l => l.src === 'run').length;
+      const nChest = entries.filter(l => l.src === 'chest').length;
+      const qAvg = src => {
+        const set = entries.filter(l => l.src === src);
+        return set.length ? set.reduce((s, l) => s + QMAP[l.q].score, 0) / set.length : null;
+      };
+      const avgRun = qAvg('run'), avgChest = qAvg('chest');
+      const goodEvery = good > 0 ? hours / good : null;
+      const unnamed = entries.filter(l => !l.name).length;
+      void unnamed;
+
+      const bars = counts.map(c => `
+        <div class="yield-row">
+          <span class="yield-lbl" style="width:66px;text-align:left;">${c.label}</span>
+          <span class="yield-track"><span class="yield-fill" style="width:${total ? (c.n / total) * 100 : 0}%;background:${
+            c.k === 'nul' ? '#8a8f98' : c.k === 'mid' ? '#6f9ed8' : c.k === 'bien' ? '#58c47a' : 'linear-gradient(90deg,var(--gold-deep),var(--gold-bright))'
+          };"></span></span>
+          <span class="yield-val">${total ? Math.round((c.n / total) * 100) : 0} %</span>
+          <span class="yield-n">${c.n}</span>
+        </div>`).join('');
+
+      return `<div class="chart-card">
+        <div class="chart-title">Qualité des légendaires</div>
+        <div class="chart-sub">${total} légendaire(s) — ${nRun} en run, ${nChest} en coffre</div>
+        ${bars}
+        <div class="detail-stats" style="margin-top:12px;">
+          <div class="dstat"><div class="lbl">Note moyenne</div><div class="val small">${avg.toFixed(2).replace('.', ',')}<span class="u"> / 4</span></div></div>
+          <div class="dstat"><div class="lbl">Bien ou mieux</div><div class="val gold small">${Math.round((good / total) * 100)}%</div></div>
+          ${goodEvery != null ? `<div class="dstat wide"><div class="lbl">Un bon légendaire (en run)</div><div class="val small">toutes les ${fmtDur(goodEvery * 3600)}</div></div>` : ''}
+          ${avgRun != null ? `<div class="dstat"><div class="lbl">Note en run</div><div class="val small">${avgRun.toFixed(2).replace('.', ',')}</div></div>` : ''}
+          ${avgChest != null ? `<div class="dstat"><div class="lbl">Note en coffre</div><div class="val small">${avgChest.toFixed(2).replace('.', ',')}</div></div>` : ''}
+        </div>
+        ${(avgRun != null && avgChest != null && Math.min(nRun, nChest) >= 5)
+          ? `<div class="insight">Les coffres sortent en moyenne ${avgChest > avgRun ? 'mieux' : avgChest < avgRun ? 'moins bien' : 'pareil'} que les drops de run (${avgChest.toFixed(2).replace('.', ',')} contre ${avgRun.toFixed(2).replace('.', ',')}).</div>`
+          : (avgRun != null && avgChest != null)
+            ? `<div class="insight warn">Trop peu de drops de chaque côté pour comparer coffres et runs — il en faut au moins 5 de chaque.</div>` : ''}
+        ${entries.length ? `<div class="chart-sub" style="margin:16px 0 6px;">Tes drops</div>
+        <div class="legend-list">
+          ${[...entries].reverse().map(l => `
+            <div class="legend-entry">
+              <span class="qbadge ${l.q}">${QMAP[l.q].short || QMAP[l.q].label}</span>
+              <span class="nm${l.name ? '' : ' unnamed'}">${l.name ? escapeHtml(l.name) : 'sans nom'}</span>
+              <span class="dt">${fmtDateShort(l.date)}</span>
+            </div>`).join('')}
+        </div>` : ''}
+        ${unnamed ? `<div class="insight warn">${unnamed} légendaire(s) sans nom. Filtre tes runs sur « ★ Légendaire » pour les retrouver et compléter.</div>` : ''}
+        ${total < 8 ? `<div class="insight warn">Sur ${total} légendaire(s) seulement, cette répartition est du bruit. Il en faut une vingtaine avant d'en tirer quoi que ce soit.</div>` : ''}
+      </div>`;
     }
 
     // ---- Objectif configurable (coffre légendaire par défaut) ----
@@ -3310,46 +4872,6 @@
       if (offsetEl) offsetEl.addEventListener('change', () => setGoal({ offset: Math.max(0, parseInt(offsetEl.value, 10) || 0) }));
     }
 
-    // ---- Rendement selon la vague atteinte ----
-    function yieldByWave(runs) {
-      const buckets = new Map();
-      runs.forEach(r => {
-        const w = Math.min(MAX_WAVE, Math.max(0, r.wave || 0));
-        const rate = runRate(r);
-        if (rate == null) return;
-        if (!buckets.has(w)) buckets.set(w, []);
-        buckets.get(w).push(rate);
-      });
-      if (buckets.size < 2) return '';
-
-      const rows = [...buckets.entries()]
-        .map(([w, rates]) => ({ w, med: median(rates), n: rates.length }))
-        .sort((a, b) => a.w - b.w);
-      const max = Math.max(...rows.map(r => r.med));
-      const peak = rows.reduce((best, r) => (r.med > best.med ? r : best), rows[0]);
-      // Un retournement = le maximum n'est pas à la vague la plus haute atteinte
-      const turning = rows.length >= 3 && peak.w !== rows[rows.length - 1].w;
-
-      const html = rows.map(r => `
-        <div class="yield-row">
-          <span class="yield-lbl">${r.w === 0 ? '—' : 'V' + r.w}</span>
-          <span class="yield-track"><span class="yield-fill${r.w === peak.w ? ' peak' : ''}" style="width:${max > 0 ? (r.med / max) * 100 : 0}%"></span></span>
-          <span class="yield-val">${fmtRate(r.med)}</span>
-          <span class="yield-n">×${r.n}</span>
-        </div>`).join('');
-
-      return `<div class="chart-card">
-        <div class="chart-title">Rendement selon la vague atteinte</div>
-        <div class="chart-sub">Bribes/h médian des runs qui se sont arrêtées à chaque vague</div>
-        ${html}
-        <div class="note-box" style="margin:12px 0 0;">
-          ${turning
-            ? `Ton rendement culmine à la <b>vague ${peak.w}</b> puis redescend. C'est le signal intéressant : au-delà, les vagues te coûtent plus de temps qu'elles ne rapportent. <b>Vérifie-le sur plus de runs avant d'en faire une règle.</b>`
-            : `Attention à la lecture : une run où le tirage est clément va loin <b>et</b> rapporte bien, donc la courbe monte pour de mauvaises raisons. Ce qui serait vraiment informatif, c'est un <b>retournement</b> — un pic suivi d'une baisse. Tant que la courbe monte tout du long, elle ne dit pas que pousser est rentable.`}
-        </div>
-      </div>`;
-    }
-
     function renderSongesStats() {
       const body = document.getElementById('sstats-body');
       const empty = document.getElementById('empty-sstats');
@@ -3422,13 +4944,11 @@
           ${sparkBars(runs)}
         </div>` : ''}
 
+        ${waveProgression(runs)}
+
         ${yieldByWave(runs)}
 
-        <div class="chart-card">
-          <div class="chart-title">Vagues atteintes</div>
-          <div class="chart-sub">Répartition de tes runs · « — » = étage final non atteint</div>
-          ${waveHistogram(runs)}
-        </div>
+        ${legendQualityCard(runs)}
 
         <div class="note-box" style="margin-bottom:0;">
           ${cv != null
@@ -3443,6 +4963,7 @@
     function renderSonges() {
       renderPeriodControls();
       renderSongesBar();
+      renderLegends();
       renderRuns();
       renderCompos();
       renderSongesStats();
@@ -3499,11 +5020,135 @@
       });
     }
     function clampInt(id, max) {
-      const raw = document.getElementById(id).value;
+      const raw = String(document.getElementById(id).value).replace(/\D/g, '');
       let v = parseInt(raw, 10);
       if (isNaN(v) || v < 0) v = 0;
       if (max != null && v > max) v = max;
       return v;
+    }
+
+    // Champ numérique simple : chiffres seuls + rappel à chaque frappe
+    function setupCountInput(id, max, onChange) {
+      const el = document.getElementById(id);
+      el.addEventListener('input', () => {
+        el.value = el.value.replace(/\D/g, '');
+        if (parseInt(el.value, 10) > max) el.value = String(max);
+        onChange();
+      });
+      el.addEventListener('focus', () => { if (el.select) el.select(); });
+    }
+
+    // Saisie du butin : chiffres seuls, bascule quand le champ est plein ou sur Entrée
+    function setupLootInputs() {
+      const ids = ['r-bribes', 'r-reflets', 'r-runes', 'r-legend'];
+      const els = ids.map(i => document.getElementById(i));
+
+      els.forEach((el, i) => {
+        const max = parseInt(el.getAttribute('maxlength'), 10);
+        el.addEventListener('input', () => {
+          el.value = el.value.replace(/\D/g, '').slice(0, max);
+          if (el.id === 'r-legend') syncQualities(true);
+          // bascule seulement quand le champ ne peut plus rien recevoir
+          if (el.value.length === max && els[i + 1]) {
+            els[i + 1].focus();
+            if (els[i + 1].select) els[i + 1].select();
+          }
+        });
+        el.addEventListener('keydown', e => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            if (els[i + 1]) { els[i + 1].focus(); if (els[i + 1].select) els[i + 1].select(); }
+            else el.blur();
+          }
+          if (e.key === 'Backspace' && el.value === '' && i > 0) {
+            e.preventDefault();
+            const prev = els[i - 1];
+            prev.focus();
+            prev.value = prev.value.slice(0, -1);
+            if (prev.id === 'r-legend') syncQualities(false);
+          }
+        });
+        el.addEventListener('focus', () => { if (el.select) el.select(); });
+      });
+    }
+
+    // Un emplacement par légende déclarée ; le classement vient du catalogue
+    function syncQualities(openPickerIfNew) {
+      const n = clampInt('r-legend', 9);
+      if (!Array.isArray(draftLegends)) draftLegends = [];
+      const before = draftLegends.length;
+      while (draftLegends.length < n) draftLegends.push({ catId: null, name: '' });
+      if (draftLegends.length > n) draftLegends.length = n;
+      paintQualities();
+      // dès qu'un emplacement s'ouvre, on propose directement de choisir la légende
+      if (openPickerIfNew && n > before) {
+        const idx = draftLegends.findIndex(l => !l.catId && !l.name);
+        if (idx >= 0) openPicker('run', idx);
+      }
+    }
+
+    function legendSlotEl(l, i, total, onPick) {
+      const info = resolveLegend(l);
+      const item = document.createElement('div');
+      item.className = 'qual-item';
+      item.innerHTML = `
+        <div class="qi-lbl">Légende ${total > 1 ? '#' + (i + 1) : ''}</div>
+        <button class="compo-opt${info.name ? ' on' : ''}" style="width:100%;">
+          <span class="lg-thumb" style="width:34px;height:34px;margin:0;font-size:15px;">${
+            info.entry && info.entry.img
+              ? `<img src="${escapeHtml(info.entry.img)}" alt="" onerror="this.parentNode.textContent='★'">`
+              : '★'}</span>
+          <span class="body">
+            <span class="nm">${info.name ? escapeHtml(info.name) : 'Choisir une légende'}</span>
+            ${info.q ? `<span class="cls"><span class="qbadge ${info.q}">${QMAP[info.q].short || QMAP[info.q].label}</span></span>` : ''}
+          </span>
+        </button>`;
+      item.querySelector('button').addEventListener('click', () => { onPick(i); haptic(); });
+      return item;
+    }
+
+    function paintQualities() {
+      const box = document.getElementById('r-qualities');
+      box.innerHTML = '';
+      draftLegends.forEach((l, i) =>
+        box.appendChild(legendSlotEl(l, i, draftLegends.length, idx => openPicker('run', idx))));
+    }
+
+    // Saisie de durée : chiffres seuls, passage automatique au champ suivant
+    function setupDurationInputs() {
+      const ids = ['r-h', 'r-m', 'r-s'];
+      const els = ids.map(i => document.getElementById(i));
+
+      els.forEach((el, i) => {
+        el.addEventListener('input', () => {
+          const max = i === 0 ? 1 : 2;
+          let v = el.value.replace(/\D/g, '').slice(0, max);
+
+          // minutes/secondes : 6 à 9 ne peuvent commencer un nombre à deux chiffres
+          const full = v.length === max || (i > 0 && v.length === 1 && +v >= 6);
+          if (i > 0 && v.length === 2 && +v > 59) v = '59';
+          el.value = v;
+
+          updateDurPreview();
+          if (full && v.length && els[i + 1]) {
+            els[i + 1].focus();
+            if (els[i + 1].select) els[i + 1].select();
+          }
+        });
+
+        // retour arrière sur un champ vide : on remonte au précédent
+        el.addEventListener('keydown', e => {
+          if (e.key === 'Backspace' && el.value === '' && i > 0) {
+            e.preventDefault();
+            const prev = els[i - 1];
+            prev.focus();
+            prev.value = prev.value.slice(0, -1);
+            updateDurPreview();
+          }
+        });
+
+        el.addEventListener('focus', () => { if (el.select) el.select(); });
+      });
     }
     function readDurationFields() {
       return clampInt('r-h', 99) * 3600 + clampInt('r-m', 59) * 60 + clampInt('r-s', 59);
@@ -3532,6 +5177,9 @@
       document.getElementById('r-runes').value = r && r.runes ? r.runes : '';
       document.getElementById('r-legend').value = r && r.legend ? r.legend : '';
       document.getElementById('r-note').value = r ? (r.note || '') : '';
+      draftLegends = (r && Array.isArray(r.legends))
+        ? r.legends.map(l => ({ catId: l.catId || null, name: l.name || '' })) : [];
+      syncQualities(false);
 
       draftWave = r ? (r.wave || 0) : 0;
       draftExcluded = r ? !!r.excluded : false;
@@ -3546,7 +5194,7 @@
       paintExcludedToggle();
       renderCompoSelect();
       updateDurPreview();
-      document.getElementById('run-delete-row').classList.toggle('hidden', !r);
+      document.getElementById('run-delete').classList.toggle('hidden', !r);
       document.getElementById('run-dup-row').classList.toggle('hidden', !r);
       document.getElementById('modal-run').classList.add('active');
     }
@@ -3562,7 +5210,7 @@
       editingRunId = null;
       document.getElementById('run-title').textContent = 'Nouvelle run';
       document.getElementById('r-date').value = todayISO();
-      document.getElementById('run-delete-row').classList.add('hidden');
+      document.getElementById('run-delete').classList.add('hidden');
       document.getElementById('run-dup-row').classList.add('hidden');
       toast('Copie prête — ajuste et enregistre');
     }
@@ -3582,9 +5230,11 @@
         bribes: num('r-bribes'),
         reflets: num('r-reflets'),
         runes: num('r-runes'),
-        legend: num('r-legend'),
+        legend: draftLegends.filter(l => l.catId || l.name).length,
         compoId: draftCompoId,
         excluded: draftExcluded,
+        legends: draftLegends.filter(l => l.catId || l.name)
+          .map(l => ({ catId: l.catId || null, name: (l.name || '').trim() })),
         note: document.getElementById('r-note').value.trim(),
       };
 
@@ -3659,9 +5309,8 @@
     document.getElementById('run-cancel').addEventListener('click', () => { closeAllModals(); editingRunId = null; });
     document.getElementById('run-save').addEventListener('click', saveRun);
     document.getElementById('run-delete').addEventListener('click', deleteRun);
-    ['r-h', 'r-m', 'r-s'].forEach(id => {
-      document.getElementById(id).addEventListener('input', updateDurPreview);
-    });
+    setupDurationInputs();
+    setupLootInputs();
 
     document.getElementById('r-excluded').addEventListener('click', () => {
       draftExcluded = !draftExcluded;
@@ -3672,6 +5321,47 @@
     document.getElementById('c-hidden').addEventListener('click', () => {
       draftHidden = !draftHidden;
       paintCompoToggle();
+      haptic();
+    });
+
+    setupCountInput('ch-count', 20, syncChestLegends);
+    document.getElementById('chest-cancel').addEventListener('click', () => {
+      document.getElementById('modal-chest').classList.remove('active');
+      editingChestId = null;
+    });
+    document.getElementById('chest-save').addEventListener('click', saveChest);
+    document.getElementById('chest-delete').addEventListener('click', deleteChest);
+    document.getElementById('cat-cancel').addEventListener('click', () => {
+      document.getElementById('modal-cat').classList.remove('active');
+      editingCatId = null;
+    });
+    document.getElementById('pick-cancel').addEventListener('click', () => {
+      document.getElementById('modal-pick').classList.remove('active');
+      pickCtx = null;
+    });
+    document.getElementById('pick-q').addEventListener('input', (e) => renderPickGrid(e.target.value));
+    document.getElementById('pick-new').addEventListener('click', () => {
+      const q = document.getElementById('pick-q').value.trim();
+      document.getElementById('modal-pick').classList.remove('active');
+      openCatForm(null, q);
+    });
+    document.getElementById('cat-save').addEventListener('click', saveCat);
+    document.getElementById('cat-delete').addEventListener('click', deleteCat);
+
+    document.getElementById('filter-clear').addEventListener('click', () => {
+      activeFilters = new Set();
+      numericFilters = {};
+      pendingFlags = pendingNums = null;
+      drawerOpen = false;
+      renderRuns();
+      toast('Filtres retirés');
+      haptic();
+    });
+
+    document.getElementById('filter-toggle').addEventListener('click', () => {
+      drawerOpen = !drawerOpen;
+      if (!drawerOpen) { pendingFlags = pendingNums = null; }
+      renderRuns();
       haptic();
     });
 
@@ -3738,6 +5428,9 @@
           if (o.id === 'modal-form') editingId = null;
           if (o.id === 'modal-run') editingRunId = null;
           if (o.id === 'modal-compo') { editingCompoId = null; compoReturnToRun = false; }
+          if (o.id === 'modal-chest') editingChestId = null;
+          if (o.id === 'modal-cat') editingCatId = null;
+          if (o.id === 'modal-pick') pickCtx = null;
           if (o.id === 'modal-confirm') confirmCb = null;
         }
       });
@@ -3768,7 +5461,9 @@
     paintCompo();
     paintCompoToggle();
     paintExcludedToggle();
+    paintCatQual();
     renderCompoSelect();
+    refreshNameList();
     render();
 
     // Service Worker pour le mode offline
