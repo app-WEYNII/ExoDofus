@@ -1166,6 +1166,40 @@
     }
     .filter-info b { color: #cfdffc; }
 
+    /* ---- Sélection d'intensité ---- */
+    .intens-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5px;
+    }
+    .int-btn {
+      padding: 9px 4px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-dim);
+      transition: all .13s ease;
+    }
+    .int-btn.on {
+      background: linear-gradient(135deg, var(--gold-deep), var(--gold));
+      color: #14100a;
+      border-color: var(--gold);
+    }
+    .int-btn:active { transform: scale(0.95); }
+    .ichip {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.07);
+      color: var(--text-soft);
+      white-space: nowrap;
+    }
+    .ichip.set { background: var(--gold-soft); color: var(--gold-bright); }
+
     /* ---- Tiroir de filtres ---- */
     .filter-row { display: flex; gap: 8px; margin-bottom: 10px; }
     .filter-clear {
@@ -2232,6 +2266,7 @@
     <!-- Songes : Compos -->
     <section class="view" id="view-compos">
       <div class="period-row" id="period-compos"></div>
+      <div class="period-row hidden" id="intens-compos"></div>
       <button class="btn btn-primary" id="add-compo" style="width:100%;margin-bottom:12px;">+ Nouvelle compo</button>
       <div class="note-box" id="compo-note"></div>
       <div id="list-compos"></div>
@@ -2250,6 +2285,7 @@
     <!-- Songes : Stats -->
     <section class="view" id="view-sstats">
       <div class="period-row" id="period-stats"></div>
+      <div class="period-row hidden" id="intens-stats"></div>
       <div id="sstats-body"></div>
       <div class="empty hidden" id="empty-sstats">
         <div class="icon">📊</div>
@@ -2430,6 +2466,7 @@
       </p>
       <div class="data-actions">
         <button class="btn btn-primary" id="data-export">⬇︎ Exporter (JSON)</button>
+        <button class="btn btn-secondary" id="data-csv">⬇︎ Exporter les runs (CSV)</button>
         <button class="btn btn-secondary" id="data-import">⬆︎ Importer</button>
       </div>
       <input type="file" id="data-file" accept="application/json,.json" style="display:none;" />
@@ -2471,6 +2508,11 @@
           </div>
         </div>
         <div class="dur-preview" id="r-dur-preview"></div>
+      </div>
+
+      <div class="field">
+        <label>Intensité</label>
+        <div class="intens-grid" id="r-intens"></div>
       </div>
 
       <div class="field">
@@ -2570,6 +2612,9 @@
         <button class="btn btn-secondary" id="compo-cancel">Annuler</button>
         <button class="btn btn-primary" id="compo-save">Enregistrer</button>
       </div>
+      <div class="modal-actions hidden" id="compo-share-row" style="margin-top:8px;">
+        <button class="btn btn-secondary" id="compo-share" style="width:100%;">⇗ Partager cette compo</button>
+      </div>
 
     </div>
   </div>
@@ -2644,6 +2689,34 @@
     </div>
   </div>
 
+  <!-- Modal: Dépense de bribes -->
+  <div class="modal-overlay" id="modal-spend">
+    <div class="modal">
+      <div class="modal-grip"></div>
+      <div class="modal-head">
+        <h2 id="spend-title">Dépense de bribes</h2>
+        <button class="trash-btn hidden" id="spend-delete" aria-label="Supprimer">🗑</button>
+      </div>
+      <div class="field">
+        <label>Date</label>
+        <input type="date" id="sp-date" />
+      </div>
+      <div class="field">
+        <label>Montant dépensé</label>
+        <input type="text" id="sp-amount" maxlength="6" placeholder="0" inputmode="numeric" autocomplete="off" />
+        <div class="hint">Ce qui part chez un marchand ne compte pas pour le palier.</div>
+      </div>
+      <div class="field">
+        <label>Objet <span style="color:var(--text-dim);font-weight:400;">(optionnel)</span></label>
+        <input type="text" id="sp-label" placeholder="Ex : ornement" maxlength="60" />
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="spend-cancel">Annuler</button>
+        <button class="btn btn-primary" id="spend-save">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Modal: Choisir une légende -->
   <div class="modal-overlay" id="modal-pick">
     <div class="modal">
@@ -2671,7 +2744,7 @@
     // ÉTAT & PERSISTANCE
     // ============================================================
     const STORAGE_KEY = 'dofus-exos-v1';
-    let state = { items: [], songes: [], compos: [], chests: [], catalogue: [], settings: {} };
+    let state = { items: [], songes: [], compos: [], chests: [], catalogue: [], spends: [], settings: {} };
     let currentDetailId = null;
     let editingId = null;
     let confirmCb = null;
@@ -2686,6 +2759,7 @@
         if (!Array.isArray(state.compos)) state.compos = [];
         if (!Array.isArray(state.chests)) state.chests = [];
         if (!Array.isArray(state.catalogue)) state.catalogue = [];
+        if (!Array.isArray(state.spends)) state.spends = [];
         if (!state.settings || typeof state.settings !== 'object') state.settings = {};
         if (state.settings.bribesOffset != null && !state.settings.goal) {
           state.settings.goal = { metric: 'bribes', target: 25000, offset: state.settings.bribesOffset };
@@ -2777,7 +2851,7 @@
           }
         });
         if (migrated) save();
-      } catch (e) { state = { items: [], songes: [], compos: [], chests: [], catalogue: [], settings: {} }; }
+      } catch (e) { state = { items: [], songes: [], compos: [], chests: [], catalogue: [], spends: [], settings: {} }; }
     }
     function save() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -3349,6 +3423,7 @@
                 compos: Array.isArray(data.compos) ? data.compos : [],
                 chests: Array.isArray(data.chests) ? data.chests : [],
                 catalogue: Array.isArray(data.catalogue) ? data.catalogue : [],
+                spends: Array.isArray(data.spends) ? data.spends : [],
                 settings: (data.settings && typeof data.settings === 'object') ? data.settings : {},
               };
               // re-sécurise les champs essentiels
@@ -3393,6 +3468,7 @@
                   r[k] = Math.max(0, parseInt(r[k], 10) || 0);
                 });
                 r.excluded = !!r.excluded;
+                r.intensity = IMAP[r.intensity] ? r.intensity : null;
                 if (!Array.isArray(r.legends)) {
                   const quals = Array.isArray(r.qualities) ? r.qualities : [];
                   r.legends = [];
@@ -3452,7 +3528,7 @@
 
     function clearAllData() {
       confirmDialog('Tout effacer ?', 'Tous tes exos, tes compos, tes runs, tes coffres et ton catalogue seront définitivement supprimés.', () => {
-        state = { items: [], songes: [], compos: [], chests: [], catalogue: [], settings: {} };
+        state = { items: [], songes: [], compos: [], chests: [], catalogue: [], spends: [], settings: {} };
         draftCompoId = null;
         save();
         render();
@@ -3469,6 +3545,21 @@
                      'Huppermage', 'Iop', 'Osamodas', 'Ouginak', 'Pandawa', 'Roublard', 'Sacrieur',
                      'Sadida', 'Sram', 'Steamer', 'Xélor', 'Zobal'];
     const MAX_WAVE = 15;
+
+    // Paliers d'intensité. Les bribes par vague varient énormément d'un palier
+    // à l'autre : sans cette donnée, comparer des runs n'a pas de sens.
+    const INTENSITIES = [
+      { k: 'reve1',  label: 'Rêve 1',      short: 'R1' },
+      { k: 'reve2',  label: 'Rêve 2',      short: 'R2' },
+      { k: 'reve3',  label: 'Rêve 3',      short: 'R3' },
+      { k: 'para1',  label: 'Paradoxe 1',  short: 'P1' },
+      { k: 'para2',  label: 'Paradoxe 2',  short: 'P2' },
+      { k: 'para3',  label: 'Paradoxe 3',  short: 'P3' },
+      { k: 'cauch1', label: 'Cauchemar 1', short: 'C1' },
+      { k: 'cauch2', label: 'Cauchemar 2', short: 'C2' },
+      { k: 'cauch3', label: 'Cauchemar 3', short: 'C3' },
+    ];
+    const IMAP = Object.fromEntries(INTENSITIES.map(i => [i.k, i]));
     const QUALITIES = [
       { k: 'nul',  label: 'Nul',  score: 1 },
       { k: 'mid',  label: 'Mid',  score: 2 },
@@ -3510,6 +3601,7 @@
     let draftCompo = [];
     let draftCompoId = null;
     let draftWave = 0;
+    let draftIntensity = null;
     let draftExcluded = false;
     let draftHidden = false;
     let draftLegends = [];
@@ -3596,10 +3688,18 @@
       d.setDate(d.getDate() - days);
       return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
     }
-    // Runs retenues pour toute analyse : ni exclues manuellement, ni hors période
+    // Runs retenues pour toute analyse : ni exclues, ni hors période, ni hors intensité
     function statRuns() {
       const cut = periodCutoff();
-      return sortedRuns().filter(r => !r.excluded && (!cut || (r.date || '') >= cut));
+      const int = state.settings.intensityFilter || null;
+      return sortedRuns().filter(r => !r.excluded
+        && (!cut || (r.date || '') >= cut)
+        && (!int || r.intensity === int));
+    }
+    // Intensités réellement présentes dans les données
+    function usedIntensities() {
+      const set = new Set(state.songes.filter(r => !r.excluded && r.intensity).map(r => r.intensity));
+      return INTENSITIES.filter(i => set.has(i.k));
     }
     function sortedRuns() {
       return [...state.songes].sort((a, b) =>
@@ -3638,6 +3738,9 @@
     function renderPeriodControls() {
       const cur = state.settings.period || 'all';
       const opts = [['all', 'Tout'], ['90', '90 jours'], ['30', '30 jours']];
+      const used = usedIntensities();
+      const curInt = state.settings.intensityFilter || '';
+
       ['period-compos', 'period-stats'].forEach(cid => {
         const el = document.getElementById(cid);
         if (!el) return;
@@ -3648,6 +3751,25 @@
             state.settings.period = b.dataset.p;
             save();
             renderSonges();
+            haptic();
+          });
+        });
+      });
+
+      // Comparer des intensités différentes n'a pas de sens : on propose de cloisonner
+      ['intens-compos', 'intens-stats'].forEach(cid => {
+        const el = document.getElementById(cid);
+        if (!el) return;
+        if (used.length < 2) { el.classList.add('hidden'); el.innerHTML = ''; return; }
+        el.classList.remove('hidden');
+        el.innerHTML = `<button class="per-btn${curInt === '' ? ' on' : ''}" data-i="">Toutes</button>` +
+          used.map(i => `<button class="per-btn${curInt === i.k ? ' on' : ''}" data-i="${i.k}">${i.short}</button>`).join('');
+        el.querySelectorAll('.per-btn').forEach(b => {
+          b.addEventListener('click', () => {
+            state.settings.intensityFilter = b.dataset.i || null;
+            save();
+            renderSonges();
+            renderSongesStats();
             haptic();
           });
         });
@@ -3671,6 +3793,7 @@
       reflets: { label: 'Reflets', get: r => r.reflets || 0 },
       runes:   { label: 'Runes',   get: r => r.runes   || 0 },
       wave:    { label: 'Vague',   get: r => r.wave    || 0, max: MAX_WAVE },
+      rate:    { label: 'Bribes/h', get: r => Math.round(runRate(r) || 0) },
       // Pour la durée, moins c'est long, mieux c'est : le seuil est un maximum
       duration:{ label: 'Durée',   get: r => r.durationSec || 0, isTime: true, dir: 'max' },
     };
@@ -4108,6 +4231,7 @@
       paintCompo();
       paintCompoToggle();
       document.getElementById('compo-delete').classList.toggle('hidden', !c);
+      document.getElementById('compo-share-row').classList.toggle('hidden', !c);
       document.getElementById('modal-compo').classList.add('active');
     }
 
@@ -4231,6 +4355,149 @@
       const dl = document.getElementById('legend-names');
       dl.innerHTML = state.catalogue
         .map(e => `<option value="${escapeHtml(e.name)}"></option>`).join('');
+    }
+
+    // ---- Partage d'une compo par lien ----
+    function encodeCompo(c) {
+      const payload = { n: c.name || '', c: c.classes };
+      // encodeURIComponent avant btoa : les accents des noms de classes sortent de Latin-1
+      return btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+    }
+    function decodeCompo(str) {
+      try {
+        const o = JSON.parse(decodeURIComponent(escape(atob(str))));
+        if (!o || !Array.isArray(o.c) || !o.c.length) return null;
+        return { name: String(o.n || '').slice(0, 40), classes: o.c.filter(x => CLASSES.includes(x)).slice(0, 4) };
+      } catch (e) { return null; }
+    }
+
+    async function shareCompo(id) {
+      const c = getCompo(id);
+      if (!c) return;
+      const url = location.origin + location.pathname + '#compo=' + encodeCompo(c);
+      const label = compoLabel(c);
+      try {
+        if (navigator.share) { await navigator.share({ title: label, url }); return; }
+        await navigator.clipboard.writeText(url);
+        toast('Lien copié');
+      } catch (e) {
+        // dernier recours : on affiche le lien pour copie manuelle
+        window.prompt('Copie ce lien :', url);
+      }
+    }
+
+    // Import d'une compo reçue par lien
+    function handleSharedCompo() {
+      const m = location.hash.match(/compo=([^&]+)/);
+      if (!m) return;
+      const shared = decodeCompo(m[1]);
+      history.replaceState(null, '', location.pathname);
+      if (!shared) { toast('Lien de compo invalide'); return; }
+
+      const key = classesKey(shared.classes);
+      if (state.compos.some(c => classesKey(c.classes) === key)) {
+        toast('Cette compo est déjà enregistrée');
+        return;
+      }
+      confirmDialog(
+        'Ajouter cette compo ?',
+        `${shared.name ? shared.name + ' — ' : ''}${shared.classes.join(', ')}`,
+        () => {
+          state.compos.push({ id: uid(), name: shared.name, classes: shared.classes, hidden: false, createdAt: Date.now() });
+          save();
+          renderSonges();
+          renderCompoSelect();
+          toast('Compo ajoutée');
+        }
+      );
+    }
+
+    // ---- Export CSV des runs ----
+    function exportCSV() {
+      const cols = ['date', 'duree_sec', 'duree', 'intensite', 'vague', 'bribes', 'bribes_par_heure',
+                    'reflets', 'runes', 'legendes', 'noms_legendes', 'compo', 'classes',
+                    'exclue', 'note'];
+      const esc = v => {
+        const t = String(v == null ? '' : v);
+        return /[";\n]/.test(t) ? '"' + t.replace(/"/g, '""') + '"' : t;
+      };
+      const rows = sortedRuns().map(r => {
+        const c = getCompo(r.compoId);
+        const names = (r.legends || []).map(l => resolveLegend(l).name).filter(Boolean);
+        const rate = runRate(r);
+        return [
+          r.date || '', r.durationSec || 0, fmtDur(r.durationSec),
+          r.intensity && IMAP[r.intensity] ? IMAP[r.intensity].label : '',
+          r.wave || 0, r.bribes || 0, rate != null ? Math.round(rate) : '',
+          r.reflets || 0, r.runes || 0, (r.legends || []).length, names.join(' | '),
+          c ? compoLabel(c) : '', c ? c.classes.join(' | ') : '',
+          r.excluded ? 'oui' : 'non', r.note || '',
+        ].map(esc).join(';');
+      });
+      // point-virgule + BOM : Excel en français ouvre le fichier correctement
+      const csv = '\ufeff' + cols.join(';') + '\n' + rows.join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `songes-runs-${todayISO()}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      toast(`${rows.length} run(s) exportée(s)`);
+    }
+
+    // ---- Dépenses de bribes ----
+    let editingSpendId = null;
+
+    function spentTotal() {
+      return (state.spends || []).reduce((s, x) => s + (x.amount || 0), 0);
+    }
+
+    function openSpendForm(id) {
+      editingSpendId = id || null;
+      const sp = id ? (state.spends || []).find(x => x.id === id) : null;
+      document.getElementById('spend-title').textContent = sp ? 'Modifier la dépense' : 'Dépense de bribes';
+      document.getElementById('sp-date').value = sp ? (sp.date || todayISO()) : todayISO();
+      document.getElementById('sp-amount').value = sp ? String(sp.amount || '') : '';
+      document.getElementById('sp-label').value = sp ? (sp.label || '') : '';
+      document.getElementById('spend-delete').classList.toggle('hidden', !sp);
+      document.getElementById('modal-spend').classList.add('active');
+    }
+
+    function saveSpend() {
+      const amount = Math.max(0, parseInt(String(document.getElementById('sp-amount').value).replace(/\D/g, ''), 10) || 0);
+      if (!amount) { flagInvalid('sp-amount'); return; }
+      const payload = {
+        date: document.getElementById('sp-date').value || todayISO(),
+        amount,
+        label: document.getElementById('sp-label').value.trim(),
+      };
+      if (editingSpendId) {
+        const sp = state.spends.find(x => x.id === editingSpendId);
+        if (sp) Object.assign(sp, payload);
+      } else {
+        state.spends.push({ id: uid(), ...payload, createdAt: Date.now() });
+      }
+      save();
+      renderSonges();
+      renderSongesStats();
+      document.getElementById('modal-spend').classList.remove('active');
+      editingSpendId = null;
+      toast('Dépense enregistrée');
+    }
+
+    function deleteSpend() {
+      const id = editingSpendId;
+      if (!id) return;
+      document.getElementById('modal-spend').classList.remove('active');
+      confirmDialog('Supprimer cette dépense ?', 'Le montant sera réintégré à ta progression.', () => {
+        state.spends = state.spends.filter(x => x.id !== id);
+        save();
+        renderSonges();
+        renderSongesStats();
+        editingSpendId = null;
+        toast('Dépense supprimée');
+      });
     }
 
     // ---- Sélecteur de légende ----
@@ -4436,6 +4703,45 @@
       });
     }
 
+    // ---- Taux de drop observés vs théoriques ----
+    // Chaque légende sort à 1/26. L'écart n'a de sens que rapporté à l'écart-type
+    // binomial : sans ça, on lit du bruit comme une tendance.
+    function dropRateCard(drops) {
+      const n = drops.filter(d => d.entry).length;
+      if (n < 10) return '';
+
+      const p = 1 / Math.max(1, LEGENDS_DB.length);
+      const sd = Math.sqrt(n * p * (1 - p));
+      const expected = n * p;
+
+      const rows = state.catalogue.map(e => {
+        const c = drops.filter(d => d.entry && d.entry.id === e.id).length;
+        return { e, c, z: sd > 0 ? (c - expected) / sd : 0 };
+      }).sort((a, b) => b.c - a.c);
+
+      const notable = rows.filter(r => Math.abs(r.z) >= 2);
+      const top = rows.slice(0, 6);
+      const max = Math.max(...rows.map(r => r.c), 1);
+
+      return `<div class="chart-card">
+        <div class="chart-title">Taux de drop observés</div>
+        <div class="chart-sub">${n} légende(s) identifiée(s) · attendu ${expected.toFixed(1).replace('.', ',')} par légende</div>
+        ${top.map(r => `
+          <div class="yield-row">
+            <span class="yield-lbl" style="width:92px;text-align:left;font-size:11px;">${escapeHtml(r.e.name.replace(/^Légende (de |du |d')/, ''))}</span>
+            <span class="yield-track"><span class="yield-fill" style="width:${(r.c / max) * 100}%"></span></span>
+            <span class="yield-val">${(n ? (r.c / n) * 100 : 0).toFixed(1).replace('.', ',')} %</span>
+            <span class="yield-n">${r.c}</span>
+          </div>`).join('')}
+        <div class="chart-legend"><span>théorique : 3,8 % chacune</span></div>
+        <div class="insight${notable.length ? '' : ' warn'}">
+          ${notable.length
+            ? `<b>${notable.map(r => escapeHtml(r.e.name)).join(', ')}</b> sort${notable.length > 1 ? 'ent' : ''} nettement hors de la fourchette attendue. Avec ${state.catalogue.length} légendes suivies, il faut s'attendre à voir ce genre d'écart par hasard de temps en temps — ce n'est pas une preuve que le jeu favorise cette légende.`
+            : `Aucun écart significatif : toutes tes légendes restent dans la fourchette normale. C'est le résultat attendu, le tirage étant uniforme. Il faudrait plusieurs centaines de drops pour détecter un vrai biais.`}
+        </div>
+      </div>`;
+    }
+
     // ---- Rendu de l'onglet Légendes ----
     function renderLegends() {
       const body = document.getElementById('legends-body');
@@ -4531,6 +4837,8 @@
           ${unlisted.length ? `<div class="insight warn"><b>${unlisted.length}</b> drop(s) portent un nom absent du catalogue. Ils comptent dans les stats mais pas dans la collection.</div>` : ''}
           ${unnamed ? `<div class="insight warn"><b>${unnamed}</b> légende(s) sans nom. Ouvre les runs concernées pour compléter.</div>` : ''}
         </div>
+
+        ${dropRateCard(drops)}
       `;
 
       const addChest = document.getElementById('add-chest');
@@ -4783,7 +5091,9 @@
       const { metric, target, offset } = goalCfg();
       const meta = GOAL_METRICS[metric];
       const earned = runs.reduce((s, r) => s + (r[metric] || 0), 0);
-      const total = earned + offset;
+      // les bribes dépensées chez un marchand ne comptent pas pour le palier
+      const spent = metric === 'bribes' ? spentTotal() : 0;
+      const total = Math.max(0, earned + offset - spent);
       const cycles = Math.floor(total / target);
       const current = total % target;
       const remaining = target - current;
@@ -4836,7 +5146,19 @@
             <span>Il te manque <b>${remaining.toLocaleString('fr-FR')}</b></span>
             ${hoursLeft != null ? `<span>≈ <b>${fmtDur(hoursLeft * 3600)}</b> de jeu</span>` : ''}
             <span>Médiane <b>${all.perRun != null ? Math.round(all.perRun).toLocaleString('fr-FR') : '—'}</b> /run</span>
+            ${spent ? `<span>Dépensé <b style="color:var(--red);">−${spent.toLocaleString('fr-FR')}</b></span>` : ''}
           </div>
+          ${metric === 'bribes' ? `<button class="btn btn-secondary" id="goal-spend" style="width:100%;margin-top:12px;">− Enregistrer une dépense</button>
+          ${(state.spends || []).length ? `<div style="margin-top:10px;">
+            ${[...state.spends].sort((a, b) => (b.date || '').localeCompare(a.date || '')).slice(0, 5).map(sp => `
+              <div class="chest-entry" data-spend="${sp.id}">
+                <span class="ic">🛒</span>
+                <span class="bd">
+                  <span class="t1">−${sp.amount.toLocaleString('fr-FR')} bribes</span>
+                  <span class="t2">${fmtDateShort(sp.date)}${sp.label ? ' · ' + escapeHtml(sp.label) : ''}</span>
+                </span>
+              </div>`).join('')}
+          </div>` : ''}` : ''}
           ${drift}
 
           <div class="goal-cfg">
@@ -4865,6 +5187,10 @@
       };
       const chestBtn = document.getElementById('goal-chest');
       if (chestBtn) chestBtn.addEventListener('click', () => openChestForm());
+      const spendBtn = document.getElementById('goal-spend');
+      if (spendBtn) spendBtn.addEventListener('click', () => openSpendForm());
+      document.querySelectorAll('[data-spend]').forEach(el =>
+        el.addEventListener('click', () => openSpendForm(el.dataset.spend)));
       const metricEl = document.getElementById('goal-metric');
       if (metricEl) {
         metricEl.addEventListener('change', () => {
@@ -4879,6 +5205,90 @@
       if (targetEl) targetEl.addEventListener('change', () => setGoal({ target: Math.max(1, parseInt(targetEl.value, 10) || 1) }));
       const offsetEl = document.getElementById('goal-offset');
       if (offsetEl) offsetEl.addEventListener('change', () => setGoal({ offset: Math.max(0, parseInt(offsetEl.value, 10) || 0) }));
+    }
+
+    // ---- Résumé hebdomadaire ----
+    function weekStartISO(offsetWeeks) {
+      const d = new Date();
+      const day = (d.getDay() + 6) % 7;          // lundi = 0
+      d.setDate(d.getDate() - day - (offsetWeeks || 0) * 7);
+      return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+    }
+
+    function weeklyCard() {
+      const thisStart = weekStartISO(0);
+      const lastStart = weekStartISO(1);
+      const base = sortedRuns().filter(r => !r.excluded
+        && (!state.settings.intensityFilter || r.intensity === state.settings.intensityFilter));
+
+      const cur = base.filter(r => (r.date || '') >= thisStart);
+      const prev = base.filter(r => (r.date || '') >= lastStart && (r.date || '') < thisStart);
+      if (!cur.length && !prev.length) return '';
+
+      const agg = rs => {
+        const sec = rs.reduce((s, r) => s + (r.durationSec || 0), 0);
+        const bribes = rs.reduce((s, r) => s + (r.bribes || 0), 0);
+        return { n: rs.length, sec, bribes, rate: sec > 0 ? bribes / (sec / 3600) : null,
+                 legends: rs.reduce((s, r) => s + (r.legends || []).length, 0) };
+      };
+      const a = agg(cur), b = agg(prev);
+      const delta = (x, y) => (y > 0 ? ((x - y) / y) * 100 : null);
+      const dRate = (a.rate != null && b.rate) ? delta(a.rate, b.rate) : null;
+
+      const line = (lbl, va, vb) => `
+        <div class="yield-row">
+          <span class="yield-lbl" style="width:74px;text-align:left;">${lbl}</span>
+          <span class="yield-val" style="width:auto;flex:1;text-align:left;color:var(--text);font-weight:600;">${va}</span>
+          <span class="yield-n" style="width:auto;">${vb}</span>
+        </div>`;
+
+      return `<div class="chart-card">
+        <div class="chart-title">Cette semaine</div>
+        <div class="chart-sub">Depuis lundi · comparé à la semaine précédente (colonne de droite)</div>
+        ${line('Runs', a.n, b.n)}
+        ${line('Temps', fmtDur(a.sec), fmtDur(b.sec))}
+        ${line('Bribes', a.bribes.toLocaleString('fr-FR'), b.bribes.toLocaleString('fr-FR'))}
+        ${line('Bribes/h', fmtRate(a.rate), fmtRate(b.rate))}
+        ${line('Légendes', a.legends, b.legends)}
+        ${dRate != null ? `<div class="profit-box ${dRate >= 0 ? 'green' : 'red'}" style="margin-top:12px;">
+          <div class="lbl">Rendement vs semaine dernière</div>
+          <div class="val">${dRate >= 0 ? '+' : ''}${dRate.toFixed(1).replace('.', ',')}%</div>
+        </div>` : ''}
+        ${(a.n < 3 || b.n < 3) ? `<div class="insight warn">Peu de runs de part et d'autre : cet écart hebdomadaire est surtout du bruit. Regarde plutôt la moyenne mobile plus bas.</div>` : ''}
+      </div>`;
+    }
+
+    // ---- Comparaison des intensités ----
+    function intensityCard() {
+      const used = usedIntensities();
+      const cut = periodCutoff();
+      const base = sortedRuns().filter(r => !r.excluded && (!cut || (r.date || '') >= cut));
+      const unset = base.filter(r => !r.intensity).length;
+      if (used.length < 2 && !unset) return '';
+
+      const rows = used.map(i => {
+        const rs = base.filter(r => r.intensity === i.k);
+        const rates = rs.map(runRate).filter(x => x != null);
+        const sec = rs.reduce((s, r) => s + (r.durationSec || 0), 0);
+        return { i, n: rs.length, med: median(rates), sec };
+      }).sort((a, b) => (b.med || 0) - (a.med || 0));
+
+      const max = Math.max(...rows.map(r => r.med || 0), 1);
+      const mixing = !state.settings.intensityFilter && used.length > 1;
+
+      return `<div class="chart-card">
+        <div class="chart-title">Rendement par intensité</div>
+        <div class="chart-sub">Bribes/h médian de chaque palier</div>
+        ${rows.map(r => `
+          <div class="yield-row">
+            <span class="yield-lbl" style="width:74px;text-align:left;">${escapeHtml(r.i.label)}</span>
+            <span class="yield-track"><span class="yield-fill" style="width:${((r.med || 0) / max) * 100}%"></span></span>
+            <span class="yield-val">${fmtRate(r.med)}</span>
+            <span class="yield-n">×${r.n}</span>
+          </div>`).join('')}
+        ${mixing ? `<div class="insight warn">Tes statistiques mélangent <b>${used.length} intensités</b> dont les gains par vague n'ont rien à voir. Les moyennes globales, la comparaison de compos et la projection vers le coffre sont donc trompeuses. Choisis une intensité en haut de l'onglet pour cloisonner.</div>` : ''}
+        ${unset ? `<div class="insight warn"><b>${unset}</b> run(s) sans intensité renseignée. Elles disparaissent dès que tu filtres sur un palier.</div>` : ''}
+      </div>`;
     }
 
     function renderSongesStats() {
@@ -4953,6 +5363,10 @@
           ${sparkBars(runs)}
         </div>` : ''}
 
+        ${weeklyCard()}
+
+        ${intensityCard()}
+
         ${waveProgression(runs)}
 
         ${yieldByWave(runs)}
@@ -4979,6 +5393,27 @@
     }
 
     // ---- Formulaire de run ----
+    function buildIntensGrid() {
+      const grid = document.getElementById('r-intens');
+      grid.innerHTML = '';
+      INTENSITIES.forEach(i => {
+        const b = document.createElement('button');
+        b.className = 'int-btn';
+        b.dataset.i = i.k;
+        b.textContent = i.label;
+        b.addEventListener('click', () => {
+          draftIntensity = (draftIntensity === i.k) ? null : i.k;
+          paintIntens();
+          haptic();
+        });
+        grid.appendChild(b);
+      });
+    }
+    function paintIntens() {
+      document.querySelectorAll('#r-intens .int-btn').forEach(b =>
+        b.classList.toggle('on', b.dataset.i === draftIntensity));
+    }
+
     function buildWaveGrid() {
       const grid = document.getElementById('r-waves');
       grid.innerHTML = '';
@@ -5181,6 +5616,12 @@
 
       draftWave = r ? (r.wave || 0) : 0;
       draftExcluded = r ? !!r.excluded : false;
+      // nouvelle run : on reprend l'intensité de la précédente
+      if (r) draftIntensity = r.intensity || null;
+      else {
+        const last = sortedRuns()[state.songes.length - 1];
+        draftIntensity = last ? (last.intensity || null) : null;
+      }
       // Nouvelle run : on reprend par défaut la compo de la dernière run enregistrée
       if (r) {
         draftCompoId = r.compoId || null;
@@ -5189,6 +5630,7 @@
         draftCompoId = (last && getCompo(last.compoId)) ? last.compoId : null;
       }
       paintWaves();
+      paintIntens();
       paintExcludedToggle();
       renderCompoSelect();
       updateDurPreview();
@@ -5225,6 +5667,7 @@
         date: document.getElementById('r-date').value || todayISO(),
         durationSec: sec,
         wave: draftWave,
+        intensity: draftIntensity,
         bribes: num('r-bribes'),
         reflets: num('r-reflets'),
         runes: num('r-runes'),
@@ -5332,6 +5775,16 @@
       document.getElementById('modal-cat').classList.remove('active');
       editingCatId = null;
     });
+    document.getElementById('spend-cancel').addEventListener('click', () => {
+      document.getElementById('modal-spend').classList.remove('active');
+      editingSpendId = null;
+    });
+    document.getElementById('spend-save').addEventListener('click', saveSpend);
+    document.getElementById('spend-delete').addEventListener('click', deleteSpend);
+    document.getElementById('sp-amount').addEventListener('input', (e) => {
+      e.target.value = e.target.value.replace(/\D/g, '');
+    });
+
     document.getElementById('pick-cancel').addEventListener('click', () => {
       document.getElementById('modal-pick').classList.remove('active');
       pickCtx = null;
@@ -5366,6 +5819,7 @@
     document.getElementById('r-new-compo').addEventListener('click', () => openCompoForm(null, true));
     document.getElementById('compo-save').addEventListener('click', saveCompo);
     document.getElementById('compo-delete').addEventListener('click', deleteCompo);
+    document.getElementById('compo-share').addEventListener('click', () => shareCompo(editingCompoId));
     document.getElementById('compo-cancel').addEventListener('click', () => {
       document.getElementById('modal-compo').classList.remove('active');
       editingCompoId = null;
@@ -5378,6 +5832,7 @@
     });
     document.getElementById('data-close').addEventListener('click', closeAllModals);
     document.getElementById('data-export').addEventListener('click', exportData);
+    document.getElementById('data-csv').addEventListener('click', exportCSV);
     document.getElementById('data-import').addEventListener('click', () => document.getElementById('data-file').click());
     document.getElementById('data-file').addEventListener('change', (e) => {
       const file = e.target.files && e.target.files[0];
@@ -5428,6 +5883,7 @@
           if (o.id === 'modal-chest') editingChestId = null;
           if (o.id === 'modal-cat') editingCatId = null;
           if (o.id === 'modal-pick') pickCtx = null;
+          if (o.id === 'modal-spend') editingSpendId = null;
           if (o.id === 'modal-confirm') confirmCb = null;
         }
       });
@@ -5453,6 +5909,8 @@
     // ============================================================
     load();
     buildWaveGrid();
+    buildIntensGrid();
+    paintIntens();
     buildClassPicker();
     paintWaves();
     paintCompo();
@@ -5462,6 +5920,7 @@
     renderCompoSelect();
     refreshNameList();
     render();
+    handleSharedCompo();
 
     // Service Worker pour le mode offline
     if ('serviceWorker' in navigator) {
