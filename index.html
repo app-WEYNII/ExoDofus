@@ -2073,6 +2073,15 @@
       border-color: var(--gold);
     }
     .wave-btn:active { transform: scale(0.92); }
+    .wave-grid.free { display: block; }
+    .wave-grid.free input {
+      width: 100%;
+      text-align: center;
+      font-size: 26px;
+      font-weight: 700;
+      font-family: var(--font-display);
+      font-variant-numeric: tabular-nums;
+    }
 
     .slot-row {
       display: flex;
@@ -2518,6 +2527,7 @@
       <div class="field">
         <label>Vague atteinte <span style="color:var(--text-dim);font-weight:400;">(0 = pas atteint l'étage final)</span></label>
         <div class="wave-grid" id="r-waves"></div>
+        <div class="dur-preview hidden" id="r-wave-info"></div>
       </div>
 
       <div class="field">
@@ -2540,6 +2550,7 @@
             <input type="text" id="r-legend" placeholder="0" maxlength="1" inputmode="numeric" autocomplete="off" />
           </div>
         </div>
+        <div class="dur-preview" id="r-bribes-hint"></div>
         <div class="hint" style="margin-top:7px;">Entrée passe au champ suivant.</div>
         <div class="qual-list" id="r-qualities"></div>
       </div>
@@ -2685,6 +2696,34 @@
       <div class="modal-actions">
         <button class="btn btn-secondary" id="cat-cancel">Annuler</button>
         <button class="btn btn-primary" id="cat-save">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Barème d'un palier -->
+  <div class="modal-overlay" id="modal-btab">
+    <div class="modal">
+      <div class="modal-grip"></div>
+      <div class="modal-head">
+        <h2 id="btab-title">Barème</h2>
+        <button class="trash-btn hidden" id="btab-reset" aria-label="Effacer ce barème">🗑</button>
+      </div>
+      <div class="field">
+        <label>Première vague récompensée</label>
+        <input type="text" id="bt-from" maxlength="2" placeholder="3" inputmode="numeric" autocomplete="off" />
+      </div>
+      <div class="field">
+        <label>Bribes à cette vague</label>
+        <input type="text" id="bt-at" maxlength="6" placeholder="250" inputmode="numeric" autocomplete="off" />
+      </div>
+      <div class="field">
+        <label>Bribes par vague supplémentaire</label>
+        <input type="text" id="bt-per" maxlength="6" placeholder="75" inputmode="numeric" autocomplete="off" />
+        <div class="hint" id="bt-preview"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="btab-cancel">Annuler</button>
+        <button class="btn btn-primary" id="btab-save">Enregistrer</button>
       </div>
     </div>
   </div>
@@ -3462,7 +3501,7 @@
                 }
                 delete r.compo;
                 if (r.compoId && !state.compos.some(c => c.id === r.compoId)) r.compoId = null;
-                r.wave = Math.min(MAX_WAVE, Math.max(0, parseInt(r.wave, 10) || 0));
+                r.wave = Math.min(HARD_CAP, Math.max(0, parseInt(r.wave, 10) || 0));
                 r.durationSec = parseInt(r.durationSec, 10) || 0;
                 ['bribes', 'reflets', 'runes', 'legend'].forEach(k => {
                   r[k] = Math.max(0, parseInt(r[k], 10) || 0);
@@ -3544,22 +3583,57 @@
     const CLASSES = ['Crâ', 'Écaflip', 'Éliotrope', 'Éniripsa', 'Énutrof', 'Féca', 'Forgelance',
                      'Huppermage', 'Iop', 'Osamodas', 'Ouginak', 'Pandawa', 'Roublard', 'Sacrieur',
                      'Sadida', 'Sram', 'Steamer', 'Xélor', 'Zobal'];
-    const MAX_WAVE = 15;
 
-    // Paliers d'intensité. Les bribes par vague varient énormément d'un palier
-    // à l'autre : sans cette donnée, comparer des runs n'a pas de sens.
+    // Paliers d'intensité, avec pour chacun : bribes par vague, vagues à vaincre
+    // pour valider le combat, et plafond de vagues (null = illimité).
     const INTENSITIES = [
-      { k: 'reve1',  label: 'Rêve 1',      short: 'R1' },
-      { k: 'reve2',  label: 'Rêve 2',      short: 'R2' },
-      { k: 'reve3',  label: 'Rêve 3',      short: 'R3' },
-      { k: 'para1',  label: 'Paradoxe 1',  short: 'P1' },
-      { k: 'para2',  label: 'Paradoxe 2',  short: 'P2' },
-      { k: 'para3',  label: 'Paradoxe 3',  short: 'P3' },
-      { k: 'cauch1', label: 'Cauchemar 1', short: 'C1' },
-      { k: 'cauch2', label: 'Cauchemar 2', short: 'C2' },
-      { k: 'cauch3', label: 'Cauchemar 3', short: 'C3' },
+      { k: 'reve1',  label: 'Rêve 1',      short: 'R1', per: 25,   min: 1, cap: 5 },
+      { k: 'reve2',  label: 'Rêve 2',      short: 'R2', per: 50,   min: 1, cap: 5 },
+      { k: 'reve3',  label: 'Rêve 3',      short: 'R3', per: 75,   min: 1, cap: 5 },
+      { k: 'para1',  label: 'Paradoxe 1',  short: 'P1', per: 75,   min: 3, cap: 15 },
+      { k: 'para2',  label: 'Paradoxe 2',  short: 'P2', per: 100,  min: 3, cap: 15 },
+      { k: 'para3',  label: 'Paradoxe 3',  short: 'P3', per: 150,  min: 3, cap: 15 },
+      { k: 'para4',  label: 'Paradoxe 4',  short: 'P4', per: 200,  min: 3, cap: 15 },
+      { k: 'cauch1', label: 'Cauchemar 1', short: 'C1', per: 300,  min: 3, cap: null },
+      { k: 'cauch2', label: 'Cauchemar 2', short: 'C2', per: 500,  min: 3, cap: null },
+      { k: 'cauch3', label: 'Cauchemar 3', short: 'C3', per: 1000, min: 3, cap: null },
     ];
     const IMAP = Object.fromEntries(INTENSITIES.map(i => [i.k, i]));
+
+    // Plafond affiché par défaut quand aucune intensité n'est choisie
+    const DEFAULT_CAP = 15;
+    const HARD_CAP = 60;          // Cauchemar est illimité, mais 50 tours bornent en pratique
+
+    function capFor(intensity) {
+      const i = IMAP[intensity];
+      if (!i) return DEFAULT_CAP;
+      return i.cap == null ? HARD_CAP : i.cap;
+    }
+    // Plus haute vague à représenter dans les graphiques et les filtres
+    function maxWaveSeen() {
+      const m = Math.max(DEFAULT_CAP, ...state.songes.map(r => r.wave || 0));
+      return Math.min(HARD_CAP, m);
+    }
+
+    function bribeTable() {
+      const custom = (state.settings && state.settings.bribeTable) || {};
+      const out = {};
+      INTENSITIES.forEach(i => {
+        const c = custom[i.k];
+        const src = c || { from: i.min, at: i.per * i.min, per: i.per };
+        if (src && src.per > 0) {
+          out[i.k] = { from: Math.max(1, src.from | 0), at: Math.max(0, src.at | 0), per: Math.max(1, src.per | 0) };
+        }
+      });
+      return out;
+    }
+    // Pas de victoire, pas de bribes : sous le nombre de vagues requis, le gain est nul
+    function bribesFor(intensity, wave) {
+      const t = bribeTable()[intensity];
+      if (!t || wave == null) return null;
+      if (wave < t.from) return 0;
+      return t.at + t.per * (wave - t.from);
+    }
     const QUALITIES = [
       { k: 'nul',  label: 'Nul',  score: 1 },
       { k: 'mid',  label: 'Mid',  score: 2 },
@@ -3602,6 +3676,7 @@
     let draftCompoId = null;
     let draftWave = 0;
     let draftIntensity = null;
+    let bribesAutofilled = false;   // vrai tant que l'utilisateur n'a pas saisi lui-même
     let draftExcluded = false;
     let draftHidden = false;
     let draftLegends = [];
@@ -3731,7 +3806,7 @@
       document.getElementById('stat-rate').textContent = fmtRate(pooled);
 
       const bestWave = runs.length ? Math.max(...runs.map(r => r.wave || 0)) : null;
-      document.getElementById('stat-best').textContent = bestWave == null ? '—' : bestWave + '/' + MAX_WAVE;
+      document.getElementById('stat-best').textContent = bestWave == null ? '—' : String(bestWave);
     }
 
     // ---- Filtre de période (partagé entre Compos et Stats) ----
@@ -3792,7 +3867,7 @@
       bribes:  { label: 'Bribes',  get: r => r.bribes  || 0 },
       reflets: { label: 'Reflets', get: r => r.reflets || 0 },
       runes:   { label: 'Runes',   get: r => r.runes   || 0 },
-      wave:    { label: 'Vague',   get: r => r.wave    || 0, max: MAX_WAVE },
+      wave:    { label: 'Vague',   get: r => r.wave    || 0, max: maxWaveSeen() },
       rate:    { label: 'Bribes/h', get: r => Math.round(runRate(r) || 0) },
       // Pour la durée, moins c'est long, mieux c'est : le seuil est un maximum
       duration:{ label: 'Durée',   get: r => r.durationSec || 0, isTime: true, dir: 'max' },
@@ -3987,7 +4062,7 @@
       card.innerHTML = `
         <div class="run-top">
           <span class="run-date">${ordinal ? 'Run ' + ordinal : ''}${r.excluded ? '<span class="excl-tag">hors stats</span>' : ''}</span>
-          <span class="run-wave">${r.wave || 0}<span class="of">/${MAX_WAVE}</span></span>
+          <span class="run-wave">${r.wave || 0}<span class="of">${IMAP[r.intensity] && IMAP[r.intensity].cap ? '/' + IMAP[r.intensity].cap : ' vagues'}</span></span>
         </div>
         <div class="run-metrics">
           <div class="rmetric"><div class="lbl">Durée</div><div class="val">${fmtDur(r.durationSec)}</div></div>
@@ -4178,7 +4253,7 @@
             <span>Reflets/h <b>${fmtRate(g.refletsH)}</b></span>
             <span>Runes/h <b>${fmtRate(g.runesH)}</b></span>
             <span>Vague moy. <b>${g.avgWave != null ? g.avgWave.toFixed(1).replace('.', ',') : '—'}</b></span>
-            <span>Record <b>${g.bestWave}/${MAX_WAVE}</b></span>
+            <span>Record <b>${g.bestWave}</b> vagues</span>
             <span>Joué <b>${fmtDur(g.totalSec)}</b></span>
             ${g.legends ? `<span style="color:var(--gold-bright);">★ <b style="color:var(--gold-bright);">${g.legends}</b> légendaire${g.legends > 1 ? 's' : ''}</span>` : ''}
           </div>`}
@@ -4444,6 +4519,64 @@
       a.click();
       URL.revokeObjectURL(url);
       toast(`${rows.length} run(s) exportée(s)`);
+    }
+
+    // ---- Édition du barème ----
+    let editingBtab = null;
+
+    function btabPreview() {
+      const from = parseInt(document.getElementById('bt-from').value, 10) || 0;
+      const at = parseInt(document.getElementById('bt-at').value, 10) || 0;
+      const per = parseInt(document.getElementById('bt-per').value, 10) || 0;
+      const el = document.getElementById('bt-preview');
+      if (!from || !per) { el.textContent = ''; return; }
+      const cap = capFor(editingBtab);
+      const ex = [from, from + 1, cap]
+        .filter((v, i, a) => a.indexOf(v) === i && v <= cap)
+        .map(w => `vague ${w} → ${(at + per * (w - from)).toLocaleString('fr-FR')}`);
+      el.textContent = ex.join(' · ');
+    }
+
+    function openBtabForm(key) {
+      editingBtab = key;
+      const t = bribeTable()[key];
+      document.getElementById('btab-title').textContent = IMAP[key] ? IMAP[key].label : 'Barème';
+      document.getElementById('bt-from').value = t ? t.from : '';
+      document.getElementById('bt-at').value = t ? t.at : '';
+      document.getElementById('bt-per').value = t ? t.per : '';
+      document.getElementById('btab-reset').classList.toggle('hidden', !t);
+      btabPreview();
+      document.getElementById('modal-btab').classList.add('active');
+    }
+
+    function saveBtab() {
+      const from = parseInt(document.getElementById('bt-from').value, 10) || 0;
+      const at = parseInt(document.getElementById('bt-at').value, 10) || 0;
+      const per = parseInt(document.getElementById('bt-per').value, 10) || 0;
+      if (!from) { flagInvalid('bt-from'); return; }
+      if (!per) { flagInvalid('bt-per'); return; }
+      state.settings.bribeTable = { ...(state.settings.bribeTable || {}), [editingBtab]: { from, at, per } };
+      save();
+      renderSongesStats();
+      applyBribePrediction();
+      document.getElementById('modal-btab').classList.remove('active');
+      editingBtab = null;
+      toast('Barème enregistré');
+    }
+
+    function resetBtab() {
+      const key = editingBtab;
+      if (!key) return;
+      const t = { ...(state.settings.bribeTable || {}) };
+      delete t[key];
+      // tous les paliers ont un barème officiel : effacer = revenir à celui-ci
+      state.settings.bribeTable = t;
+      save();
+      renderSongesStats();
+      applyBribePrediction();
+      document.getElementById('modal-btab').classList.remove('active');
+      editingBtab = null;
+      toast('Barème officiel rétabli');
     }
 
     // ---- Dépenses de bribes ----
@@ -4896,12 +5029,13 @@
       if (reached.length < 2) return '';
 
       const rows = [];
-      for (let w = 1; w <= MAX_WAVE; w++) {
+      const topWave = maxWaveSeen();
+      for (let w = 1; w <= topWave; w++) {
         const n = reached.filter(r => (r.wave || 0) >= w).length;
         rows.push({ w, n, pct: (n / reached.length) * 100 });
       }
       const lastReached = Math.max(...reached.map(r => r.wave || 0));
-      const visible = rows.filter(r => r.w <= Math.min(MAX_WAVE, lastReached + 1));
+      const visible = rows.filter(r => r.w <= Math.min(topWave, lastReached + 1));
 
       // Le mur : la vague où l'on perd le plus de monde d'un coup
       let wall = null, biggestDrop = 0;
@@ -4942,7 +5076,7 @@
     function yieldByWave(runs) {
       const buckets = new Map();
       runs.forEach(r => {
-        const w = Math.min(MAX_WAVE, Math.max(0, r.wave || 0));
+        const w = Math.max(0, r.wave || 0);
         const rate = runRate(r);
         if (rate == null) return;
         if (!buckets.has(w)) buckets.set(w, []);
@@ -5185,6 +5319,8 @@
         save();
         renderSongesStats();
       };
+      document.querySelectorAll('[data-bt]').forEach(el =>
+        el.addEventListener('click', () => openBtabForm(el.dataset.bt)));
       const chestBtn = document.getElementById('goal-chest');
       if (chestBtn) chestBtn.addEventListener('click', () => openChestForm());
       const spendBtn = document.getElementById('goal-spend');
@@ -5205,6 +5341,44 @@
       if (targetEl) targetEl.addEventListener('change', () => setGoal({ target: Math.max(1, parseInt(targetEl.value, 10) || 1) }));
       const offsetEl = document.getElementById('goal-offset');
       if (offsetEl) offsetEl.addEventListener('change', () => setGoal({ offset: Math.max(0, parseInt(offsetEl.value, 10) || 0) }));
+    }
+
+    function predictBribes(intensity, wave) {
+      if (!intensity) return null;
+      return bribesFor(intensity, wave);
+    }
+
+    function bribeModelCard() {
+      const table = bribeTable();
+      const rows = INTENSITIES.map(i => {
+        const t = table[i.k];
+        const runs = state.songes.filter(r => r.intensity === i.k && !r.excluded && (r.wave || 0) > 0);
+        // écart entre le barème et ce que tu as réellement saisi
+        const mismatch = t ? runs.filter(r => (r.bribes || 0) !== bribesFor(i.k, r.wave)) : [];
+        return { i, t, n: runs.length, mismatch: mismatch.length };
+      });
+      const anyMismatch = rows.some(r => r.mismatch > 0);
+
+      return `<div class="chart-card">
+        <div class="chart-title">Barème des bribes</div>
+        <div class="chart-sub">Bribes par vague, vagues à vaincre pour valider, plafond · touche une ligne pour ajuster</div>
+        ${rows.map(r => {
+          const cap = r.i.cap == null ? '∞' : r.i.cap;
+          const txt = `<b>${r.t.per.toLocaleString('fr-FR')}</b>/vague · ${r.i.min} requise${r.i.min > 1 ? 's' : ''} · max ${cap}`;
+          return `<div class="chest-entry" data-bt="${r.i.k}" style="margin-bottom:6px;">
+            <span class="ic">${r.t ? '📐' : '➕'}</span>
+            <span class="bd">
+              <span class="t1">${escapeHtml(r.i.label)}</span>
+              <span class="t2">${txt}</span>
+            </span>
+            ${r.mismatch ? `<span class="n-badge low">${r.mismatch} écart${r.mismatch > 1 ? 's' : ''}</span>`
+                         : (r.n ? `<span class="n-badge ok">×${r.n}</span>` : '')}
+          </div>`;
+        }).join('')}
+        ${anyMismatch
+          ? `<div class="insight warn">Des runs enregistrées ne collent pas au barème. Soit une saisie est erronée, soit le jeu a changé ses valeurs — touche le palier concerné pour l'ajuster.</div>`
+          : `<div class="insight">Le barème pré-remplit les bribes dès que tu choisis une intensité et une vague. Sous le nombre de vagues requis, le combat est perdu et le gain est nul.</div>`}
+      </div>`;
     }
 
     // ---- Résumé hebdomadaire ----
@@ -5334,7 +5508,7 @@
             <div class="dstat"><div class="lbl">Médiane bribes/h</div><div class="val small">${fmtRate(med)}</div></div>
             <div class="dstat"><div class="lbl">Dispersion</div><div class="val small">${cv != null ? Math.round(cv) + '%' : '—'}</div></div>
             <div class="dstat"><div class="lbl">Vague médiane</div><div class="val small">${median(waves) != null ? String(median(waves)).replace('.', ',') : '—'}</div></div>
-            <div class="dstat"><div class="lbl">Meilleure vague</div><div class="val gold small">${Math.max(...waves)}/${MAX_WAVE}</div></div>
+            <div class="dstat"><div class="lbl">Meilleure vague</div><div class="val gold small">${Math.max(...waves)}</div></div>
           </div>
           ${trend != null ? `<div class="profit-box ${trend >= 0 ? 'green' : 'red'}" style="margin-top:12px;">
             <div class="lbl">5 dernières runs vs les 5 précédentes</div>
@@ -5366,6 +5540,8 @@
         ${weeklyCard()}
 
         ${intensityCard()}
+
+        ${bribeModelCard()}
 
         ${waveProgression(runs)}
 
@@ -5403,6 +5579,7 @@
         b.textContent = i.label;
         b.addEventListener('click', () => {
           draftIntensity = (draftIntensity === i.k) ? null : i.k;
+          buildWaveGrid();
           paintIntens();
           haptic();
         });
@@ -5412,19 +5589,88 @@
     function paintIntens() {
       document.querySelectorAll('#r-intens .int-btn').forEach(b =>
         b.classList.toggle('on', b.dataset.i === draftIntensity));
+      applyBribePrediction();
     }
 
-    function buildWaveGrid() {
-      const grid = document.getElementById('r-waves');
-      grid.innerHTML = '';
-      for (let w = 0; w <= MAX_WAVE; w++) {
-        const b = document.createElement('button');
-        b.className = 'wave-btn';
-        b.textContent = w;
-        b.addEventListener('click', () => { draftWave = w; paintWaves(); haptic(); });
-        grid.appendChild(b);
+    // Pré-remplit les bribes quand le barème est connu, sans jamais écraser une saisie
+    function applyBribePrediction() {
+      const hint = document.getElementById('r-bribes-hint');
+      const field = document.getElementById('r-bribes');
+      if (!hint || !field) return;
+
+      const predicted = predictBribes(draftIntensity, draftWave);
+      if (predicted == null) {
+        hint.textContent = '';
+        hint.classList.remove('bad');
+        return;
+      }
+      const current = parseInt(field.value.replace(/\D/g, ''), 10);
+      if (!field.value || bribesAutofilled) {
+        field.value = String(predicted);
+        bribesAutofilled = true;
+        hint.textContent = `↳ calculé : ${predicted.toLocaleString('fr-FR')} bribes`;
+        hint.classList.remove('bad');
+      } else if (current !== predicted) {
+        hint.textContent = `attendu ${predicted.toLocaleString('fr-FR')} — tu as saisi ${current.toLocaleString('fr-FR')}`;
+        hint.classList.add('bad');
+      } else {
+        hint.textContent = `↳ conforme au barème`;
+        hint.classList.remove('bad');
       }
     }
+
+    // La grille de vagues suit le plafond du palier choisi ; Cauchemar étant
+    // illimité, on y bascule sur une saisie libre.
+    function buildWaveGrid() {
+      const grid = document.getElementById('r-waves');
+      const info = document.getElementById('r-wave-info');
+      const i = IMAP[draftIntensity];
+      const unlimited = i && i.cap == null;
+      grid.innerHTML = '';
+
+      if (unlimited) {
+        grid.classList.add('free');
+        grid.innerHTML = `<input type="text" id="r-wave-free" maxlength="2" inputmode="numeric"
+          autocomplete="off" placeholder="0" value="${draftWave || ''}" />`;
+        const inp = document.getElementById('r-wave-free');
+        inp.addEventListener('input', () => {
+          inp.value = inp.value.replace(/\D/g, '');
+          let v = parseInt(inp.value, 10) || 0;
+          if (v > HARD_CAP) { v = HARD_CAP; inp.value = String(v); }
+          draftWave = v;
+          applyBribePrediction();
+          paintWaveInfo();
+        });
+        inp.addEventListener('focus', () => { if (inp.select) inp.select(); });
+      } else {
+        grid.classList.remove('free');
+        const cap = i ? i.cap : DEFAULT_CAP;
+        if (draftWave > cap) draftWave = cap;
+        for (let w = 0; w <= cap; w++) {
+          const b = document.createElement('button');
+          b.className = 'wave-btn';
+          b.textContent = w;
+          b.addEventListener('click', () => { draftWave = w; paintWaves(); applyBribePrediction(); paintWaveInfo(); haptic(); });
+          grid.appendChild(b);
+        }
+        paintWaves();
+      }
+      paintWaveInfo();
+      if (info) info.classList.toggle('hidden', !i);
+    }
+
+    function paintWaveInfo() {
+      const info = document.getElementById('r-wave-info');
+      if (!info) return;
+      const i = IMAP[draftIntensity];
+      if (!i) { info.textContent = ''; return; }
+      const won = draftWave >= i.min;
+      info.textContent = won
+        ? `Combat remporté (${i.min} vague${i.min > 1 ? 's' : ''} requise${i.min > 1 ? 's' : ''})`
+        : `Sous les ${i.min} vagues requises : combat perdu, aucune bribe`;
+      info.classList.toggle('bad', !won);
+    }
+
     function paintWaves() {
       document.querySelectorAll('#r-waves .wave-btn').forEach((b, i) => {
         b.classList.toggle('on', i === draftWave);
@@ -5480,6 +5726,7 @@
         const max = parseInt(el.getAttribute('maxlength'), 10);
         el.addEventListener('input', () => {
           el.value = el.value.replace(/\D/g, '').slice(0, max);
+          if (el.id === 'r-bribes') { bribesAutofilled = false; applyBribePrediction(); }
           if (el.id === 'r-legend') syncQualities(true);
           // bascule seulement quand le champ ne peut plus rien recevoir
           if (el.value.length === max && els[i + 1]) {
@@ -5629,7 +5876,9 @@
         const last = sortedRuns()[state.songes.length - 1];
         draftCompoId = (last && getCompo(last.compoId)) ? last.compoId : null;
       }
-      paintWaves();
+      // en édition, la valeur existante fait foi ; en création, on autorise le calcul
+      bribesAutofilled = !r;
+      buildWaveGrid();
       paintIntens();
       paintExcludedToggle();
       renderCompoSelect();
@@ -5775,6 +6024,19 @@
       document.getElementById('modal-cat').classList.remove('active');
       editingCatId = null;
     });
+    document.getElementById('btab-cancel').addEventListener('click', () => {
+      document.getElementById('modal-btab').classList.remove('active');
+      editingBtab = null;
+    });
+    document.getElementById('btab-save').addEventListener('click', saveBtab);
+    document.getElementById('btab-reset').addEventListener('click', resetBtab);
+    ['bt-from', 'bt-at', 'bt-per'].forEach(id => {
+      document.getElementById(id).addEventListener('input', (e) => {
+        e.target.value = e.target.value.replace(/\D/g, '');
+        btabPreview();
+      });
+    });
+
     document.getElementById('spend-cancel').addEventListener('click', () => {
       document.getElementById('modal-spend').classList.remove('active');
       editingSpendId = null;
@@ -5884,6 +6146,7 @@
           if (o.id === 'modal-cat') editingCatId = null;
           if (o.id === 'modal-pick') pickCtx = null;
           if (o.id === 'modal-spend') editingSpendId = null;
+          if (o.id === 'modal-btab') editingBtab = null;
           if (o.id === 'modal-confirm') confirmCb = null;
         }
       });
