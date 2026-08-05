@@ -1545,6 +1545,30 @@
     }
     .chest-entry .ic { font-size: 18px; flex-shrink: 0; }
     .chest-entry .qdot { margin-right: 1px; }
+    .opt-rank {
+      width: 22px;
+      height: 22px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold-deep), var(--gold));
+      color: #14100a;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 22px;
+      text-align: center;
+      margin-top: 1px;
+    }
+    .opt-gain {
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 1px 7px;
+      border-radius: 999px;
+      background: var(--green-soft);
+      color: var(--green);
+      margin-left: 6px;
+      white-space: nowrap;
+    }
+    .chest-entry .t2 { line-height: 1.5; }
     .chest-entry .bd { flex: 1; min-width: 0; }
     .chest-entry .t1 { font-size: 13px; font-weight: 600; }
     .chest-entry .t2 { font-size: 11.5px; color: var(--text-dim); margin-top: 3px; }
@@ -5482,6 +5506,243 @@
       </div>`;
     }
 
+    // ---- Optimiseur ----
+    // Régression des moindres carrés : durée ≈ base + k × vague.
+    // « base » est le temps de montée des 26 étages, « k » le coût d'une vague.
+    function waveTimeModel(runs) {
+      const pts = runs.filter(r => (r.durationSec || 0) > 0 && (r.wave || 0) > 0)
+        .map(r => ({ w: r.wave, d: r.durationSec }));
+      const waves = new Set(pts.map(p => p.w));
+      if (pts.length < 5 || waves.size < 3) return { status: 'thin', n: pts.length, spread: waves.size };
+
+      const n = pts.length;
+      const sx = pts.reduce((a, p) => a + p.w, 0);
+      const sy = pts.reduce((a, p) => a + p.d, 0);
+      const sxy = pts.reduce((a, p) => a + p.w * p.d, 0);
+      const sxx = pts.reduce((a, p) => a + p.w * p.w, 0);
+      const denom = n * sxx - sx * sx;
+      if (!denom) return { status: 'thin', n, spread: waves.size };
+
+      const k = (n * sxy - sx * sy) / denom;         // secondes par vague
+      const base = (sy - k * sx) / n;                 // secondes hors vagues
+      if (k <= 0) return { status: 'noisy', n, spread: waves.size };
+
+      // Part de la variance expliquée : sans ça, on lirait du bruit comme une loi
+      const my = sy / n;
+      const ssTot = pts.reduce((a, p) => a + (p.d - my) ** 2, 0);
+      const ssRes = pts.reduce((a, p) => a + (p.d - (base + k * p.w)) ** 2, 0);
+      const r2 = ssTot > 0 ? 1 - ssRes / ssTot : 0;
+
+      return { status: 'ok', n, spread: waves.size, k, base: Math.max(0, base), r2 };
+    }
+
+    // Compare le coût marginal d'une vague sur les profondeurs faibles et élevées.
+    // Un coût constant implique qu'il n'existe aucun point d'arrêt optimal.
+    function escalation(runs) {
+      const byWave = new Map();
+      runs.filter(r => (r.wave || 0) > 0 && (r.durationSec || 0) > 0).forEach(r => {
+        if (!byWave.has(r.wave)) byWave.set(r.wave, []);
+        byWave.get(r.wave).push(r.durationSec);
+      });
+      const pts = [...byWave.entries()].map(([w, ds]) => ({ w, d: mean(ds) })).sort((a, b) => a.w - b.w);
+      if (pts.length < 4) return { status: 'thin' };
+
+      const mid = Math.floor(pts.length / 2);
+      const slope = seg => (seg[seg.length - 1].d - seg[0].d) / (seg[seg.length - 1].w - seg[0].w);
+      const low = slope(pts.slice(0, mid + 1));
+      const high = slope(pts.slice(mid));
+      if (!(low > 0) || !(high > 0)) return { status: 'noisy' };
+      if (high < low * 1.25) return { status: 'flat', low, high };
+
+      const fit = quadFit(pts);
+      // Pour d(w) = a + b·w + c·w², le rendement per·w/d(w) est maximal en √(a/c)
+      const optimal = (fit && fit.c > 0 && fit.a > 0)
+        ? Math.max(1, Math.round(Math.sqrt(fit.a / fit.c))) : null;
+      return { status: 'escalating', low, high, optimal, gain: ((high - low) / low) * 100 };
+    }
+
+    // Moindres carrés sur d = a + b·w + c·w² (résolution directe du système 3×3)
+    function quadFit(pts) {
+      const n = pts.length;
+      if (n < 3) return null;
+      let s1 = 0, s2 = 0, s3 = 0, s4 = 0, ty = 0, twy = 0, tw2y = 0;
+      pts.forEach(p => {
+        const w = p.w, w2 = w * w;
+        s1 += w; s2 += w2; s3 += w2 * w; s4 += w2 * w2;
+        ty += p.d; twy += w * p.d; tw2y += w2 * p.d;
+      });
+      const M = [[n, s1, s2], [s1, s2, s3], [s2, s3, s4]];
+      const V = [ty, twy, tw2y];
+      const det3 = m =>
+        m[0][0] * (m[1][1] * m[2][2] - m[1][2] * m[2][1])
+        - m[0][1] * (m[1][0] * m[2][2] - m[1][2] * m[2][0])
+        + m[0][2] * (m[1][0] * m[2][1] - m[1][1] * m[2][0]);
+      const D = det3(M);
+      if (!D || !isFinite(D)) return null;
+      const sub = col => det3(M.map((row, i) => row.map((v, j) => (j === col ? V[i] : v))));
+      return { a: sub(0) / D, b: sub(1) / D, c: sub(2) / D };
+    }
+
+    function optimizerCard(runs) {
+      if (runs.length < 5) {
+        return `<div class="chart-card">
+          <div class="chart-title">Que faire pour optimiser ?</div>
+          <div class="chart-sub">Analyse disponible à partir de 5 runs</div>
+          <div class="insight warn">Encore <b>${5 - runs.length}</b> run(s) et l'app pourra estimer ce que te coûte une vague supplémentaire, et te dire si pousser est rentable.</div>
+        </div>`;
+      }
+
+      const rates = runs.map(runRate).filter(x => x != null);
+      const totalSec = runs.reduce((a, r) => a + (r.durationSec || 0), 0);
+      const totalBribes = runs.reduce((a, r) => a + (r.bribes || 0), 0);
+      const hours = totalSec / 3600;
+      const global = hours > 0 ? totalBribes / hours : null;
+      const med = median(rates);
+      const actions = [];
+
+      // --- 1. Écart global / médiane ---
+      let gapNote = '';
+      if (global && med) {
+        const gap = ((med - global) / global) * 100;
+        if (Math.abs(gap) < 8) {
+          gapNote = `Ton rendement global (<b>${fmtRate(global)}</b>) et ta médiane (<b>${fmtRate(med)}</b>) sont proches : tes runs sont homogènes, aucune ne fausse tes chiffres.`;
+        } else if (gap > 0) {
+          const slow = [...runs].sort((a, b) => (runRate(a) ?? 0) - (runRate(b) ?? 0)).slice(0, 2);
+          gapNote = `Ta médiane (<b>${fmtRate(med)}</b>) dépasse ton global (<b>${fmtRate(global)}</b>) de <b>${Math.round(gap)}%</b>. Autrement dit, tes runs les plus longues sont tes moins rentables et tirent ta moyenne vers le bas.`;
+          actions.push({
+            gain: gap,
+            title: 'Tes runs longues te coûtent',
+            body: `Tes ${slow.length} pires runs tournent à ${slow.map(r => fmtRate(runRate(r))).join(' et ')} bribes/h, contre ${fmtRate(med)} en temps normal. Repère ce qui les allonge — et si c'est une pause ou un imprévu, marque-les « hors stats » pour ne pas polluer tes moyennes.`,
+          });
+        } else {
+          gapNote = `Ton global (<b>${fmtRate(global)}</b>) dépasse ta médiane (<b>${fmtRate(med)}</b>) de <b>${Math.round(-gap)}%</b> : ce sont tes runs longues qui rapportent le plus. Signe que pousser plus loin paie.`;
+        }
+      }
+
+      // --- 2. Rentabilité d'une vague supplémentaire ---
+      const intFilter = state.settings.intensityFilter;
+      const counts = {};
+      runs.forEach(r => { if (r.intensity) counts[r.intensity] = (counts[r.intensity] || 0) + 1; });
+      const dominant = intFilter || Object.keys(counts).sort((a, b) => counts[b] - counts[a])[0];
+      const meta = IMAP[dominant];
+      const model = waveTimeModel(runs.filter(r => !dominant || r.intensity === dominant));
+
+      let waveNote = '';
+      if (!meta) {
+        waveNote = `Renseigne l'intensité de tes runs pour que l'app puisse chiffrer ce que rapporte une vague de plus.`;
+      } else if (model.status !== 'ok') {
+        waveNote = `Il faut des runs arrêtées à <b>au moins 3 vagues différentes</b> en ${escapeHtml(meta.label)} pour mesurer le coût d'une vague. Tu en as ${model.spread || 0}.`;
+      } else {
+        const perWaveMin = model.k / 60;
+        const marginal = meta.per * 3600 / model.k;     // bribes/h d'une vague de plus
+        const ratio = global ? marginal / global : null;
+        const solid = model.r2 >= 0.5;
+        const medWave = median(runs.map(r => r.wave || 0));
+
+        // Le coût d'une vague augmente-t-il avec la profondeur ?
+        const esc = escalation(runs.filter(r => !dominant || r.intensity === dominant));
+
+        waveNote = `Une vague de plus te coûte environ <b>${perWaveMin.toFixed(1).replace('.', ',')} min</b> et rapporte <b>${meta.per}</b> bribes, soit <b>${fmtRate(marginal)}</b> bribes/h sur la marge — contre ${fmtRate(global)} en moyenne.`
+          + (solid ? '' : ` <b>Attention</b> : le lien entre durée et vague n'explique que ${Math.round(model.r2 * 100)}% de tes écarts de durée, l'estimation est fragile.`);
+
+        if (esc.status === 'escalating') {
+          // Le coût grimpe : il existe alors une profondeur au-delà de laquelle on perd
+          const stop = esc.optimal;
+          if (stop != null && stop < medWave - 0.5) {
+            actions.push({
+              gain: esc.gain,
+              title: `Arrête-toi vers la vague ${stop}`,
+              body: `Tes premières vagues coûtent ${(esc.low / 60).toFixed(1).replace('.', ',')} min, les dernières ${(esc.high / 60).toFixed(1).replace('.', ',')} min. Le gain reste fixe à ${meta.per} bribes, donc au-delà de la vague ${stop} tu perds plus de temps que tu ne gagnes. Tu t'arrêtes en général à ${medWave}.`,
+            });
+          } else {
+            actions.push({
+              gain: (ratio - 1) * 100,
+              title: 'Pousse encore un peu',
+              body: `Le coût d'une vague grimpe (${(esc.low / 60).toFixed(1).replace('.', ',')} min au début, ${(esc.high / 60).toFixed(1).replace('.', ',')} min ensuite), mais tu n'as pas encore atteint le point de bascule, estimé vers la vague ${stop != null ? stop : '—'}.`,
+            });
+          }
+        } else if (ratio != null && ratio > 1.02) {
+          // Coût constant : mathématiquement, pousser améliore toujours la moyenne
+          const target = Math.min(capFor(dominant), Math.round(medWave + 3));
+          actions.push({
+            gain: (ratio - 1) * 100,
+            title: 'Pousse plus loin dans les vagues',
+            body: `Le coût d'une vague est stable chez toi, et le combat est déjà validé à ${meta.min} vagues — continuer ne risque que du temps. Tant que ce coût ne grimpe pas, chaque vague de plus <b>améliore</b> ta moyenne, parce qu'elle dilue le temps de montée des étages. Tu t'arrêtes vers ${medWave} : viser ${target} est le levier le plus direct.`,
+          });
+        }
+
+        // --- 3. Le temps hors vagues ---
+        if (model.base > 0 && totalSec > 0) {
+          const basePart = (model.base * runs.length) / totalSec;
+          if (basePart > 0.6) {
+            actions.push({
+              gain: null,
+              title: 'La montée des étages domine ton temps',
+              body: `Environ ${Math.round(basePart * 100)}% de ton temps part dans les 26 étages, pas dans le combat final. Accélérer la montée (compo plus rapide, moins de temps de réflexion) rapporte plus que n'importe quel réglage de vagues.`,
+            });
+          }
+        }
+      }
+
+      // --- 4. Intensité la plus rentable ---
+      if (!intFilter) {
+        const byInt = Object.keys(counts).filter(k => counts[k] >= 3).map(k => {
+          const rs = runs.filter(r => r.intensity === k);
+          const sec = rs.reduce((a, r) => a + (r.durationSec || 0), 0);
+          const br = rs.reduce((a, r) => a + (r.bribes || 0), 0);
+          return { k, n: rs.length, rate: sec > 0 ? br / (sec / 3600) : 0 };
+        }).sort((a, b) => b.rate - a.rate);
+        if (byInt.length >= 2 && byInt[0].rate > byInt[byInt.length - 1].rate * 1.1) {
+          const best = byInt[0], worst = byInt[byInt.length - 1];
+          actions.push({
+            gain: ((best.rate - worst.rate) / worst.rate) * 100,
+            title: `Privilégie ${IMAP[best.k].label}`,
+            body: `Sur tes données, ${IMAP[best.k].label} tourne à ${fmtRate(best.rate)} bribes/h (${best.n} runs) contre ${fmtRate(worst.rate)} en ${IMAP[worst.k].label}. Attention : si tu ne montes pas aussi haut dans les deux, la comparaison mélange difficulté et progression.`,
+          });
+        }
+      }
+
+      // --- 5. Compo ---
+      const groups = state.compos.filter(c => !c.hidden).map(compoStats).filter(g => g.n >= MIN_SAMPLE)
+        .sort((a, b) => (b.medRate || 0) - (a.medRate || 0));
+      if (groups.length >= 2) {
+        const [a, b] = groups;
+        const overlap = a.minRate != null && b.maxRate != null && a.minRate <= b.maxRate;
+        if (!overlap && a.medRate && b.medRate) {
+          actions.push({
+            gain: ((a.medRate - b.medRate) / b.medRate) * 100,
+            title: `Joue ${escapeHtml(compoLabel(a.compo))}`,
+            body: `Elle sort à ${fmtRate(a.medRate)} bribes/h médian contre ${fmtRate(b.medRate)} pour ${escapeHtml(compoLabel(b.compo))}, sans chevauchement des fourchettes sur ${a.n} runs.`,
+          });
+        }
+      }
+
+      actions.sort((x, y) => (y.gain ?? 0) - (x.gain ?? 0));
+
+      return `<div class="chart-card">
+        <div class="chart-title">Que faire pour optimiser ?</div>
+        <div class="chart-sub">Sur ${plural(runs.length, 'run')}${meta ? ' · ' + escapeHtml(meta.label) : ''}</div>
+
+        <div class="detail-stats">
+          <div class="dstat"><div class="lbl">Global</div><div class="val small">${fmtRate(global)}</div></div>
+          <div class="dstat"><div class="lbl">Médiane</div><div class="val small">${fmtRate(med)}</div></div>
+        </div>
+        ${gapNote ? `<div class="insight">${gapNote}</div>` : ''}
+        ${waveNote ? `<div class="insight${model.status === 'ok' ? '' : ' warn'}">${waveNote}</div>` : ''}
+
+        ${actions.length ? `<div class="chart-sub" style="margin:16px 0 8px;">À faire, du plus rentable au moins</div>
+          ${actions.map((a, i) => `
+            <div class="chest-entry" style="align-items:flex-start;">
+              <span class="opt-rank">${i + 1}</span>
+              <span class="bd">
+                <span class="t1">${a.title}${a.gain != null ? ` <span class="opt-gain">+${Math.round(a.gain)}%</span>` : ''}</span>
+                <span class="t2" style="white-space:normal;">${a.body}</span>
+              </span>
+            </div>`).join('')}`
+          : `<div class="insight">Aucun levier net à signaler : ton rendement est cohérent d'une run à l'autre et le coût d'une vague est aligné sur ta moyenne. À ce stade, c'est le volume de runs qui fera la différence.</div>`}
+      </div>`;
+    }
+
     // ---- Résumé hebdomadaire ----
     function weekStartISO(offsetWeeks) {
       const d = new Date();
@@ -5646,6 +5907,8 @@
         </div>` : ''}
 
         ${weeklyCard()}
+
+        ${optimizerCard(runs)}
       `;
 
       const vagues = `
