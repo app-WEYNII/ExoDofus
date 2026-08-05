@@ -1109,6 +1109,19 @@
     .qual-btn.on[data-q="bien"] { background: #58c47a; }
     .qual-btn.on[data-q="exc"]  { background: linear-gradient(135deg, var(--gold-deep), var(--gold-bright)); box-shadow: var(--shadow-gold); }
 
+    .qdot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.25);
+    }
+    .qdot.nul  { background: #8a8f98; }
+    .qdot.mid  { background: #6f9ed8; }
+    .qdot.bien { background: #58c47a; }
+    .qdot.exc  { background: linear-gradient(135deg, var(--gold-deep), var(--gold-bright)); box-shadow: 0 0 8px rgba(245, 198, 104, 0.45); }
+    .qdot.none { background: transparent; box-shadow: inset 0 0 0 1.5px var(--border-hi); }
+
     .qbadge {
       font-size: 10px;
       font-weight: 700;
@@ -1531,6 +1544,7 @@
       margin-bottom: 8px;
     }
     .chest-entry .ic { font-size: 18px; flex-shrink: 0; }
+    .chest-entry .qdot { margin-right: 1px; }
     .chest-entry .bd { flex: 1; min-width: 0; }
     .chest-entry .t1 { font-size: 13px; font-weight: 600; }
     .chest-entry .t2 { font-size: 11.5px; color: var(--text-dim); margin-top: 3px; }
@@ -1594,6 +1608,39 @@
     .insight b { color: var(--text); }
     .insight.warn { border-left-color: var(--blue); }
 
+    /* ---- Verrou de défilement (iOS) ---- */
+    body.modal-open {
+      position: fixed;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    /* ---- Sous-onglets des stats ---- */
+    .subtabs {
+      display: flex;
+      gap: 4px;
+      background: rgba(0, 0, 0, 0.28);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 4px;
+      margin-bottom: 12px;
+    }
+    .sub-btn {
+      flex: 1;
+      padding: 8px 6px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-dim);
+      transition: all .16s ease;
+      white-space: nowrap;
+    }
+    .sub-btn.on {
+      background: var(--bg-card-hi);
+      color: var(--gold-bright);
+      box-shadow: inset 0 0 0 1px rgba(217, 166, 72, 0.35);
+    }
+
     /* ---- Regroupement des runs par jour ---- */
     .day-group { margin-bottom: 18px; }
     .day-head {
@@ -1606,9 +1653,7 @@
       gap: 10px;
       padding: 7px 2px 8px;
       margin-bottom: 8px;
-      background: linear-gradient(to bottom, var(--bg) 62%, transparent);
-      backdrop-filter: blur(3px);
-      -webkit-backdrop-filter: blur(3px);
+      background: var(--bg);
     }
     .day-label {
       font-family: var(--font-display);
@@ -2187,8 +2232,8 @@
         <div class="value kamas-num" id="stat-rate">—</div>
       </div>
       <div class="stat">
-        <div class="label">Record</div>
-        <div class="value kamas-num" id="stat-best">—</div>
+        <div class="label">Légendes</div>
+        <div class="value kamas-num" id="stat-best">0</div>
       </div>
     </div>
   </header>
@@ -2293,6 +2338,10 @@
 
     <!-- Songes : Stats -->
     <section class="view" id="view-sstats">
+      <div class="subtabs" id="stats-subtabs">
+        <button class="sub-btn on" data-s="general">Général</button>
+        <button class="sub-btn" data-s="vagues">Vagues</button>
+      </div>
       <div class="period-row" id="period-stats"></div>
       <div class="period-row hidden" id="intens-stats"></div>
       <div id="sstats-body"></div>
@@ -2800,6 +2849,7 @@
         if (!Array.isArray(state.catalogue)) state.catalogue = [];
         if (!Array.isArray(state.spends)) state.spends = [];
         if (!state.settings || typeof state.settings !== 'object') state.settings = {};
+        collapsedDays = new Set(Array.isArray(state.settings.collapsedDays) ? state.settings.collapsedDays : []);
         if (state.settings.bribesOffset != null && !state.settings.goal) {
           state.settings.goal = { metric: 'bribes', target: 25000, offset: state.settings.bribesOffset };
           delete state.settings.bribesOffset;
@@ -3413,6 +3463,23 @@
       document.getElementById('modal-confirm').classList.add('active');
     }
 
+    // iOS fait défiler la page derrière une modale ouverte, ce qui donne
+    // l'impression que l'affichage saute. On fige le corps pendant l'ouverture.
+    let lockedScrollY = 0;
+    function syncScrollLock() {
+      const open = document.querySelector('.modal-overlay.active') !== null;
+      const locked = document.body.classList.contains('modal-open');
+      if (open && !locked) {
+        lockedScrollY = window.scrollY || window.pageYOffset || 0;
+        document.body.style.top = `-${lockedScrollY}px`;
+        document.body.classList.add('modal-open');
+      } else if (!open && locked) {
+        document.body.classList.remove('modal-open');
+        document.body.style.top = '';
+        window.scrollTo(0, lockedScrollY);
+      }
+    }
+
     function closeAllModals() {
       document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
     }
@@ -3454,7 +3521,7 @@
           document.getElementById('modal-data').classList.remove('active');
           confirmDialog(
             'Importer cette sauvegarde ?',
-            `Elle contient ${nItems} exo(s) et ${nRuns} run(s) de songes, et remplacera tes données actuelles.`,
+            `Elle contient ${plural(nItems, 'exo')} et ${plural(nRuns, 'run')} de songes, et remplacera tes données actuelles.`,
             () => {
               state = {
                 items: Array.isArray(data.items) ? data.items : [],
@@ -3542,6 +3609,7 @@
               drawerOpen = false;
               pendingFlags = pendingNums = null;
               collapsedDays.clear();
+              delete state.settings.collapsedDays;
               save();
               // on ferme AVANT de redessiner : si le rendu échoue sur des
               // données importées inattendues, la modale ne reste pas coincée
@@ -3680,7 +3748,7 @@
     let draftExcluded = false;
     let draftHidden = false;
     let draftLegends = [];
-    let collapsedDays = new Set();
+    let collapsedDays = new Set();   // rechargé depuis les réglages au démarrage
 
     // ---- Durée : formatage ----
     function fmtDur(sec) {
@@ -3689,6 +3757,19 @@
       const m = Math.floor((sec % 3600) / 60);
       if (h > 0) return h + 'h' + String(m).padStart(2, '0');
       return m + ' min';
+    }
+    // Affichage précis pour les cartes de run : la seconde compte quand on compare
+    // Accord automatique plutôt que des « (s) » disgracieux
+    function plural(n, singular, pluralForm) {
+      return `${Number(n).toLocaleString('fr-FR')} ${n > 1 ? (pluralForm || singular + 's') : singular}`;
+    }
+    function fmtDurPrecise(sec) {
+      sec = Math.round(sec || 0);
+      const h = Math.floor(sec / 3600);
+      const m = Math.floor((sec % 3600) / 60);
+      const s = sec % 60;
+      if (h > 0) return `${h}h${String(m).padStart(2, '0')}'${String(s).padStart(2, '0')}`;
+      return `${m}'${String(s).padStart(2, '0')}`;
     }
     function fmtDurLong(sec) {
       sec = Math.round(sec || 0);
@@ -3754,6 +3835,13 @@
       if (r >= 100) return Math.round(r).toLocaleString('fr-FR');
       return r.toFixed(1).replace('.', ',');
     }
+    // On ne garde que les jours encore présents, pour éviter d'accumuler des clés mortes
+    function saveCollapsed() {
+      const known = new Set(state.songes.map(r => r.date || ''));
+      state.settings.collapsedDays = [...collapsedDays].filter(k => known.has(k));
+      save();
+    }
+
     function periodCutoff() {
       const p = state.settings.period;
       if (!p || p === 'all') return null;
@@ -3805,8 +3893,10 @@
       const pooled = totalSec > 0 ? totalBribes / (totalSec / 3600) : null;
       document.getElementById('stat-rate').textContent = fmtRate(pooled);
 
-      const bestWave = runs.length ? Math.max(...runs.map(r => r.wave || 0)) : null;
-      document.getElementById('stat-best').textContent = bestWave == null ? '—' : String(bestWave);
+      // toutes provenances confondues : drops de run et coffres
+      const nLegends = runs.reduce((s, r) => s + (r.legends || []).length, 0)
+        + (state.chests || []).reduce((s, c) => s + (c.legends || []).length, 0);
+      document.getElementById('stat-best').textContent = String(nLegends);
     }
 
     // ---- Filtre de période (partagé entre Compos et Stats) ----
@@ -3973,7 +4063,7 @@
 
       const refreshCount = () => {
         const m = applyFilters(allRuns, pendingFlags, pendingNums).length;
-        document.getElementById('fd-count').innerHTML = `<b>${m}</b> run(s) sur ${allRuns.length}`;
+        document.getElementById('fd-count').innerHTML = `<b>${m}</b> ${m > 1 ? 'runs' : 'run'} sur ${allRuns.length}`;
       };
       const setNum = (k, v) => {
         const range = drawer.querySelector(`[data-range="${k}"]`);
@@ -4065,7 +4155,7 @@
           <span class="run-wave">${r.wave || 0}<span class="of">${IMAP[r.intensity] && IMAP[r.intensity].cap ? '/' + IMAP[r.intensity].cap : ' vagues'}</span></span>
         </div>
         <div class="run-metrics">
-          <div class="rmetric"><div class="lbl">Durée</div><div class="val">${fmtDur(r.durationSec)}</div></div>
+          <div class="rmetric"><div class="lbl">Durée</div><div class="val">${fmtDurPrecise(r.durationSec)}</div></div>
           <div class="rmetric"><div class="lbl">Bribes</div><div class="val gold">${(r.bribes || 0).toLocaleString('fr-FR')}</div></div>
           <div class="rmetric"><div class="lbl">Bribes/h</div><div class="val${cls}">${fmtRate(rate)}</div></div>
         </div>
@@ -4090,7 +4180,7 @@
         const sec = runs.reduce((s, r) => s + (r.durationSec || 0), 0);
         const bribes = runs.reduce((s, r) => s + (r.bribes || 0), 0);
         info.classList.remove('hidden');
-        info.innerHTML = `<b>${runs.length}</b> run(s) sur ${all.length} · ${escapeHtml(activeFilterLabels().join(' + '))}`
+        info.innerHTML = `<b>${runs.length}</b> ${runs.length > 1 ? 'runs' : 'run'} sur ${all.length} · ${escapeHtml(activeFilterLabels().join(' + '))}`
           + (runs.length ? ` — <b>${fmtDur(sec)}</b>, <b>${bribes.toLocaleString('fr-FR')}</b> bribes` : '');
       } else {
         info.classList.add('hidden');
@@ -4139,6 +4229,7 @@
         head.addEventListener('click', () => {
           collapsedDays.has(d.key) ? collapsedDays.delete(d.key) : collapsedDays.add(d.key);
           group.classList.toggle('collapsed');
+          saveCollapsed();
           haptic();
         });
         group.appendChild(head);
@@ -4215,7 +4306,7 @@
         if (overlap) {
           msg = `<b>${escapeHtml(compoLabel(a.compo))}</b> mène, mais son intervalle chevauche celui de <b>${escapeHtml(compoLabel(b.compo))}</b> : l'écart n'est pas encore concluant. Continue à alterner les deux.`;
         } else {
-          msg = `<b>${escapeHtml(compoLabel(a.compo))}</b> sort devant sans chevauchement avec <b>${escapeHtml(compoLabel(b.compo))}</b> sur ${a.n} run(s). Le signal commence à être réel${a.n < GOOD_SAMPLE ? `, mais ${GOOD_SAMPLE} runs le rendraient solide` : ''}.`;
+          msg = `<b>${escapeHtml(compoLabel(a.compo))}</b> sort devant sans chevauchement avec <b>${escapeHtml(compoLabel(b.compo))}</b> sur ${plural(a.n, 'run')}. Le signal commence à être réel${a.n < GOOD_SAMPLE ? `, mais ${GOOD_SAMPLE} runs le rendraient solide` : ''}.`;
         }
       }
       note.innerHTML = msg;
@@ -4289,7 +4380,7 @@
       if (orphans) {
         const o = document.createElement('div');
         o.className = 'orphan-note';
-        o.textContent = `${orphans} run(s) sans compo — non comptées dans ce comparatif.`;
+        o.textContent = `${plural(orphans, 'run')} sans compo — non ${orphans > 1 ? 'comptées' : 'comptée'} dans ce comparatif.`;
         list.appendChild(o);
       }
     }
@@ -4343,7 +4434,7 @@
       confirmDialog(
         'Supprimer cette compo ?',
         used
-          ? `${used} run(s) l'utilisent : elles seront conservées mais passeront en « compo non renseignée ».`
+          ? `${plural(used, 'run')} l'${used > 1 ? 'utilisent' : 'utilise'} : ${used > 1 ? 'elles seront conservées mais passeront' : 'elle sera conservée mais passera'} en « compo non renseignée ».`
           : 'Elle sera retirée du comparatif.',
         () => {
           state.compos = state.compos.filter(c => c.id !== id);
@@ -4501,7 +4592,7 @@
         const names = (r.legends || []).map(l => resolveLegend(l).name).filter(Boolean);
         const rate = runRate(r);
         return [
-          r.date || '', r.durationSec || 0, fmtDur(r.durationSec),
+          r.date || '', r.durationSec || 0, fmtDurPrecise(r.durationSec),
           r.intensity && IMAP[r.intensity] ? IMAP[r.intensity].label : '',
           r.wave || 0, r.bribes || 0, rate != null ? Math.round(rate) : '',
           r.reflets || 0, r.runes || 0, (r.legends || []).length, names.join(' | '),
@@ -4518,7 +4609,7 @@
       a.download = `songes-runs-${todayISO()}.csv`;
       a.click();
       URL.revokeObjectURL(url);
-      toast(`${rows.length} run(s) exportée(s)`);
+      toast(`${plural(rows.length, 'run')} ${rows.length > 1 ? 'exportées' : 'exportée'}`);
     }
 
     // ---- Édition du barème ----
@@ -4723,7 +4814,7 @@
           added++;
         });
         toast(added
-          ? `${added} légende(s) ajoutée(s)${skipped ? ` · ${skipped} doublon(s) ignoré(s)` : ''}`
+          ? `${plural(added, 'légende')} ${added > 1 ? 'ajoutées' : 'ajoutée'}${skipped ? ` · ${plural(skipped, 'doublon')} ${skipped > 1 ? 'ignorés' : 'ignoré'}` : ''}`
           : 'Déjà dans le catalogue');
       }
       state.catalogue.sort((a, b) => a.name.localeCompare(b.name, 'fr'));
@@ -4756,7 +4847,7 @@
       document.getElementById('modal-cat').classList.remove('active');
       confirmDialog(
         'Retirer du catalogue ?',
-        used ? `${used} drop(s) portent ce nom : ils sont conservés, seul le catalogue perd l'entrée.`
+        used ? `${plural(used, 'drop')} ${used > 1 ? 'portent' : 'porte'} ce nom : ${used > 1 ? 'ils sont conservés' : 'il est conservé'}, seul le catalogue perd l'entrée.`
              : 'Elle disparaîtra de ta collection.',
         () => {
           state.catalogue = state.catalogue.filter(x => x.id !== id);
@@ -4858,7 +4949,7 @@
 
       return `<div class="chart-card">
         <div class="chart-title">Taux de drop observés</div>
-        <div class="chart-sub">${n} légende(s) identifiée(s) · attendu ${expected.toFixed(1).replace('.', ',')} par légende</div>
+        <div class="chart-sub">${plural(n, 'légende')} ${n > 1 ? 'identifiées' : 'identifiée'} · attendu ${expected.toFixed(1).replace('.', ',')} par légende</div>
         ${top.map(r => `
           <div class="yield-row">
             <span class="yield-lbl" style="width:92px;text-align:left;font-size:11px;">${escapeHtml(r.e.name.replace(/^Légende (de |du |d')/, ''))}</span>
@@ -4910,13 +5001,13 @@
             <div class="num kamas-num">${nChests}</div>
             <div class="lbl">coffre${nChests > 1 ? 's' : ''} ouvert${nChests > 1 ? 's' : ''}</div>
           </div>
-          ${gap != null && gap !== 0 ? `<div class="insight warn">Tes bribes cumulées correspondent à <b>${expected}</b> palier(s), mais tu as enregistré <b>${nChests}</b> coffre(s). ${gap > 0 ? `Il t'en manque ${gap} à saisir.` : `Tu en as saisi ${-gap} de plus — peut-être des coffres obtenus avant le suivi.`}</div>` : ''}
+          ${gap != null && gap !== 0 ? `<div class="insight warn">Tes bribes cumulées correspondent à <b>${expected}</b> ${expected > 1 ? 'paliers' : 'palier'}, mais tu as enregistré <b>${nChests}</b> ${nChests > 1 ? 'coffres' : 'coffre'}. ${gap > 0 ? `Il t'en manque ${gap} à saisir.` : `Tu en as saisi ${-gap} de plus — peut-être des coffres obtenus avant le suivi.`}</div>` : ''}
           <button class="btn btn-primary" id="add-chest" style="width:100%;margin-top:12px;">+ J'ai ouvert un coffre</button>
         </div>
 
         <div class="chart-card">
           <div class="chart-title">Provenance des légendes</div>
-          <div class="chart-sub">${drops.length} légende(s) au total</div>
+          <div class="chart-sub">${plural(drops.length, 'légende')} au total</div>
           <div class="yield-row">
             <span class="yield-lbl" style="width:52px;text-align:left;">Coffres</span>
             <span class="yield-track"><span class="yield-fill" style="width:${drops.length ? (fromChest.length / drops.length) * 100 : 0}%"></span></span>
@@ -4933,10 +5024,16 @@
           <div style="margin-top:6px;">
             ${[...state.chests].sort((a, b) => (b.date || '').localeCompare(a.date || '')).map(c => `
               <div class="chest-entry" data-chest="${c.id}">
-                <span class="ic">🎁</span>
+                ${(c.legends || []).map(l => {
+                  const q = resolveLegend(l).q;
+                  return `<span class="qdot ${q || 'none'}"></span>`;
+                }).join('') || '<span class="qdot none"></span>'}
                 <span class="bd">
-                  <span class="t1">${fmtDateShort(c.date)} — ${(c.legends || []).length} légende(s)</span>
-                  <span class="t2">${(c.legends || []).map(l => escapeHtml(resolveLegend(l).name || 'sans nom')).join(', ') || 'aucune'}${c.note ? ' · ' + escapeHtml(c.note) : ''}</span>
+                  <span class="t1">${fmtDateShort(c.date)} — ${(c.legends || []).map(l => escapeHtml(resolveLegend(l).name || 'sans nom')).join(', ') || 'aucune légende'}</span>
+                  <span class="t2">${(c.legends || []).map(l => {
+                    const q = resolveLegend(l).q;
+                    return q && QMAP[q] ? QMAP[q].label : 'non classée';
+                  }).join(', ')}${c.note ? ' · ' + escapeHtml(c.note) : ''}</span>
                 </span>
               </div>`).join('')}
           </div>` : ''}
@@ -4967,9 +5064,11 @@
             <span><span class="lg-swatch" style="background:var(--blue)"></span> obtenue en run</span>
             <span><span class="lg-swatch" style="background:var(--gold)"></span> obtenue en coffre</span>
           </div>` : `<div class="purchases-empty">Catalogue vide — ajoute tes légendes pour suivre ta collection.</div>`}
-          ${unlisted.length ? `<div class="insight warn"><b>${unlisted.length}</b> drop(s) portent un nom absent du catalogue. Ils comptent dans les stats mais pas dans la collection.</div>` : ''}
-          ${unnamed ? `<div class="insight warn"><b>${unnamed}</b> légende(s) sans nom. Ouvre les runs concernées pour compléter.</div>` : ''}
+          ${unlisted.length ? `<div class="insight warn"><b>${unlisted.length}</b> ${unlisted.length > 1 ? 'drops portent' : 'drop porte'} un nom absent du catalogue. ${unlisted.length > 1 ? 'Ils comptent' : 'Il compte'} dans les stats mais pas dans la collection.</div>` : ''}
+          ${unnamed ? `<div class="insight warn"><b>${unnamed}</b> ${unnamed > 1 ? 'légendes' : 'légende'} sans nom. Ouvre les runs concernées pour compléter.</div>` : ''}
         </div>
+
+        ${legendQualityCard(statRuns())}
 
         ${dropRateCard(drops)}
       `;
@@ -5058,7 +5157,7 @@
 
       return `<div class="chart-card">
         <div class="chart-title">Progression dans les vagues</div>
-        <div class="chart-sub">Part de tes runs qui atteint <b>au moins</b> chaque vague · ${reached.length} run(s) arrivées à l'étage final</div>
+        <div class="chart-sub">Part de tes runs qui atteint <b>au moins</b> chaque vague · ${plural(reached.length, 'run')} ${reached.length > 1 ? 'arrivées' : 'arrivée'} à l'étage final</div>
         ${bars}
         <div class="chart-legend">
           <span><span class="lg-swatch" style="background:linear-gradient(90deg,var(--gold-deep),var(--gold-bright))"></span> % de runs</span>
@@ -5163,6 +5262,8 @@
       const sec = runs.reduce((s, r) => s + (r.durationSec || 0), 0);
       const hours = sec / 3600;
       const good = entries.filter(l => l.src === 'run' && (l.q === 'bien' || l.q === 'exc')).length;
+      const nRunDrops = entries.filter(l => l.src === 'run').length;
+      const anyEvery = nRunDrops > 0 ? hours / nRunDrops : null;
       const nRun = entries.filter(l => l.src === 'run').length;
       const nChest = entries.filter(l => l.src === 'chest').length;
       const qAvg = src => {
@@ -5186,12 +5287,12 @@
 
       return `<div class="chart-card">
         <div class="chart-title">Qualité des légendaires</div>
-        <div class="chart-sub">${total} légendaire(s) — ${nRun} en run, ${nChest} en coffre</div>
+        <div class="chart-sub">${plural(total, 'légende')} — ${nRun} en run, ${nChest} en coffre</div>
         ${bars}
         <div class="detail-stats" style="margin-top:12px;">
           <div class="dstat"><div class="lbl">Note moyenne</div><div class="val small">${avg.toFixed(2).replace('.', ',')}<span class="u"> / 4</span></div></div>
           <div class="dstat"><div class="lbl">Bien ou mieux</div><div class="val gold small">${Math.round((good / total) * 100)}%</div></div>
-          ${goodEvery != null ? `<div class="dstat wide"><div class="lbl">Un bon légendaire (en run)</div><div class="val small">toutes les ${fmtDur(goodEvery * 3600)}</div></div>` : ''}
+          ${anyEvery != null ? `<div class="dstat wide"><div class="lbl">Une légende (en run)</div><div class="val small">toutes les ${fmtDurPrecise(anyEvery * 3600)}</div></div>` : ''}
           ${avgRun != null ? `<div class="dstat"><div class="lbl">Note en run</div><div class="val small">${avgRun.toFixed(2).replace('.', ',')}</div></div>` : ''}
           ${avgChest != null ? `<div class="dstat"><div class="lbl">Note en coffre</div><div class="val small">${avgChest.toFixed(2).replace('.', ',')}</div></div>` : ''}
         </div>
@@ -5203,13 +5304,13 @@
         <div class="legend-list">
           ${[...entries].reverse().map(l => `
             <div class="legend-entry">
-              <span class="qbadge ${l.q}">${QMAP[l.q].short || QMAP[l.q].label}</span>
+              <span class="qdot ${l.q}"></span>
               <span class="nm${l.name ? '' : ' unnamed'}">${l.name ? escapeHtml(l.name) : 'sans nom'}</span>
               <span class="dt">${fmtDateShort(l.date)}</span>
             </div>`).join('')}
         </div>` : ''}
-        ${unnamed ? `<div class="insight warn">${unnamed} légendaire(s) sans nom. Filtre tes runs sur « ★ Légendaire » pour les retrouver et compléter.</div>` : ''}
-        ${total < 8 ? `<div class="insight warn">Sur ${total} légendaire(s) seulement, cette répartition est du bruit. Il en faut une vingtaine avant d'en tirer quoi que ce soit.</div>` : ''}
+        ${unnamed ? `<div class="insight warn">${plural(unnamed, 'légende')} sans nom. Filtre tes runs sur « ★ Légendaire » pour les retrouver et compléter.</div>` : ''}
+        ${total < 8 ? `<div class="insight warn">Sur ${plural(total, 'légende')} seulement, cette répartition est du bruit. Il en faut une vingtaine avant d'en tirer quoi que ce soit.</div>` : ''}
       </div>`;
     }
 
@@ -5244,7 +5345,7 @@
       if (runsLeft != null && runsLeftRecent != null && runsLeft !== runsLeftRecent) {
         const better = runsLeftRecent < runsLeft;
         drift = `<div class="compo-sub" style="margin-top:10px;">
-          <span>Sur tes <b>5 dernières runs</b> uniquement : <b>${runsLeftRecent}</b> run(s) restante(s),
+          <span>Sur tes <b>5 dernières runs</b> uniquement : <b>${runsLeftRecent}</b> ${runsLeftRecent > 1 ? 'runs restantes' : 'run restante'},
           soit ${better ? 'mieux' : 'moins bien'} que ta moyenne globale.</span>
         </div>`;
       }
@@ -5260,7 +5361,7 @@
       return `
         <div class="chart-card">
           <div class="chart-title">${escapeHtml(meta.reward)}</div>
-          <div class="chart-sub">Palier n°${cycles + 1} · ${target.toLocaleString('fr-FR')} ${meta.label.toLowerCase()}${cycles > 0 ? ` · ${cycles} déjà atteint(s)` : ''}</div>
+          <div class="chart-sub">Palier n°${cycles + 1} · ${target.toLocaleString('fr-FR')} ${meta.label.toLowerCase()}${cycles > 0 ? ` · ${cycles} déjà ${cycles > 1 ? 'atteints' : 'atteint'}` : ''}</div>
 
           ${due > 0 ? `<div class="profit-box green" style="margin-bottom:12px;">
             <div class="lbl">Palier atteint</div>
@@ -5269,7 +5370,7 @@
           <button class="btn btn-primary" id="goal-chest" style="width:100%;margin-bottom:12px;">+ J'ai ouvert le coffre</button>
           ` : `<div class="counter-big" style="margin-bottom:12px;">
             <div class="num kamas-num">${runsLeft != null ? runsLeft : '—'}</div>
-            <div class="lbl">run(s) restante(s) à ton rythme actuel</div>
+            <div class="lbl">${runsLeft > 1 ? 'runs restantes' : 'run restante'} à ton rythme actuel</div>
           </div>`}
 
           <div class="progress" style="margin-bottom:8px;">
@@ -5461,7 +5562,7 @@
             <span class="yield-n">×${r.n}</span>
           </div>`).join('')}
         ${mixing ? `<div class="insight warn">Tes statistiques mélangent <b>${used.length} intensités</b> dont les gains par vague n'ont rien à voir. Les moyennes globales, la comparaison de compos et la projection vers le coffre sont donc trompeuses. Choisis une intensité en haut de l'onglet pour cloisonner.</div>` : ''}
-        ${unset ? `<div class="insight warn"><b>${unset}</b> run(s) sans intensité renseignée. Elles disparaissent dès que tu filtres sur un palier.</div>` : ''}
+        ${unset ? `<div class="insight warn"><b>${unset}</b> ${unset > 1 ? 'runs' : 'run'} sans intensité renseignée. ${unset > 1 ? 'Elles disparaissent' : 'Elle disparaît'} dès que tu filtres sur un palier.</div>` : ''}
       </div>`;
     }
 
@@ -5497,16 +5598,22 @@
       const trend = (last5.length >= 3 && prev5.length >= 3)
         ? ((mean(last5) - mean(prev5)) / mean(prev5)) * 100 : null;
 
-      body.innerHTML = `
+      const sub = state.settings.statsTab === 'vagues' ? 'vagues' : 'general';
+      document.querySelectorAll('#stats-subtabs .sub-btn').forEach(b =>
+        b.classList.toggle('on', b.dataset.s === sub));
+
+      const general = `
         ${goalCardHTML(runs)}
         <div class="chart-card">
           <div class="chart-title">Synthèse</div>
-          <div class="chart-sub">${runs.length} run(s) · ${fmtDur(totalSec)} de jeu cumulé</div>
+          <div class="chart-sub">${plural(runs.length, 'run')} · ${fmtDur(totalSec)} de jeu cumulé</div>
           <div class="detail-stats">
             <div class="dstat"><div class="lbl">Bribes totales</div><div class="val gold small">${totalBribes.toLocaleString('fr-FR')}</div></div>
             <div class="dstat"><div class="lbl">Bribes/h global</div><div class="val small">${fmtRate(pooled)}</div></div>
             <div class="dstat"><div class="lbl">Médiane bribes/h</div><div class="val small">${fmtRate(med)}</div></div>
             <div class="dstat"><div class="lbl">Dispersion</div><div class="val small">${cv != null ? Math.round(cv) + '%' : '—'}</div></div>
+            <div class="dstat"><div class="lbl">Durée moyenne</div><div class="val small">${runs.length ? fmtDurPrecise(totalSec / runs.length) : '—'}</div></div>
+            <div class="dstat"><div class="lbl">Durée médiane</div><div class="val small">${runs.length ? fmtDurPrecise(median(runs.map(r => r.durationSec || 0))) : '—'}</div></div>
             <div class="dstat"><div class="lbl">Vague médiane</div><div class="val small">${median(waves) != null ? String(median(waves)).replace('.', ',') : '—'}</div></div>
             <div class="dstat"><div class="lbl">Meilleure vague</div><div class="val gold small">${Math.max(...waves)}</div></div>
           </div>
@@ -5514,6 +5621,7 @@
             <div class="lbl">5 dernières runs vs les 5 précédentes</div>
             <div class="val">${trend >= 0 ? '+' : ''}${trend.toFixed(1).replace('.', ',')}%</div>
           </div>` : ''}
+          ${cv != null ? `<div class="insight">Ta dispersion est de <b>${Math.round(cv)}%</b>. Le contenu des songes étant aléatoire, une partie de cet écart ne vient pas de toi — ce qui compte, c'est de la voir <b>se resserrer</b> avec le temps.</div>` : ''}
         </div>
 
         <div class="chart-card">
@@ -5538,7 +5646,9 @@
         </div>` : ''}
 
         ${weeklyCard()}
+      `;
 
+      const vagues = `
         ${intensityCard()}
 
         ${bribeModelCard()}
@@ -5547,15 +5657,9 @@
 
         ${yieldByWave(runs)}
 
-        ${legendQualityCard(runs)}
-
-        <div class="note-box" style="margin-bottom:0;">
-          ${cv != null
-            ? `Ta dispersion est de <b>${Math.round(cv)}%</b>. Comme le contenu des songes est aléatoire, une partie de cet écart ne vient pas de toi. Ce qui compte, c'est de la voir <b>se resserrer</b> avec le temps : ça veut dire que les mauvais tirages te coûtent moins cher qu'avant.`
-            : `Enregistre au moins 2 runs pour commencer à mesurer ta régularité.`}
-        </div>
       `;
 
+      body.innerHTML = sub === 'vagues' ? vagues : general;
       bindGoalCard();
     }
 
@@ -5962,7 +6066,7 @@
       document.querySelectorAll('nav.tabs').forEach(n => n.classList.toggle('hidden', n.dataset.mod !== mod));
       document.getElementById('bar-exos').classList.toggle('hidden', mod !== 'exos');
       document.getElementById('bar-songes').classList.toggle('hidden', mod !== 'songes');
-      document.getElementById('app-title').textContent = mod === 'exos' ? 'Dofus Exos' : 'Songes Infinis';
+      document.getElementById('app-title').textContent = mod === 'exos' ? 'Exo' : 'Songes Infinis';
       document.getElementById('app-sub').textContent = mod === 'exos' ? 'Forgemagie' : 'Rendement & compos';
 
       const nav = document.querySelector(`nav.tabs[data-mod="${mod}"]`);
@@ -6060,6 +6164,16 @@
     document.getElementById('cat-save').addEventListener('click', saveCat);
     document.getElementById('cat-delete').addEventListener('click', deleteCat);
 
+    document.querySelectorAll('#stats-subtabs .sub-btn').forEach(b => {
+      b.addEventListener('click', () => {
+        state.settings.statsTab = b.dataset.s;
+        save();
+        renderSongesStats();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        haptic();
+      });
+    });
+
     document.getElementById('filter-clear').addEventListener('click', () => {
       activeFilters = new Set();
       numericFilters = {};
@@ -6133,6 +6247,11 @@
       document.getElementById('modal-confirm').classList.remove('active');
       confirmCb = null;
     });
+
+    // Un seul point d'écoute plutôt que d'instrumenter chaque ouverture de modale
+    const scrollLockObserver = new MutationObserver(syncScrollLock);
+    document.querySelectorAll('.modal-overlay').forEach(o =>
+      scrollLockObserver.observe(o, { attributes: true, attributeFilter: ['class'] }));
 
     // Click overlay = close
     document.querySelectorAll('.modal-overlay').forEach(o => {
