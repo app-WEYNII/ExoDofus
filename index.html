@@ -561,6 +561,9 @@
       align-items: flex-end;
       justify-content: center;
       padding-top: env(safe-area-inset-top);
+      /* --kb : hauteur du clavier virtuel, mesurée via visualViewport */
+      bottom: var(--kb, 0px);
+      transition: bottom .18s ease;
     }
     .modal-overlay.active { display: flex; }
     .modal {
@@ -570,9 +573,10 @@
       border-radius: var(--radius-lg) var(--radius-lg) 0 0;
       width: 100%;
       max-width: 640px;
-      max-height: 92vh;
+      max-height: calc(92vh - var(--kb, 0px));
       overflow-y: auto;
       padding: 20px 18px calc(20px + env(safe-area-inset-bottom));
+      transition: max-height .18s ease;
       animation: slideUp .25s ease;
       -webkit-overflow-scrolling: touch;
     }
@@ -1681,6 +1685,8 @@
     .insight.warn { border-left-color: var(--blue); }
 
     /* ---- Verrou de défilement (iOS) ---- */
+    body.kb-open .modal { padding-bottom: 16px; }
+
     body.modal-open {
       position: fixed;
       width: 100%;
@@ -3530,6 +3536,46 @@
       document.getElementById('confirm-msg').textContent = msg;
       confirmCb = cb;
       document.getElementById('modal-confirm').classList.add('active');
+    }
+
+    // ---- Clavier virtuel ----
+    // Sur iOS, le clavier réduit le « visual viewport » sans toucher au layout :
+    // la modale reste donc à sa place et se retrouve masquée. On mesure l'écart
+    // et on remonte la feuille d'autant.
+    function setupKeyboard() {
+      const vv = window.visualViewport;
+      const root = document.documentElement;
+
+      if (vv) {
+        const apply = () => {
+          const kb = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+          root.style.setProperty('--kb', kb + 'px');
+          document.body.classList.toggle('kb-open', kb > 80);
+        };
+        vv.addEventListener('resize', apply);
+        vv.addEventListener('scroll', apply);
+        apply();
+      }
+
+      // Le champ visé est ramené au centre de la zone encore visible.
+      // Le délai laisse au clavier le temps de finir son animation.
+      document.addEventListener('focusin', (e) => {
+        const el = e.target;
+        if (!el.matches || !el.matches('input, textarea, select')) return;
+        const modal = el.closest('.modal');
+        if (!modal) return;
+        // Si le clavier est déjà ouvert (passage d'un champ à l'autre),
+        // inutile d'attendre son animation.
+        const delay = document.body.classList.contains('kb-open') ? 60 : 320;
+        setTimeout(() => {
+          if (document.activeElement !== el) return;
+          const box = el.getBoundingClientRect();
+          const view = modal.getBoundingClientRect();
+          const target = view.top + view.height / 2;
+          const delta = (box.top + box.height / 2) - target;
+          if (Math.abs(delta) > 24) modal.scrollBy({ top: delta, behavior: 'smooth' });
+        }, delay);
+      });
     }
 
     // iOS fait défiler la page derrière une modale ouverte, ce qui donne
@@ -6485,6 +6531,7 @@
     document.getElementById('run-delete').addEventListener('click', deleteRun);
     setupDurationInputs();
     setupLootInputs();
+    setupKeyboard();
 
     document.getElementById('r-excluded').addEventListener('click', () => {
       draftExcluded = !draftExcluded;
