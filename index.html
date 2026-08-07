@@ -106,6 +106,29 @@
       border-color: var(--gold);
       background: var(--bg-card);
     }
+    /* iOS donne au champ date une hauteur intrinsèque énorme et un alignement
+       imprévisible : on neutralise son apparence native. */
+    input[type="date"] {
+      -webkit-appearance: none;
+      appearance: none;
+      display: block;
+      height: 48px;
+      line-height: 22px;
+      text-align: center;
+      padding: 12px 14px;
+    }
+    input[type="date"]::-webkit-date-and-time-value {
+      text-align: center;
+      margin: 0;
+      line-height: 22px;
+    }
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      position: absolute;
+      right: 14px;
+      opacity: 0.55;
+    }
+    .field { position: relative; }
+
     input[type="number"] { -moz-appearance: textfield; }
     input[type="number"]::-webkit-outer-spin-button,
     input[type="number"]::-webkit-inner-spin-button {
@@ -575,7 +598,8 @@
       max-width: 640px;
       max-height: calc(92vh - var(--kb, 0px));
       overflow-y: auto;
-      padding: 20px 18px calc(20px + env(safe-area-inset-bottom));
+      /* pas de marge haute : c'est la poignée collante qui la fournit */
+      padding: 0 18px calc(20px + env(safe-area-inset-bottom));
       transition: max-height .18s ease;
       animation: slideUp .25s ease;
       -webkit-overflow-scrolling: touch;
@@ -585,13 +609,30 @@
       to { transform: translateY(0); }
     }
 
+    /* Zone tactile large autour de la poignée : c'est le geste naturel pour fermer */
     .modal-grip {
-      width: 40px;
-      height: 4px;
+      display: block;
+      position: sticky;
+      top: 0;
+      z-index: 6;
+      width: calc(100% + 36px);
+      margin: 0 -18px 6px;
+      padding: 16px 0 12px;
+      border: none;
+      background: var(--bg-elev);
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    }
+    .modal-grip::before {
+      content: '';
+      display: block;
+      width: 44px;
+      height: 5px;
       background: var(--border-hi);
       border-radius: 999px;
-      margin: 0 auto 14px;
+      margin: 0 auto;
+      transition: background .15s ease, width .15s ease;
     }
+    .modal-grip:active::before { background: var(--gold); width: 56px; }
 
     .modal h2 {
       font-family: var(--font-display);
@@ -2437,7 +2478,7 @@
   <!-- Modal: Add/Edit -->
   <div class="modal-overlay" id="modal-form">
     <div class="modal">
-      <div class="modal-grip"></div>
+      <button class="modal-grip" aria-label="Fermer"></button>
       <h2 id="form-title">Nouvel exo</h2>
 
       <div class="field">
@@ -2490,7 +2531,7 @@
   <!-- Modal: Detail -->
   <div class="modal-overlay" id="modal-detail">
     <div class="modal">
-      <div class="modal-grip"></div>
+      <button class="modal-grip" aria-label="Fermer"></button>
 
       <div class="detail-hero">
         <h2 class="detail-name" id="d-name">—</h2>
@@ -2566,7 +2607,7 @@
   <!-- Modal: Confirm -->
   <div class="modal-overlay" id="modal-confirm">
     <div class="modal" style="max-width: 400px;">
-      <div class="modal-grip"></div>
+      <button class="modal-grip" aria-label="Fermer"></button>
       <h2 id="confirm-title">Confirmer</h2>
       <p id="confirm-msg" style="color: var(--text-soft); margin: 0 0 18px;">—</p>
       <div class="modal-actions">
@@ -2579,7 +2620,7 @@
   <!-- Modal: Achat de runes -->
   <div class="modal-overlay" id="modal-purchase">
     <div class="modal" style="max-width: 400px;">
-      <div class="modal-grip"></div>
+      <button class="modal-grip" aria-label="Fermer"></button>
       <h2>Acheter des runes</h2>
       <div class="field">
         <label>Montant en kamas</label>
@@ -2596,7 +2637,7 @@
   <!-- Modal: Données / Sauvegarde -->
   <div class="modal-overlay" id="modal-data">
     <div class="modal" style="max-width: 440px;">
-      <div class="modal-grip"></div>
+      <button class="modal-grip" aria-label="Fermer"></button>
       <h2>Données &amp; sauvegarde</h2>
       <p style="color: var(--text-soft); margin: 0 0 16px; font-size: 14px;">
         Exporte régulièrement : les données vivent dans le navigateur et peuvent être effacées si tu retires la PWA.
@@ -2617,7 +2658,7 @@
   <!-- Modal: Run de Songes -->
   <div class="modal-overlay" id="modal-run">
     <div class="modal">
-      <div class="modal-grip"></div>
+      <button class="modal-grip" aria-label="Fermer"></button>
       <div class="modal-head">
         <h2 id="run-title">Nouvelle run</h2>
         <button class="trash-btn hidden" id="run-delete" aria-label="Supprimer cette run">🗑</button>
@@ -2714,7 +2755,7 @@
   <!-- Modal: Édition d'une compo -->
   <div class="modal-overlay" id="modal-compo">
     <div class="modal">
-      <div class="modal-grip"></div>
+      <button class="modal-grip" aria-label="Fermer"></button>
       <div class="modal-head">
         <h2 id="compo-title">Nouvelle compo</h2>
         <button class="trash-btn hidden" id="compo-delete" aria-label="Supprimer cette compo">🗑</button>
@@ -2757,7 +2798,7 @@
   <!-- Modal: Ouverture d'un coffre -->
   <div class="modal-overlay" id="modal-chest">
     <div class="modal">
-      <div class="modal-grip"></div>
+      <button class="modal-grip" aria-label="Fermer"></button>
       <div class="modal-head">
         <h2 id="chest-title">Coffre légendaire</h2>
         <button class="trash-btn hidden" id="chest-delete" aria-label="Supprimer ce coffre">🗑</button>
@@ -2788,7 +2829,7 @@
   <!-- Modal: Catalogue des légendes -->
   <div class="modal-overlay" id="modal-cat">
     <div class="modal">
-      <div class="modal-grip"></div>
+      <button class="modal-grip" aria-label="Fermer"></button>
       <div class="modal-head">
         <h2 id="cat-title">Ajouter des légendes</h2>
         <button class="trash-btn hidden" id="cat-delete" aria-label="Retirer du catalogue">🗑</button>
@@ -2827,7 +2868,7 @@
   <!-- Modal: Barème d'un palier -->
   <div class="modal-overlay" id="modal-btab">
     <div class="modal">
-      <div class="modal-grip"></div>
+      <button class="modal-grip" aria-label="Fermer"></button>
       <div class="modal-head">
         <h2 id="btab-title">Barème</h2>
         <button class="trash-btn hidden" id="btab-reset" aria-label="Effacer ce barème">🗑</button>
@@ -2855,7 +2896,7 @@
   <!-- Modal: Dépense de bribes -->
   <div class="modal-overlay" id="modal-spend">
     <div class="modal">
-      <div class="modal-grip"></div>
+      <button class="modal-grip" aria-label="Fermer"></button>
       <div class="modal-head">
         <h2 id="spend-title">Dépense de bribes</h2>
         <button class="trash-btn hidden" id="spend-delete" aria-label="Supprimer">🗑</button>
@@ -2883,7 +2924,7 @@
   <!-- Modal: Choisir une légende -->
   <div class="modal-overlay" id="modal-pick">
     <div class="modal">
-      <div class="modal-grip"></div>
+      <button class="modal-grip" aria-label="Fermer"></button>
       <div class="modal-head">
         <h2 id="pick-title">Quelle légende ?</h2>
       </div>
@@ -6680,21 +6721,33 @@
     document.querySelectorAll('.modal-overlay').forEach(o =>
       scrollLockObserver.observe(o, { attributes: true, attributeFilter: ['class'] }));
 
+    // Ferme une modale et remet à zéro l'édition qu'elle portait
+    function dismissModal(o) {
+      if (!o) return;
+      o.classList.remove('active');
+      if (o.id === 'modal-form') editingId = null;
+      if (o.id === 'modal-run') editingRunId = null;
+      if (o.id === 'modal-compo') { editingCompoId = null; compoReturnToRun = false; }
+      if (o.id === 'modal-chest') editingChestId = null;
+      if (o.id === 'modal-cat') editingCatId = null;
+      if (o.id === 'modal-pick') pickCtx = null;
+      if (o.id === 'modal-spend') editingSpendId = null;
+      if (o.id === 'modal-btab') editingBtab = null;
+      if (o.id === 'modal-confirm') confirmCb = null;
+    }
+
+    // La poignée ferme la modale : accessible sans dérouler jusqu'au bas
+    document.querySelectorAll('.modal-grip').forEach(g => {
+      g.addEventListener('click', () => {
+        dismissModal(g.closest('.modal-overlay'));
+        haptic();
+      });
+    });
+
     // Click overlay = close
     document.querySelectorAll('.modal-overlay').forEach(o => {
       o.addEventListener('click', e => {
-        if (e.target === o) {
-          o.classList.remove('active');
-          if (o.id === 'modal-form') editingId = null;
-          if (o.id === 'modal-run') editingRunId = null;
-          if (o.id === 'modal-compo') { editingCompoId = null; compoReturnToRun = false; }
-          if (o.id === 'modal-chest') editingChestId = null;
-          if (o.id === 'modal-cat') editingCatId = null;
-          if (o.id === 'modal-pick') pickCtx = null;
-          if (o.id === 'modal-spend') editingSpendId = null;
-          if (o.id === 'modal-btab') editingBtab = null;
-          if (o.id === 'modal-confirm') confirmCb = null;
-        }
+        if (e.target === o) dismissModal(o);
       });
     });
 
