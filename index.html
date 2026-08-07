@@ -587,6 +587,7 @@
       /* --kb : hauteur du clavier virtuel, mesurée via visualViewport */
       bottom: var(--kb, 0px);
       transition: bottom .18s ease;
+      overscroll-behavior: contain;
     }
     .modal-overlay.active { display: flex; }
     .modal {
@@ -598,6 +599,7 @@
       max-width: 640px;
       max-height: calc(92vh - var(--kb, 0px));
       overflow-y: auto;
+      overscroll-behavior: contain;
       /* pas de marge haute : c'est la poignée collante qui la fournit */
       padding: 0 18px calc(20px + env(safe-area-inset-bottom));
       transition: max-height .18s ease;
@@ -3588,13 +3590,22 @@
       const root = document.documentElement;
 
       if (vv) {
+        // Le rebond élastique d'iOS et la barre d'URL font varier le viewport de
+        // quelques dizaines de pixels. En dessous du seuil, on considère qu'aucun
+        // clavier n'est ouvert : sinon la feuille se décolle du bas à chaque scroll.
+        const KB_MIN = 120;
+        let last = -1;
         const apply = () => {
-          const kb = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+          const raw = window.innerHeight - vv.height;
+          const kb = raw >= KB_MIN ? Math.round(raw) : 0;
+          if (kb === last) return;                 // évite les repaints inutiles
+          last = kb;
           root.style.setProperty('--kb', kb + 'px');
-          document.body.classList.toggle('kb-open', kb > 80);
+          document.body.classList.toggle('kb-open', kb > 0);
         };
+        // 'scroll' n'est écouté que clavier ouvert : sinon il ne fait que du bruit
         vv.addEventListener('resize', apply);
-        vv.addEventListener('scroll', apply);
+        vv.addEventListener('scroll', () => { if (last > 0) apply(); });
         apply();
       }
 
