@@ -1213,6 +1213,30 @@
     }
     .ichip.set { background: var(--gold-soft); color: var(--gold-bright); }
 
+    /* ---- Compteur depuis le dernier légendaire ---- */
+    .dry-streak {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 11px 14px;
+      margin-bottom: 10px;
+    }
+    .dry-streak.hot { border-color: rgba(217, 166, 72, 0.45); background: linear-gradient(160deg, var(--bg-card-hi), var(--bg-card)); }
+    .ds-num {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--gold-bright);
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+    .ds-txt { flex: 1; font-size: 12px; color: var(--text-soft); line-height: 1.4; }
+    .ds-txt b { color: var(--text); }
+    .ds-sub { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+
     /* ---- Tiroir de filtres ---- */
     .filter-row { display: flex; gap: 8px; margin-bottom: 10px; }
     .filter-clear {
@@ -1318,6 +1342,30 @@
       width: 24px; height: 24px; border: none; border-radius: 50%;
       background: linear-gradient(135deg, var(--gold-deep), var(--gold-bright)); cursor: pointer;
     }
+    .fd-dirs {
+      display: flex;
+      gap: 3px;
+      background: rgba(0,0,0,0.25);
+      border-radius: 999px;
+      padding: 2px;
+      margin-left: auto;
+      margin-right: 8px;
+    }
+    .fd-dir {
+      width: 30px;
+      padding: 4px 0;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-dim);
+      transition: all .13s ease;
+    }
+    .fd-dir.on {
+      background: linear-gradient(135deg, var(--gold-deep), var(--gold));
+      color: #14100a;
+    }
+    .fd-dir:active { transform: scale(0.9); }
+
     .fd-presets { display: flex; gap: 5px; }
     .fd-preset {
       flex: 1;
@@ -2323,6 +2371,7 @@
 
     <!-- Songes : Runs -->
     <section class="view active" id="view-runs">
+      <div class="dry-streak hidden" id="dry-streak"></div>
       <div class="filter-row">
         <button class="filter-toggle" id="filter-toggle">
           <span class="ft-label">⚙ Filtres</span>
@@ -2609,10 +2658,6 @@
           <div>
             <div class="hint" style="margin:0 0 5px;">Bribes</div>
             <input type="text" id="r-bribes" placeholder="0" maxlength="4" inputmode="numeric" autocomplete="off" />
-          </div>
-          <div>
-            <div class="hint" style="margin:0 0 5px;">Reflets</div>
-            <input type="text" id="r-reflets" placeholder="0" maxlength="3" inputmode="numeric" autocomplete="off" />
           </div>
           <div>
             <div class="hint" style="margin:0 0 5px;">Runes</div>
@@ -3748,7 +3793,6 @@
     ];
     const GOAL_METRICS = {
       bribes:  { label: 'Bribes',  target: 25000, reward: 'Coffre légendaire' },
-      reflets: { label: 'Reflets', target: 5000,  reward: 'Objectif reflets' },
       runes:   { label: 'Runes',   target: 1000,  reward: 'Objectif runes' },
     };
     function goalCfg() {
@@ -3979,7 +4023,6 @@
 
     const NUM_FILTERS = {
       bribes:  { label: 'Bribes',  get: r => r.bribes  || 0 },
-      reflets: { label: 'Reflets', get: r => r.reflets || 0 },
       runes:   { label: 'Runes',   get: r => r.runes   || 0 },
       wave:    { label: 'Vague',   get: r => r.wave    || 0, max: maxWaveSeen() },
       rate:    { label: 'Bribes/h', get: r => Math.round(runRate(r) || 0) },
@@ -3990,7 +4033,20 @@
     function fmtFilterVal(key, v) {
       return NUM_FILTERS[key].isTime ? fmtDur(v) : v.toLocaleString('fr-FR');
     }
-    function filterCount() { return activeFilters.size + Object.keys(numericFilters).length; }
+    // Sens du seuil : 'min' = au moins (≥), 'max' = au plus (≤)
+    function filterDir(key, store) {
+      const f = (store || numericFilters)[key];
+      if (f && f.dir) return f.dir;
+      return NUM_FILTERS[key].dir === 'max' ? 'max' : 'min';
+    }
+    function filterVal(key, store) {
+      const f = (store || numericFilters)[key];
+      return f ? f.v : null;
+    }
+    function filterCount() {
+      return activeFilters.size
+        + Object.values(numericFilters).filter(c => c && !c.inactive).length;
+    }
 
     // Cumul en ET : une run doit satisfaire tous les critères actifs
     function applyFilters(runs, flags, nums) {
@@ -3998,18 +4054,20 @@
       const N = nums || numericFilters;
       let out = runs;
       F.forEach(k => { if (FLAG_FILTERS[k]) out = out.filter(FLAG_FILTERS[k].test); });
-      Object.entries(N).forEach(([k, v]) => {
+      Object.entries(N).forEach(([k, cfg]) => {
         const f = NUM_FILTERS[k];
-        if (!f) return;
-        out = f.dir === 'max' ? out.filter(r => f.get(r) <= v) : out.filter(r => f.get(r) >= v);
+        if (!f || !cfg || cfg.inactive) return;
+        const v = cfg.v;
+        out = cfg.dir === 'max' ? out.filter(r => f.get(r) <= v) : out.filter(r => f.get(r) >= v);
       });
       return out;
     }
 
     function activeFilterLabels() {
       const out = [...activeFilters].map(k => FLAG_FILTERS[k].label);
-      Object.entries(numericFilters).forEach(([k, v]) => {
-        out.push(`${NUM_FILTERS[k].label} ${NUM_FILTERS[k].dir === 'max' ? '≤' : '≥'} ${fmtFilterVal(k, v)}`);
+      Object.entries(numericFilters).forEach(([k, cfg]) => {
+        if (cfg.inactive) return;
+        out.push(`${NUM_FILTERS[k].label} ${cfg.dir === 'max' ? '≤' : '≥'} ${fmtFilterVal(k, cfg.v)}`);
       });
       return out;
     }
@@ -4053,24 +4111,28 @@
           const values = allRuns.map(f.get);
           const dataMax = values.length ? Math.max(...values) : 0;
           const dataMin = values.length ? Math.min(...values) : 0;
-          const isMax = f.dir === 'max';
-          const bound = f.max != null ? f.max : dataMax;          // borne haute du curseur
+          const isMax = filterDir(k, pendingNums) === 'max';
+          const bound = f.max != null ? f.max : dataMax;
           const step = f.max != null ? 1 : sliderStep(dataMax, f.isTime);
-          const off = isMax ? bound : 0;                           // valeur « pas de filtre »
-          const cur = pendingNums[k] != null ? Math.min(pendingNums[k], bound) : off;
+          const off = isMax ? bound : 0;                    // valeur « pas de filtre »
+          const stored = filterVal(k, pendingNums);
+          const cur = stored != null ? Math.min(stored, bound) : off;
           const active = isMax ? cur < bound : cur > 0;
           const sorted = [...values].sort((a, b) => a - b);
           const q = p => sorted.length ? sorted[Math.floor((sorted.length - 1) * p)] : 0;
           const presets = isMax
-            // pour la durée : le « record » est la run la plus rapide
-            ? [{ l: 'Tout', v: bound }, { l: 'Médiane', v: q(0.5) }, { l: 'Top 25%', v: q(0.25) }, { l: 'Record', v: dataMin }]
-            : f.max != null
-              ? [{ l: 'Tout', v: 0 }, { l: '≥ 5', v: 5 }, { l: '≥ 10', v: 10 }, { l: 'Max', v: bound }]
-              : [{ l: 'Tout', v: 0 }, { l: 'Médiane', v: q(0.5) }, { l: 'Top 25%', v: q(0.75) }, { l: 'Record', v: dataMax }];
+            ? [{ l: 'Tout', v: bound }, { l: 'Médiane', v: q(0.5) },
+               { l: 'Bas 25%', v: q(0.25) }, { l: f.isTime ? 'Record' : 'Pire', v: dataMin }]
+            : [{ l: 'Tout', v: 0 }, { l: 'Médiane', v: q(0.5) },
+               { l: 'Top 25%', v: q(0.75) }, { l: f.isTime ? 'Pire' : 'Record', v: dataMax }];
           return `
           <div class="fd-block" data-num="${k}">
             <div class="fd-head">
-              <span class="fd-name">${escapeHtml(f.label)}${isMax ? ' <span style="color:var(--text-dim);font-weight:400;">(au plus)</span>' : ''}</span>
+              <span class="fd-name">${escapeHtml(f.label)}</span>
+              <span class="fd-dirs">
+                <button class="fd-dir${isMax ? '' : ' on'}" data-dir-set="${k}" data-d="min">≥</button>
+                <button class="fd-dir${isMax ? ' on' : ''}" data-dir-set="${k}" data-d="max">≤</button>
+              </span>
               <span class="fd-val${active ? '' : ' off'}" data-val="${k}">${active ? (isMax ? '≤ ' : '≥ ') + fmtFilterVal(k, cur) : 'tout'}</span>
             </div>
             <input type="range" class="fd-slider" data-range="${k}" data-off="${off}" data-dir="${isMax ? 'max' : 'min'}" min="0" max="${bound}" step="${step}" value="${cur}" />
@@ -4091,10 +4153,12 @@
       };
       const setNum = (k, v) => {
         const range = drawer.querySelector(`[data-range="${k}"]`);
-        const isMax = range.dataset.dir === 'max';
+        const dir = range.dataset.dir;
+        const isMax = dir === 'max';
         const off = parseInt(range.dataset.off, 10) || 0;
         const active = isMax ? v < off : v > 0;
-        if (active) pendingNums[k] = v; else delete pendingNums[k];
+        if (active) pendingNums[k] = { v, dir };
+        else pendingNums[k] = { v: off, dir, inactive: true };
         const valEl = drawer.querySelector(`[data-val="${k}"]`);
         valEl.textContent = active ? (isMax ? '≤ ' : '≥ ') + fmtFilterVal(k, v) : 'tout';
         valEl.classList.toggle('off', !active);
@@ -4126,6 +4190,18 @@
           haptic();
         });
       });
+      drawer.querySelectorAll('[data-dir-set]').forEach(b => {
+        b.addEventListener('click', () => {
+          const k = b.dataset.dirSet;
+          if (filterDir(k, pendingNums) === b.dataset.d) return;
+          // changer de sens remet le seuil à « tout » : garder la valeur n'aurait pas de sens
+          delete pendingNums[k];
+          pendingNums[k] = { v: 0, dir: b.dataset.d, inactive: true };
+          renderFilterDrawer(allRuns);
+          haptic();
+        });
+      });
+
       document.getElementById('fd-apply').addEventListener('click', () => {
         activeFilters = new Set(pendingFlags);
         numericFilters = { ...pendingNums };
@@ -4143,6 +4219,54 @@
         haptic();
       });
       refreshCount();
+    }
+
+    // ---- Disette : runs écoulées depuis le dernier légendaire ----
+    function renderDryStreak() {
+      const el = document.getElementById('dry-streak');
+      if (!el) return;
+      const runs = sortedRuns().filter(r => !r.excluded);
+      if (!runs.length) { el.classList.add('hidden'); return; }
+
+      let since = 0, found = false, lastName = '', lastDate = '';
+      for (let i = runs.length - 1; i >= 0; i--) {
+        if ((runs[i].legends || []).length) {
+          found = true;
+          const l = runs[i].legends[runs[i].legends.length - 1];
+          lastName = resolveLegend(l).name || 'sans nom';
+          lastDate = runs[i].date;
+          break;
+        }
+        since++;
+      }
+
+      // Écart-type d'une géométrique : au-delà, la série sort de l'ordinaire
+      const drops = runs.reduce((a, r) => a + (r.legends || []).length, 0);
+      const rate = runs.length ? drops / runs.length : 0;
+      const expected = rate > 0 ? 1 / rate : null;
+
+      el.classList.remove('hidden');
+      el.classList.toggle('hot', expected != null && since > expected * 2);
+
+      if (!found) {
+        el.innerHTML = `
+          <span class="ds-num">${runs.length}</span>
+          <span class="ds-txt"><b>runs sans le moindre légendaire.</b>
+            <span class="ds-sub">Aucun drop enregistré pour l'instant.</span></span>`;
+        return;
+      }
+
+      const note = expected == null ? ''
+        : since > expected * 2
+          ? `Tu en sors habituellement un toutes les ${expected.toFixed(1).replace('.', ',')} runs — la série est longue, mais chaque run garde exactement la même chance.`
+          : `Tu en sors en moyenne un toutes les ${expected.toFixed(1).replace('.', ',')} runs.`;
+
+      el.innerHTML = `
+        <span class="ds-num">${since}</span>
+        <span class="ds-txt">
+          ${since === 0 ? `<b>Légendaire sur ta dernière run.</b>` : `<b>run${since > 1 ? 's' : ''} depuis ton dernier légendaire</b>`}
+          <span class="ds-sub">${escapeHtml(lastName)} · ${fmtDateShort(lastDate)}${note ? ' — ' + note : ''}</span>
+        </span>`;
     }
 
     // ---- Rendu : liste des runs, groupée par jour ----
@@ -4168,7 +4292,6 @@
         const badge = info.q ? `<span class="qbadge ${info.q}">${QMAP[info.q].short || QMAP[info.q].label}</span> ` : '';
         loot.push(`${badge}<span class="lname">★ ${escapeHtml(info.name || 'sans nom')}</span>`);
       });
-      if (r.reflets) loot.push(`<span class="lchip">Reflets <b>${r.reflets.toLocaleString('fr-FR')}</b></span>`);
       if (r.runes) loot.push(`<span class="lchip">Runes <b>${r.runes.toLocaleString('fr-FR')}</b></span>`);
 
       const card = document.createElement('div');
@@ -4198,6 +4321,7 @@
       const all = sortedRuns().reverse();
       const runs = applyFilters(all);
       list.innerHTML = '';
+      renderDryStreak();
       renderFilterDrawer(all);
 
       if (filterCount()) {
@@ -4282,7 +4406,6 @@
         medRate: median(rates),
         minRate: rates.length ? Math.min(...rates) : null,
         maxRate: rates.length ? Math.max(...rates) : null,
-        refletsH: hours > 0 ? sum('reflets') / hours : null,
         runesH: hours > 0 ? sum('runes') / hours : null,
         legends: sum('legend'),
         avgWave: waves.length ? mean(waves) : null,
@@ -4365,7 +4488,6 @@
             : `<div class="compo-rate">${fmtRate(g.medRate)} <span class="u">bribes/h médian</span></div>
           <div class="compo-sub">
             <span>Fourchette <b>${range}</b></span>
-            <span>Reflets/h <b>${fmtRate(g.refletsH)}</b></span>
             <span>Runes/h <b>${fmtRate(g.runesH)}</b></span>
             <span>Vague moy. <b>${g.avgWave != null ? g.avgWave.toFixed(1).replace('.', ',') : '—'}</b></span>
             <span>Record <b>${g.bestWave}</b> vagues</span>
@@ -5847,7 +5969,6 @@
       const pooled = totalSec > 0 ? totalBribes / (totalSec / 3600) : null;
       const hours = totalSec / 3600;
       const sumAll = k => runs.reduce((s, r) => s + (r[k] || 0), 0);
-      const totalReflets = sumAll('reflets');
       const totalRunes = sumAll('runes');
       const totalLegends = sumAll('legend');
       const legendEvery = totalLegends > 0 ? hours / totalLegends : null;
@@ -5889,8 +6010,6 @@
           <div class="chart-title">Butin</div>
           <div class="chart-sub">Cumul et taux horaire sur ${fmtDur(totalSec)} de jeu</div>
           <div class="detail-stats">
-            <div class="dstat"><div class="lbl">Reflets</div><div class="val small">${totalReflets.toLocaleString('fr-FR')}</div></div>
-            <div class="dstat"><div class="lbl">Reflets/h</div><div class="val small">${fmtRate(hours > 0 ? totalReflets / hours : null)}</div></div>
             <div class="dstat"><div class="lbl">Runes</div><div class="val small">${totalRunes.toLocaleString('fr-FR')}</div></div>
             <div class="dstat"><div class="lbl">Runes/h</div><div class="val small">${fmtRate(hours > 0 ? totalRunes / hours : null)}</div></div>
             <div class="dstat wide">
@@ -6086,7 +6205,7 @@
 
     // Saisie du butin : chiffres seuls, bascule quand le champ est plein ou sur Entrée
     function setupLootInputs() {
-      const ids = ['r-bribes', 'r-reflets', 'r-runes', 'r-legend'];
+      const ids = ['r-bribes', 'r-runes', 'r-legend'];
       const els = ids.map(i => document.getElementById(i));
 
       els.forEach((el, i) => {
@@ -6220,7 +6339,6 @@
       document.getElementById('r-s').value = r && sec % 60 ? sec % 60 : '';
 
       document.getElementById('r-bribes').value = r && r.bribes ? r.bribes : '';
-      document.getElementById('r-reflets').value = r && r.reflets ? r.reflets : '';
       document.getElementById('r-runes').value = r && r.runes ? r.runes : '';
       document.getElementById('r-legend').value = r && r.legend ? r.legend : '';
       document.getElementById('r-note').value = r ? (r.note || '') : '';
@@ -6285,7 +6403,6 @@
         wave: draftWave,
         intensity: draftIntensity,
         bribes: num('r-bribes'),
-        reflets: num('r-reflets'),
         runes: num('r-runes'),
         legend: draftLegends.filter(l => l.catId || l.name).length,
         compoId: draftCompoId,
