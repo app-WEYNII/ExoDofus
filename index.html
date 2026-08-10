@@ -244,6 +244,16 @@
       color: var(--text-dim);
       font-weight: 600;
     }
+    .stats-bar.six {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+    .stats-bar.six .stat { padding: 9px 4px; }
+    .stats-bar.six .stat .label { font-size: 9.5px; }
+    .stats-bar.six .stat .value { font-size: 16px; }
+    .stat .value.gold { color: var(--gold-bright); }
+
     .stat .value {
       font-family: var(--font-display);
       font-weight: 700;
@@ -1284,6 +1294,104 @@
     .ds-txt b { color: var(--text); }
     .ds-sub { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
 
+    .fold-all {
+      width: 100%;
+      text-align: left;
+      padding: 9px 14px;
+      margin-bottom: 10px;
+      border-radius: var(--radius);
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-dim);
+      transition: all .14s ease;
+    }
+    .fold-all:active { transform: scale(0.99); border-color: var(--border-hi); }
+
+    /* ---- Tableaux comparatifs ---- */
+    .vs-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+    .vs-pick { display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; align-items: center; margin-bottom: 14px; }
+    .vs-pick select { padding: 9px 8px; font-size: 12.5px; }
+    .vs-sep { font-size: 12px; color: var(--text-dim); font-weight: 700; }
+
+    .cmp-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+    .cmp-table th, .cmp-table td {
+      padding: 9px 6px;
+      border-bottom: 1px solid var(--border);
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+    .cmp-table th { color: var(--text-dim); font-weight: 600; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .cmp-table td:first-child, .cmp-table th:first-child { text-align: left; color: var(--text-soft); white-space: normal; }
+    .cmp-table tr:last-child td { border-bottom: none; }
+    .cmp-table .win { color: var(--green); font-weight: 700; }
+    .cmp-table .lose { color: var(--text-dim); }
+    .cmp-table .tie { color: var(--text); }
+    .cmp-head th { color: var(--gold); font-size: 11.5px; text-transform: none; letter-spacing: 0; }
+    .cmp-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -4px; padding: 0 4px; }
+    .cmp-delta { font-size: 10.5px; margin-left: 4px; }
+    .cmp-delta.up { color: var(--green); }
+    .cmp-delta.down { color: var(--red); }
+    .cmp-best td { background: rgba(217, 166, 72, 0.07); }
+
+    /* ---- Alertes de prix manquant ---- */
+    .price-warn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      width: 100%;
+      text-align: left;
+      margin-top: 8px;
+      padding: 9px 11px;
+      border-radius: var(--radius-sm);
+      background: var(--red-soft);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      font-size: 11.5px;
+      line-height: 1.4;
+      color: #f7a8a8;
+    }
+    .pw-cta {
+      flex-shrink: 0;
+      font-weight: 700;
+      color: var(--gold-bright);
+      text-decoration: underline;
+    }
+    .price-alert {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      text-align: left;
+      margin-bottom: 10px;
+      padding: 12px 14px;
+      border-radius: var(--radius);
+      background: var(--red-soft);
+      border: 1px solid rgba(239, 68, 68, 0.32);
+      font-size: 12.5px;
+      line-height: 1.45;
+      color: #f7b3b3;
+    }
+    .price-alert b { color: #fff; }
+    .price-tag {
+      flex-shrink: 0;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--gold-bright);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+    .price-tag.none { color: var(--red); font-size: 11.5px; font-weight: 600; }
+    .pa-icon { font-size: 16px; flex-shrink: 0; }
+
     /* ---- Tiroir de filtres ---- */
     .filter-row { display: flex; gap: 8px; margin-bottom: 10px; }
     .filter-clear {
@@ -1617,6 +1725,19 @@
       line-height: 19px;
       font-variant-numeric: tabular-nums;
     }
+    .lg-price {
+      display: block;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--gold-bright);
+      font-variant-numeric: tabular-nums;
+      margin-top: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .lg-price.none { color: var(--red); font-weight: 600; }
+
     .src-dots { display: flex; gap: 3px; justify-content: center; margin-top: 5px; }
     .src-dot { width: 6px; height: 6px; border-radius: 50%; }
     .src-dot.run { background: var(--blue); }
@@ -2102,6 +2223,33 @@
     .rmetric .val.green { color: var(--green); }
     .rmetric .val.red { color: var(--red); }
 
+    /* Avec les kamas : 3 colonnes sur 2 rangées, le total occupant 2 colonnes */
+    .run-metrics.rich { grid-template-columns: repeat(3, 1fr); }
+    .run-metrics.rich .rmetric.wide { grid-column: span 2; }
+    .run-metrics.rich .rmetric .val { font-size: 13px; }
+    .run-metrics.rich .rmetric.wide .val { font-size: 15px; }
+    .rmetric .val.green { color: var(--green); }
+    .rmetric .val.red { color: var(--red); }
+
+    .rune-row {
+      display: grid;
+      grid-template-columns: 1fr 90px 34px;
+      gap: 6px;
+      margin-bottom: 7px;
+      align-items: center;
+    }
+    .rune-row input { padding: 10px 11px; font-size: 14px; }
+    .rn-del {
+      height: 38px;
+      border-radius: var(--radius-sm);
+      background: var(--red-soft);
+      border: 1px solid rgba(239,68,68,0.28);
+      color: var(--red);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .rn-del:active { transform: scale(0.9); }
+
     .comp-chips { display: flex; flex-wrap: wrap; gap: 5px; }
     .cchip {
       font-size: 11px;
@@ -2343,18 +2491,30 @@
       </div>
     </div>
 
-    <div class="stats-bar" id="bar-songes">
+    <div class="stats-bar six" id="bar-songes">
       <div class="stat">
         <div class="label">Runs</div>
         <div class="value" id="stat-runs">0</div>
       </div>
       <div class="stat">
-        <div class="label">Bribes/h</div>
-        <div class="value kamas-num" id="stat-rate">—</div>
+        <div class="label">Temps</div>
+        <div class="value kamas-num" id="stat-time">—</div>
       </div>
       <div class="stat">
         <div class="label">Légendes</div>
         <div class="value kamas-num" id="stat-best">0</div>
+      </div>
+      <div class="stat">
+        <div class="label">Kamas</div>
+        <div class="value gold kamas-num" id="stat-kamas-total">—</div>
+      </div>
+      <div class="stat">
+        <div class="label">Kamas/h</div>
+        <div class="value gold kamas-num" id="stat-kph">—</div>
+      </div>
+      <div class="stat">
+        <div class="label">Bribes/h</div>
+        <div class="value kamas-num" id="stat-rate">—</div>
       </div>
     </div>
   </header>
@@ -2421,6 +2581,8 @@
     <!-- Songes : Runs -->
     <section class="view active" id="view-runs">
       <div class="dry-streak hidden" id="dry-streak"></div>
+      <button class="fold-all hidden" id="fold-all"></button>
+      <button class="price-alert hidden" id="price-alert"></button>
       <div class="filter-row">
         <button class="filter-toggle" id="filter-toggle">
           <span class="ft-label">⚙ Filtres</span>
@@ -2441,8 +2603,8 @@
 
     <!-- Songes : Compos -->
     <section class="view" id="view-compos">
-      <div class="period-row" id="period-compos"></div>
       <div class="period-row hidden" id="intens-compos"></div>
+      <div id="compo-versus"></div>
       <button class="btn btn-primary" id="add-compo" style="width:100%;margin-bottom:12px;">+ Nouvelle compo</button>
       <div class="note-box" id="compo-note"></div>
       <div id="list-compos"></div>
@@ -2462,9 +2624,9 @@
     <section class="view" id="view-sstats">
       <div class="subtabs" id="stats-subtabs">
         <button class="sub-btn on" data-s="general">Général</button>
+        <button class="sub-btn" data-s="kamas">Kamas</button>
         <button class="sub-btn" data-s="vagues">Vagues</button>
       </div>
-      <div class="period-row" id="period-stats"></div>
       <div class="period-row hidden" id="intens-stats"></div>
       <div id="sstats-body"></div>
       <div class="empty hidden" id="empty-sstats">
@@ -2709,15 +2871,12 @@
             <input type="text" id="r-bribes" placeholder="0" maxlength="4" inputmode="numeric" autocomplete="off" />
           </div>
           <div>
-            <div class="hint" style="margin:0 0 5px;">Runes</div>
-            <input type="text" id="r-runes" placeholder="0" maxlength="1" inputmode="numeric" autocomplete="off" />
-          </div>
-          <div>
             <div class="hint" style="margin:0 0 5px;">Légendaires</div>
             <input type="text" id="r-legend" placeholder="0" maxlength="1" inputmode="numeric" autocomplete="off" />
           </div>
         </div>
         <div class="dur-preview" id="r-bribes-hint"></div>
+        <div class="loot-grid" id="r-runes-grid" style="margin-top:10px;"></div>
         <div class="hint" style="margin-top:7px;">Entrée passe au champ suivant.</div>
         <div class="qual-list" id="r-qualities"></div>
       </div>
@@ -2848,6 +3007,12 @@
         <div class="hint">Ton propre jugement sur cette légende. Il s'applique à tous tes drops de cet objet.</div>
       </div>
 
+      <div class="field">
+        <label>Prix de vente estimé <span style="color:var(--text-dim);font-weight:400;">(kamas)</span></label>
+        <input type="text" id="cat-price" maxlength="10" inputmode="numeric" autocomplete="off" placeholder="0" />
+        <div class="hint" id="cat-price-hint">Sa valeur marchande, que tu l'aies vendue ou non. Modifiable à tout moment, et appliquée rétroactivement à tous tes drops de cet objet.</div>
+      </div>
+
       <div class="field" id="cat-img-wrap">
         <label>Image <span style="color:var(--text-dim);font-weight:400;">(URL, optionnel)</span></label>
         <input type="text" id="cat-img" placeholder="https://..." maxlength="300" />
@@ -2891,6 +3056,41 @@
       <div class="modal-actions">
         <button class="btn btn-secondary" id="btab-cancel">Annuler</button>
         <button class="btn btn-primary" id="btab-save">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Prix du butin -->
+  <div class="modal-overlay" id="modal-eco">
+    <div class="modal">
+      <button class="modal-grip" aria-label="Fermer"></button>
+      <div class="modal-head">
+        <h2>Prix du butin</h2>
+      </div>
+      <div class="hint" style="margin-bottom:16px;">Les prix sont fixés ici une fois pour toutes. Ils s'appliquent rétroactivement à toutes tes runs.</div>
+
+      <div class="field">
+        <label>Reflets par run</label>
+        <input type="text" id="eco-rq" maxlength="5" inputmode="numeric" autocomplete="off" placeholder="1200" />
+        <div class="hint">Quantité fixe obtenue à chaque run.</div>
+      </div>
+
+      <div class="field">
+        <label>Prix unitaire d'un reflet</label>
+        <input type="text" id="eco-rp" maxlength="9" inputmode="numeric" autocomplete="off" placeholder="0" />
+        <div class="hint" id="eco-rtotal"></div>
+      </div>
+
+      <div class="field">
+        <label>Runes astrales</label>
+        <div id="eco-runes"></div>
+        <button class="btn btn-secondary" id="eco-add-rune" style="width:100%;margin-top:8px;">+ Ajouter une rune</button>
+        <div class="hint">Les deux runes astrales de valeur sont déjà là. Sur chaque run, tu ne saisiras que la quantité droppée — souvent zéro.</div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="eco-cancel">Annuler</button>
+        <button class="btn btn-primary" id="eco-save">Enregistrer</button>
       </div>
     </div>
   </div>
@@ -3133,9 +3333,40 @@
       if (Math.abs(n) >= 1000) return (n / 1000).toFixed(n % 1000 === 0 ? 0 : 1).replace(/\.?0+$/, '') + 'k';
       return String(n);
     }
-    function fmtFull(n) {
-      return Math.round(n || 0).toLocaleString('fr-FR');
+    // Espace insécable tous les 3 chiffres : 100 000 000 se lit d'un coup d'œil
+    function fmtNum(n) {
+      const v = Math.round(n || 0);
+      const sign = v < 0 ? '-' : '';
+      return sign + String(Math.abs(v)).replace(/\B(?=(\d{3})+(?!\d))/g, '\u00A0');
     }
+    function fmtFull(n) { return fmtNum(n); }
+
+    // Valeur numérique d'un champ formaté avec des espaces
+    function rawNum(el) {
+      const t = typeof el === 'string' ? el : (el ? el.value : '');
+      return Math.max(0, parseInt(String(t).replace(/\D/g, ''), 10) || 0);
+    }
+
+    // Reformate le champ à chaque frappe, en gardant le curseur à sa place
+    function wireNumberInput(el) {
+      if (!el || el.dataset.numWired) return;
+      el.dataset.numWired = '1';
+      el.setAttribute('inputmode', 'numeric');
+      el.addEventListener('input', () => {
+        const before = el.value.slice(0, el.selectionStart || 0).replace(/\D/g, '').length;
+        const digits = el.value.replace(/\D/g, '');
+        el.value = digits ? fmtNum(digits) : '';
+        // on repositionne après le même nombre de chiffres qu'avant l'édition
+        let seen = 0, pos = el.value.length;
+        for (let i = 0; i < el.value.length; i++) {
+          if (/\d/.test(el.value[i])) seen++;
+          if (seen === before) { pos = i + 1; break; }
+        }
+        if (before === 0) pos = 0;
+        try { el.setSelectionRange(pos, pos); } catch (e) { /* champ non supporté */ }
+      });
+    }
+    function setNumberInput(el, v) { el.value = v ? fmtNum(v) : ''; }
     function fmtPct(p) {
       if (p >= 0.999) return '99.9%';
       if (p < 0.01) return (p * 100).toFixed(2) + '%';
@@ -3708,7 +3939,8 @@
               state.catalogue = state.catalogue
                 .filter(e => e && typeof e === 'object' && e.name)
                 .map(e => ({ id: e.id || uid(), name: String(e.name).slice(0, 60),
-                             img: String(e.img || '').slice(0, 300), q: QMAP[e.q] ? e.q : 'mid' }));
+                             img: String(e.img || '').slice(0, 300), q: QMAP[e.q] ? e.q : 'mid',
+                             price: Math.max(0, parseInt(e.price, 10) || 0) }));
               state.chests = state.chests
                 .filter(c => c && typeof c === 'object')
                 .map(c => ({
@@ -3742,6 +3974,7 @@
                 });
                 r.excluded = !!r.excluded;
                 r.intensity = IMAP[r.intensity] ? r.intensity : null;
+                if (!r.runeQty || typeof r.runeQty !== 'object') r.runeQty = {};
                 if (!Array.isArray(r.legends)) {
                   const quals = Array.isArray(r.qualities) ? r.qualities : [];
                   r.legends = [];
@@ -3927,7 +4160,7 @@
     // Affichage précis pour les cartes de run : la seconde compte quand on compare
     // Accord automatique plutôt que des « (s) » disgracieux
     function plural(n, singular, pluralForm) {
-      return `${Number(n).toLocaleString('fr-FR')} ${n > 1 ? (pluralForm || singular + 's') : singular}`;
+      return `${fmtNum(n)} ${n > 1 ? (pluralForm || singular + 's') : singular}`;
     }
     function fmtDurPrecise(sec) {
       sec = Math.round(sec || 0);
@@ -3998,7 +4231,7 @@
     }
     function fmtRate(r) {
       if (r == null) return '—';
-      if (r >= 100) return Math.round(r).toLocaleString('fr-FR');
+      if (r >= 100) return fmtNum(r);
       return r.toFixed(1).replace('.', ',');
     }
     // On ne garde que les jours encore présents, pour éviter d'accumuler des clés mortes
@@ -4008,15 +4241,9 @@
       save();
     }
 
-    function periodCutoff() {
-      const p = state.settings.period;
-      if (!p || p === 'all') return null;
-      const days = parseInt(p, 10);
-      if (!days) return null;
-      const d = new Date();
-      d.setDate(d.getDate() - days);
-      return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
-    }
+    // Le filtrage par période a été retiré : les comparatifs par jour, semaine
+    // et mois répondent mieux au besoin sans amputer les moyennes.
+    function periodCutoff() { return null; }
     // Runs retenues pour toute analyse : ni exclues, ni hors période, ni hors intensité
     function statRuns() {
       const cut = periodCutoff();
@@ -4063,29 +4290,20 @@
       const nLegends = runs.reduce((s, r) => s + (r.legends || []).length, 0)
         + (state.chests || []).reduce((s, c) => s + (c.legends || []).length, 0);
       document.getElementById('stat-best').textContent = String(nLegends);
+
+      document.getElementById('stat-time').textContent = totalSec > 0 ? fmtDur(totalSec) : '—';
+
+      const money = economyTotals(runs);
+      const on = ecoConfigured();
+      document.getElementById('stat-kamas-total').textContent = on ? fmtNum(money.total) : '—';
+      document.getElementById('stat-kph').textContent =
+        on && money.perHour != null ? fmtNum(money.perHour) : '—';
     }
 
     // ---- Filtre de période (partagé entre Compos et Stats) ----
     function renderPeriodControls() {
-      const cur = state.settings.period || 'all';
-      const opts = [['all', 'Tout'], ['90', '90 jours'], ['30', '30 jours']];
       const used = usedIntensities();
       const curInt = state.settings.intensityFilter || '';
-
-      ['period-compos', 'period-stats'].forEach(cid => {
-        const el = document.getElementById(cid);
-        if (!el) return;
-        el.innerHTML = opts.map(([v, l]) =>
-          `<button class="per-btn${v === cur ? ' on' : ''}" data-p="${v}">${l}</button>`).join('');
-        el.querySelectorAll('.per-btn').forEach(b => {
-          b.addEventListener('click', () => {
-            state.settings.period = b.dataset.p;
-            save();
-            renderSonges();
-            haptic();
-          });
-        });
-      });
 
       // Comparer des intensités différentes n'a pas de sens : on propose de cloisonner
       ['intens-compos', 'intens-stats'].forEach(cid => {
@@ -4129,7 +4347,7 @@
     };
 
     function fmtFilterVal(key, v) {
-      return NUM_FILTERS[key].isTime ? fmtDur(v) : v.toLocaleString('fr-FR');
+      return NUM_FILTERS[key].isTime ? fmtDur(v) : fmtNum(v);
     }
     // Sens du seuil : 'min' = au moins (≥), 'max' = au plus (≤)
     function filterDir(key, store) {
@@ -4367,13 +4585,60 @@
         </span>`;
     }
 
+    // Replier ou déplier toutes les journées d'un coup
+    function renderFoldAll(days) {
+      const el = document.getElementById('fold-all');
+      if (!el) return;
+      if (days.length < 2) { el.classList.add('hidden'); return; }
+      el.classList.remove('hidden');
+      const openCount = days.filter(d => !collapsedDays.has(d.key)).length;
+      const willCollapse = openCount > 0;
+      el.textContent = willCollapse
+        ? `⌃ Tout replier (${plural(openCount, 'jour')} ouvert${openCount > 1 ? 's' : ''})`
+        : `⌄ Tout déplier (${plural(days.length, 'jour')})`;
+      el.onclick = () => {
+        if (willCollapse) days.forEach(d => collapsedDays.add(d.key));
+        else collapsedDays.clear();
+        saveCollapsed();
+        renderRuns();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        haptic();
+      };
+    }
+
+    // Rappel global : tant qu'une légende obtenue n'a pas de prix, le total est faux
+    function renderPriceAlert() {
+      const el = document.getElementById('price-alert');
+      if (!el) return;
+      const missing = unpricedLegends();
+      if (!missing.length) { el.classList.add('hidden'); return; }
+      el.classList.remove('hidden');
+      el.innerHTML = `<span class="pa-icon">⚠︎</span><span>
+        <b>${plural(missing.length, 'légende')}</b> obtenue${missing.length > 1 ? 's' : ''} sans prix de vente :
+        ${missing.slice(0, 3).map(c => escapeHtml(c.name)).join(', ')}${missing.length > 3 ? '…' : ''}.
+        Tes kamas sont sous-estimés — touche pour renseigner.</span>`;
+      el.onclick = () => { openCatForm(missing[0].id); haptic(); };
+    }
+
     // ---- Rendu : liste des runs, groupée par jour ----
-    function runCardEl(r, med, rates, ordinal) {
+    function runCardEl(r, med, rates, ordinal, medMoney) {
       const rate = runRate(r);
       let cls = '';
       if (med != null && rate != null && rates.length >= 3 && !r.excluded) {
         if (rate > med * 1.05) cls = ' green';
         else if (rate < med * 0.95) cls = ' red';
+      }
+
+      // Valorisation en kamas, seulement si des prix ont été renseignés
+      let money = null, moneyCls = '';
+      if (ecoConfigured()) {
+        const v = runValue(r);
+        const h = (r.durationSec || 0) / 3600;
+        money = { total: v.total, perHour: h > 0 ? v.total / h : null };
+        if (money.perHour != null && medMoney != null && !r.excluded) {
+          if (money.perHour > medMoney * 1.05) moneyCls = ' green';
+          else if (money.perHour < medMoney * 0.95) moneyCls = ' red';
+        }
       }
 
       const compo = getCompo(r.compoId);
@@ -4390,7 +4655,7 @@
         const badge = info.q ? `<span class="qbadge ${info.q}">${QMAP[info.q].short || QMAP[info.q].label}</span> ` : '';
         loot.push(`${badge}<span class="lname">★ ${escapeHtml(info.name || 'sans nom')}</span>`);
       });
-      if (r.runes) loot.push(`<span class="lchip">Runes <b>${r.runes.toLocaleString('fr-FR')}</b></span>`);
+      if (r.runes) loot.push(`<span class="lchip">Runes <b>${fmtNum(r.runes)}</b></span>`);
 
       const card = document.createElement('div');
       card.className = 'run-card' + (r.excluded ? ' excluded' : '');
@@ -4399,10 +4664,12 @@
           <span class="run-date">${ordinal ? 'Run ' + ordinal : ''}${r.excluded ? '<span class="excl-tag">hors stats</span>' : ''}</span>
           <span class="run-wave">${r.wave || 0}<span class="of">${IMAP[r.intensity] && IMAP[r.intensity].cap ? '/' + IMAP[r.intensity].cap : ' vagues'}</span></span>
         </div>
-        <div class="run-metrics">
+        <div class="run-metrics${money ? ' rich' : ''}">
           <div class="rmetric"><div class="lbl">Durée</div><div class="val">${fmtDurPrecise(r.durationSec)}</div></div>
-          <div class="rmetric"><div class="lbl">Bribes</div><div class="val gold">${(r.bribes || 0).toLocaleString('fr-FR')}</div></div>
+          <div class="rmetric"><div class="lbl">Bribes</div><div class="val gold">${fmtNum(r.bribes || 0)}</div></div>
           <div class="rmetric"><div class="lbl">Bribes/h</div><div class="val${cls}">${fmtRate(rate)}</div></div>
+          ${money ? `<div class="rmetric wide"><div class="lbl">Kamas</div><div class="val gold">${fmtNum(money.total)}</div></div>
+          <div class="rmetric"><div class="lbl">Kamas/h</div><div class="val${moneyCls}">${money.perHour != null ? fmtNum(money.perHour) : '—'}</div></div>` : ''}
         </div>
         <div class="comp-chips">${chips}</div>
         ${loot.length ? `<div class="loot-chips">${loot.join('')}</div>` : ''}
@@ -4420,6 +4687,7 @@
       const runs = applyFilters(all);
       list.innerHTML = '';
       renderDryStreak();
+      renderPriceAlert();
       renderFilterDrawer(all);
 
       if (filterCount()) {
@@ -4427,7 +4695,7 @@
         const bribes = runs.reduce((s, r) => s + (r.bribes || 0), 0);
         info.classList.remove('hidden');
         info.innerHTML = `<b>${runs.length}</b> ${runs.length > 1 ? 'runs' : 'run'} sur ${all.length} · ${escapeHtml(activeFilterLabels().join(' + '))}`
-          + (runs.length ? ` — <b>${fmtDur(sec)}</b>, <b>${bribes.toLocaleString('fr-FR')}</b> bribes` : '');
+          + (runs.length ? ` — <b>${fmtDur(sec)}</b>, <b>${fmtNum(bribes)}</b> bribes` : '');
       } else {
         info.classList.add('hidden');
       }
@@ -4442,6 +4710,9 @@
 
       const rates = statRuns().map(runRate).filter(r => r != null);
       const med = median(rates);
+      const medMoney = ecoConfigured() ? median(statRuns()
+        .map(r => { const h = (r.durationSec || 0) / 3600; return h > 0 ? runValue(r).total / h : null; })
+        .filter(v => v != null)) : null;
 
       // Un groupe par journée effectivement jouée — les jours sans run n'apparaissent pas
       const days = [];
@@ -4452,13 +4723,19 @@
         else days.push({ key, runs: [r] });
       });
 
+      renderFoldAll(days);
+
       days.forEach(d => {
         const counted = d.runs.filter(r => !r.excluded);
         const sec = counted.reduce((s, r) => s + (r.durationSec || 0), 0);
         const bribes = counted.reduce((s, r) => s + (r.bribes || 0), 0);
         const parts = [`<b>${d.runs.length}</b> run${d.runs.length > 1 ? 's' : ''}`];
         if (sec > 0) parts.push(`<b>${fmtDur(sec)}</b>`);
-        if (bribes > 0) parts.push(`<b>${bribes.toLocaleString('fr-FR')}</b> bribes`);
+        if (bribes > 0) parts.push(`<b>${fmtNum(bribes)}</b> bribes`);
+        if (ecoConfigured()) {
+          const k = counted.reduce((a, r) => a + runValue(r).total, 0);
+          if (k > 0) parts.push(`<b>${fmtNum(k)}</b> k`);
+        }
 
         const collapsed = collapsedDays.has(d.key);
         const group = document.createElement('div');
@@ -4484,7 +4761,7 @@
         bodyEl.className = 'day-body';
         // numérotation dans l'ordre de saisie de la journée (la liste est antéchronologique)
         d.runs.forEach((r, i) => bodyEl.appendChild(
-          runCardEl(r, med, rates, d.runs.length > 1 ? d.runs.length - i : null)));
+          runCardEl(r, med, rates, d.runs.length > 1 ? d.runs.length - i : null, medMoney)));
         group.appendChild(bodyEl);
         list.appendChild(group);
       });
@@ -4502,12 +4779,13 @@
         compo: c,
         n: runs.length,
         medRate: median(rates),
+        avgRate: rates.length ? mean(rates) : null,
         minRate: rates.length ? Math.min(...rates) : null,
         maxRate: rates.length ? Math.max(...rates) : null,
-        runesH: hours > 0 ? sum('runes') / hours : null,
         legends: sum('legend'),
         avgWave: waves.length ? mean(waves) : null,
         bestWave: waves.length ? Math.max(...waves) : 0,
+        avgSec: runs.length ? totalSec / runs.length : null,
         totalSec,
       };
     }
@@ -4521,6 +4799,7 @@
       if (!state.compos.length) {
         empty.classList.remove('hidden');
         note.classList.add('hidden');
+        document.getElementById('compo-versus').innerHTML = '';
         return;
       }
       empty.classList.add('hidden');
@@ -4547,14 +4826,18 @@
         msg = `Il te faut au moins <b>${MIN_SAMPLE} runs</b> sur au moins deux compos pour que la comparaison veuille dire quelque chose. En dessous, tu mesures surtout le tirage aléatoire.`;
       } else {
         const [a, b] = solid;
+        // Les pires runs de la meilleure compo dépassent-elles les meilleures de la suivante ?
         const overlap = a.minRate != null && b.maxRate != null && a.minRate <= b.maxRate;
         if (overlap) {
-          msg = `<b>${escapeHtml(compoLabel(a.compo))}</b> mène, mais son intervalle chevauche celui de <b>${escapeHtml(compoLabel(b.compo))}</b> : l'écart n'est pas encore concluant. Continue à alterner les deux.`;
+          msg = `<b>${escapeHtml(compoLabel(a.compo))}</b> mène, mais ses mauvaises runs descendent sous les bonnes de <b>${escapeHtml(compoLabel(b.compo))}</b> : l'écart n'est pas encore concluant. Continue à alterner les deux.`;
         } else {
-          msg = `<b>${escapeHtml(compoLabel(a.compo))}</b> sort devant sans chevauchement avec <b>${escapeHtml(compoLabel(b.compo))}</b> sur ${plural(a.n, 'run')}. Le signal commence à être réel${a.n < GOOD_SAMPLE ? `, mais ${GOOD_SAMPLE} runs le rendraient solide` : ''}.`;
+          msg = `<b>${escapeHtml(compoLabel(a.compo))}</b> sort devant <b>${escapeHtml(compoLabel(b.compo))}</b> sur ${plural(a.n, 'run')}, sans qu'aucune de ses runs ne descende au niveau de l'autre. Le signal commence à être réel${a.n < GOOD_SAMPLE ? `, mais ${GOOD_SAMPLE} runs le rendraient solide` : ''}.`;
         }
+
       }
       note.innerHTML = msg;
+
+      renderCompoVersus(groups);
 
       let bestMarked = false;
       const renderCard = (g, isHidden) => {
@@ -4564,7 +4847,7 @@
         if (isBest) bestMarked = true;
 
         const nCls = g.n >= GOOD_SAMPLE ? 'ok' : ((thin || unplayed) ? 'low' : '');
-        const range = (g.minRate != null && g.n > 1) ? `${fmtRate(g.minRate)} – ${fmtRate(g.maxRate)}` : '—';
+
         const named = g.compo.name && g.compo.name.trim();
 
         const card = document.createElement('div');
@@ -4584,13 +4867,13 @@
           ${unplayed
             ? `<div style="font-size:12.5px;color:var(--text-dim);margin-top:4px;">Jamais jouée pour l'instant.</div>`
             : `<div class="compo-rate">${fmtRate(g.medRate)} <span class="u">bribes/h médian</span></div>
-          <div class="compo-sub">
-            <span>Fourchette <b>${range}</b></span>
-            <span>Runes/h <b>${fmtRate(g.runesH)}</b></span>
-            <span>Vague moy. <b>${g.avgWave != null ? g.avgWave.toFixed(1).replace('.', ',') : '—'}</b></span>
-            <span>Record <b>${g.bestWave}</b> vagues</span>
-            <span>Joué <b>${fmtDur(g.totalSec)}</b></span>
-            ${g.legends ? `<span style="color:var(--gold-bright);">★ <b style="color:var(--gold-bright);">${g.legends}</b> légendaire${g.legends > 1 ? 's' : ''}</span>` : ''}
+          <div class="detail-stats" style="margin-top:12px;">
+            <div class="dstat"><div class="lbl">Moyenne</div><div class="val small">${fmtRate(g.avgRate)}</div></div>
+            <div class="dstat"><div class="lbl">Durée moy.</div><div class="val small">${g.avgSec != null ? fmtDurPrecise(g.avgSec) : '—'}</div></div>
+            <div class="dstat"><div class="lbl">Vague moy.</div><div class="val small">${g.avgWave != null ? g.avgWave.toFixed(1).replace('.', ',') : '—'}</div></div>
+            <div class="dstat"><div class="lbl">Meilleure vague</div><div class="val small">${g.bestWave}</div></div>
+            <div class="dstat"><div class="lbl">Légendes</div><div class="val${g.legends ? ' gold' : ''} small">${g.legends}</div></div>
+            <div class="dstat wide"><div class="lbl">Temps joué</div><div class="val small">${fmtDur(g.totalSec)}</div></div>
           </div>`}
         `;
         card.addEventListener('click', () => openCompoForm(g.compo.id));
@@ -4627,6 +4910,105 @@
         o.textContent = `${plural(orphans, 'run')} sans compo — non ${orphans > 1 ? 'comptées' : 'comptée'} dans ce comparatif.`;
         list.appendChild(o);
       }
+    }
+
+    // ---- Comparatif de deux compos ----
+    function renderCompoVersus(groups) {
+      const box = document.getElementById('compo-versus');
+      const playable = groups.filter(g => g.n > 0);
+      if (playable.length < 2) { box.innerHTML = ''; return; }
+
+      // sélection par défaut : les deux compos les plus jouées
+      const byUse = [...playable].sort((x, y) => y.n - x.n);
+      let a = playable.find(g => g.compo.id === state.settings.vsA) || byUse[0];
+      let b = playable.find(g => g.compo.id === state.settings.vsB) || byUse.find(g => g !== a);
+      if (a === b) b = byUse.find(g => g !== a);
+      if (!b) { box.innerHTML = ''; return; }
+
+      const opts = sel => playable.map(g =>
+        `<option value="${g.compo.id}"${g.compo.id === sel.compo.id ? ' selected' : ''}>${escapeHtml(compoLabel(g.compo))}</option>`).join('');
+
+      // higher: true si une valeur plus grande est meilleure
+      const rows = [
+        { lbl: 'Runs jouées', va: a.n, vb: b.n, fmt: v => v, higher: null },
+        { lbl: 'Bribes/h médian', va: a.medRate, vb: b.medRate, fmt: fmtRate, higher: true },
+        { lbl: 'Bribes/h moyen', va: a.avgRate, vb: b.avgRate, fmt: fmtRate, higher: true },
+        { lbl: 'Durée moyenne', va: a.avgSec, vb: b.avgSec, fmt: v => v != null ? fmtDurPrecise(v) : '—', higher: false },
+        { lbl: 'Vague moyenne', va: a.avgWave, vb: b.avgWave, fmt: v => v != null ? v.toFixed(1).replace('.', ',') : '—', higher: true },
+        { lbl: 'Meilleure vague', va: a.bestWave, vb: b.bestWave, fmt: v => v, higher: true },
+        { lbl: 'Légendes', va: a.legends, vb: b.legends, fmt: v => v, higher: null },
+        { lbl: 'Temps joué', va: a.totalSec, vb: b.totalSec, fmt: fmtDur, higher: null },
+      ];
+
+      const cell = (v, other, higher, fmt) => {
+        if (v == null) return `<td class="lose">—</td>`;
+        if (higher == null || other == null || v === other) return `<td class="tie">${fmt(v)}</td>`;
+        const better = higher ? v > other : v < other;
+        const pct = other !== 0 ? Math.round(((v - other) / Math.abs(other)) * 100) : null;
+        const delta = better && pct !== null && Math.abs(pct) >= 1
+          ? ` <span class="cmp-delta up">${pct > 0 ? '+' : ''}${pct}%</span>` : '';
+        return `<td class="${better ? 'win' : 'lose'}">${fmt(v)}${delta}</td>`;
+      };
+
+      // Verdict : l'écart tient-il debout ?
+      const thin = Math.min(a.n, b.n) < MIN_SAMPLE;
+      const overlap = a.medRate != null && b.medRate != null
+        && Math.min(a.maxRate, b.maxRate) >= Math.max(a.minRate, b.minRate);
+      const lead = (a.medRate || 0) >= (b.medRate || 0) ? a : b;
+      const other = lead === a ? b : a;
+      const gap = other.medRate ? Math.round(((lead.medRate - other.medRate) / other.medRate) * 100) : null;
+
+      let verdict;
+      if (thin) {
+        verdict = `Avec ${plural(Math.min(a.n, b.n), 'run')} d'un côté, l'écart ne veut encore rien dire. Il en faut au moins ${MIN_SAMPLE} sur chaque compo.`;
+      } else if (overlap) {
+        verdict = `<b>${escapeHtml(compoLabel(lead.compo))}</b> mène de ${gap}%, mais les deux compos se chevauchent : certaines de ses runs font moins bien que les meilleures de l'autre. Continue à alterner.`;
+      } else {
+        verdict = `<b>${escapeHtml(compoLabel(lead.compo))}</b> devance <b>${escapeHtml(compoLabel(other.compo))}</b> de <b>${gap}%</b> sans chevauchement. L'écart tient.`;
+      }
+
+      box.innerHTML = `<div class="vs-card">
+        <div class="chart-title">Comparer deux compos</div>
+        <div class="vs-pick">
+          <select id="vs-a">${opts(a)}</select>
+          <span class="vs-sep">contre</span>
+          <select id="vs-b">${opts(b)}</select>
+        </div>
+        <div class="cmp-scroll">
+          <table class="cmp-table">
+            <tr class="cmp-head">
+              <th></th>
+              <th>${escapeHtml(compoLabel(a.compo))}</th>
+              <th>${escapeHtml(compoLabel(b.compo))}</th>
+            </tr>
+            ${rows.map(r => `<tr>
+              <td>${r.lbl}</td>
+              ${cell(r.va, r.vb, r.higher, r.fmt)}
+              ${cell(r.vb, r.va, r.higher, r.fmt)}
+            </tr>`).join('')}
+          </table>
+        </div>
+        <div class="insight${thin || overlap ? ' warn' : ''}">${verdict}</div>
+      </div>`;
+
+      const pick = (id, key) => {
+        const el = document.getElementById(id);
+        el.addEventListener('change', () => {
+          state.settings[key] = el.value;
+          // on évite de comparer une compo avec elle-même
+          if (state.settings.vsA === state.settings.vsB) {
+            const alt = playable.find(g => g.compo.id !== el.value);
+            state.settings[key === 'vsA' ? 'vsB' : 'vsA'] = alt ? alt.compo.id : null;
+          }
+          save();
+          renderCompos();
+          haptic();
+        });
+      };
+      state.settings.vsA = a.compo.id;
+      state.settings.vsB = b.compo.id;
+      pick('vs-a', 'vsA');
+      pick('vs-b', 'vsB');
     }
 
     // ---- Édition d'une compo ----
@@ -4730,6 +5112,9 @@
     let draftChestLegends = [];
     let draftCatQ = 'mid';
 
+    function catPriceInput() {
+      return rawNum(document.getElementById('cat-price'));
+    }
     function paintCatQual() {
       const row = document.getElementById('cat-qual');
       row.innerHTML = QUALITIES.map(q =>
@@ -4825,6 +5210,7 @@
     // ---- Export CSV des runs ----
     function exportCSV() {
       const cols = ['date', 'duree_sec', 'duree', 'intensite', 'vague', 'bribes', 'bribes_par_heure',
+                    'kamas', 'kamas_par_heure',
                     'reflets', 'runes', 'legendes', 'noms_legendes', 'compo', 'classes',
                     'exclue', 'note'];
       const esc = v => {
@@ -4839,6 +5225,8 @@
           r.date || '', r.durationSec || 0, fmtDurPrecise(r.durationSec),
           r.intensity && IMAP[r.intensity] ? IMAP[r.intensity].label : '',
           r.wave || 0, r.bribes || 0, rate != null ? Math.round(rate) : '',
+          Math.round(runValue(r).total),
+          (r.durationSec || 0) > 0 ? Math.round(runValue(r).total / ((r.durationSec || 0) / 3600)) : '',
           r.reflets || 0, r.runes || 0, (r.legends || []).length, names.join(' | '),
           c ? compoLabel(c) : '', c ? c.classes.join(' | ') : '',
           r.excluded ? 'oui' : 'non', r.note || '',
@@ -4860,15 +5248,15 @@
     let editingBtab = null;
 
     function btabPreview() {
-      const from = parseInt(document.getElementById('bt-from').value, 10) || 0;
-      const at = parseInt(document.getElementById('bt-at').value, 10) || 0;
-      const per = parseInt(document.getElementById('bt-per').value, 10) || 0;
+      const from = rawNum(document.getElementById('bt-from'));
+      const at = rawNum(document.getElementById('bt-at'));
+      const per = rawNum(document.getElementById('bt-per'));
       const el = document.getElementById('bt-preview');
       if (!from || !per) { el.textContent = ''; return; }
       const cap = capFor(editingBtab);
       const ex = [from, from + 1, cap]
         .filter((v, i, a) => a.indexOf(v) === i && v <= cap)
-        .map(w => `vague ${w} → ${(at + per * (w - from)).toLocaleString('fr-FR')}`);
+        .map(w => `vague ${w} → ${fmtNum(at + per * (w - from))}`);
       el.textContent = ex.join(' · ');
     }
 
@@ -4876,18 +5264,18 @@
       editingBtab = key;
       const t = bribeTable()[key];
       document.getElementById('btab-title').textContent = IMAP[key] ? IMAP[key].label : 'Barème';
-      document.getElementById('bt-from').value = t ? t.from : '';
-      document.getElementById('bt-at').value = t ? t.at : '';
-      document.getElementById('bt-per').value = t ? t.per : '';
+      setNumberInput(document.getElementById('bt-from'), t ? t.from : 0);
+      setNumberInput(document.getElementById('bt-at'), t ? t.at : 0);
+      setNumberInput(document.getElementById('bt-per'), t ? t.per : 0);
       document.getElementById('btab-reset').classList.toggle('hidden', !t);
       btabPreview();
       document.getElementById('modal-btab').classList.add('active');
     }
 
     function saveBtab() {
-      const from = parseInt(document.getElementById('bt-from').value, 10) || 0;
-      const at = parseInt(document.getElementById('bt-at').value, 10) || 0;
-      const per = parseInt(document.getElementById('bt-per').value, 10) || 0;
+      const from = rawNum(document.getElementById('bt-from'));
+      const at = rawNum(document.getElementById('bt-at'));
+      const per = rawNum(document.getElementById('bt-per'));
       if (!from) { flagInvalid('bt-from'); return; }
       if (!per) { flagInvalid('bt-per'); return; }
       state.settings.bribeTable = { ...(state.settings.bribeTable || {}), [editingBtab]: { from, at, per } };
@@ -4914,6 +5302,60 @@
       toast('Barème officiel rétabli');
     }
 
+    // ---- Réglage des prix ----
+    let draftRunes = [];
+
+    function paintEcoRunes() {
+      const box = document.getElementById('eco-runes');
+      box.innerHTML = draftRunes.map((t, i) => `
+        <div class="rune-row">
+          <input type="text" class="rn-name" data-i="${i}" maxlength="24" placeholder="Nom de la rune" value="${escapeHtml(t.name)}" />
+          <input type="text" class="rn-price" data-i="${i}" maxlength="9" inputmode="numeric" placeholder="prix" value="${t.price || ''}" />
+          <button class="rn-del" data-i="${i}" aria-label="Retirer">✕</button>
+        </div>`).join('') || `<div class="purchases-empty">Aucune rune suivie.</div>`;
+
+      box.querySelectorAll('.rn-name').forEach(el =>
+        el.addEventListener('input', () => { draftRunes[el.dataset.i].name = el.value; }));
+      box.querySelectorAll('.rn-price').forEach(el => {
+        wireNumberInput(el);
+        el.addEventListener('input', () => { draftRunes[el.dataset.i].price = rawNum(el); });
+      });
+      box.querySelectorAll('.rn-del').forEach(el =>
+        el.addEventListener('click', () => { draftRunes.splice(el.dataset.i, 1); paintEcoRunes(); haptic(); }));
+    }
+
+    function ecoRefletPreview() {
+      const q = rawNum(document.getElementById('eco-rq'));
+      const p = rawNum(document.getElementById('eco-rp'));
+      const el = document.getElementById('eco-rtotal');
+      el.textContent = (q && p) ? `Soit ${fmtFull(q * p)} kamas par run.` : '';
+    }
+
+    function openEcoForm() {
+      const e = eco();
+      setNumberInput(document.getElementById('eco-rq'), e.refletsPerRun);
+      setNumberInput(document.getElementById('eco-rp'), e.refletPrice);
+      draftRunes = e.runeTypes.map(t => ({ ...t }));
+      paintEcoRunes();
+      ecoRefletPreview();
+      document.getElementById('modal-eco').classList.add('active');
+    }
+
+    function saveEco() {
+      state.settings.eco = {
+        refletsPerRun: rawNum(document.getElementById('eco-rq')),
+        refletPrice: rawNum(document.getElementById('eco-rp')),
+        runeTypes: draftRunes
+          .filter(t => (t.name || '').trim())
+          .map(t => ({ id: t.id || uid(), name: t.name.trim().slice(0, 24), price: Math.max(0, t.price | 0) })),
+      };
+      save();
+      renderSonges();
+      renderSongesStats();
+      document.getElementById('modal-eco').classList.remove('active');
+      toast('Prix enregistrés');
+    }
+
     // ---- Dépenses de bribes ----
     let editingSpendId = null;
 
@@ -4926,14 +5368,14 @@
       const sp = id ? (state.spends || []).find(x => x.id === id) : null;
       document.getElementById('spend-title').textContent = sp ? 'Modifier la dépense' : 'Dépense de bribes';
       document.getElementById('sp-date').value = sp ? (sp.date || todayISO()) : todayISO();
-      document.getElementById('sp-amount').value = sp ? String(sp.amount || '') : '';
+      setNumberInput(document.getElementById('sp-amount'), sp ? sp.amount : 0);
       document.getElementById('sp-label').value = sp ? (sp.label || '') : '';
       document.getElementById('spend-delete').classList.toggle('hidden', !sp);
       document.getElementById('modal-spend').classList.add('active');
     }
 
     function saveSpend() {
-      const amount = Math.max(0, parseInt(String(document.getElementById('sp-amount').value).replace(/\D/g, ''), 10) || 0);
+      const amount = rawNum(document.getElementById('sp-amount'));
       if (!amount) { flagInvalid('sp-amount'); return; }
       const payload = {
         date: document.getElementById('sp-date').value || todayISO(),
@@ -4989,7 +5431,8 @@
       const q = normName(query);
       const slot = currentPickSlot();
       const list = (state.catalogue || [])
-        .filter(e => !q || normName(e.name).includes(q));
+        .filter(e => !q || normName(e.name).includes(q))
+        .sort((a, b) => (b.price || 0) - (a.price || 0) || a.name.localeCompare(b.name, 'fr'));
 
       if (!list.length) {
         grid.innerHTML = `<div class="pick-empty">${
@@ -5003,7 +5446,7 @@
             ? `<img src="${escapeHtml(e.img)}" alt="" onerror="this.parentNode.textContent='★'">`
             : '★'}</span>
           <span class="lg-name">${escapeHtml(e.name)}</span>
-          ${QMAP[e.q] ? `<span class="qbadge ${e.q}" style="margin-top:5px;display:inline-block;">${QMAP[e.q].short || QMAP[e.q].label}</span>` : ''}
+          <span class="lg-price${e.price ? '' : ' none'}">${e.price ? fmtNum(e.price) : 'prix ?'}</span>
         </button>`).join('');
 
       grid.querySelectorAll('[data-pick]').forEach(b => {
@@ -5028,6 +5471,7 @@
       document.getElementById('cat-name').value = e ? e.name : (prefill || '');
       document.getElementById('cat-img').value = e ? (e.img || '') : '';
       draftCatQ = e && QMAP[e.q] ? e.q : 'mid';
+      setNumberInput(document.getElementById('cat-price'), e && e.price ? e.price : 0);
       paintCatQual();
       document.getElementById('cat-bulk').value = '';
       // en édition, on masque l'ajout en masse
@@ -5044,7 +5488,7 @@
       if (editingCatId) {
         const e = state.catalogue.find(x => x.id === editingCatId);
         if (!name) { flagInvalid('cat-name'); return; }
-        if (e) { e.name = name; e.img = img; e.q = draftCatQ; }
+        if (e) { e.name = name; e.img = img; e.q = draftCatQ; e.price = catPriceInput(); }
       } else {
         const lines = [];
         if (name) lines.push(name);
@@ -5054,7 +5498,8 @@
         let added = 0, skipped = 0;
         lines.forEach(n => {
           if (state.catalogue.some(e => normName(e.name) === normName(n))) { skipped++; return; }
-          state.catalogue.push({ id: uid(), name: n.slice(0, 60), img: (lines.length === 1 ? img : ''), q: draftCatQ });
+          state.catalogue.push({ id: uid(), name: n.slice(0, 60), img: (lines.length === 1 ? img : ''),
+                                 q: draftCatQ, price: (lines.length === 1 ? catPriceInput() : 0) });
           added++;
         });
         toast(added
@@ -5064,9 +5509,15 @@
       state.catalogue.sort((a, b) => a.name.localeCompare(b.name, 'fr'));
       save();
       refreshNameList();
-      renderLegends();
+      // un prix modifié se répercute sur les kamas, l'alerte et les stats
+      renderSonges();
+      renderSongesStats();
       document.getElementById('modal-cat').classList.remove('active');
       editingCatId = null;
+
+      // le prix vient peut-être d'être renseigné : on rafraîchit les emplacements ouverts
+      if (document.getElementById('modal-run').classList.contains('active')) paintQualities();
+      if (document.getElementById('modal-chest').classList.contains('active')) paintChestLegends();
 
       // si on venait du sélecteur, on y retourne pour choisir la légende créée
       if (pickCtx) {
@@ -5231,7 +5682,10 @@
         const mine = drops.filter(d => (d.entry && d.entry.id === e.id));
         return { entry: e, n: mine.length, runs: mine.filter(m => m.src === 'run').length,
                  chests: mine.filter(m => m.src === 'chest').length };
-      }).sort((a, b) => b.n - a.n || a.entry.name.localeCompare(b.entry.name, 'fr'));
+      }).sort((a, b) =>
+        (b.entry.price || 0) - (a.entry.price || 0)   // les plus chères d'abord
+        || b.n - a.n
+        || a.entry.name.localeCompare(b.entry.name, 'fr'));
 
       const owned = catRows.filter(r => r.n > 0).length;
       const unlisted = drops.filter(d => !d.entry && d.name);
@@ -5240,7 +5694,7 @@
       body.innerHTML = `
         <div class="chart-card">
           <div class="chart-title">Coffres légendaires</div>
-          <div class="chart-sub">Chaque palier de ${target.toLocaleString('fr-FR')} bribes en débloque un</div>
+          <div class="chart-sub">Chaque palier de ${fmtNum(target)} bribes en débloque un</div>
           <div class="counter-big" style="margin-bottom:4px;">
             <div class="num kamas-num">${nChests}</div>
             <div class="lbl">coffre${nChests > 1 ? 's' : ''} ouvert${nChests > 1 ? 's' : ''}</div>
@@ -5297,6 +5751,7 @@
                   ? `<img src="${escapeHtml(r.entry.img)}" alt="" onerror="this.parentNode.textContent='★'">`
                   : '★'}</span>
                 <span class="lg-name">${escapeHtml(r.entry.name)}</span>
+                <span class="lg-price${r.entry.price ? '' : ' none'}">${r.entry.price ? fmtNum(r.entry.price) : 'prix ?'}</span>
                 ${QMAP[r.entry.q] ? `<span class="qbadge ${r.entry.q}" style="margin-top:5px;display:inline-block;">${QMAP[r.entry.q].short || QMAP[r.entry.q].label}</span>` : ''}
                 ${r.n ? `<span class="src-dots">
                   ${Array.from({ length: Math.min(r.runs, 6) }).map(() => '<span class="src-dot run"></span>').join('')}
@@ -5550,7 +6005,7 @@
             <div class="legend-entry">
               <span class="qdot ${l.q}"></span>
               <span class="nm${l.name ? '' : ' unnamed'}">${l.name ? escapeHtml(l.name) : 'sans nom'}</span>
-              <span class="dt">${fmtDateShort(l.date)}</span>
+              <span class="dt">${l.entry && l.entry.price ? fmtNum(l.entry.price) : '—'}</span>
             </div>`).join('')}
         </div>` : ''}
         ${unnamed ? `<div class="insight warn">${plural(unnamed, 'légende')} sans nom. Filtre tes runs sur « ★ Légendaire » pour les retrouver et compléter.</div>` : ''}
@@ -5605,7 +6060,7 @@
       return `
         <div class="chart-card">
           <div class="chart-title">${escapeHtml(meta.reward)}</div>
-          <div class="chart-sub">Palier n°${cycles + 1} · ${target.toLocaleString('fr-FR')} ${meta.label.toLowerCase()}${cycles > 0 ? ` · ${cycles} déjà ${cycles > 1 ? 'atteints' : 'atteint'}` : ''}</div>
+          <div class="chart-sub">Palier n°${cycles + 1} · ${fmtNum(target)} ${meta.label.toLowerCase()}${cycles > 0 ? ` · ${cycles} déjà ${cycles > 1 ? 'atteints' : 'atteint'}` : ''}</div>
 
           ${due > 0 ? `<div class="profit-box green" style="margin-bottom:12px;">
             <div class="lbl">Palier atteint</div>
@@ -5621,11 +6076,11 @@
             <div class="progress-bar" style="width:${pct.toFixed(1)}%"></div>
           </div>
           <div class="compo-sub" style="border-top:none;padding-top:0;margin-top:0;">
-            <span><b>${current.toLocaleString('fr-FR')}</b> / ${target.toLocaleString('fr-FR')}</span>
-            <span>Il te manque <b>${remaining.toLocaleString('fr-FR')}</b></span>
+            <span><b>${fmtNum(current)}</b> / ${fmtNum(target)}</span>
+            <span>Il te manque <b>${fmtNum(remaining)}</b></span>
             ${hoursLeft != null ? `<span>≈ <b>${fmtDur(hoursLeft * 3600)}</b> de jeu</span>` : ''}
-            <span>Médiane <b>${all.perRun != null ? Math.round(all.perRun).toLocaleString('fr-FR') : '—'}</b> /run</span>
-            ${spent ? `<span>Dépensé <b style="color:var(--red);">−${spent.toLocaleString('fr-FR')}</b></span>` : ''}
+            <span>Médiane <b>${all.perRun != null ? fmtNum(all.perRun) : '—'}</b> /run</span>
+            ${spent ? `<span>Dépensé <b style="color:var(--red);">−${fmtNum(spent)}</b></span>` : ''}
           </div>
           ${metric === 'bribes' ? `<button class="btn btn-secondary" id="goal-spend" style="width:100%;margin-top:12px;">− Enregistrer une dépense</button>
           ${(state.spends || []).length ? `<div style="margin-top:10px;">
@@ -5633,7 +6088,7 @@
               <div class="chest-entry" data-spend="${sp.id}">
                 <span class="ic">🛒</span>
                 <span class="bd">
-                  <span class="t1">−${sp.amount.toLocaleString('fr-FR')} bribes</span>
+                  <span class="t1">−${fmtNum(sp.amount)} bribes</span>
                   <span class="t2">${fmtDateShort(sp.date)}${sp.label ? ' · ' + escapeHtml(sp.label) : ''}</span>
                 </span>
               </div>`).join('')}
@@ -5647,11 +6102,11 @@
             </div>
             <div>
               <div class="lbl">Palier</div>
-              <input type="number" id="goal-target" min="1" inputmode="numeric" value="${target}" />
+              <input type="text" id="goal-target" inputmode="numeric" value="${fmtNum(target)}" />
             </div>
             <div class="wide">
               <div class="lbl">Déjà acquis avant le suivi</div>
-              <input type="number" id="goal-offset" min="0" inputmode="numeric" placeholder="0" value="${offset || ''}" />
+              <input type="text" id="goal-offset" inputmode="numeric" placeholder="0" value="${offset ? fmtNum(offset) : ''}" />
             </div>
           </div>
         </div>
@@ -5683,9 +6138,15 @@
         });
       }
       const targetEl = document.getElementById('goal-target');
-      if (targetEl) targetEl.addEventListener('change', () => setGoal({ target: Math.max(1, parseInt(targetEl.value, 10) || 1) }));
+      if (targetEl) {
+        wireNumberInput(targetEl);
+        targetEl.addEventListener('change', () => setGoal({ target: Math.max(1, rawNum(targetEl)) }));
+      }
       const offsetEl = document.getElementById('goal-offset');
-      if (offsetEl) offsetEl.addEventListener('change', () => setGoal({ offset: Math.max(0, parseInt(offsetEl.value, 10) || 0) }));
+      if (offsetEl) {
+        wireNumberInput(offsetEl);
+        offsetEl.addEventListener('change', () => setGoal({ offset: rawNum(offsetEl) }));
+      }
     }
 
     function predictBribes(intensity, wave) {
@@ -5709,7 +6170,7 @@
         <div class="chart-sub">Bribes par vague, vagues à vaincre pour valider, plafond · touche une ligne pour ajuster</div>
         ${rows.map(r => {
           const cap = r.i.cap == null ? '∞' : r.i.cap;
-          const txt = `<b>${r.t.per.toLocaleString('fr-FR')}</b>/vague · ${r.i.min} requise${r.i.min > 1 ? 's' : ''} · max ${cap}`;
+          const txt = `<b>${fmtNum(r.t.per)}</b>/vague · ${r.i.min} requise${r.i.min > 1 ? 's' : ''} · max ${cap}`;
           return `<div class="chest-entry" data-bt="${r.i.k}" style="margin-bottom:6px;">
             <span class="ic">${r.t ? '📐' : '➕'}</span>
             <span class="bd">
@@ -5723,6 +6184,173 @@
         ${anyMismatch
           ? `<div class="insight warn">Des runs enregistrées ne collent pas au barème. Soit une saisie est erronée, soit le jeu a changé ses valeurs — touche le palier concerné pour l'ajuster.</div>`
           : `<div class="insight">Le barème pré-remplit les bribes dès que tu choisis une intensité et une vague. Sous le nombre de vagues requis, le combat est perdu et le gain est nul.</div>`}
+      </div>`;
+    }
+
+    // ============================================================
+    // ÉCONOMIE : valorisation du butin en kamas
+    // ============================================================
+    const ECO_DEFAULTS = { refletsPerRun: 1200, refletPrice: 0 };
+    // Les deux seules runes qui valent quelque chose : toujours proposées à la saisie
+    const DEFAULT_RUNES = [
+      { id: 'rune-merv', name: 'Astrale Merveilleuse', price: 0 },
+      { id: 'rune-leg',  name: 'Astrale Légendaire',   price: 0 },
+    ];
+
+    function eco() {
+      const e = (state.settings && state.settings.eco) || {};
+      return {
+        refletsPerRun: e.refletsPerRun != null ? Math.max(0, e.refletsPerRun | 0) : ECO_DEFAULTS.refletsPerRun,
+        refletPrice: Math.max(0, e.refletPrice | 0),
+        runeTypes: (Array.isArray(e.runeTypes) && e.runeTypes.length)
+          ? e.runeTypes : DEFAULT_RUNES.map(t => ({ ...t })),
+      };
+    }
+    function ecoConfigured() {
+      const e = eco();
+      return e.refletPrice > 0 || e.runeTypes.some(t => t.price > 0) ||
+        (state.catalogue || []).some(c => (c.price || 0) > 0);
+    }
+
+    // Légendes obtenues dont le prix de vente n'a pas encore été renseigné
+    function unpricedLegends() {
+      const seen = new Map();
+      allLegendDrops().forEach(d => {
+        if (d.entry && !d.entry.price) seen.set(d.entry.id, d.entry);
+      });
+      return [...seen.values()];
+    }
+
+    // Valeur d'un lot de légendes, d'après le prix figé sur chaque entrée du catalogue
+    function legendsValue(legends) {
+      return (legends || []).reduce((sum, l) => {
+        const e = resolveLegend(l).entry;
+        return sum + (e && e.price ? e.price : 0);
+      }, 0);
+    }
+
+    // Décomposition de la valeur d'une run
+    function runValue(r) {
+      const e = eco();
+      const reflets = e.refletsPerRun * e.refletPrice;
+      const runes = e.runeTypes.reduce((sum, t) =>
+        sum + (((r.runeQty || {})[t.id] || 0) * (t.price || 0)), 0);
+      const legends = legendsValue(r.legends);
+      return { reflets, runes, legends, total: reflets + runes + legends };
+    }
+    function chestValue(c) { return legendsValue(c.legends); }
+
+    // Rentabilité globale : les coffres viennent des runs, leur valeur s'y rattache
+    function economyTotals(runs) {
+      let reflets = 0, runes = 0, legends = 0, sec = 0;
+      runs.forEach(r => {
+        const v = runValue(r);
+        reflets += v.reflets; runes += v.runes; legends += v.legends;
+        sec += r.durationSec || 0;
+      });
+      const chests = (state.chests || []).reduce((a, c) => a + chestValue(c), 0);
+      const total = reflets + runes + legends + chests;
+      const hours = sec / 3600;
+      return { reflets, runes, legends, chests, total, sec, hours,
+               perHour: hours > 0 ? total / hours : null,
+               perRun: runs.length ? total / runs.length : null };
+    }
+
+    function profitCard(runs) {
+      const e = eco();
+      const t = economyTotals(runs);
+      const missing = unpricedLegends();
+
+      if (!ecoConfigured()) {
+        return `<div class="chart-card">
+          <div class="chart-title">Rentabilité</div>
+          <div class="chart-sub">Combien tes runs rapportent réellement</div>
+          <div class="insight warn">Aucun prix renseigné. Indique le prix d'un reflet, celui des runes que tu revends, et le prix de vente de tes légendes — l'app calculera ensuite tes kamas par heure.</div>
+          <button class="btn btn-primary" id="eco-open" style="width:100%;margin-top:12px;">Régler les prix</button>
+        </div>`;
+      }
+
+      const share = v => t.total > 0 ? Math.round((v / t.total) * 100) : 0;
+      const line = (lbl, val, pct, color) => `
+        <div class="yield-row">
+          <span class="yield-lbl" style="width:66px;text-align:left;">${lbl}</span>
+          <span class="yield-track"><span class="yield-fill" style="width:${pct}%;${color ? 'background:' + color + ';' : ''}"></span></span>
+          <span class="yield-val" style="width:96px;">${fmtNum(val)}</span>
+          <span class="yield-n">${pct}%</span>
+        </div>`;
+
+      return `<div class="chart-card">
+        <div class="chart-title">Rentabilité</div>
+        <div class="chart-sub">${plural(runs.length, 'run')} · ${fmtDur(t.sec)} de jeu</div>
+
+        <div class="counter-big" style="margin-bottom:12px;">
+          <div class="num kamas-num">${t.perHour != null ? fmtNum(t.perHour) : '—'}</div>
+          <div class="lbl">kamas par heure</div>
+        </div>
+
+        <div class="detail-stats">
+          <div class="dstat"><div class="lbl">Total généré</div><div class="val gold small kamas-num">${fmtFull(t.total)}</div></div>
+          <div class="dstat"><div class="lbl">Par run</div><div class="val small kamas-num">${t.perRun != null ? fmtNum(t.perRun) : '—'}</div></div>
+          <div class="dstat"><div class="lbl">Temps cumulé</div><div class="val small">${fmtDur(t.sec)}</div></div>
+          <div class="dstat"><div class="lbl">Runs</div><div class="val small">${runs.length}</div></div>
+        </div>
+
+        <div class="chart-sub" style="margin:16px 0 8px;">D'où viennent les kamas</div>
+        ${line('Reflets', t.reflets, share(t.reflets))}
+        ${line('Runes', t.runes, share(t.runes), 'linear-gradient(90deg,#2f5aa8,var(--blue))')}
+        ${line('Drops', t.legends, share(t.legends), 'linear-gradient(90deg,#3f8a5a,#58c47a)')}
+        ${line('Coffres', t.chests, share(t.chests))}
+
+        ${missing.length ? `<div class="insight warn"><b>${plural(missing.length, 'légende')}</b> obtenue${missing.length > 1 ? 's' : ''} sans prix : ${missing.slice(0, 3).map(c => escapeHtml(c.name)).join(', ')}${missing.length > 3 ? '…' : ''}. Ces drops ne comptent pas — ta rentabilité réelle est plus élevée que ce chiffre.</div>` : ''}
+        ${e.refletPrice > 0 ? `<div class="insight">Les reflets sont comptés forfaitairement à ${fmtFull(e.refletsPerRun)} par run. Si ce nombre varie chez toi, le total dérivera d'autant.</div>` : ''}
+
+        <button class="btn btn-secondary" id="eco-open" style="width:100%;margin-top:12px;">Régler les prix</button>
+      </div>`;
+    }
+
+    // Récapitulatif des prix, éditable depuis l'onglet Kamas
+    function priceSettingsCard() {
+      const e = eco();
+      const priced = (state.catalogue || []).filter(c => c.price > 0)
+        .sort((a, b) => b.price - a.price);
+      const unpriced = unpricedLegends();
+
+      const row = (lbl, val, sub) => `
+        <div class="chest-entry">
+          <span class="bd">
+            <span class="t1">${escapeHtml(lbl)}</span>
+            ${sub ? `<span class="t2">${sub}</span>` : ''}
+          </span>
+          <span class="price-tag${val ? '' : ' none'}">${val ? fmtNum(val) : 'non réglé'}</span>
+        </div>`;
+
+      return `<div class="chart-card">
+        <div class="chart-title">Prix du butin</div>
+        <div class="chart-sub">Ce sur quoi reposent tous les calculs de kamas</div>
+
+        ${row('Reflet', e.refletPrice, `${fmtNum(e.refletsPerRun)} par run → ${fmtNum(e.refletsPerRun * e.refletPrice)} kamas`)}
+        ${e.runeTypes.map(t => row(t.name, t.price, 'à l\'unité')).join('')}
+        <button class="btn btn-secondary" id="eco-open2" style="width:100%;margin-top:10px;">Modifier reflets et runes</button>
+
+        <div class="chart-sub" style="margin:18px 0 8px;">Légendes valorisées</div>
+        ${priced.length
+          ? priced.slice(0, 8).map(c => `
+            <div class="chest-entry" data-catprice="${c.id}">
+              <span class="qdot ${c.q}"></span>
+              <span class="bd"><span class="t1">${escapeHtml(c.name)}</span></span>
+              <span class="price-tag">${fmtNum(c.price)}</span>
+            </div>`).join('')
+            + (priced.length > 8 ? `<div class="orphan-note">et ${plural(priced.length - 8, 'autre')} — voir l'onglet Légendes</div>` : '')
+          : `<div class="purchases-empty">Aucun prix de légende renseigné.</div>`}
+
+        ${unpriced.length ? `<div class="chart-sub" style="margin:18px 0 8px;">Obtenues sans prix</div>
+          ${unpriced.map(c => `
+            <div class="chest-entry" data-catprice="${c.id}">
+              <span class="qdot ${c.q}"></span>
+              <span class="bd"><span class="t1">${escapeHtml(c.name)}</span></span>
+              <span class="price-tag none">à régler</span>
+            </div>`).join('')}
+          <div class="insight warn">Tant que ces légendes n'ont pas de prix, elles ne comptent pas dans tes kamas.</div>` : ''}
       </div>`;
     }
 
@@ -5963,54 +6591,114 @@
       </div>`;
     }
 
-    // ---- Résumé hebdomadaire ----
-    function weekStartISO(offsetWeeks) {
-      const d = new Date();
-      const day = (d.getDay() + 6) % 7;          // lundi = 0
-      d.setDate(d.getDate() - day - (offsetWeeks || 0) * 7);
+    // ---- Comparatif par période ----
+    // Regroupe les runs par jour, semaine ou mois et met en regard les périodes.
+    function periodKey(iso, gran) {
+      if (!iso) return '';
+      if (gran === 'day') return iso;
+      if (gran === 'month') return iso.slice(0, 7);
+      const d = new Date(iso + 'T12:00:00');
+      const day = (d.getDay() + 6) % 7;              // lundi = 0
+      d.setDate(d.getDate() - day);
       return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
     }
+    function periodLabel(key, gran) {
+      if (gran === 'month') {
+        const d = new Date(key + '-01T12:00:00');
+        return d.toLocaleDateString('fr-FR', { month: 'short', year: '2-digit' });
+      }
+      if (gran === 'week') {
+        const a = new Date(key + 'T12:00:00');
+        const b = new Date(a); b.setDate(b.getDate() + 6);
+        const f = d => d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+        return `${f(a)} – ${f(b)}`;
+      }
+      return dayLabel(key);
+    }
 
-    function weeklyCard() {
-      const thisStart = weekStartISO(0);
-      const lastStart = weekStartISO(1);
-      const base = sortedRuns().filter(r => !r.excluded
-        && (!state.settings.intensityFilter || r.intensity === state.settings.intensityFilter));
+    function periodCompareCard(runs) {
+      const gran = ['day', 'week', 'month'].includes(state.settings.gran) ? state.settings.gran : 'week';
+      const labels = { day: 'Jour', week: 'Semaine', month: 'Mois' };
 
-      const cur = base.filter(r => (r.date || '') >= thisStart);
-      const prev = base.filter(r => (r.date || '') >= lastStart && (r.date || '') < thisStart);
-      if (!cur.length && !prev.length) return '';
+      const map = new Map();
+      runs.forEach(r => {
+        const k = periodKey(r.date, gran);
+        if (!k) return;
+        if (!map.has(k)) map.set(k, []);
+        map.get(k).push(r);
+      });
+      if (!map.size) return '';
 
-      const agg = rs => {
-        const sec = rs.reduce((s, r) => s + (r.durationSec || 0), 0);
-        const bribes = rs.reduce((s, r) => s + (r.bribes || 0), 0);
-        return { n: rs.length, sec, bribes, rate: sec > 0 ? bribes / (sec / 3600) : null,
-                 legends: rs.reduce((s, r) => s + (r.legends || []).length, 0) };
+      const rows = [...map.entries()]
+        .sort((a, b) => b[0].localeCompare(a[0]))     // du plus récent au plus ancien
+        .slice(0, 8)
+        .map(([k, rs]) => {
+          const sec = rs.reduce((a, r) => a + (r.durationSec || 0), 0);
+          const bribes = rs.reduce((a, r) => a + (r.bribes || 0), 0);
+          const kamas = rs.reduce((a, r) => a + runValue(r).total, 0);
+          const hours = sec / 3600;
+          return {
+            k, n: rs.length, sec, bribes, kamas,
+            rate: hours > 0 ? bribes / hours : null,
+            kph: hours > 0 ? kamas / hours : null,
+            legends: rs.reduce((a, r) => a + (r.legends || []).length, 0),
+          };
+        });
+
+      const money = ecoConfigured();
+      const best = k => Math.max(...rows.map(r => r[k] || 0));
+      const bestRate = best('rate'), bestTime = best('sec');
+
+      // évolution d'une ligne par rapport à la période précédente (la suivante dans la liste)
+      const delta = (i, key) => {
+        const cur = rows[i][key], prev = rows[i + 1] ? rows[i + 1][key] : null;
+        if (cur == null || !prev) return '';
+        const p = Math.round(((cur - prev) / prev) * 100);
+        if (!p) return '';
+        return ` <span class="cmp-delta ${p > 0 ? 'up' : 'down'}">${p > 0 ? '+' : ''}${p}%</span>`;
       };
-      const a = agg(cur), b = agg(prev);
-      const delta = (x, y) => (y > 0 ? ((x - y) / y) * 100 : null);
-      const dRate = (a.rate != null && b.rate) ? delta(a.rate, b.rate) : null;
-
-      const line = (lbl, va, vb) => `
-        <div class="yield-row">
-          <span class="yield-lbl" style="width:74px;text-align:left;">${lbl}</span>
-          <span class="yield-val" style="width:auto;flex:1;text-align:left;color:var(--text);font-weight:600;">${va}</span>
-          <span class="yield-n" style="width:auto;">${vb}</span>
-        </div>`;
 
       return `<div class="chart-card">
-        <div class="chart-title">Cette semaine</div>
-        <div class="chart-sub">Depuis lundi · comparé à la semaine précédente (colonne de droite)</div>
-        ${line('Runs', a.n, b.n)}
-        ${line('Temps', fmtDur(a.sec), fmtDur(b.sec))}
-        ${line('Bribes', a.bribes.toLocaleString('fr-FR'), b.bribes.toLocaleString('fr-FR'))}
-        ${line('Bribes/h', fmtRate(a.rate), fmtRate(b.rate))}
-        ${line('Légendes', a.legends, b.legends)}
-        ${dRate != null ? `<div class="profit-box ${dRate >= 0 ? 'green' : 'red'}" style="margin-top:12px;">
-          <div class="lbl">Rendement vs semaine dernière</div>
-          <div class="val">${dRate >= 0 ? '+' : ''}${dRate.toFixed(1).replace('.', ',')}%</div>
+        <div class="chart-title">Comparatif par période</div>
+        <div class="chart-sub">Chaque ligne est comparée à la période précédente</div>
+
+        <div class="subtabs" style="margin:12px 0;">
+          ${['day', 'week', 'month'].map(g =>
+            `<button class="sub-btn${g === gran ? ' on' : ''}" data-gran="${g}">${labels[g]}</button>`).join('')}
+        </div>
+
+        <div class="cmp-scroll">
+          <table class="cmp-table">
+            <tr class="cmp-head">
+              <th>${labels[gran]}</th>
+              <th>Runs</th>
+              <th>Temps</th>
+              <th>Bribes/h</th>
+              ${money ? '<th>Kamas/h</th>' : ''}
+              <th>★</th>
+            </tr>
+            ${rows.map((r, i) => `<tr class="${r.rate === bestRate && rows.length > 1 ? 'cmp-best' : ''}">
+              <td>${escapeHtml(periodLabel(r.k, gran))}</td>
+              <td class="tie">${r.n}</td>
+              <td class="${r.sec === bestTime && rows.length > 1 ? 'win' : 'tie'}">${fmtDur(r.sec)}</td>
+              <td class="${r.rate === bestRate && rows.length > 1 ? 'win' : 'tie'}">${fmtRate(r.rate)}${delta(i, 'rate')}</td>
+              ${money ? `<td class="tie">${r.kph != null ? fmtNum(r.kph) : '—'}</td>` : ''}
+              <td class="${r.legends ? 'win' : 'lose'}">${r.legends}</td>
+            </tr>`).join('')}
+          </table>
+        </div>
+
+        ${rows.length >= 2 ? `<div class="insight${rows[0].n < 3 ? ' warn' : ''}">
+          ${rows[0].n < 3
+            ? `La période en cours ne compte que ${plural(rows[0].n, 'run')} : son rendement n'est pas encore comparable aux précédentes.`
+            : (() => {
+                const d = rows[1].rate ? Math.round(((rows[0].rate - rows[1].rate) / rows[1].rate) * 100) : 0;
+                if (Math.abs(d) < 5) return `Ton rendement est stable d'une ${labels[gran].toLowerCase()} à l'autre.`;
+                return d > 0
+                  ? `Tu es à <b>+${d}%</b> par rapport à la ${labels[gran].toLowerCase()} précédente.`
+                  : `Tu es à <b>${d}%</b> par rapport à la ${labels[gran].toLowerCase()} précédente — regarde si c'est le tirage ou ta façon de jouer.`;
+              })()}
         </div>` : ''}
-        ${(a.n < 3 || b.n < 3) ? `<div class="insight warn">Peu de runs de part et d'autre : cet écart hebdomadaire est surtout du bruit. Regarde plutôt la moyenne mobile plus bas.</div>` : ''}
       </div>`;
     }
 
@@ -6078,7 +6766,8 @@
       const trend = (last5.length >= 3 && prev5.length >= 3)
         ? ((mean(last5) - mean(prev5)) / mean(prev5)) * 100 : null;
 
-      const sub = state.settings.statsTab === 'vagues' ? 'vagues' : 'general';
+      const sub = ['vagues', 'kamas'].includes(state.settings.statsTab)
+        ? state.settings.statsTab : 'general';
       document.querySelectorAll('#stats-subtabs .sub-btn').forEach(b =>
         b.classList.toggle('on', b.dataset.s === sub));
 
@@ -6088,7 +6777,7 @@
           <div class="chart-title">Synthèse</div>
           <div class="chart-sub">${plural(runs.length, 'run')} · ${fmtDur(totalSec)} de jeu cumulé</div>
           <div class="detail-stats">
-            <div class="dstat"><div class="lbl">Bribes totales</div><div class="val gold small">${totalBribes.toLocaleString('fr-FR')}</div></div>
+            <div class="dstat"><div class="lbl">Bribes totales</div><div class="val gold small">${fmtNum(totalBribes)}</div></div>
             <div class="dstat"><div class="lbl">Bribes/h global</div><div class="val small">${fmtRate(pooled)}</div></div>
             <div class="dstat"><div class="lbl">Médiane bribes/h</div><div class="val small">${fmtRate(med)}</div></div>
             <div class="dstat"><div class="lbl">Dispersion</div><div class="val small">${cv != null ? Math.round(cv) + '%' : '—'}</div></div>
@@ -6108,7 +6797,7 @@
           <div class="chart-title">Butin</div>
           <div class="chart-sub">Cumul et taux horaire sur ${fmtDur(totalSec)} de jeu</div>
           <div class="detail-stats">
-            <div class="dstat"><div class="lbl">Runes</div><div class="val small">${totalRunes.toLocaleString('fr-FR')}</div></div>
+            <div class="dstat"><div class="lbl">Runes</div><div class="val small">${fmtNum(totalRunes)}</div></div>
             <div class="dstat"><div class="lbl">Runes/h</div><div class="val small">${fmtRate(hours > 0 ? totalRunes / hours : null)}</div></div>
             <div class="dstat wide">
               <div class="lbl">Légendaires</div>
@@ -6123,9 +6812,15 @@
           ${sparkBars(runs)}
         </div>` : ''}
 
-        ${weeklyCard()}
+        ${periodCompareCard(runs)}
 
         ${optimizerCard(runs)}
+      `;
+
+      const kamas = `
+        ${profitCard(runs)}
+
+        ${priceSettingsCard()}
       `;
 
       const vagues = `
@@ -6139,8 +6834,21 @@
 
       `;
 
-      body.innerHTML = sub === 'vagues' ? vagues : general;
+      body.innerHTML = sub === 'vagues' ? vagues : sub === 'kamas' ? kamas : general;
       bindGoalCard();
+      document.querySelectorAll('[data-gran]').forEach(b =>
+        b.addEventListener('click', () => {
+          state.settings.gran = b.dataset.gran;
+          save();
+          renderSongesStats();
+          haptic();
+        }));
+      ['eco-open', 'eco-open2'].forEach(id => {
+        const b = document.getElementById(id);
+        if (b) b.addEventListener('click', openEcoForm);
+      });
+      document.querySelectorAll('[data-catprice]').forEach(el =>
+        el.addEventListener('click', () => openCatForm(el.dataset.catprice)));
     }
 
     function renderSonges() {
@@ -6192,10 +6900,10 @@
       if (!field.value || bribesAutofilled) {
         field.value = String(predicted);
         bribesAutofilled = true;
-        hint.textContent = `↳ calculé : ${predicted.toLocaleString('fr-FR')} bribes`;
+        hint.textContent = `↳ calculé : ${fmtNum(predicted)} bribes`;
         hint.classList.remove('bad');
       } else if (current !== predicted) {
-        hint.textContent = `attendu ${predicted.toLocaleString('fr-FR')} — tu as saisi ${current.toLocaleString('fr-FR')}`;
+        hint.textContent = `attendu ${fmtNum(predicted)} — tu as saisi ${fmtNum(current)}`;
         hint.classList.add('bad');
       } else {
         hint.textContent = `↳ conforme au barème`;
@@ -6301,39 +7009,75 @@
       return v;
     }
 
-    // Saisie du butin : chiffres seuls, bascule quand le champ est plein ou sur Entrée
-    function setupLootInputs() {
-      const ids = ['r-bribes', 'r-runes', 'r-legend'];
-      const els = ids.map(i => document.getElementById(i));
+    // La chaîne de saisie du butin inclut un champ par rune suivie ; elle est
+    // reconstruite à chaque ouverture puisque la liste des runes peut changer.
+    function lootChain() {
+      return [document.getElementById('r-bribes')]
+        .concat([...document.querySelectorAll('#r-runes-grid input')])
+        .concat([document.getElementById('r-legend')]);
+    }
+    function nextLootField(el) {
+      const c = lootChain();
+      return c[c.indexOf(el) + 1] || null;
+    }
+    function prevLootField(el) {
+      const c = lootChain();
+      const i = c.indexOf(el);
+      return i > 0 ? c[i - 1] : null;
+    }
 
-      els.forEach((el, i) => {
-        const max = parseInt(el.getAttribute('maxlength'), 10);
-        el.addEventListener('input', () => {
-          el.value = el.value.replace(/\D/g, '').slice(0, max);
-          if (el.id === 'r-bribes') { bribesAutofilled = false; applyBribePrediction(); }
-          if (el.id === 'r-legend') syncQualities(true);
-          // bascule seulement quand le champ ne peut plus rien recevoir
-          if (el.value.length === max && els[i + 1]) {
-            els[i + 1].focus();
-            if (els[i + 1].select) els[i + 1].select();
-          }
-        });
-        el.addEventListener('keydown', e => {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-            if (els[i + 1]) { els[i + 1].focus(); if (els[i + 1].select) els[i + 1].select(); }
-            else el.blur();
-          }
-          if (e.key === 'Backspace' && el.value === '' && i > 0) {
-            e.preventDefault();
-            const prev = els[i - 1];
-            prev.focus();
-            prev.value = prev.value.slice(0, -1);
-            if (prev.id === 'r-legend') syncQualities(false);
-          }
-        });
-        el.addEventListener('focus', () => { if (el.select) el.select(); });
+    function wireLootField(el) {
+      if (el.dataset.wired) return;
+      el.dataset.wired = '1';
+      const max = parseInt(el.getAttribute('maxlength'), 10) || 3;
+      el.addEventListener('input', () => {
+        el.value = el.value.replace(/\D/g, '').slice(0, max);
+        if (el.id === 'r-bribes') { bribesAutofilled = false; applyBribePrediction(); }
+        if (el.id === 'r-legend') syncQualities(true);
+        const nxt = nextLootField(el);
+        if (el.value.length === max && nxt) { nxt.focus(); if (nxt.select) nxt.select(); }
       });
+      el.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const nxt = nextLootField(el);
+          if (nxt) { nxt.focus(); if (nxt.select) nxt.select(); } else el.blur();
+        }
+        if (e.key === 'Backspace' && el.value === '') {
+          const prev = prevLootField(el);
+          if (!prev) return;
+          e.preventDefault();
+          prev.focus();
+          prev.value = prev.value.slice(0, -1);
+          if (prev.id === 'r-legend') syncQualities(false);
+        }
+      });
+      el.addEventListener('focus', () => { if (el.select) el.select(); });
+    }
+    function setupLootInputs() { lootChain().forEach(wireLootField); }
+
+    function readRuneQty() {
+      const out = {};
+      document.querySelectorAll('#r-runes-grid input').forEach(el => {
+        const v = parseInt(el.value, 10) || 0;
+        if (v > 0) out[el.dataset.rune] = v;
+      });
+      return out;
+    }
+    function totalRunes(q) { return Object.values(q || {}).reduce((a, b) => a + b, 0); }
+
+    // Un champ de quantité par rune suivie
+    function renderRuneInputs(r) {
+      const box = document.getElementById('r-runes-grid');
+      const types = eco().runeTypes;
+      box.innerHTML = types.map(t => `
+        <div>
+          <div class="hint" style="margin:0 0 5px;">${escapeHtml(t.name)}</div>
+          <input type="text" data-rune="${t.id}" maxlength="3" inputmode="numeric"
+                 autocomplete="off" placeholder="0"
+                 value="${r && r.runeQty && r.runeQty[t.id] ? r.runeQty[t.id] : ''}" />
+        </div>`).join('');
+      box.querySelectorAll('input').forEach(wireLootField);
     }
 
     // Un emplacement par légende déclarée ; le classement vient du catalogue
@@ -6364,10 +7108,19 @@
               : '★'}</span>
           <span class="body">
             <span class="nm">${info.name ? escapeHtml(info.name) : 'Choisir une légende'}</span>
-            ${info.q ? `<span class="cls"><span class="qbadge ${info.q}">${QMAP[info.q].short || QMAP[info.q].label}</span></span>` : ''}
+            ${info.entry ? `<span class="cls">${info.q ? `<span class="qbadge ${info.q}">${QMAP[info.q].short || QMAP[info.q].label}</span> ` : ''}${info.entry.price ? `<b style="color:var(--gold-bright);">${fmtNum(info.entry.price)}</b> kamas` : ''}</span>` : ''}
           </span>
         </button>`;
       item.querySelector('button').addEventListener('click', () => { onPick(i); haptic(); });
+
+      // Sans prix, la légende ne compte pas dans la rentabilité : on le signale ici
+      if (info.entry && !info.entry.price) {
+        const warn = document.createElement('button');
+        warn.className = 'price-warn';
+        warn.innerHTML = `<span>⚠︎ Prix de vente non renseigné — cette légende ne compte pas dans tes kamas</span><span class="pw-cta">Renseigner</span>`;
+        warn.addEventListener('click', () => { openCatForm(info.entry.id); haptic(); });
+        item.appendChild(warn);
+      }
       return item;
     }
 
@@ -6437,7 +7190,7 @@
       document.getElementById('r-s').value = r && sec % 60 ? sec % 60 : '';
 
       document.getElementById('r-bribes').value = r && r.bribes ? r.bribes : '';
-      document.getElementById('r-runes').value = r && r.runes ? r.runes : '';
+      renderRuneInputs(r);
       document.getElementById('r-legend').value = r && r.legend ? r.legend : '';
       document.getElementById('r-note').value = r ? (r.note || '') : '';
       draftLegends = (r && Array.isArray(r.legends))
@@ -6501,7 +7254,8 @@
         wave: draftWave,
         intensity: draftIntensity,
         bribes: num('r-bribes'),
-        runes: num('r-runes'),
+        runeQty: readRuneQty(),
+        runes: totalRunes(readRuneQty()),
         legend: draftLegends.filter(l => l.catId || l.name).length,
         compoId: draftCompoId,
         excluded: draftExcluded,
@@ -6614,11 +7368,27 @@
     document.getElementById('btab-save').addEventListener('click', saveBtab);
     document.getElementById('btab-reset').addEventListener('click', resetBtab);
     ['bt-from', 'bt-at', 'bt-per'].forEach(id => {
-      document.getElementById(id).addEventListener('input', (e) => {
-        e.target.value = e.target.value.replace(/\D/g, '');
-        btabPreview();
-      });
+      const el = document.getElementById(id);
+      wireNumberInput(el);
+      el.addEventListener('input', btabPreview);
     });
+
+    document.getElementById('eco-cancel').addEventListener('click', () => {
+      document.getElementById('modal-eco').classList.remove('active');
+    });
+    document.getElementById('eco-save').addEventListener('click', saveEco);
+    document.getElementById('eco-add-rune').addEventListener('click', () => {
+      if (draftRunes.length >= 6) { toast('6 runes maximum'); return; }
+      draftRunes.push({ id: uid(), name: '', price: 0 });
+      paintEcoRunes();
+      haptic();
+    });
+    ['eco-rq', 'eco-rp'].forEach(id => {
+      const el = document.getElementById(id);
+      wireNumberInput(el);
+      el.addEventListener('input', ecoRefletPreview);
+    });
+    wireNumberInput(document.getElementById('cat-price'));
 
     document.getElementById('spend-cancel').addEventListener('click', () => {
       document.getElementById('modal-spend').classList.remove('active');
@@ -6626,9 +7396,7 @@
     });
     document.getElementById('spend-save').addEventListener('click', saveSpend);
     document.getElementById('spend-delete').addEventListener('click', deleteSpend);
-    document.getElementById('sp-amount').addEventListener('input', (e) => {
-      e.target.value = e.target.value.replace(/\D/g, '');
-    });
+    wireNumberInput(document.getElementById('sp-amount'));
 
     document.getElementById('pick-cancel').addEventListener('click', () => {
       document.getElementById('modal-pick').classList.remove('active');
@@ -6744,6 +7512,7 @@
       if (o.id === 'modal-pick') pickCtx = null;
       if (o.id === 'modal-spend') editingSpendId = null;
       if (o.id === 'modal-btab') editingBtab = null;
+      if (o.id === 'modal-eco') draftRunes = [];
       if (o.id === 'modal-confirm') confirmCb = null;
     }
 
