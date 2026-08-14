@@ -2458,6 +2458,182 @@
       .item-plus { width: 64px; font-size: 28px; }
       .wave-grid { grid-template-columns: repeat(6, 1fr); }
     }
+    /* ============ MODULE FARM ============ */
+    .chrono-card {
+      background: linear-gradient(160deg, var(--bg-card-hi), var(--bg-card));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+    .chrono-card.on { border-color: var(--gold-deep); box-shadow: var(--shadow-gold); }
+    .chrono-zone {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      font-weight: 700;
+      color: var(--text-dim);
+    }
+    .chrono-time {
+      font-family: var(--font-display);
+      font-size: 42px;
+      line-height: 1.15;
+      color: var(--gold-bright);
+      font-variant-numeric: tabular-nums;
+      margin: 2px 0 0;
+    }
+    .chrono-card.paused .chrono-time { color: var(--text-soft); }
+    .chrono-sub { font-size: 12.5px; color: var(--text-soft); min-height: 18px; }
+    .chrono-actions { display: flex; gap: 8px; margin-top: 12px; }
+    .chrono-actions .btn { flex: 1; }
+    .chrono-pick { margin-top: 10px; }
+    .chrono-pick select {
+      width: 100%;
+      background: var(--bg-elev);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      font-family: var(--font-body);
+      font-size: 15px;
+    }
+
+    .tgt-row {
+      display: grid;
+      grid-template-columns: 1fr 68px 96px 34px;
+      gap: 6px;
+      align-items: center;
+      margin-bottom: 7px;
+    }
+    .tgt-row select, .tgt-row input {
+      background: var(--bg-elev);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 9px 8px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      width: 100%;
+      min-width: 0;
+    }
+    .tgt-del {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      font-size: 17px;
+      padding: 4px;
+      cursor: pointer;
+    }
+    .tgt-head {
+      display: grid;
+      grid-template-columns: 1fr 68px 96px 34px;
+      gap: 6px;
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-dim);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .anom-tag, .bonus-tag {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 2px 8px;
+      margin-left: 8px;
+    }
+    .anom-tag { color: var(--purple); background: rgba(178, 136, 232, 0.14); }
+    .bonus-tag { color: var(--blue); background: var(--blue-soft); }
+
+    .res-line {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      margin-bottom: 7px;
+    }
+    .res-line:active { border-color: var(--border-hi); }
+    .res-line .rl-name { flex: 1; font-size: 14.5px; font-weight: 600; min-width: 0; }
+    .res-line .rl-sub { font-size: 11.5px; color: var(--text-dim); font-weight: 400; }
+    .res-line .rl-val { font-variant-numeric: tabular-nums; font-size: 13.5px; color: var(--gold); text-align: right; }
+    .res-line .rl-val .u { display: block; font-size: 11px; color: var(--text-dim); }
+    .res-line.noprice { border-color: rgba(239, 68, 68, 0.35); }
+
+    .cmp-table tr.per-row { cursor: pointer; }
+    .cmp-table tr.per-row:active td { background: var(--bg-card-hi); }
+    .cmp-table td.per-lbl .caret { color: var(--text-dim); font-size: 10px; margin-right: 5px; }
+    .cmp-table tr.cmp-detail td {
+      background: var(--bg-soft);
+      text-align: left;
+      white-space: normal;
+      padding: 10px 10px 12px;
+    }
+    .pd-head {
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-dim);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .pd-zone {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .pd-zone:last-child { border-bottom: none; }
+    .pd-rank { width: 16px; flex-shrink: 0; color: var(--text-dim); font-size: 11px; }
+    .pd-name { flex: 1; min-width: 0; font-size: 12.5px; font-weight: 600; }
+    .pd-meta { display: block; font-size: 11px; color: var(--text-dim); font-weight: 400; }
+    .pd-rate { flex-shrink: 0; font-variant-numeric: tabular-nums; font-size: 12.5px; color: var(--gold); }
+    .pd-zone.top .pd-rate { color: var(--green); font-weight: 700; }
+    .pd-note { font-size: 11.5px; color: var(--text-dim); margin-top: 8px; }
+
+    .pair-row {
+      display: flex;
+      align-items: stretch;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .pair-row.thin { opacity: 0.6; }
+    .pair-side {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      padding: 10px;
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+    }
+    .pair-side.win { border-color: rgba(74, 222, 128, 0.4); background: var(--green-soft); }
+    .ps-kind {
+      font-size: 9.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+      font-weight: 700;
+    }
+    .ps-name { font-size: 13px; font-weight: 600; }
+    .ps-rate { font-size: 15px; color: var(--gold); font-variant-numeric: tabular-nums; margin-top: 3px; }
+    .pair-side.win .ps-rate { color: var(--green); }
+    .ps-meta { font-size: 11px; color: var(--text-dim); }
+    .pair-sep {
+      align-self: center;
+      font-size: 11px;
+      color: var(--text-dim);
+      flex-shrink: 0;
+    }
   </style>
 </head>
 <body>
@@ -2473,6 +2649,7 @@
 
     <div class="module-switch">
       <button class="mod-btn active" data-mod="songes">☾ Songes</button>
+      <button class="mod-btn" data-mod="farm">⛏ Farm</button>
       <button class="mod-btn" data-mod="exos">⚒ Exos</button>
     </div>
 
@@ -2517,6 +2694,33 @@
         <div class="value kamas-num" id="stat-rate">—</div>
       </div>
     </div>
+
+    <div class="stats-bar six hidden" id="bar-farm">
+      <div class="stat">
+        <div class="label">Sessions</div>
+        <div class="value" id="fstat-sessions">0</div>
+      </div>
+      <div class="stat">
+        <div class="label">Temps</div>
+        <div class="value kamas-num" id="fstat-time">—</div>
+      </div>
+      <div class="stat">
+        <div class="label">Zones</div>
+        <div class="value kamas-num" id="fstat-zones">0</div>
+      </div>
+      <div class="stat">
+        <div class="label">Net</div>
+        <div class="value gold kamas-num" id="fstat-net">—</div>
+      </div>
+      <div class="stat">
+        <div class="label">Kamas/h</div>
+        <div class="value gold kamas-num" id="fstat-rate">—</div>
+      </div>
+      <div class="stat">
+        <div class="label">Donjons</div>
+        <div class="value kamas-num" id="fstat-dj">0</div>
+      </div>
+    </div>
   </header>
 
   <nav class="tabs hidden" data-mod="exos">
@@ -2530,6 +2734,13 @@
     <button class="tab" data-view="compos">Compos</button>
     <button class="tab" data-view="legends">Légendes</button>
     <button class="tab" data-view="sstats">Stats</button>
+  </nav>
+
+  <nav class="tabs hidden" data-mod="farm">
+    <button class="tab active" data-view="sessions">Sessions</button>
+    <button class="tab" data-view="zones">Zones</button>
+    <button class="tab" data-view="res">Ressources</button>
+    <button class="tab" data-view="fstats">Stats</button>
   </nav>
 
   <main>
@@ -2633,6 +2844,52 @@
         <div class="icon">📊</div>
         <div class="title">Pas encore de données</div>
         <div>Enregistre quelques runs pour voir les tendances</div>
+      </div>
+    </section>
+    <!-- Farm : Sessions -->
+    <section class="view" id="view-sessions">
+      <div id="chrono-box"></div>
+      <div id="list-farms"></div>
+      <div class="empty hidden" id="empty-farms">
+        <div class="icon">⛏</div>
+        <div class="title">Aucune session de farm</div>
+        <div>Lance le chrono avant de partir farmer</div>
+      </div>
+    </section>
+
+    <!-- Farm : Zones -->
+    <section class="view" id="view-zones">
+      <div id="zone-versus"></div>
+      <div id="zone-pairs"></div>
+      <button class="btn btn-primary" id="add-zone" style="width:100%;margin-bottom:12px;">+ Nouvelle zone</button>
+      <div class="note-box" id="zone-note"></div>
+      <div id="list-zones"></div>
+      <div class="empty hidden" id="empty-zones">
+        <div class="icon">🗺</div>
+        <div class="title">Aucune zone enregistrée</div>
+        <div>Crée tes zones et donjons pour pouvoir les comparer</div>
+      </div>
+    </section>
+
+    <!-- Farm : Ressources -->
+    <section class="view" id="view-res">
+      <button class="price-alert hidden" id="res-alert"></button>
+      <button class="btn btn-primary" id="add-res" style="width:100%;margin-bottom:12px;">+ Nouvelle ressource</button>
+      <div id="res-body"></div>
+    </section>
+
+    <!-- Farm : Stats -->
+    <section class="view" id="view-fstats">
+      <div class="subtabs" id="fstats-subtabs">
+        <button class="sub-btn on" data-f="general">Général</button>
+        <button class="sub-btn" data-f="kamas">Kamas</button>
+        <button class="sub-btn" data-f="anomalies">Anomalies</button>
+      </div>
+      <div id="fstats-body"></div>
+      <div class="empty hidden" id="empty-fstats">
+        <div class="icon">📊</div>
+        <div class="title">Pas encore de données</div>
+        <div>Enregistre quelques sessions pour voir les tendances</div>
       </div>
     </section>
   </main>
@@ -3145,12 +3402,239 @@
 
   <div class="toast" id="toast"></div>
 
+  <!-- Modal: Session de farm -->
+  <div class="modal-overlay" id="modal-farm">
+    <div class="modal">
+      <button class="modal-grip" aria-label="Fermer"></button>
+      <div class="modal-head">
+        <h2 id="farm-title">Nouvelle session</h2>
+        <button class="trash-btn hidden" id="farm-delete" aria-label="Supprimer cette session">🗑</button>
+      </div>
+
+      <div class="field">
+        <label>Date</label>
+        <input type="date" id="f-date" />
+      </div>
+
+      <div class="field">
+        <label>Durée de farm</label>
+        <div class="dur-row">
+          <div class="dur-cell narrow">
+            <input type="text" id="f-h" maxlength="1" placeholder="0" inputmode="numeric" autocomplete="off" />
+            <span class="u">h</span>
+          </div>
+          <div class="dur-cell">
+            <input type="text" id="f-m" maxlength="2" placeholder="0" inputmode="numeric" autocomplete="off" />
+            <span class="u">min</span>
+          </div>
+          <div class="dur-cell">
+            <input type="text" id="f-s" maxlength="2" placeholder="0" inputmode="numeric" autocomplete="off" />
+            <span class="u">sec</span>
+          </div>
+        </div>
+        <div class="dur-preview" id="f-dur-preview"></div>
+      </div>
+
+      <div class="field">
+        <label>Zone farmée</label>
+        <div class="compo-select" id="f-zone-list"></div>
+        <button class="btn btn-secondary" id="f-new-zone" style="width:100%;margin-top:8px;">+ Créer une zone</button>
+      </div>
+
+      <div class="field">
+        <label>Bonus de drop de la zone</label>
+        <div class="dur-row">
+          <div class="dur-cell">
+            <input type="text" id="f-bonus" maxlength="2" placeholder="0" inputmode="numeric" autocomplete="off" />
+            <span class="u">%</span>
+          </div>
+          <div class="dur-cell hidden" id="f-dj-cell">
+            <input type="text" id="f-dj" maxlength="3" placeholder="0" inputmode="numeric" autocomplete="off" />
+            <span class="u">donjons</span>
+          </div>
+        </div>
+        <div class="dur-preview" id="f-mult-preview"></div>
+      </div>
+
+      <div class="field">
+        <button class="toggle-row neutral" id="f-anomaly">
+          <span class="box">✓</span>
+          <span class="txt">
+            <span class="t1">Zone sous anomalie</span>
+            <span class="t2">Le bonus de zone est alors remplacé par le bonus fixe de l'anomalie.</span>
+          </span>
+        </button>
+      </div>
+
+      <div class="field">
+        <label>Ressources ciblées</label>
+        <div class="tgt-head" id="f-tgt-head">
+          <span>Ressource</span><span>Qté</span><span>Prix/u</span><span></span>
+        </div>
+        <div id="f-targets"></div>
+        <button class="btn btn-secondary" id="f-add-target" style="width:100%;margin-top:4px;">+ Ajouter une ressource</button>
+        <div class="hint">Le prix saisi met à jour le catalogue.</div>
+      </div>
+
+      <div class="field">
+        <label>Total obtenu <span style="color:var(--text-dim);font-weight:400;">(butin complet, kamas)</span></label>
+        <input type="text" id="f-gross" placeholder="0" inputmode="numeric" autocomplete="off" />
+        <div class="dur-preview" id="f-gross-hint"></div>
+      </div>
+
+      <div class="field">
+        <label>Coûts de la session</label>
+        <div class="dur-row">
+          <div class="dur-cell">
+            <input type="text" id="f-potions" maxlength="2" placeholder="0" inputmode="numeric" autocomplete="off" />
+            <span class="u">potions</span>
+          </div>
+          <div class="dur-cell">
+            <input type="text" id="f-extra" placeholder="0" inputmode="numeric" autocomplete="off" />
+            <span class="u">autres</span>
+          </div>
+        </div>
+        <div class="dur-preview" id="f-cost-hint"></div>
+      </div>
+
+      <div class="field">
+        <label>Note <span style="color:var(--text-dim);font-weight:400;">(optionnel)</span></label>
+        <input type="text" id="f-note" placeholder="Ex : mauvais spawn, beaucoup d'agros" maxlength="80" />
+      </div>
+
+      <div class="field">
+        <button class="toggle-row" id="f-excluded">
+          <span class="box">✓</span>
+          <span class="txt">
+            <span class="t1">Exclure des statistiques</span>
+            <span class="t2">La session reste dans l'historique mais ne compte ni dans les moyennes ni dans le comparatif de zones.</span>
+          </span>
+        </button>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="farm-cancel">Annuler</button>
+        <button class="btn btn-primary" id="farm-save">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Zone de farm -->
+  <div class="modal-overlay" id="modal-zone">
+    <div class="modal">
+      <button class="modal-grip" aria-label="Fermer"></button>
+      <div class="modal-head">
+        <h2 id="zone-title">Nouvelle zone</h2>
+        <button class="trash-btn hidden" id="zone-delete" aria-label="Supprimer cette zone">🗑</button>
+      </div>
+
+      <div class="field">
+        <label>Nom</label>
+        <input type="text" id="z-name" placeholder="Ex : Donjon des Wabbits" maxlength="40" />
+      </div>
+
+      <div class="field">
+        <label>Type</label>
+        <div class="intens-grid" id="z-kinds"></div>
+      </div>
+
+      <div class="field hidden" id="z-link-field">
+        <label>Zone qui l'entoure</label>
+        <select id="z-link"></select>
+        <div class="hint">Permet de comparer directement ce donjon à la zone qu'on pourrait farmer à la place.</div>
+      </div>
+
+      <div class="field">
+        <label>Niveau <span style="color:var(--text-dim);font-weight:400;">(optionnel)</span></label>
+        <input type="text" id="z-level" placeholder="Ex : 180" maxlength="3" inputmode="numeric" autocomplete="off" />
+      </div>
+
+      <div class="field">
+        <button class="toggle-row neutral" id="z-hidden">
+          <span class="box">✓</span>
+          <span class="txt">
+            <span class="t1">Masquer du comparatif</span>
+            <span class="t2">Pour les zones testées une seule fois. Ses sessions comptent toujours dans les stats globales.</span>
+          </span>
+        </button>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="zone-cancel">Annuler</button>
+        <button class="btn btn-primary" id="zone-save">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Ressource -->
+  <div class="modal-overlay" id="modal-res">
+    <div class="modal">
+      <button class="modal-grip" aria-label="Fermer"></button>
+      <div class="modal-head">
+        <h2 id="res-title">Nouvelle ressource</h2>
+        <button class="trash-btn hidden" id="res-delete" aria-label="Supprimer cette ressource">🗑</button>
+      </div>
+
+      <div class="field">
+        <label>Nom</label>
+        <input type="text" id="rs-name" placeholder="Ex : Peau de Bouftou" maxlength="50" />
+      </div>
+
+      <div class="field">
+        <label>Prix unitaire HDV</label>
+        <input type="text" id="rs-price" placeholder="0" inputmode="numeric" autocomplete="off" />
+        <div class="hint" id="rs-price-hint"></div>
+      </div>
+
+      <div class="field">
+        <button class="toggle-row neutral" id="rs-flat">
+          <span class="box">✓</span>
+          <span class="txt">
+            <span class="t1">Insensible au bonus de drop</span>
+            <span class="t2">Pour les fragments d'anomalie et assimilés : leur taux ne suit ni le bonus de zone ni la prospection, donc ils sont sortis du rendement normalisé.</span>
+          </span>
+        </button>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="res-cancel">Annuler</button>
+        <button class="btn btn-primary" id="res-save">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Réglages du farm -->
+  <div class="modal-overlay" id="modal-fcfg">
+    <div class="modal">
+      <button class="modal-grip" aria-label="Fermer"></button>
+      <div class="modal-head"><h2>Réglages du farm</h2></div>
+
+      <div class="field">
+        <label>Bonus de drop d'une anomalie</label>
+        <input type="text" id="fc-anom" placeholder="120" maxlength="3" inputmode="numeric" autocomplete="off" />
+        <div class="hint">En pourcentage. Sert à ramener les sessions sous anomalie à un rendement comparable aux autres.</div>
+      </div>
+
+      <div class="field">
+        <label>Prix d'une potion / d'un élixir</label>
+        <input type="text" id="fc-potion" placeholder="0" inputmode="numeric" autocomplete="off" />
+        <div class="hint">Multiplié par le nombre de potions saisi sur chaque session.</div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="fcfg-cancel">Annuler</button>
+        <button class="btn btn-primary" id="fcfg-save">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     // ============================================================
     // ÉTAT & PERSISTANCE
     // ============================================================
     const STORAGE_KEY = 'dofus-exos-v1';
-    let state = { items: [], songes: [], compos: [], chests: [], catalogue: [], spends: [], settings: {} };
+    let state = { items: [], songes: [], compos: [], chests: [], catalogue: [], spends: [],
+                  farms: [], zones: [], resources: [], settings: {} };
     let currentDetailId = null;
     let editingId = null;
     let confirmCb = null;
@@ -3166,6 +3650,10 @@
         if (!Array.isArray(state.chests)) state.chests = [];
         if (!Array.isArray(state.catalogue)) state.catalogue = [];
         if (!Array.isArray(state.spends)) state.spends = [];
+        if (!Array.isArray(state.farms)) state.farms = [];
+        if (!Array.isArray(state.zones)) state.zones = [];
+        if (!Array.isArray(state.resources)) state.resources = [];
+
         if (!state.settings || typeof state.settings !== 'object') state.settings = {};
         collapsedDays = new Set(Array.isArray(state.settings.collapsedDays) ? state.settings.collapsedDays : []);
         if (state.settings.bribesOffset != null && !state.settings.goal) {
@@ -3174,6 +3662,7 @@
         }
 
         let migrated = false;
+        farmPriceMigration();
 
         // Migration : légendaires → références au catalogue
         const ensureCat = (name, q) => {
@@ -3258,10 +3747,24 @@
           }
         });
         if (migrated) save();
-      } catch (e) { state = { items: [], songes: [], compos: [], chests: [], catalogue: [], spends: [], settings: {} }; }
+      } catch (e) { state = { items: [], songes: [], compos: [], chests: [], catalogue: [], spends: [],
+                              farms: [], zones: [], resources: [], settings: {} }; }
     }
     function save() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+    // Le prix d'une ressource est figé au moment de la session : sans ça, changer
+    // un prix aujourd'hui revaloriserait rétroactivement tout l'historique.
+    function farmPriceMigration() {
+      let changed = false;
+      (state.farms || []).forEach(f => (f.targets || []).forEach(t => {
+        if (t.price == null) {
+          const r = (state.resources || []).find(x => x.id === t.resId);
+          t.price = r ? (r.price || 0) : 0;
+          changed = true;
+        }
+      }));
+      return changed;
     }
     function uid() {
       return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
@@ -3327,10 +3830,14 @@
       if (avg <= 0 || !item.chance) return null;
       return (item.baseCost || 0) + avg * item.chance;
     }
+    // Les zéros de fin ne se coupent qu'après la virgule : sinon 600 000 s'affichait « 6k »
+    function trimDec(s) {
+      return s.includes('.') ? s.replace(/0+$/, '').replace(/\.$/, '') : s;
+    }
     function fmtK(n) {
       n = Math.round(n || 0);
-      if (Math.abs(n) >= 1000000) return (n / 1000000).toFixed(n % 1000000 === 0 ? 0 : 2).replace(/\.?0+$/, '') + 'M';
-      if (Math.abs(n) >= 1000) return (n / 1000).toFixed(n % 1000 === 0 ? 0 : 1).replace(/\.?0+$/, '') + 'k';
+      if (Math.abs(n) >= 1000000) return trimDec((n / 1000000).toFixed(n % 1000000 === 0 ? 0 : 2)) + 'M';
+      if (Math.abs(n) >= 1000) return trimDec((n / 1000).toFixed(n % 1000 === 0 ? 0 : 1)) + 'k';
       return String(n);
     }
     // Espace insécable tous les 3 chiffres : 100 000 000 se lit d'un coup d'œil
@@ -3383,6 +3890,7 @@
       renderArchive();
       renderRanking();
       renderSonges();
+      renderFarm();
     }
 
     function renderStats() {
@@ -3928,8 +4436,32 @@
                 chests: Array.isArray(data.chests) ? data.chests : [],
                 catalogue: Array.isArray(data.catalogue) ? data.catalogue : [],
                 spends: Array.isArray(data.spends) ? data.spends : [],
+                farms: Array.isArray(data.farms) ? data.farms : [],
+                zones: Array.isArray(data.zones) ? data.zones : [],
+                resources: Array.isArray(data.resources) ? data.resources : [],
                 settings: (data.settings && typeof data.settings === 'object') ? data.settings : {},
               };
+              // Farm : on re-sécurise les collections avant tout calcul
+              state.zones = state.zones
+                .filter(z => z && typeof z === 'object' && z.name)
+                .map(z => ({ id: z.id || uid(), name: String(z.name).slice(0, 40),
+                             kind: z.kind === 'donjon' ? 'donjon' : 'zone',
+                             level: Math.max(0, parseInt(z.level, 10) || 0) || null,
+                             linkId: z.linkId || null,
+                             hidden: !!z.hidden, createdAt: z.createdAt || Date.now() }));
+              state.resources = state.resources
+                .filter(r => r && typeof r === 'object' && r.name)
+                .map(r => ({ id: r.id || uid(), name: String(r.name).slice(0, 50),
+                             price: Math.max(0, parseInt(r.price, 10) || 0),
+                             flat: !!r.flat, createdAt: r.createdAt || Date.now() }));
+              state.farms = state.farms
+                .filter(s => s && typeof s === 'object')
+                .map(s => ({ ...s, id: s.id || uid(), date: s.date || todayISO(),
+                             targets: (Array.isArray(s.targets) ? s.targets : [])
+                               .filter(t => t && t.resId)
+                               .map(t => ({ resId: t.resId, qty: Math.max(0, parseInt(t.qty, 10) || 0),
+                                            price: t.price == null ? null : Math.max(0, parseInt(t.price, 10) || 0) })) }));
+              farmPriceMigration();
               // re-sécurise les champs essentiels
               state.items.forEach(it => { if (!it.purchases) it.purchases = []; });
               state.compos.forEach(c => {
@@ -4034,9 +4566,12 @@
     }
 
     function clearAllData() {
-      confirmDialog('Tout effacer ?', 'Tous tes exos, tes compos, tes runs, tes coffres et ton catalogue seront définitivement supprimés.', () => {
-        state = { items: [], songes: [], compos: [], chests: [], catalogue: [], spends: [], settings: {} };
+      confirmDialog('Tout effacer ?', 'Tous tes exos, tes compos, tes runs, tes coffres, ton catalogue et tes sessions de farm seront définitivement supprimés.', () => {
+        state = { items: [], songes: [], compos: [], chests: [], catalogue: [], spends: [],
+                  farms: [], zones: [], resources: [], settings: {} };
+        stopTick();
         draftCompoId = null;
+        draftZoneId = null;
         save();
         render();
         renderCompoSelect();
@@ -6820,6 +7355,8 @@
       const kamas = `
         ${profitCard(runs)}
 
+        ${activityCompareCard()}
+
         ${priceSettingsCard()}
       `;
 
@@ -7298,8 +7835,15 @@
       document.querySelectorAll('nav.tabs').forEach(n => n.classList.toggle('hidden', n.dataset.mod !== mod));
       document.getElementById('bar-exos').classList.toggle('hidden', mod !== 'exos');
       document.getElementById('bar-songes').classList.toggle('hidden', mod !== 'songes');
-      document.getElementById('app-title').textContent = mod === 'exos' ? 'Exo' : 'Songes Infinis';
-      document.getElementById('app-sub').textContent = mod === 'exos' ? 'Forgemagie' : 'Rendement & compos';
+      document.getElementById('bar-farm').classList.toggle('hidden', mod !== 'farm');
+      const heads = {
+        exos: ['Exo', 'Forgemagie'],
+        farm: ['Farm', 'Rentabilité des zones'],
+        songes: ['Songes Infinis', 'Rendement & compos'],
+      };
+      const head = heads[mod] || heads.songes;
+      document.getElementById('app-title').textContent = head[0];
+      document.getElementById('app-sub').textContent = head[1];
 
       const nav = document.querySelector(`nav.tabs[data-mod="${mod}"]`);
       const activeTab = nav.querySelector('.tab.active') || nav.querySelector('.tab');
@@ -7307,6 +7851,1664 @@
       document.querySelectorAll('.view').forEach(s => s.classList.remove('active'));
       document.getElementById('view-' + activeTab.dataset.view).classList.add('active');
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ============================================================
+    // MODULE : FARM
+    // ============================================================
+    // Une session de farm = une zone, une durée, un butin. Tout l'enjeu est de
+    // rendre deux sessions comparables : le bonus de drop de la zone monte
+    // progressivement, et une anomalie le remplace par un bonus fixe. Sans
+    // normalisation, un classement de zones mesurerait surtout le timing.
+    const ZONE_KINDS = [
+      { k: 'zone', label: 'Zone' },
+      { k: 'donjon', label: 'Donjon' },
+    ];
+    const MAX_ZONE_BONUS = 90;      // le bonus naturel plafonne avant de déclencher l'anomalie
+    const ANOMALY_BONUS = 120;      // bonus fixe d'une anomalie active, surchargeable
+    const FARM_MIN = 3;             // en-dessous, une zone n'est pas interprétable
+    const FARM_GOOD = 8;
+
+    let editingFarmId = null;
+    let editingZoneId = null;
+    let editingResId = null;
+    let draftZoneId = null;
+    let draftAnomaly = false;
+    let draftFarmExcluded = false;
+    let draftTargets = [];
+    let draftZoneKind = 'zone';
+    let draftZoneHidden = false;
+    let draftResFlat = false;
+    let chronoTimer = null;
+    let zoneReturnToFarm = false;
+    let resReturnToIndex = null;
+
+    function farmCfg() {
+      const f = (state.settings && state.settings.farm) || {};
+      const a = parseInt(f.anomalyBonus, 10);
+      return {
+        anomalyBonus: isNaN(a) ? ANOMALY_BONUS : Math.max(0, a),
+        potionPrice: Math.max(0, parseInt(f.potionPrice, 10) || 0),
+      };
+    }
+    function zoneById(id) { return id ? (state.zones || []).find(z => z.id === id) || null : null; }
+    function resById(id) { return id ? (state.resources || []).find(r => r.id === id) || null : null; }
+    function zoneLabel(z) {
+      if (!z) return 'Zone non renseignée';
+      return (z.name && z.name.trim()) || 'Sans nom';
+    }
+    function zoneKindLabel(z) {
+      const k = ZONE_KINDS.find(x => x.k === (z && z.kind));
+      return k ? k.label : 'Zone';
+    }
+
+    // Multiplicateur de drop subi par la session. L'anomalie ne s'ajoute pas au
+    // bonus de zone : elle le remplace.
+    function dropMult(s) {
+      if (!s) return 1;
+      if (s.anomaly) return 1 + farmCfg().anomalyBonus / 100;
+      return 1 + Math.max(0, Math.min(MAX_ZONE_BONUS, s.bonus || 0)) / 100;
+    }
+    function sessionCost(s) {
+      return (s.potions || 0) * farmCfg().potionPrice + (s.extraCost || 0);
+    }
+    // Prix retenu pour une ligne : celui figé à la session, sinon le catalogue
+    function targetPrice(t) {
+      if (t && t.price != null) return Math.max(0, t.price);
+      const r = resById(t && t.resId);
+      return r ? (r.price || 0) : 0;
+    }
+    // Valeur des seules ressources détaillées
+    function targetsValue(s) {
+      return (s.targets || []).reduce((t, x) => t + targetPrice(x) * (x.qty || 0), 0);
+    }
+    // Le total saisi fait foi : c'est le seul chiffre qui couvre tout le butin
+    function sessionGross(s) {
+      return (s.gross || 0) > 0 ? s.gross : targetsValue(s);
+    }
+    function sessionNet(s) { return sessionGross(s) - sessionCost(s); }
+    function farmHours(s) { return (s.durationSec || 0) / 3600; }
+    function grossRate(s) { const h = farmHours(s); return h > 0 ? sessionGross(s) / h : null; }
+    function netRate(s) { const h = farmHours(s); return h > 0 ? sessionNet(s) / h : null; }
+    // Rendement ramené à 0 % de bonus : le seul chiffre comparable entre zones.
+    // Les ressources insensibles au bonus sont sorties avant division.
+    function normRate(s) {
+      const h = farmHours(s);
+      if (h <= 0) return null;
+      const flat = (s.targets || []).reduce((t, x) => {
+        const r = resById(x.resId);
+        return t + (r && r.flat ? targetPrice(x) * (x.qty || 0) : 0);
+      }, 0);
+      const scalable = Math.max(0, sessionGross(s) - flat);
+      return (scalable / dropMult(s) + flat) / h;
+    }
+    function farmSessions() { return (state.farms || []).filter(s => !s.excluded); }
+    function sortedFarms() {
+      return [...(state.farms || [])].sort((a, b) =>
+        (a.date || '').localeCompare(b.date || '') || (a.createdAt || 0) - (b.createdAt || 0));
+    }
+    function sessionsOfZone(id) { return farmSessions().filter(s => s.zoneId === id); }
+    function farmConfigured() {
+      return (state.resources || []).some(r => (r.price || 0) > 0)
+        || (state.farms || []).some(s => (s.gross || 0) > 0);
+    }
+    function unpricedResources() {
+      const used = new Set();
+      (state.farms || []).forEach(s => (s.targets || []).forEach(t => { if (t.qty > 0) used.add(t.resId); }));
+      return (state.resources || []).filter(r => used.has(r.id) && !(r.price > 0));
+    }
+
+    function zoneStats(z) {
+      const runs = sessionsOfZone(z.id);
+      const nets = runs.map(netRate).filter(v => v != null);
+      const norms = runs.map(normRate).filter(v => v != null);
+      const totalSec = runs.reduce((s, r) => s + (r.durationSec || 0), 0);
+      const dungeons = runs.reduce((s, r) => s + (r.dungeons || 0), 0);
+      // cadence : combien de donjons enchaînés, et en combien de temps chacun
+      const timedDj = runs.filter(r => (r.dungeons || 0) > 0);
+      const djSec = timedDj.reduce((s, r) => s + (r.durationSec || 0), 0);
+      const djCount = timedDj.reduce((s, r) => s + (r.dungeons || 0), 0);
+      return {
+        dungeons,
+        perDungeon: djCount > 0 ? djSec / djCount : null,
+        dungeonsPerHour: djSec > 0 && djCount > 0 ? djCount / (djSec / 3600) : null,
+        zone: z,
+        n: runs.length,
+        runs,
+        medNet: median(nets),
+        avgNet: nets.length ? mean(nets) : null,
+        minNet: nets.length ? Math.min(...nets) : null,
+        maxNet: nets.length ? Math.max(...nets) : null,
+        medNorm: median(norms),
+        totalSec,
+        totalNet: runs.reduce((s, r) => s + sessionNet(r), 0),
+        totalCost: runs.reduce((s, r) => s + sessionCost(r), 0),
+        avgSec: runs.length ? totalSec / runs.length : null,
+        avgBonus: runs.length ? mean(runs.map(r => r.anomaly ? farmCfg().anomalyBonus : (r.bonus || 0))) : null,
+        anomalies: runs.filter(r => r.anomaly).length,
+      };
+    }
+
+    // ---- Chronomètre ----
+    function liveSession() { return (state.settings && state.settings.live) || null; }
+    function liveElapsed() {
+      const l = liveSession();
+      if (!l) return 0;
+      return Math.max(0, Math.round((l.accum || 0) + (l.since ? (Date.now() - l.since) / 1000 : 0)));
+    }
+    function tickChrono() {
+      if (chronoTimer) return;
+      chronoTimer = setInterval(() => {
+        const l = liveSession();
+        if (!l || !l.since) { stopTick(); return; }
+        const el = document.getElementById('chrono-time');
+        if (el) el.textContent = fmtChrono(liveElapsed());
+      }, 1000);
+    }
+    function stopTick() {
+      if (chronoTimer) { clearInterval(chronoTimer); chronoTimer = null; }
+    }
+    function fmtChrono(sec) {
+      sec = Math.max(0, Math.round(sec || 0));
+      const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), s = sec % 60;
+      return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+    function startLive(zoneId) {
+      state.settings.live = { zoneId: zoneId || null, accum: 0, since: Date.now(), startISO: todayISO() };
+      save();
+      renderChrono();
+      tickChrono();
+    }
+    function pauseLive() {
+      const l = liveSession();
+      if (!l || !l.since) return;
+      l.accum = (l.accum || 0) + (Date.now() - l.since) / 1000;
+      l.since = null;
+      save();
+      stopTick();
+      renderChrono();
+    }
+    function resumeLive() {
+      const l = liveSession();
+      if (!l || l.since) return;
+      l.since = Date.now();
+      save();
+      renderChrono();
+      tickChrono();
+    }
+    function finishLive() {
+      const l = liveSession();
+      if (!l) return;
+      openFarmForm(null, { durationSec: liveElapsed(), zoneId: l.zoneId, date: l.startISO });
+    }
+    function discardLive() {
+      confirmDialog('Abandonner la session ?', 'Le temps déjà écoulé sera perdu.', () => {
+        delete state.settings.live;
+        save();
+        stopTick();
+        renderChrono();
+        toast('Session abandonnée');
+      });
+    }
+
+    function renderChrono() {
+      const box = document.getElementById('chrono-box');
+      if (!box) return;
+      const l = liveSession();
+      const zones = state.zones || [];
+
+      if (!l) {
+        box.innerHTML = `<div class="chrono-card">
+          <div class="chrono-zone">Chronomètre</div>
+          <div class="chrono-time">0:00:00</div>
+          <div class="chrono-sub">Lance-le en arrivant sur la zone.</div>
+          ${zones.length ? `<div class="chrono-pick"><select id="chrono-zone">
+            <option value="">Zone à choisir plus tard</option>
+            ${zones.map(z => `<option value="${z.id}"${state.settings.lastZone === z.id ? ' selected' : ''}>${escapeHtml(zoneLabel(z))}</option>`).join('')}
+          </select></div>` : `<div class="chrono-pick"><div class="hint">Crée une zone dans l'onglet Zones pour la rattacher.</div></div>`}
+          <div class="chrono-actions">
+            <button class="btn btn-primary" id="chrono-start">▶ Démarrer</button>
+          </div>
+        </div>`;
+        const b = document.getElementById('chrono-start');
+        if (b) b.addEventListener('click', () => {
+          const sel = document.getElementById('chrono-zone');
+          startLive(sel ? sel.value : null);
+          haptic();
+        });
+        return;
+      }
+
+      const running = !!l.since;
+      const z = zoneById(l.zoneId);
+      box.innerHTML = `<div class="chrono-card on${running ? '' : ' paused'}">
+        <div class="chrono-zone">${running ? 'Session en cours' : 'En pause'}${z ? ' · ' + escapeHtml(zoneLabel(z)) : ''}</div>
+        <div class="chrono-time" id="chrono-time">${fmtChrono(liveElapsed())}</div>
+        <div class="chrono-sub">Démarrée le ${escapeHtml(fmtDateShort(l.startISO || todayISO()))}. Elle reste ouverte tant que tu ne la termines pas.</div>
+        ${zones.length ? `<div class="chrono-pick"><select id="chrono-zone">
+          <option value="">Zone non renseignée</option>
+          ${zones.map(zz => `<option value="${zz.id}"${l.zoneId === zz.id ? ' selected' : ''}>${escapeHtml(zoneLabel(zz))}</option>`).join('')}
+        </select></div>` : ''}
+        <div class="chrono-actions">
+          <button class="btn btn-secondary" id="chrono-toggle">${running ? '❙❙ Pause' : '▶ Reprendre'}</button>
+          <button class="btn btn-primary" id="chrono-finish">■ Terminer</button>
+        </div>
+        <div class="chrono-actions">
+          <button class="btn btn-secondary" id="chrono-discard" style="flex:1;">Abandonner</button>
+        </div>
+      </div>`;
+
+      document.getElementById('chrono-toggle').addEventListener('click', () => {
+        running ? pauseLive() : resumeLive();
+        haptic();
+      });
+      document.getElementById('chrono-finish').addEventListener('click', () => { finishLive(); haptic(); });
+      document.getElementById('chrono-discard').addEventListener('click', () => { discardLive(); haptic(); });
+      const sel = document.getElementById('chrono-zone');
+      if (sel) sel.addEventListener('change', () => {
+        const cur = liveSession();
+        if (cur) { cur.zoneId = sel.value || null; save(); renderChrono(); }
+      });
+      if (running) tickChrono();
+    }
+
+    // ---- Liste des sessions ----
+    function farmCardEl(s, medNet) {
+      const z = zoneById(s.zoneId);
+      const net = netRate(s);
+      let cls = '';
+      if (medNet != null && net != null && !s.excluded) {
+        if (net > medNet * 1.05) cls = ' green';
+        else if (net < medNet * 0.95) cls = ' red';
+      }
+      const tags = [];
+      if (s.anomaly) tags.push('<span class="anom-tag">anomalie</span>');
+      else if (s.bonus) tags.push(`<span class="bonus-tag">+${s.bonus}%</span>`);
+      if (s.dungeons > 0) tags.push(`<span class="bonus-tag">${s.dungeons} dj</span>`);
+
+      const loot = (s.targets || []).filter(t => t.qty > 0).map(t => {
+        const r = resById(t.resId);
+        return `<span class="lchip">${escapeHtml(r ? r.name : 'ressource')} <b>${fmtNum(t.qty)}</b></span>`;
+      });
+      const cost = sessionCost(s);
+
+      const card = document.createElement('div');
+      card.className = 'run-card' + (s.excluded ? ' excluded' : '');
+      card.innerHTML = `
+        <div class="run-top">
+          <span class="run-date">${escapeHtml(fmtDateShort(s.date))}${s.excluded ? '<span class="excl-tag">hors stats</span>' : ''}${tags.join('')}</span>
+          <span class="run-wave">${escapeHtml(zoneLabel(z))}</span>
+        </div>
+        <div class="run-metrics rich">
+          <div class="rmetric"><div class="lbl">Durée</div><div class="val">${fmtDurPrecise(s.durationSec)}</div></div>
+          <div class="rmetric"><div class="lbl">Butin</div><div class="val gold">${fmtNum(sessionGross(s))}</div></div>
+          <div class="rmetric"><div class="lbl">Coûts</div><div class="val">${cost ? '-' + fmtNum(cost) : '—'}</div></div>
+          <div class="rmetric wide"><div class="lbl">Kamas/h net</div><div class="val${cls}">${net != null ? fmtNum(net) : '—'}</div></div>
+          <div class="rmetric"><div class="lbl">${s.dungeons > 0 ? 'Par donjon' : 'Normalisé'}</div><div class="val">${s.dungeons > 0
+            ? fmtDurPrecise((s.durationSec || 0) / s.dungeons)
+            : (normRate(s) != null ? fmtNum(normRate(s)) : '—')}</div></div>
+        </div>
+        ${loot.length ? `<div class="loot-chips">${loot.join('')}</div>` : ''}
+        ${s.note ? `<div style="margin-top:9px;font-size:12px;color:var(--text-dim);">${escapeHtml(s.note)}</div>` : ''}
+      `;
+      card.addEventListener('click', () => openFarmForm(s.id));
+      return card;
+    }
+
+    function renderFarmList() {
+      const list = document.getElementById('list-farms');
+      const empty = document.getElementById('empty-farms');
+      if (!list) return;
+      list.innerHTML = '';
+      const all = sortedFarms().reverse();
+      if (!all.length) { empty.classList.remove('hidden'); return; }
+      empty.classList.add('hidden');
+      const medNet = median(farmSessions().map(netRate).filter(v => v != null));
+      all.forEach(s => list.appendChild(farmCardEl(s, medNet)));
+    }
+
+    // ---- Onglet Zones ----
+    function renderZones() {
+      const list = document.getElementById('list-zones');
+      const empty = document.getElementById('empty-zones');
+      const note = document.getElementById('zone-note');
+      if (!list) return;
+      list.innerHTML = '';
+
+      if (!(state.zones || []).length) {
+        empty.classList.remove('hidden');
+        note.classList.add('hidden');
+        document.getElementById('zone-versus').innerHTML = '';
+        document.getElementById('zone-pairs').innerHTML = '';
+        return;
+      }
+      empty.classList.add('hidden');
+      note.classList.remove('hidden');
+
+      const sortFn = (a, b) => {
+        if (!a.n && !b.n) return 0;
+        if (!a.n) return 1;
+        if (!b.n) return -1;
+        return (b.medNorm || 0) - (a.medNorm || 0);
+      };
+      const all = (state.zones || []).map(zoneStats);
+      const groups = all.filter(g => !g.zone.hidden).sort(sortFn);
+      const hiddenGroups = all.filter(g => g.zone.hidden).sort(sortFn);
+      const solid = groups.filter(g => g.n >= FARM_MIN);
+
+      let msg;
+      if (!groups.length) {
+        msg = `Toutes tes zones sont masquées du comparatif.`;
+      } else if (!groups.some(g => g.n > 0)) {
+        msg = `Tes zones sont enregistrées. Rattache-les à tes sessions et le classement se remplira tout seul.`;
+      } else if (!farmConfigured()) {
+        msg = `Il manque les prix : sans valeur de butin, aucune zone ne peut être comparée. Renseigne le total obtenu sur tes sessions ou le prix de tes ressources.`;
+      } else if (solid.length < 2) {
+        msg = `Il te faut au moins <b>${FARM_MIN} sessions</b> sur au moins deux zones pour que la comparaison veuille dire quelque chose. En dessous, tu mesures surtout la chance.`;
+      } else {
+        const [a, b] = solid;
+        const overlap = a.minNet != null && b.maxNet != null && a.minNet <= b.maxNet;
+        msg = overlap
+          ? `<b>${escapeHtml(zoneLabel(a.zone))}</b> mène au rendement normalisé, mais ses mauvaises sessions descendent sous les bonnes de <b>${escapeHtml(zoneLabel(b.zone))}</b> : l'écart n'est pas concluant. Continue à alterner.`
+          : `<b>${escapeHtml(zoneLabel(a.zone))}</b> sort devant <b>${escapeHtml(zoneLabel(b.zone))}</b> sur ${plural(a.n, 'session')}, sans chevauchement${a.n < FARM_GOOD ? `, mais ${FARM_GOOD} sessions le rendraient solide` : ''}.`;
+      }
+      note.innerHTML = msg;
+
+      renderZoneVersus(groups);
+      renderDungeonPairs();
+
+      let bestMarked = false;
+      const mk = (g, isHidden) => {
+        const unplayed = g.n === 0;
+        const thin = !unplayed && g.n < FARM_MIN;
+        const isBest = !isHidden && !unplayed && !thin && !bestMarked;
+        if (isBest) bestMarked = true;
+        const nCls = g.n >= FARM_GOOD ? 'ok' : ((thin || unplayed) ? 'low' : '');
+
+        const card = document.createElement('div');
+        card.className = 'compo-card' + (isBest ? ' best' : '') + (thin ? ' thin' : '')
+          + (unplayed ? ' unplayed' : '') + (isHidden ? ' hidden-compo' : '');
+        card.innerHTML = `
+          <div class="compo-head">
+            <div style="min-width:0;">
+              <div class="compo-name">${escapeHtml(zoneLabel(g.zone))}</div>
+              <div class="comp-chips">
+                <span class="cchip">${escapeHtml(zoneKindLabel(g.zone))}</span>
+                ${g.zone.level ? `<span class="cchip">niv. ${escapeHtml(String(g.zone.level))}</span>` : ''}
+                ${g.anomalies ? `<span class="cchip">${g.anomalies} sous anomalie</span>` : ''}
+              </div>
+            </div>
+            <span style="display:flex;flex-direction:column;gap:4px;align-items:flex-end;margin-top:30px;">
+              <span class="n-badge ${nCls}">${g.n} session${g.n > 1 ? 's' : ''}</span>
+              ${isHidden ? '<span class="hidden-tag">masquée</span>' : ''}
+            </span>
+          </div>
+          ${unplayed
+            ? `<div style="font-size:12.5px;color:var(--text-dim);margin-top:4px;">Jamais farmée pour l'instant.</div>`
+            : `<div class="compo-rate">${g.medNorm != null ? fmtNum(g.medNorm) : '—'} <span class="u">kamas/h normalisés</span></div>
+          <div class="detail-stats" style="margin-top:12px;">
+            <div class="dstat"><div class="lbl">Kamas/h net</div><div class="val small">${g.medNet != null ? fmtNum(g.medNet) : '—'}</div></div>
+            <div class="dstat"><div class="lbl">Net cumulé</div><div class="val gold small">${fmtNum(g.totalNet)}</div></div>
+            <div class="dstat"><div class="lbl">Durée moyenne</div><div class="val small">${g.avgSec != null ? fmtDurPrecise(g.avgSec) : '—'}</div></div>
+            <div class="dstat"><div class="lbl">Bonus moyen</div><div class="val small">${g.avgBonus != null ? Math.round(g.avgBonus) + '%' : '—'}</div></div>
+            <div class="dstat"><div class="lbl">Temps farmé</div><div class="val small">${fmtDur(g.totalSec)}</div></div>
+            ${g.dungeons > 0
+              ? `<div class="dstat"><div class="lbl">Donjons</div><div class="val small">${g.dungeons}</div></div>
+                 <div class="dstat"><div class="lbl">Temps/donjon</div><div class="val small">${g.perDungeon != null ? fmtDurPrecise(g.perDungeon) : '—'}</div></div>`
+              : `<div class="dstat"><div class="lbl">Coûts</div><div class="val small">${g.totalCost ? fmtNum(g.totalCost) : '—'}</div></div>`}
+          </div>`}
+        `;
+        card.addEventListener('click', () => openZoneForm(g.zone.id));
+        list.appendChild(card);
+      };
+      groups.forEach(g => mk(g, false));
+      hiddenGroups.forEach(g => mk(g, true));
+    }
+
+    function renderZoneVersus(groups) {
+      const box = document.getElementById('zone-versus');
+      if (!box) return;
+      const playable = groups.filter(g => g.n > 0);
+      if (playable.length < 2) { box.innerHTML = ''; return; }
+
+      const byUse = [...playable].sort((x, y) => y.n - x.n);
+      let a = playable.find(g => g.zone.id === state.settings.zvA) || byUse[0];
+      let b = playable.find(g => g.zone.id === state.settings.zvB) || byUse.find(g => g !== a);
+      if (a === b) b = byUse.find(g => g !== a);
+      if (!b) { box.innerHTML = ''; return; }
+
+      const opts = sel => playable.map(g =>
+        `<option value="${g.zone.id}"${g.zone.id === sel.zone.id ? ' selected' : ''}>${escapeHtml(zoneLabel(g.zone))}</option>`).join('');
+
+      const rows = [
+        { lbl: 'Sessions', va: a.n, vb: b.n, fmt: v => v, higher: null },
+        { lbl: 'Kamas/h normalisés', va: a.medNorm, vb: b.medNorm, fmt: v => v != null ? fmtNum(v) : '—', higher: true },
+        { lbl: 'Kamas/h net médian', va: a.medNet, vb: b.medNet, fmt: v => v != null ? fmtNum(v) : '—', higher: true },
+        { lbl: 'Net cumulé', va: a.totalNet, vb: b.totalNet, fmt: fmtNum, higher: null },
+        { lbl: 'Durée moyenne', va: a.avgSec, vb: b.avgSec, fmt: v => v != null ? fmtDurPrecise(v) : '—', higher: null },
+        { lbl: 'Bonus moyen', va: a.avgBonus, vb: b.avgBonus, fmt: v => v != null ? Math.round(v) + '%' : '—', higher: null },
+        { lbl: 'Temps/donjon', va: a.perDungeon, vb: b.perDungeon, fmt: v => v != null ? fmtDurPrecise(v) : '—', higher: false },
+        { lbl: 'Temps farmé', va: a.totalSec, vb: b.totalSec, fmt: fmtDur, higher: null },
+      ];
+
+      const cell = (v, other, higher, fmt) => {
+        if (v == null) return `<td class="lose">—</td>`;
+        if (higher == null || other == null || v === other) return `<td class="tie">${fmt(v)}</td>`;
+        const better = higher ? v > other : v < other;
+        const pct = other !== 0 ? Math.round(((v - other) / Math.abs(other)) * 100) : null;
+        const delta = better && pct !== null && Math.abs(pct) >= 1
+          ? ` <span class="cmp-delta up">${pct > 0 ? '+' : ''}${pct}%</span>` : '';
+        return `<td class="${better ? 'win' : 'lose'}">${fmt(v)}${delta}</td>`;
+      };
+
+      const thin = Math.min(a.n, b.n) < FARM_MIN;
+      const overlap = a.medNet != null && b.medNet != null
+        && Math.min(a.maxNet, b.maxNet) >= Math.max(a.minNet, b.minNet);
+      const lead = (a.medNorm || 0) >= (b.medNorm || 0) ? a : b;
+      const other = lead === a ? b : a;
+      const gap = other.medNorm ? Math.round(((lead.medNorm - other.medNorm) / other.medNorm) * 100) : null;
+
+      let verdict;
+      if (thin) {
+        verdict = `Avec ${plural(Math.min(a.n, b.n), 'session')} d'un côté, l'écart ne veut rien dire. Il en faut au moins ${FARM_MIN} sur chaque zone.`;
+      } else if (overlap) {
+        verdict = `<b>${escapeHtml(zoneLabel(lead.zone))}</b> mène de ${gap}%, mais les deux zones se chevauchent : certaines de ses sessions font moins bien que les meilleures de l'autre.`;
+      } else {
+        verdict = `<b>${escapeHtml(zoneLabel(lead.zone))}</b> devance <b>${escapeHtml(zoneLabel(other.zone))}</b> de <b>${gap}%</b> à bonus égal, sans chevauchement. L'écart tient.`;
+      }
+
+      box.innerHTML = `<div class="vs-card">
+        <div class="chart-title">Comparer deux zones</div>
+        <div class="vs-pick">
+          <select id="zv-a">${opts(a)}</select>
+          <span class="vs-sep">contre</span>
+          <select id="zv-b">${opts(b)}</select>
+        </div>
+        <div class="cmp-scroll">
+          <table class="cmp-table">
+            <tr class="cmp-head">
+              <th></th>
+              <th>${escapeHtml(zoneLabel(a.zone))}</th>
+              <th>${escapeHtml(zoneLabel(b.zone))}</th>
+            </tr>
+            ${rows.map(r => `<tr>
+              <td>${r.lbl}</td>
+              ${cell(r.va, r.vb, r.higher, r.fmt)}
+              ${cell(r.vb, r.va, r.higher, r.fmt)}
+            </tr>`).join('')}
+          </table>
+        </div>
+        <div class="insight${thin || overlap ? ' warn' : ''}">${verdict}</div>
+      </div>`;
+
+      const pick = (id, key) => {
+        const el = document.getElementById(id);
+        el.addEventListener('change', () => {
+          state.settings[key] = el.value;
+          if (state.settings.zvA === state.settings.zvB) {
+            const alt = playable.find(g => g.zone.id !== el.value);
+            state.settings[key === 'zvA' ? 'zvB' : 'zvA'] = alt ? alt.zone.id : null;
+          }
+          save();
+          renderZones();
+          haptic();
+        });
+      };
+      state.settings.zvA = a.zone.id;
+      state.settings.zvB = b.zone.id;
+      pick('zv-a', 'zvA');
+      pick('zv-b', 'zvB');
+    }
+
+    // ---- Donjon contre sa zone ----
+    // Un donjon se farme dans une zone qu'on pourrait farmer directement :
+    // la vraie question n'est pas « quel donjon » mais « donjon ou zone ».
+    function renderDungeonPairs() {
+      const box = document.getElementById('zone-pairs');
+      if (!box) return;
+      const stats = (state.zones || []).map(zoneStats);
+      const byId = id => stats.find(g => g.zone.id === id) || null;
+      const pairs = stats
+        .filter(g => g.zone.kind === 'donjon' && g.zone.linkId && byId(g.zone.linkId))
+        .map(g => ({ d: g, z: byId(g.zone.linkId) }))
+        .filter(p => p.d.n > 0 || p.z.n > 0);
+
+      const aggOf = kind => {
+        const rs = farmSessions().filter(s => {
+          const z = zoneById(s.zoneId);
+          return z && z.kind === kind;
+        });
+        const sec = rs.reduce((a, r) => a + (r.durationSec || 0), 0);
+        const net = rs.reduce((a, r) => a + sessionNet(r), 0);
+        const h = sec / 3600;
+        return { n: rs.length, sec, net, rate: h > 0 ? net / h : null,
+                 norm: median(rs.map(normRate).filter(v => v != null)) };
+      };
+      const dj = aggOf('donjon'), zn = aggOf('zone');
+
+      if (!pairs.length && !(dj.n && zn.n)) { box.innerHTML = ''; return; }
+
+      const cell = (v, other, fmt) => {
+        if (v == null) return `<td class="lose">—</td>`;
+        if (other == null || v === other) return `<td class="tie">${fmt(v)}</td>`;
+        return `<td class="${v > other ? 'win' : 'lose'}">${fmt(v)}</td>`;
+      };
+
+      const globalRows = (dj.n && zn.n) ? [
+        { lbl: 'Kamas/h net', va: dj.rate, vb: zn.rate, fmt: fmtNum, cmp: true },
+        { lbl: 'Normalisé', va: dj.norm, vb: zn.norm, fmt: fmtNum, cmp: true },
+        { lbl: 'Sessions', va: dj.n, vb: zn.n, fmt: v => v, cmp: false },
+        { lbl: 'Temps', va: dj.sec, vb: zn.sec, fmt: fmtDur, cmp: false },
+      ] : [];
+
+      const thinPairs = pairs.filter(p => Math.min(p.d.n, p.z.n) < FARM_MIN);
+      const solidPairs = pairs.filter(p => Math.min(p.d.n, p.z.n) >= FARM_MIN);
+
+      let verdict;
+      if (!pairs.length) {
+        verdict = `Aucun donjon n'est rattaché à sa zone pour l'instant. Ouvre un donjon dans la liste ci-dessous et choisis la zone qui l'entoure : tu pourras alors savoir laquelle des deux vaut ton heure.`;
+      } else if (!solidPairs.length) {
+        verdict = `Il te faut au moins ${FARM_MIN} sessions de chaque côté d'une paire pour trancher. Pour l'instant aucune n'y est.`;
+      } else {
+        const p = solidPairs[0];
+        const dWins = (p.d.medNet || 0) >= (p.z.medNet || 0);
+        const lo = Math.min(p.d.medNet || 0, p.z.medNet || 0);
+        const gap = lo > 0 ? Math.round((Math.abs((p.d.medNet || 0) - (p.z.medNet || 0)) / lo) * 100) : null;
+        verdict = `Sur <b>${escapeHtml(zoneLabel(p.d.zone))}</b>, ${dWins ? 'le donjon' : 'la zone'} l'emporte${gap != null ? ` de <b>${gap}%</b>` : ''}. `
+          + `Un donjon enchaîne des combats choisis mais impose ses allers-retours ; une zone se farme en continu mais avec des groupes subis. C'est cet arbitrage-là que le chiffre tranche, et il ne vaut que pour ta façon de jouer.`;
+      }
+
+      box.innerHTML = `<div class="vs-card">
+        <div class="chart-title">Donjon ou zone</div>
+        ${globalRows.length ? `<div class="cmp-scroll">
+          <table class="cmp-table">
+            <tr class="cmp-head"><th>Tous confondus</th><th>Donjons</th><th>Zones</th></tr>
+            ${globalRows.map(r => `<tr>
+              <td>${r.lbl}</td>
+              ${r.cmp ? cell(r.va, r.vb, r.fmt) : `<td class="tie">${r.va != null ? r.fmt(r.va) : '—'}</td>`}
+              ${r.cmp ? cell(r.vb, r.va, r.fmt) : `<td class="tie">${r.vb != null ? r.fmt(r.vb) : '—'}</td>`}
+            </tr>`).join('')}
+          </table>
+        </div>` : ''}
+
+        ${pairs.length ? `<div class="pd-head" style="margin-top:14px;">Paires rattachées</div>
+        ${pairs.map(p => {
+          const thin = Math.min(p.d.n, p.z.n) < FARM_MIN;
+          const dWins = (p.d.medNet || 0) >= (p.z.medNet || 0);
+          return `<div class="pair-row${thin ? ' thin' : ''}">
+            <div class="pair-side${!thin && dWins ? ' win' : ''}">
+              <span class="ps-kind">Donjon</span>
+              <span class="ps-name">${escapeHtml(zoneLabel(p.d.zone))}</span>
+              <span class="ps-rate">${p.d.medNet != null ? fmtNum(p.d.medNet) : '—'}</span>
+              <span class="ps-meta">${plural(p.d.n, 'session')}</span>
+            </div>
+            <span class="pair-sep">vs</span>
+            <div class="pair-side${!thin && !dWins ? ' win' : ''}">
+              <span class="ps-kind">Zone</span>
+              <span class="ps-name">${escapeHtml(zoneLabel(p.z.zone))}</span>
+              <span class="ps-rate">${p.z.medNet != null ? fmtNum(p.z.medNet) : '—'}</span>
+              <span class="ps-meta">${plural(p.z.n, 'session')}</span>
+            </div>
+          </div>`;
+        }).join('')}` : ''}
+
+        <div class="insight${!solidPairs.length ? ' warn' : ''}">${verdict}</div>
+      </div>`;
+    }
+
+    // ---- Onglet Ressources ----
+    function resTotals() {
+      const map = {};
+      farmSessions().forEach(s => {
+        const h = farmHours(s);
+        (s.targets || []).forEach(t => {
+          if (!t.resId) return;
+          if (!map[t.resId]) map[t.resId] = { qty: 0, sec: 0, sessions: 0, value: 0 };
+          map[t.resId].qty += t.qty || 0;
+          map[t.resId].sec += s.durationSec || 0;
+          map[t.resId].value += targetPrice(t) * (t.qty || 0);
+          map[t.resId].sessions++;
+        });
+      });
+      return map;
+    }
+
+    function renderResources() {
+      const body = document.getElementById('res-body');
+      const alert = document.getElementById('res-alert');
+      if (!body) return;
+
+      const missing = unpricedResources();
+      if (!missing.length) alert.classList.add('hidden');
+      else {
+        alert.classList.remove('hidden');
+        alert.innerHTML = `<span class="pa-icon">⚠︎</span><span>
+          <b>${plural(missing.length, 'ressource')}</b> droppée${missing.length > 1 ? 's' : ''} sans prix :
+          ${missing.slice(0, 3).map(r => escapeHtml(r.name)).join(', ')}${missing.length > 3 ? '…' : ''}.
+          Tes kamas sont sous-estimés — touche pour renseigner.</span>`;
+        alert.onclick = () => { openResForm(missing[0].id); haptic(); };
+      }
+
+      if (!(state.resources || []).length) {
+        body.innerHTML = `<div class="empty"><div class="icon">🌾</div>
+          <div class="title">Aucune ressource</div>
+          <div>Ajoute les ressources que tu viens chercher, avec leur prix unitaire</div></div>`;
+        return;
+      }
+
+      const totals = resTotals();
+      const rows = (state.resources || []).map(r => {
+        const t = totals[r.id] || { qty: 0, sec: 0, sessions: 0, value: 0 };
+        const h = t.sec / 3600;
+        return { r, qty: t.qty, sessions: t.sessions, perHour: h > 0 ? t.qty / h : null, value: t.value };
+      }).sort((a, b) => b.value - a.value || b.qty - a.qty || a.r.name.localeCompare(b.r.name, 'fr'));
+
+      const totalValue = rows.reduce((s, x) => s + x.value, 0);
+
+      body.innerHTML = `
+        <div class="chart-card">
+          <div class="chart-title">Catalogue</div>
+          <div class="chart-sub">${plural(state.resources.length, 'ressource')} · ${fmtNum(totalValue)} kamas générés, au prix de chaque session</div>
+          ${rows.map(x => `
+            <div class="res-line${!(x.r.price > 0) && x.qty > 0 ? ' noprice' : ''}" data-res="${x.r.id}">
+              <span class="rl-name">${escapeHtml(x.r.name)}
+                <span class="rl-sub">${x.r.price > 0 ? fmtNum(x.r.price) + ' k/u' : 'prix manquant'}${x.r.flat ? ' · hors bonus' : ''}</span>
+              </span>
+              <span class="rl-val">${fmtNum(x.qty)}<span class="u">${x.perHour != null ? x.perHour.toFixed(1).replace('.', ',') + '/h' : '—'}</span></span>
+              <span class="rl-val">${fmtNum(x.value)}<span class="u">kamas</span></span>
+            </div>`).join('')}
+        </div>
+        ${priceTrendCard()}
+        ${totalValue > 0 ? `<div class="chart-card">
+          <div class="chart-title">Ce qui rapporte</div>
+          <div class="chart-sub">Part de chaque ressource dans la valeur détaillée</div>
+          ${rows.filter(x => x.value > 0).slice(0, 6).map(x => `
+            <div class="yield-row">
+              <span class="yield-lbl" style="width:92px;text-align:left;font-size:11px;">${escapeHtml(x.r.name)}</span>
+              <span class="yield-track"><span class="yield-fill" style="width:${(x.value / totalValue) * 100}%"></span></span>
+              <span class="yield-val">${Math.round((x.value / totalValue) * 100)} %</span>
+              <span class="yield-n">${fmtNum(x.qty)}</span>
+            </div>`).join('')}
+          <div class="insight warn">Ces parts ne portent que sur les ressources que tu as détaillées, pas sur l'ensemble de ton butin. Le total réel de chaque session reste celui que tu saisis à la main.</div>
+        </div>` : ''}`;
+
+      body.querySelectorAll('[data-res]').forEach(el =>
+        el.addEventListener('click', () => openResForm(el.dataset.res)));
+    }
+
+    // ---- Évolution des prix ----
+    // L'historique se déduit des sessions elles-mêmes : chaque ligne porte le
+    // prix qui avait cours ce jour-là, ce qui suffit à voir un cours décrocher.
+    function priceHistory() {
+      const map = {};
+      sortedFarms().forEach(s => (s.targets || []).forEach(t => {
+        if (!t.resId || !(t.price > 0)) return;
+        const arr = map[t.resId] || (map[t.resId] = []);
+        const last = arr[arr.length - 1];
+        // une seule observation par jour : la dernière saisie fait foi
+        if (last && last.date === s.date) last.price = t.price;
+        else arr.push({ date: s.date, price: t.price });
+      }));
+      return map;
+    }
+
+    function priceSpark(pts) {
+      if (pts.length < 2) return '';
+      const vals = pts.map(p => p.price);
+      const min = Math.min(...vals), max = Math.max(...vals);
+      const W = 110, H = 26, span = max - min || 1;
+      const d = pts.map((p, i) => {
+        const x = (i / (pts.length - 1)) * (W - 2) + 1;
+        const y = H - 3 - ((p.price - min) / span) * (H - 6);
+        return `${x.toFixed(1)},${y.toFixed(1)}`;
+      }).join(' ');
+      const down = vals[vals.length - 1] < vals[0];
+      return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" style="width:${W}px;height:${H}px;flex-shrink:0;">
+        <polyline points="${d}" fill="none" stroke="${down ? 'var(--red)' : 'var(--green)'}" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
+      </svg>`;
+    }
+
+    function priceTrendCard() {
+      const hist = priceHistory();
+      const totals = resTotals();
+      const rows = Object.keys(hist).map(id => {
+        const r = resById(id);
+        const pts = hist[id];
+        if (!r || pts.length < 2) return null;
+        const first = pts[0].price, last = pts[pts.length - 1].price;
+        return { r, pts, first, last,
+                 delta: first ? ((last - first) / first) * 100 : null,
+                 qty: (totals[id] || {}).qty || 0 };
+      }).filter(Boolean).sort((a, b) => (a.delta || 0) - (b.delta || 0));
+
+      if (!rows.length) return '';
+      const sinking = rows.filter(x => x.delta != null && x.delta <= -15);
+
+      return `<div class="chart-card">
+        <div class="chart-title">Évolution des prix</div>
+        <div class="chart-sub">Reconstituée à partir des prix saisis sur tes sessions</div>
+        ${rows.map(x => `
+          <div class="res-line">
+            <span class="rl-name">${escapeHtml(x.r.name)}
+              <span class="rl-sub">${fmtNum(x.first)} → ${fmtNum(x.last)} · ${plural(x.pts.length, 'relevé')}</span>
+            </span>
+            ${priceSpark(x.pts)}
+            <span class="rl-val" style="color:${x.delta < 0 ? 'var(--red)' : 'var(--green)'};">
+              ${x.delta > 0 ? '+' : ''}${x.delta != null ? Math.round(x.delta) : 0} %
+            </span>
+          </div>`).join('')}
+        <div class="insight${sinking.length ? ' warn' : ''}">
+          ${sinking.length
+            ? `<b>${sinking.map(x => escapeHtml(x.r.name)).join(', ')}</b> ${sinking.length > 1 ? 'ont perdu' : 'a perdu'} plus de 15 % depuis ton premier relevé. Deux causes possibles et impossibles à départager ici : le marché du serveur, ou ton propre farm qui alimente l'offre. Dans les deux cas, la rentabilité de la zone concernée baisse sans que la zone ait changé.`
+            : `Les prix que tu as relevés tiennent. Chaque session garde la valeur qu'elle avait le jour même, donc corriger un prix aujourd'hui ne réécrit pas ton historique.`}
+        </div>
+      </div>`;
+    }
+
+    // ---- Cadence des donjons ----
+    // Le classement au kamas/h dit où aller ; celui-ci dit à quelle vitesse tu
+    // enchaînes, ce qui explique une bonne moitié de ce kamas/h.
+    function dungeonPaceCard() {
+      const rows = (state.zones || []).map(zoneStats)
+        .filter(g => g.zone.kind === 'donjon' && g.dungeons > 0 && g.perDungeon != null)
+        .sort((a, b) => a.perDungeon - b.perDungeon);
+      if (!rows.length) return '';
+
+      const fastest = rows[0].perDungeon;
+      const totalDj = rows.reduce((s, g) => s + g.dungeons, 0);
+      const thin = rows.filter(g => g.dungeons < 5);
+
+      return `<div class="chart-card">
+        <div class="chart-title">Cadence des donjons</div>
+        <div class="chart-sub">${plural(totalDj, 'donjon')} ${totalDj > 1 ? 'enchaînés' : 'enchaîné'} · du plus rapide au plus lent</div>
+        ${rows.map((g, i) => `
+          <div class="yield-row">
+            <span class="yield-lbl" style="width:92px;text-align:left;font-size:11px;">${i + 1}. ${escapeHtml(zoneLabel(g.zone))}</span>
+            <span class="yield-track"><span class="yield-fill" style="width:${(fastest / g.perDungeon) * 100}%"></span></span>
+            <span class="yield-val">${fmtDurPrecise(g.perDungeon)}</span>
+            <span class="yield-n">×${g.dungeons}</span>
+          </div>`).join('')}
+        <div class="insight${thin.length ? ' warn' : ''}">
+          ${thin.length
+            ? `${thin.map(g => escapeHtml(zoneLabel(g.zone))).join(', ')} ${thin.length > 1 ? 'reposent' : 'repose'} sur moins de 5 donjons : la cadence n'y est pas encore stable.`
+            : `Un donjon rapide ne rapporte pas forcément plus : croise cette cadence avec le kamas/h du classement ci-dessus. Si un donjon est lent <b>et</b> mieux payé, c'est son butin qui fait la différence, pas ta vitesse.`}
+        </div>
+      </div>`;
+    }
+
+    // ---- Comparatif par période ----
+    // Classé au rendement et non chronologiquement : la question posée ici est
+    // « quelles journées ont été les bonnes », pas « comment ça évolue ».
+    // La tendance dans le temps est déjà lisible sur le graphe par session.
+    function farmPeriodCard(runs) {
+      const gran = ['day', 'week', 'month'].includes(state.settings.fgran) ? state.settings.fgran : 'day';
+      const labels = { day: 'Jour', week: 'Semaine', month: 'Mois' };
+
+      const map = new Map();
+      runs.forEach(s => {
+        const k = periodKey(s.date, gran);
+        if (!k) return;
+        if (!map.has(k)) map.set(k, []);
+        map.get(k).push(s);
+      });
+      if (!map.size) return '';
+
+      const agg = list => {
+        const sec = list.reduce((a, r) => a + (r.durationSec || 0), 0);
+        const net = list.reduce((a, r) => a + sessionNet(r), 0);
+        const h = sec / 3600;
+        return { n: list.length, sec, net, rate: h > 0 ? net / h : null,
+                 dj: list.reduce((a, r) => a + (r.dungeons || 0), 0),
+                 norm: median(list.map(normRate).filter(v => v != null)) };
+      };
+
+      const rows = [...map.entries()]
+        .map(([k, rs]) => ({ k, rs, ...agg(rs) }))
+        .sort((a, b) => (b.rate || 0) - (a.rate || 0))
+        .slice(0, 10);
+
+      // Répartition par zone à l'intérieur d'une période, elle aussi classée
+      const zonesOf = rs => {
+        const m = new Map();
+        rs.forEach(s => {
+          const id = s.zoneId || '_';
+          if (!m.has(id)) m.set(id, []);
+          m.get(id).push(s);
+        });
+        return [...m.entries()].map(([id, list]) => {
+          const z = id === '_' ? null : zoneById(id);
+          return { name: z ? zoneLabel(z) : 'Sans zone', ...agg(list) };
+        }).sort((a, b) => (b.rate || 0) - (a.rate || 0));
+      };
+
+      const open = state.settings.fpOpen || null;
+      const medAll = median(rows.map(r => r.rate).filter(v => v != null));
+      const bestRate = Math.max(...rows.map(r => r.rate || 0));
+
+      const detail = r => {
+        const zs = zonesOf(r.rs);
+        return `<tr class="cmp-detail"><td colspan="5">
+          <div class="pd-head">${plural(zs.length, 'zone')} ${zs.length > 1 ? 'farmées' : 'farmée'} · classement au kamas/h net</div>
+          ${zs.map((z, i) => `<div class="pd-zone${i === 0 && zs.length > 1 ? ' top' : ''}">
+            <span class="pd-rank">${i + 1}</span>
+            <span class="pd-name">${escapeHtml(z.name)}
+              <span class="pd-meta">${plural(z.n, 'session')} · ${fmtDur(z.sec)} · net ${fmtNum(z.net)}${z.dj > 0 ? ` · ${z.dj} donjons (${fmtDurPrecise(z.sec / z.dj)} chacun)` : ''}</span>
+            </span>
+            <span class="pd-rate">${z.rate != null ? fmtNum(z.rate) : '—'}</span>
+          </div>`).join('')}
+          ${zs.length < 2 ? `<div class="pd-note">Une seule zone ce ${labels[gran].toLowerCase()}-là : rien à départager.</div>` : ''}
+        </td></tr>`;
+      };
+
+      const worst = rows[rows.length - 1];
+      let insight;
+      if (rows.length < 2) {
+        insight = `Une seule ${labels[gran].toLowerCase()} enregistrée pour l'instant.`;
+      } else if (rows[0].n < 2) {
+        insight = `Ta meilleure ${labels[gran].toLowerCase()} (<b>${escapeHtml(periodLabel(rows[0].k, gran))}</b>) ne repose que sur une session : c'est un bon tirage avant d'être une bonne journée. Regarde plutôt les lignes qui cumulent plusieurs sessions.`;
+      } else {
+        const gap = worst.rate ? Math.round(((rows[0].rate - worst.rate) / worst.rate) * 100) : null;
+        insight = `<b>${escapeHtml(periodLabel(rows[0].k, gran))}</b> est ta meilleure ${labels[gran].toLowerCase()} à ${fmtNum(rows[0].rate)} kamas/h${gap != null ? `, soit <b>${gap}%</b> au-dessus de la plus faible` : ''}. Touche une ligne pour voir quelles zones y ont contribué — c'est là que se lit la vraie cause, pas dans la date.`;
+      }
+
+      return `<div class="chart-card">
+        <div class="chart-title">Comparatif par période</div>
+        <div class="chart-sub">Classé du plus rentable au moins rentable · touche une ligne pour la détailler</div>
+
+        <div class="subtabs" style="margin:12px 0;">
+          ${['day', 'week', 'month'].map(g =>
+            `<button class="sub-btn${g === gran ? ' on' : ''}" data-fgran="${g}">${labels[g]}</button>`).join('')}
+        </div>
+
+        <div class="cmp-scroll">
+          <table class="cmp-table">
+            <tr class="cmp-head">
+              <th>${labels[gran]}</th>
+              <th>Sessions</th>
+              <th>Temps</th>
+              <th>Net</th>
+              <th>Kamas/h</th>
+            </tr>
+            ${rows.map((r, i) => `<tr class="per-row${r.rate === bestRate && rows.length > 1 ? ' cmp-best' : ''}" data-fp="${escapeHtml(r.k)}">
+              <td class="per-lbl"><span class="caret">${open === r.k ? '▾' : '▸'}</span>${i + 1}. ${escapeHtml(periodLabel(r.k, gran))}</td>
+              <td class="tie">${r.n}</td>
+              <td class="tie">${fmtDur(r.sec)}</td>
+              <td class="tie">${fmtNum(r.net)}</td>
+              <td class="${r.rate === bestRate && rows.length > 1 ? 'win' : (medAll != null && r.rate != null && r.rate < medAll ? 'lose' : 'tie')}">${r.rate != null ? fmtNum(r.rate) : '—'}</td>
+            </tr>
+            ${open === r.k ? detail(r) : ''}`).join('')}
+          </table>
+        </div>
+
+        <div class="insight${rows.length < 2 || rows[0].n < 2 ? ' warn' : ''}">${insight}</div>
+      </div>`;
+    }
+
+    // ---- Comparatif entre activités ----
+    // Les deux modules produisent des kamas/h : c'est la seule question qui
+    // compte au bout du compte — que faire de l'heure qui vient.
+    function activityCompareCard() {
+      const fr = farmSessions();
+      const fSec = fr.reduce((s, r) => s + (r.durationSec || 0), 0);
+      const fNet = fr.reduce((s, r) => s + sessionNet(r), 0);
+      const fRate = fSec > 0 && farmConfigured() ? fNet / (fSec / 3600) : null;
+
+      const sr = statRuns();
+      const eTot = ecoConfigured() ? economyTotals(sr) : null;
+      const sRate = eTot ? eTot.perHour : null;
+
+      const best = (state.zones || []).map(zoneStats)
+        .filter(g => g.n >= FARM_MIN && g.medNet != null)
+        .sort((a, b) => b.medNet - a.medNet)[0] || null;
+
+      let verdict;
+      if (fRate == null && sRate == null) {
+        verdict = `Ni le farm ni les songes ne sont valorisés pour l'instant. Renseigne des prix des deux côtés et la comparaison se fera toute seule.`;
+      } else if (fRate == null) {
+        verdict = `Seuls tes songes sont valorisés. Enregistre quelques sessions de farm avec leur butin pour pouvoir trancher.`;
+      } else if (sRate == null) {
+        verdict = `Seul ton farm est valorisé. Renseigne les prix du butin de songes (onglet Kamas des Songes) pour pouvoir comparer.`;
+      } else {
+        const farmWins = fRate >= sRate;
+        const lo = Math.min(fRate, sRate);
+        const pct = lo > 0 ? Math.round((Math.abs(fRate - sRate) / lo) * 100) : null;
+        verdict = `À l'heure, <b>${farmWins ? 'le farm' : 'les songes'}</b> ${pct != null ? `${farmWins ? 'rapporte' : 'rapportent'} <b>${pct}%</b> de plus` : 'prend le dessus'}.`
+          + (best && farmWins ? ` Et en ne gardant que ta meilleure zone (<b>${escapeHtml(zoneLabel(best.zone))}</b>, ${fmtNum(best.medNet)} kamas/h), l'écart se creuse encore.` : '')
+          + (best && !farmWins ? ` Ta meilleure zone seule (<b>${escapeHtml(zoneLabel(best.zone))}</b>) tourne à ${fmtNum(best.medNet)} kamas/h — c'est elle qu'il faut opposer aux songes, pas ta moyenne de farm.` : '');
+      }
+
+      const cell = (v, other, fmt) => {
+        if (v == null) return `<td class="lose">—</td>`;
+        if (other == null || v === other) return `<td class="tie">${fmt(v)}</td>`;
+        return `<td class="${v > other ? 'win' : 'lose'}">${fmt(v)}</td>`;
+      };
+      const rows = [
+        { lbl: 'Kamas/h', va: fRate, vb: sRate, fmt: v => fmtNum(v) },
+        { lbl: 'Temps cumulé', va: fSec || null, vb: eTot ? eTot.sec || null : null, fmt: fmtDur },
+        { lbl: 'Kamas cumulés', va: fr.length ? fNet : null, vb: eTot ? eTot.total : null, fmt: fmtNum },
+        { lbl: 'Entrées', va: fr.length || null, vb: sr.length || null, fmt: v => v },
+      ];
+
+      return `<div class="chart-card">
+        <div class="chart-title">Farm ou Songes</div>
+        <div class="chart-sub">Le même indicateur des deux côtés : ce que rapporte une heure</div>
+        <div class="cmp-scroll">
+          <table class="cmp-table">
+            <tr class="cmp-head"><th></th><th>Farm</th><th>Songes</th></tr>
+            ${rows.map(r => `<tr>
+              <td>${r.lbl}</td>
+              ${r.lbl === 'Kamas/h' ? cell(r.va, r.vb, r.fmt) : `<td class="tie">${r.va != null ? r.fmt(r.va) : '—'}</td>`}
+              ${r.lbl === 'Kamas/h' ? cell(r.vb, r.va, r.fmt) : `<td class="tie">${r.vb != null ? r.fmt(r.vb) : '—'}</td>`}
+            </tr>`).join('')}
+          </table>
+        </div>
+        <div class="insight warn">${verdict}
+        Deux réserves avant d'arbitrer : la valeur des songes repose beaucoup sur des légendaires rares, donc son kamas/h bouge énormément tant que tu n'as pas accumulé des dizaines de runs ; et des deux côtés il s'agit de kamas théoriques, pas encaissés.</div>
+      </div>`;
+    }
+
+    // ---- Statistiques ----
+    function farmBars(vals) {
+      const valid = vals.filter(v => v != null);
+      if (valid.length < 2) return '';
+      const max = Math.max(...valid);
+      const W = 320, H = 110, pad = 4;
+      const n = vals.length;
+      const bw = (W - pad * 2) / n;
+      let bars = '';
+      vals.forEach((v, i) => {
+        if (v == null) return;
+        const h = max > 0 ? (Math.max(0, v) / max) * (H - 18) : 0;
+        const x = pad + i * bw + bw * 0.15;
+        const w = Math.max(1.5, bw * 0.7);
+        bars += `<rect x="${x.toFixed(2)}" y="${(H - 14 - h).toFixed(2)}" width="${w.toFixed(2)}" height="${h.toFixed(2)}" rx="1.5" fill="var(--gold)" opacity="0.75"/>`;
+      });
+      let pts = [];
+      for (let i = 0; i < n; i++) {
+        const win = vals.slice(Math.max(0, i - 4), i + 1).filter(v => v != null);
+        if (!win.length) continue;
+        const m = mean(win);
+        const x = pad + i * bw + bw / 2;
+        const y = H - 14 - (max > 0 ? (Math.max(0, m) / max) * (H - 18) : 0);
+        pts.push(`${x.toFixed(2)},${y.toFixed(2)}`);
+      }
+      const line = pts.length > 1
+        ? `<polyline points="${pts.join(' ')}" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>` : '';
+      return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img">
+        <line x1="${pad}" y1="${H - 14}" x2="${W - pad}" y2="${H - 14}" stroke="var(--border-hi)" stroke-width="1"/>
+        ${bars}${line}
+      </svg>`;
+    }
+
+    // La potion se rembourse-t-elle ? On compare le rendement brut horaire des
+    // sessions sous anomalie à celui des autres, coût déduit.
+    function anomalyCard(runs) {
+      const withA = runs.filter(s => s.anomaly);
+      const without = runs.filter(s => !s.anomaly);
+      if (!withA.length && !without.length) return '';
+
+      const medA = median(withA.map(grossRate).filter(v => v != null));
+      const medB = median(without.map(grossRate).filter(v => v != null));
+      const costA = withA.length ? mean(withA.map(s => sessionCost(s) / Math.max(farmHours(s), 0.01))) : null;
+      const netA = median(withA.map(netRate).filter(v => v != null));
+      const netB = median(without.map(netRate).filter(v => v != null));
+      const thin = withA.length < FARM_MIN || without.length < FARM_MIN;
+
+      let verdict;
+      if (!withA.length) {
+        verdict = `Aucune session sous anomalie pour l'instant. Enregistres-en quelques-unes et la comparaison se fera toute seule.`;
+      } else if (!without.length) {
+        verdict = `Toutes tes sessions sont sous anomalie : il n'y a rien à quoi les comparer. Farme quelques sessions hors anomalie pour mesurer ce que l'anomalie t'apporte réellement.`;
+      } else if (thin) {
+        verdict = `${plural(withA.length, 'session')} sous anomalie contre ${without.length} sans : trop peu pour conclure. Il en faut ${FARM_MIN} de chaque côté.`;
+      } else if (netA != null && netB != null) {
+        const diff = netA - netB;
+        const pct = netB ? Math.round((diff / netB) * 100) : null;
+        verdict = diff > 0
+          ? `Coûts déduits, l'anomalie te rapporte <b>${fmtNum(diff)} kamas/h de plus</b>${pct != null ? ` (+${pct}%)` : ''}. Elle se rembourse.`
+          : `Coûts déduits, l'anomalie te rapporte <b>${fmtNum(Math.abs(diff))} kamas/h de moins</b>. À ce prix de potion, elle ne se rembourse pas — vérifie le prix saisi dans les réglages avant d'en tirer une conclusion.`;
+      } else {
+        verdict = `Il manque des valeurs de butin pour trancher.`;
+      }
+
+      // Ressources marquées comme insensibles au bonus (fragments et assimilés)
+      const flatIds = new Set((state.resources || []).filter(r => r.flat).map(r => r.id));
+      const flatQty = withA.reduce((t, s) =>
+        t + (s.targets || []).filter(x => flatIds.has(x.resId)).reduce((u, x) => u + (x.qty || 0), 0), 0);
+      const flatSec = withA.reduce((t, s) => t + (s.durationSec || 0), 0);
+
+      return `<div class="chart-card">
+        <div class="chart-title">Sous anomalie ou pas</div>
+        <div class="chart-sub">${plural(withA.length, 'session')} sous anomalie · ${without.length} sans</div>
+        <div class="detail-stats">
+          <div class="dstat"><div class="lbl">Brut/h sous anomalie</div><div class="val gold small">${medA != null ? fmtNum(medA) : '—'}</div></div>
+          <div class="dstat"><div class="lbl">Brut/h sans</div><div class="val small">${medB != null ? fmtNum(medB) : '—'}</div></div>
+          <div class="dstat"><div class="lbl">Net/h sous anomalie</div><div class="val small">${netA != null ? fmtNum(netA) : '—'}</div></div>
+          <div class="dstat"><div class="lbl">Net/h sans</div><div class="val small">${netB != null ? fmtNum(netB) : '—'}</div></div>
+          <div class="dstat"><div class="lbl">Coût horaire</div><div class="val small">${costA != null ? fmtNum(costA) : '—'}</div></div>
+          <div class="dstat"><div class="lbl">Ressources hors bonus</div><div class="val small">${flatSec > 0 ? (flatQty / (flatSec / 3600)).toFixed(1).replace('.', ',') + '/h' : '—'}</div></div>
+        </div>
+        <div class="insight${thin || !withA.length || !without.length ? ' warn' : ''}">${verdict}</div>
+      </div>`;
+    }
+
+    function farmProfitCard(runs) {
+      const gross = runs.reduce((s, r) => s + sessionGross(r), 0);
+      const cost = runs.reduce((s, r) => s + sessionCost(r), 0);
+      const net = gross - cost;
+      const sec = runs.reduce((s, r) => s + (r.durationSec || 0), 0);
+      const h = sec / 3600;
+      const margin = gross > 0 ? (net / gross) * 100 : null;
+
+      return `<div class="chart-card">
+        <div class="chart-title">Économie du farm</div>
+        <div class="chart-sub">${plural(runs.length, 'session')} · ${fmtDur(sec)} de farm cumulé</div>
+        <div class="detail-stats">
+          <div class="dstat"><div class="lbl">Butin brut</div><div class="val gold small">${fmtNum(gross)}</div></div>
+          <div class="dstat"><div class="lbl">Coûts</div><div class="val small">${cost ? '-' + fmtNum(cost) : '—'}</div></div>
+          <div class="dstat"><div class="lbl">Net</div><div class="val gold small">${fmtNum(net)}</div></div>
+          <div class="dstat"><div class="lbl">Marge</div><div class="val small">${margin != null ? Math.round(margin) + '%' : '—'}</div></div>
+          <div class="dstat"><div class="lbl">Kamas/h net</div><div class="val small">${h > 0 ? fmtNum(net / h) : '—'}</div></div>
+          <div class="dstat"><div class="lbl">Coût/h</div><div class="val small">${h > 0 && cost ? fmtNum(cost / h) : '—'}</div></div>
+        </div>
+        <div class="profit-box ${net >= 0 ? 'green' : 'red'}" style="margin-top:12px;">
+          <div class="lbl">Résultat cumulé</div>
+          <div class="val">${net >= 0 ? '+' : ''}${fmtNum(net)} kamas</div>
+        </div>
+        <div class="insight warn">Ces kamas sont une valeur théorique au prix que tu as saisi. Ce que tu encaisses dépend du HDV au moment de la vente, et farmer une ressource en masse fait baisser son cours.</div>
+      </div>`;
+    }
+
+    function farmSettingsCard() {
+      const cfg = farmCfg();
+      return `<div class="chart-card">
+        <div class="chart-title">Réglages</div>
+        <div class="chart-sub">Servent au calcul des coûts et du rendement normalisé</div>
+        <div class="detail-stats">
+          <div class="dstat"><div class="lbl">Bonus d'anomalie</div><div class="val small">${cfg.anomalyBonus}%</div></div>
+          <div class="dstat"><div class="lbl">Prix d'une potion</div><div class="val small">${cfg.potionPrice ? fmtNum(cfg.potionPrice) : '—'}</div></div>
+        </div>
+        <button class="btn btn-secondary" id="fcfg-open" style="width:100%;margin-top:12px;">Modifier les réglages</button>
+      </div>`;
+    }
+
+    function renderFarmStats() {
+      const body = document.getElementById('fstats-body');
+      const empty = document.getElementById('empty-fstats');
+      if (!body) return;
+      const runs = farmSessions();
+      if (!runs.length) {
+        body.innerHTML = '';
+        empty.classList.remove('hidden');
+        empty.querySelector('.title').textContent = (state.farms || []).length
+          ? 'Toutes tes sessions sont exclues' : 'Pas encore de données';
+        return;
+      }
+      empty.classList.add('hidden');
+
+      const ordered = sortedFarms().filter(s => !s.excluded);
+      const nets = ordered.map(netRate).filter(v => v != null);
+      const norms = ordered.map(normRate).filter(v => v != null);
+      const totalSec = runs.reduce((s, r) => s + (r.durationSec || 0), 0);
+      const med = median(nets);
+      const sd = stdev(nets);
+      const cv = (sd != null && nets.length) ? (sd / mean(nets)) * 100 : null;
+      const last5 = nets.slice(-5), prev5 = nets.slice(-10, -5);
+      const trend = (last5.length >= 3 && prev5.length >= 3 && mean(prev5))
+        ? ((mean(last5) - mean(prev5)) / Math.abs(mean(prev5))) * 100 : null;
+      const best = ordered.reduce((b, s) => {
+        const r = netRate(s);
+        return (r != null && (b == null || r > b.r)) ? { s, r } : b;
+      }, null);
+
+      const sub = ['kamas', 'anomalies'].includes(state.settings.farmTab) ? state.settings.farmTab : 'general';
+      document.querySelectorAll('#fstats-subtabs .sub-btn').forEach(b =>
+        b.classList.toggle('on', b.dataset.f === sub));
+
+      const zoneRank = (state.zones || []).map(zoneStats)
+        .filter(g => g.n >= FARM_MIN && g.medNorm != null)
+        .sort((a, b) => b.medNorm - a.medNorm);
+
+      const general = `
+        <div class="chart-card">
+          <div class="chart-title">Synthèse</div>
+          <div class="chart-sub">${plural(runs.length, 'session')} · ${fmtDur(totalSec)} de farm cumulé</div>
+          <div class="detail-stats">
+            <div class="dstat"><div class="lbl">Kamas/h net médian</div><div class="val gold small">${med != null ? fmtNum(med) : '—'}</div></div>
+            <div class="dstat"><div class="lbl">Normalisé médian</div><div class="val small">${median(norms) != null ? fmtNum(median(norms)) : '—'}</div></div>
+            <div class="dstat"><div class="lbl">Dispersion</div><div class="val small">${cv != null ? Math.round(cv) + '%' : '—'}</div></div>
+            <div class="dstat"><div class="lbl">Durée moyenne</div><div class="val small">${fmtDurPrecise(totalSec / runs.length)}</div></div>
+            <div class="dstat"><div class="lbl">Meilleure session</div><div class="val gold small">${best ? fmtNum(best.r) : '—'}</div></div>
+            <div class="dstat"><div class="lbl">Zones farmées</div><div class="val small">${new Set(runs.map(r => r.zoneId).filter(Boolean)).size}</div></div>
+          </div>
+          ${trend != null ? `<div class="profit-box ${trend >= 0 ? 'green' : 'red'}" style="margin-top:12px;">
+            <div class="lbl">5 dernières sessions vs les 5 précédentes</div>
+            <div class="val">${trend >= 0 ? '+' : ''}${trend.toFixed(1).replace('.', ',')}%</div>
+          </div>` : ''}
+          ${cv != null ? `<div class="insight">Ta dispersion est de <b>${Math.round(cv)}%</b>. Une partie vient du hasard des drops, une autre du bonus de zone qui n'est pas le même à chaque session — c'est pour ça que le classement des zones utilise le rendement normalisé.</div>` : ''}
+        </div>
+
+        ${nets.length >= 2 ? `<div class="chart-card">
+          <div class="chart-title">Rendement par session</div>
+          <div class="chart-sub">Barres = kamas/h net (chronologique) · ligne bleue = moyenne mobile sur 5</div>
+          ${farmBars(ordered.map(netRate))}
+        </div>` : ''}
+
+        ${zoneRank.length ? `<div class="chart-card">
+          <div class="chart-title">Classement des zones</div>
+          <div class="chart-sub">Kamas/h ramenés à 0 % de bonus · ${FARM_MIN} sessions minimum</div>
+          ${zoneRank.map((g, i) => `
+            <div class="yield-row">
+              <span class="yield-lbl" style="width:92px;text-align:left;font-size:11px;">${i + 1}. ${escapeHtml(zoneLabel(g.zone))}</span>
+              <span class="yield-track"><span class="yield-fill" style="width:${(g.medNorm / zoneRank[0].medNorm) * 100}%"></span></span>
+              <span class="yield-val">${fmtNum(g.medNorm)}</span>
+              <span class="yield-n">×${g.n}</span>
+            </div>`).join('')}
+          <div class="insight${zoneRank.length < 2 ? ' warn' : ''}">${zoneRank.length < 2
+            ? `Une seule zone atteint ${FARM_MIN} sessions. Un classement à une entrée ne classe rien.`
+            : `Ce classement neutralise le bonus de zone et l'anomalie. Il répond à « quelle zone rapporte le plus à conditions égales », pas à « où dois-je aller maintenant » — pour ça, regarde le kamas/h net, bonus compris.`}</div>
+        </div>` : ''}
+
+        ${dungeonPaceCard()}
+
+        ${farmPeriodCard(runs)}`;
+
+      const kamas = `
+        ${farmProfitCard(runs)}
+        ${activityCompareCard()}
+        ${farmSettingsCard()}`;
+
+      const anomalies = `
+        ${anomalyCard(runs)}
+        ${farmSettingsCard()}`;
+
+      body.innerHTML = sub === 'kamas' ? kamas : sub === 'anomalies' ? anomalies : general;
+      const cfgBtn = document.getElementById('fcfg-open');
+      if (cfgBtn) cfgBtn.addEventListener('click', openFarmCfg);
+      document.querySelectorAll('[data-fgran]').forEach(b =>
+        b.addEventListener('click', () => {
+          state.settings.fgran = b.dataset.fgran;
+          state.settings.fpOpen = null;   // les clés de période changent de forme
+          save();
+          renderFarmStats();
+          haptic();
+        }));
+      document.querySelectorAll('[data-fp]').forEach(el =>
+        el.addEventListener('click', () => {
+          state.settings.fpOpen = state.settings.fpOpen === el.dataset.fp ? null : el.dataset.fp;
+          save();
+          renderFarmStats();
+          haptic();
+        }));
+    }
+
+    function renderFarmBar() {
+      const runs = farmSessions();
+      const sec = runs.reduce((s, r) => s + (r.durationSec || 0), 0);
+      const net = runs.reduce((s, r) => s + sessionNet(r), 0);
+      const h = sec / 3600;
+      const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+      set('fstat-sessions', (state.farms || []).length);
+      set('fstat-time', sec ? fmtDur(sec) : '—');
+      set('fstat-net', net ? fmtK(net) : '—');
+      set('fstat-rate', h > 0 ? fmtK(net / h) : '—');
+      set('fstat-zones', (state.zones || []).filter(z => z.kind !== 'donjon').length);
+      set('fstat-dj', (state.zones || []).filter(z => z.kind === 'donjon').length);
+    }
+
+    function renderFarm() {
+      renderFarmBar();
+      renderChrono();
+      renderFarmList();
+      renderZones();
+      renderResources();
+      renderFarmStats();
+    }
+
+    // ---- Formulaire de session ----
+    function setupFarmDurInputs() {
+      const ids = ['f-h', 'f-m', 'f-s'];
+      const els = ids.map(i => document.getElementById(i));
+      els.forEach((el, i) => {
+        el.addEventListener('input', () => {
+          const max = i === 0 ? 1 : 2;
+          let v = el.value.replace(/\D/g, '').slice(0, max);
+          const full = v.length === max || (i > 0 && v.length === 1 && +v >= 6);
+          if (i > 0 && v.length === 2 && +v > 59) v = '59';
+          el.value = v;
+          updateFarmDurPreview();
+          if (full && v.length && els[i + 1]) {
+            els[i + 1].focus();
+            if (els[i + 1].select) els[i + 1].select();
+          }
+        });
+        el.addEventListener('keydown', e => {
+          if (e.key === 'Backspace' && el.value === '' && i > 0) {
+            e.preventDefault();
+            const prev = els[i - 1];
+            prev.focus();
+            prev.value = prev.value.slice(0, -1);
+            updateFarmDurPreview();
+          }
+        });
+        el.addEventListener('focus', () => { if (el.select) el.select(); });
+      });
+    }
+    function readFarmDur() {
+      return clampInt('f-h', 99) * 3600 + clampInt('f-m', 59) * 60 + clampInt('f-s', 59);
+    }
+    function updateFarmDurPreview() {
+      const el = document.getElementById('f-dur-preview');
+      const sec = readFarmDur();
+      el.textContent = sec > 0 ? '→ ' + fmtDurLong(sec) : '';
+      updateFarmHints();
+    }
+    function readBonus() { return Math.max(0, Math.min(MAX_ZONE_BONUS, clampInt('f-bonus', MAX_ZONE_BONUS))); }
+
+    function updateFarmHints() {
+      const mult = dropMult({ anomaly: draftAnomaly, bonus: readBonus() });
+      const mEl = document.getElementById('f-mult-preview');
+      if (mEl) {
+        const base = draftAnomaly
+          ? `Anomalie active : ×${mult.toFixed(2).replace('.', ',')} sur les drops (le bonus de zone est ignoré)`
+          : `×${mult.toFixed(2).replace('.', ',')} sur les drops`;
+        const nd = clampInt('f-dj', 999), sec = readFarmDur();
+        mEl.textContent = base + (nd > 0 && sec > 0 ? ` · ${fmtDurPrecise(sec / nd)} par donjon` : '');
+      }
+      const tv = draftTargets.reduce((t, x) =>
+        t + (x.price != null ? Math.max(0, x.price) : targetPrice(x)) * (x.qty || 0), 0);
+      const gEl = document.getElementById('f-gross-hint');
+      if (gEl) {
+        const g = rawNum(document.getElementById('f-gross'));
+        if (!tv && !g) gEl.textContent = '';
+        else if (!g) gEl.textContent = `Vide : les ${fmtNum(tv)} kamas des ressources détaillées seront utilisés.`;
+        else if (tv > g) gEl.textContent = `⚠ Les ressources détaillées valent déjà ${fmtNum(tv)} kamas.`;
+        else gEl.textContent = tv ? `Dont ${fmtNum(tv)} kamas détaillés (${Math.round((tv / g) * 100)}%).` : '';
+      }
+      const cEl = document.getElementById('f-cost-hint');
+      if (cEl) {
+        const cost = clampInt('f-potions', 99) * farmCfg().potionPrice + rawNum(document.getElementById('f-extra'));
+        cEl.textContent = cost ? `→ ${fmtNum(cost)} kamas de coûts` : '';
+      }
+    }
+
+    // Le nombre de donjons enchaînés n'a de sens que dans un donjon
+    function paintDungeonField() {
+      const z = zoneById(draftZoneId);
+      const cell = document.getElementById('f-dj-cell');
+      if (!cell) return;
+      const on = !!(z && z.kind === 'donjon');
+      cell.classList.toggle('hidden', !on);
+      if (!on) document.getElementById('f-dj').value = '';
+    }
+
+    function renderZoneSelect() {
+      const box = document.getElementById('f-zone-list');
+      if (!box) return;
+      box.innerHTML = '';
+      const mk = (id, label, sub) => {
+        const b = document.createElement('button');
+        b.className = 'compo-opt' + (draftZoneId === id ? ' on' : '');
+        b.innerHTML = `<span class="tick">✓</span><span class="body">
+          <span class="nm">${escapeHtml(label)}</span>
+          ${sub ? `<span class="cls">${escapeHtml(sub)}</span>` : ''}</span>`;
+        b.addEventListener('click', () => {
+          draftZoneId = id;
+          renderZoneSelect();
+          paintDungeonField();
+          updateFarmHints();
+          haptic();
+        });
+        box.appendChild(b);
+      };
+      mk(null, 'Non renseignée', '');
+      (state.zones || []).forEach(z => mk(z.id, zoneLabel(z),
+        zoneKindLabel(z) + (z.level ? ' · niv. ' + z.level : '')));
+    }
+
+    function paintTargets() {
+      const box = document.getElementById('f-targets');
+      if (!box) return;
+      box.innerHTML = '';
+      const head = document.getElementById('f-tgt-head');
+      if (head) head.classList.toggle('hidden', !draftTargets.length);
+
+      draftTargets.forEach((t, i) => {
+        const row = document.createElement('div');
+        row.className = 'tgt-row';
+        const r = resById(t.resId);
+        row.innerHTML = `
+          <select data-i="${i}" class="tg-res">
+            <option value="">Choisir…</option>
+            ${(state.resources || []).map(x => `<option value="${x.id}"${x.id === t.resId ? ' selected' : ''}>${escapeHtml(x.name)}</option>`).join('')}
+            <option value="__new">+ Nouvelle…</option>
+          </select>
+          <input type="text" class="tg-qty" data-i="${i}" inputmode="numeric" placeholder="0" value="${t.qty ? fmtNum(t.qty) : ''}" />
+          <input type="text" class="tg-price" data-i="${i}" inputmode="numeric" placeholder="prix" value="${(t.price != null ? t.price : (r ? r.price : 0)) ? fmtNum(t.price != null ? t.price : r.price) : ''}" />
+          <button class="tgt-del" data-i="${i}" aria-label="Retirer">✕</button>`;
+        box.appendChild(row);
+      });
+
+      box.querySelectorAll('.tg-res').forEach(sel => sel.addEventListener('change', () => {
+        const i = +sel.dataset.i;
+        if (sel.value === '__new') {
+          sel.value = draftTargets[i].resId || '';
+          openResForm(null, i);
+          return;
+        }
+        draftTargets[i].resId = sel.value || null;
+        paintTargets();
+        updateFarmHints();
+      }));
+      box.querySelectorAll('.tg-qty').forEach(el => {
+        wireNumberInput(el);
+        el.addEventListener('input', () => {
+          draftTargets[+el.dataset.i].qty = rawNum(el);
+          updateFarmHints();
+        });
+      });
+      box.querySelectorAll('.tg-price').forEach(el => {
+        wireNumberInput(el);
+        el.addEventListener('input', () => {
+          draftTargets[+el.dataset.i].price = rawNum(el);
+          updateFarmHints();
+        });
+      });
+      box.querySelectorAll('.tgt-del').forEach(b => b.addEventListener('click', () => {
+        draftTargets.splice(+b.dataset.i, 1);
+        paintTargets();
+        updateFarmHints();
+        haptic();
+      }));
+    }
+
+    function openFarmForm(id, prefill) {
+      editingFarmId = id || null;
+      const s = id ? (state.farms || []).find(x => x.id === id) : null;
+      const p = prefill || {};
+      document.getElementById('farm-title').textContent = s ? 'Modifier la session' : 'Nouvelle session';
+      document.getElementById('f-date').value = s ? (s.date || todayISO()) : (p.date || todayISO());
+
+      const sec = s ? (s.durationSec || 0) : (p.durationSec || 0);
+      document.getElementById('f-h').value = sec ? Math.floor(sec / 3600) : '';
+      document.getElementById('f-m').value = sec ? Math.floor((sec % 3600) / 60) : '';
+      document.getElementById('f-s').value = sec % 60 ? sec % 60 : '';
+
+      const last = sortedFarms()[(state.farms || []).length - 1];
+      draftZoneId = s ? (s.zoneId || null)
+        : (p.zoneId || (last && zoneById(last.zoneId) ? last.zoneId : null));
+      draftAnomaly = s ? !!s.anomaly : false;
+      draftFarmExcluded = s ? !!s.excluded : false;
+      // pas de report des ressources de la session précédente : on ne cible pas
+      // forcément la même chose, et une ligne oubliée fausserait les taux horaires
+      draftTargets = s && Array.isArray(s.targets)
+        ? s.targets.map(t => ({ resId: t.resId || null, qty: t.qty || 0, price: t.price }))
+        : [];
+
+      document.getElementById('f-bonus').value = s && s.bonus ? s.bonus : '';
+      setNumberInput(document.getElementById('f-gross'), s ? (s.gross || 0) : 0);
+      document.getElementById('f-potions').value = s && s.potions ? s.potions : '';
+      setNumberInput(document.getElementById('f-extra'), s ? (s.extraCost || 0) : 0);
+      document.getElementById('f-note').value = s ? (s.note || '') : '';
+
+      document.getElementById('f-dj').value = s && s.dungeons ? s.dungeons : '';
+      renderZoneSelect();
+      paintDungeonField();
+      paintTargets();
+      paintFarmToggles();
+      updateFarmDurPreview();
+      document.getElementById('farm-delete').classList.toggle('hidden', !s);
+      document.getElementById('modal-farm').classList.add('active');
+    }
+
+    function paintFarmToggles() {
+      document.getElementById('f-anomaly').classList.toggle('on', draftAnomaly);
+      document.getElementById('f-excluded').classList.toggle('on', draftFarmExcluded);
+    }
+
+    function saveFarm() {
+      const sec = readFarmDur();
+      if (sec <= 0) {
+        ['f-h', 'f-m', 'f-s'].forEach(flagInvalid);
+        toast('Renseigne la durée de la session');
+        return;
+      }
+      // Les prix saisis en ligne mettent à jour le catalogue
+      draftTargets.forEach(t => {
+        if (t.resId && t.price != null) {
+          const r = resById(t.resId);
+          if (r) r.price = Math.max(0, t.price | 0);
+        }
+      });
+
+      const payload = {
+        date: document.getElementById('f-date').value || todayISO(),
+        durationSec: sec,
+        zoneId: draftZoneId,
+        bonus: readBonus(),
+        anomaly: draftAnomaly,
+        dungeons: (zoneById(draftZoneId) || {}).kind === 'donjon' ? clampInt('f-dj', 999) : 0,
+        targets: draftTargets.filter(t => t.resId).map(t => ({ resId: t.resId, qty: t.qty || 0,
+          price: t.price != null ? Math.max(0, t.price | 0) : targetPrice(t) })),
+        gross: rawNum(document.getElementById('f-gross')),
+        potions: clampInt('f-potions', 99),
+        extraCost: rawNum(document.getElementById('f-extra')),
+        excluded: draftFarmExcluded,
+        note: document.getElementById('f-note').value.trim(),
+      };
+
+      const wasEditing = !!editingFarmId;
+      if (editingFarmId) {
+        const s = (state.farms || []).find(x => x.id === editingFarmId);
+        if (s) Object.assign(s, payload);
+      } else {
+        state.farms.push({ id: uid(), ...payload, createdAt: Date.now() });
+        // la session chronométrée est close une fois enregistrée
+        if (liveSession()) { delete state.settings.live; stopTick(); }
+      }
+      if (draftZoneId) state.settings.lastZone = draftZoneId;
+      save();
+      renderFarm();
+      closeAllModals();
+      editingFarmId = null;
+      toast(wasEditing ? 'Session mise à jour' : 'Session enregistrée');
+    }
+
+    function deleteFarm() {
+      const id = editingFarmId;
+      if (!id) return;
+      closeAllModals();
+      confirmDialog('Supprimer cette session ?', 'Elle ne sera plus comptée dans tes statistiques.', () => {
+        state.farms = (state.farms || []).filter(x => x.id !== id);
+        save();
+        renderFarm();
+        editingFarmId = null;
+        toast('Session supprimée');
+      });
+    }
+
+    // ---- Formulaire de zone ----
+    function buildZoneKinds() {
+      const grid = document.getElementById('z-kinds');
+      if (!grid) return;
+      grid.innerHTML = '';
+      ZONE_KINDS.forEach(k => {
+        const b = document.createElement('button');
+        b.className = 'int-btn';
+        b.dataset.z = k.k;
+        b.textContent = k.label;
+        b.addEventListener('click', () => { draftZoneKind = k.k; paintZoneKinds(); haptic(); });
+        grid.appendChild(b);
+      });
+    }
+    function paintZoneKinds() {
+      document.querySelectorAll('#z-kinds .int-btn').forEach(b =>
+        b.classList.toggle('on', b.dataset.z === draftZoneKind));
+      // le rattachement n'a de sens que pour un donjon
+      document.getElementById('z-link-field').classList.toggle('hidden', draftZoneKind !== 'donjon');
+    }
+    function fillZoneLinks(selected) {
+      const sel = document.getElementById('z-link');
+      const opts = (state.zones || []).filter(z => z.kind !== 'donjon' && z.id !== editingZoneId);
+      sel.innerHTML = `<option value="">Aucune</option>` + opts.map(z =>
+        `<option value="${z.id}"${z.id === selected ? ' selected' : ''}>${escapeHtml(zoneLabel(z))}</option>`).join('');
+    }
+
+    function openZoneForm(id, fromFarm) {
+      editingZoneId = id || null;
+      zoneReturnToFarm = !!fromFarm;
+      const z = id ? zoneById(id) : null;
+      document.getElementById('zone-title').textContent = z ? 'Modifier la zone' : 'Nouvelle zone';
+      document.getElementById('z-name').value = z ? (z.name || '') : '';
+      document.getElementById('z-level').value = z && z.level ? z.level : '';
+      draftZoneKind = z ? (z.kind || 'zone') : 'zone';
+      draftZoneHidden = z ? !!z.hidden : false;
+      fillZoneLinks(z ? z.linkId : null);
+      paintZoneKinds();
+      document.getElementById('z-hidden').classList.toggle('on', draftZoneHidden);
+      document.getElementById('zone-delete').classList.toggle('hidden', !z);
+      document.getElementById('modal-zone').classList.add('active');
+    }
+
+    function saveZone() {
+      const name = document.getElementById('z-name').value.trim();
+      if (!name) { flagInvalid('z-name'); toast('Donne un nom à la zone'); return; }
+      const payload = {
+        name: name.slice(0, 40),
+        kind: draftZoneKind,
+        level: clampInt('z-level', 999) || null,
+        linkId: draftZoneKind === 'donjon' ? (document.getElementById('z-link').value || null) : null,
+        hidden: draftZoneHidden,
+      };
+      let id = editingZoneId;
+      if (id) {
+        const z = zoneById(id);
+        if (z) Object.assign(z, payload);
+      } else {
+        id = uid();
+        state.zones.push({ id, ...payload, createdAt: Date.now() });
+      }
+      save();
+      editingZoneId = null;
+      document.getElementById('modal-zone').classList.remove('active');
+      if (zoneReturnToFarm) {
+        zoneReturnToFarm = false;
+        draftZoneId = id;
+        renderZoneSelect();
+      }
+      renderFarm();
+      toast('Zone enregistrée');
+    }
+
+    function deleteZone() {
+      const id = editingZoneId;
+      if (!id) return;
+      const used = (state.farms || []).filter(s => s.zoneId === id).length;
+      document.getElementById('modal-zone').classList.remove('active');
+      confirmDialog('Supprimer cette zone ?',
+        used ? `${plural(used, 'session')} y ${used > 1 ? 'sont rattachées' : 'est rattachée'} et se retrouvera${used > 1 ? 'ont' : ''} sans zone.`
+             : 'Elle sera retirée du comparatif.',
+        () => {
+          state.zones = (state.zones || []).filter(z => z.id !== id);
+          state.zones.forEach(z => { if (z.linkId === id) z.linkId = null; });
+          (state.farms || []).forEach(s => { if (s.zoneId === id) s.zoneId = null; });
+          save();
+          renderFarm();
+          editingZoneId = null;
+          toast('Zone supprimée');
+        });
+    }
+
+    // ---- Formulaire de ressource ----
+    function openResForm(id, targetIndex) {
+      editingResId = id || null;
+      resReturnToIndex = (targetIndex == null) ? null : targetIndex;
+      const r = id ? resById(id) : null;
+      document.getElementById('res-title').textContent = r ? 'Modifier la ressource' : 'Nouvelle ressource';
+      document.getElementById('rs-name').value = r ? (r.name || '') : '';
+      setNumberInput(document.getElementById('rs-price'), r ? (r.price || 0) : 0);
+      draftResFlat = r ? !!r.flat : false;
+      document.getElementById('rs-flat').classList.toggle('on', draftResFlat);
+      const totals = resTotals();
+      const t = r ? totals[r.id] : null;
+      document.getElementById('rs-price-hint').textContent = t && t.qty
+        ? `${fmtNum(t.qty)} unités déjà enregistrées : le prix s'applique rétroactivement.` : '';
+      document.getElementById('res-delete').classList.toggle('hidden', !r);
+      document.getElementById('modal-res').classList.add('active');
+    }
+
+    function saveRes() {
+      const name = document.getElementById('rs-name').value.trim();
+      if (!name) { flagInvalid('rs-name'); toast('Donne un nom à la ressource'); return; }
+      const dup = (state.resources || []).find(r =>
+        r.id !== editingResId && r.name.trim().toLowerCase() === name.toLowerCase());
+      if (dup) { flagInvalid('rs-name'); toast('Cette ressource existe déjà'); return; }
+      // Sans prix, la ressource fausse tous les calculs de rentabilité en silence
+      const price = rawNum(document.getElementById('rs-price'));
+      if (price <= 0) { flagInvalid('rs-price'); toast('Renseigne le prix unitaire'); return; }
+
+      const payload = {
+        name: name.slice(0, 50),
+        price,
+        flat: draftResFlat,
+      };
+      let id = editingResId;
+      if (id) {
+        const r = resById(id);
+        if (r) Object.assign(r, payload);
+      } else {
+        id = uid();
+        state.resources.push({ id, ...payload, createdAt: Date.now() });
+      }
+      save();
+      editingResId = null;
+      document.getElementById('modal-res').classList.remove('active');
+      if (resReturnToIndex != null && draftTargets[resReturnToIndex]) {
+        draftTargets[resReturnToIndex].resId = id;
+        paintTargets();
+        updateFarmHints();
+      }
+      resReturnToIndex = null;
+      renderFarm();
+      toast('Ressource enregistrée');
+    }
+
+    function deleteRes() {
+      const id = editingResId;
+      if (!id) return;
+      const used = (state.farms || []).reduce((n, s) =>
+        n + ((s.targets || []).some(t => t.resId === id) ? 1 : 0), 0);
+      document.getElementById('modal-res').classList.remove('active');
+      confirmDialog('Supprimer cette ressource ?',
+        used ? `Elle apparaît dans ${plural(used, 'session')} ; ces lignes seront retirées.` : 'Elle sera retirée du catalogue.',
+        () => {
+          state.resources = (state.resources || []).filter(r => r.id !== id);
+          (state.farms || []).forEach(s => {
+            if (Array.isArray(s.targets)) s.targets = s.targets.filter(t => t.resId !== id);
+          });
+          save();
+          renderFarm();
+          editingResId = null;
+          toast('Ressource supprimée');
+        });
+    }
+
+    // ---- Réglages du farm ----
+    function openFarmCfg() {
+      const cfg = farmCfg();
+      document.getElementById('fc-anom').value = cfg.anomalyBonus;
+      setNumberInput(document.getElementById('fc-potion'), cfg.potionPrice);
+      document.getElementById('modal-fcfg').classList.add('active');
+    }
+    function saveFarmCfg() {
+      state.settings.farm = {
+        anomalyBonus: clampInt('fc-anom', 999),
+        potionPrice: rawNum(document.getElementById('fc-potion')),
+      };
+      save();
+      document.getElementById('modal-fcfg').classList.remove('active');
+      renderFarm();
+      toast('Réglages enregistrés');
     }
 
     // ============================================================
@@ -7329,6 +9531,7 @@
 
     document.getElementById('fab-add').addEventListener('click', () => {
       if (activeModule === 'songes') openRunForm();
+      else if (activeModule === 'farm') openFarmForm();
       else openForm();
     });
 
@@ -7449,6 +9652,83 @@
       compoReturnToRun = false;
     });
 
+    // ---- Farm ----
+    document.getElementById('farm-cancel').addEventListener('click', () => { closeAllModals(); editingFarmId = null; });
+    document.getElementById('farm-save').addEventListener('click', saveFarm);
+    document.getElementById('farm-delete').addEventListener('click', deleteFarm);
+    document.getElementById('f-anomaly').addEventListener('click', () => {
+      draftAnomaly = !draftAnomaly;
+      paintFarmToggles();
+      updateFarmHints();
+      haptic();
+    });
+    document.getElementById('f-excluded').addEventListener('click', () => {
+      draftFarmExcluded = !draftFarmExcluded;
+      paintFarmToggles();
+      haptic();
+    });
+    document.getElementById('f-new-zone').addEventListener('click', () => openZoneForm(null, true));
+    document.getElementById('f-add-target').addEventListener('click', () => {
+      if (draftTargets.length >= 8) { toast('8 ressources maximum'); return; }
+      draftTargets.push({ resId: null, qty: 0 });
+      paintTargets();
+      haptic();
+    });
+    ['f-bonus', 'f-potions', 'f-dj'].forEach(id =>
+      document.getElementById(id).addEventListener('input', updateFarmHints));
+    ['f-gross', 'f-extra'].forEach(id => {
+      const el = document.getElementById(id);
+      wireNumberInput(el);
+      el.addEventListener('input', updateFarmHints);
+    });
+
+    document.getElementById('add-zone').addEventListener('click', () => openZoneForm());
+    document.getElementById('zone-save').addEventListener('click', saveZone);
+    document.getElementById('zone-delete').addEventListener('click', deleteZone);
+    document.getElementById('zone-cancel').addEventListener('click', () => {
+      document.getElementById('modal-zone').classList.remove('active');
+      editingZoneId = null;
+      zoneReturnToFarm = false;
+    });
+    document.getElementById('z-hidden').addEventListener('click', () => {
+      draftZoneHidden = !draftZoneHidden;
+      document.getElementById('z-hidden').classList.toggle('on', draftZoneHidden);
+      haptic();
+    });
+
+    document.getElementById('add-res').addEventListener('click', () => openResForm());
+    document.getElementById('res-save').addEventListener('click', saveRes);
+    document.getElementById('res-delete').addEventListener('click', deleteRes);
+    document.getElementById('res-cancel').addEventListener('click', () => {
+      document.getElementById('modal-res').classList.remove('active');
+      editingResId = null;
+      resReturnToIndex = null;
+    });
+    document.getElementById('rs-flat').addEventListener('click', () => {
+      draftResFlat = !draftResFlat;
+      document.getElementById('rs-flat').classList.toggle('on', draftResFlat);
+      haptic();
+    });
+    wireNumberInput(document.getElementById('rs-price'));
+
+    document.getElementById('fcfg-cancel').addEventListener('click', () =>
+      document.getElementById('modal-fcfg').classList.remove('active'));
+    document.getElementById('fcfg-save').addEventListener('click', saveFarmCfg);
+    wireNumberInput(document.getElementById('fc-potion'));
+
+    document.querySelectorAll('#fstats-subtabs .sub-btn').forEach(b => {
+      b.addEventListener('click', () => {
+        state.settings.farmTab = b.dataset.f;
+        save();
+        renderFarmStats();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        haptic();
+      });
+    });
+
+    setupFarmDurInputs();
+    buildZoneKinds();
+
     // Données / sauvegarde
     document.getElementById('open-data').addEventListener('click', () => {
       document.getElementById('modal-data').classList.add('active');
@@ -7513,6 +9793,9 @@
       if (o.id === 'modal-spend') editingSpendId = null;
       if (o.id === 'modal-btab') editingBtab = null;
       if (o.id === 'modal-eco') draftRunes = [];
+      if (o.id === 'modal-farm') editingFarmId = null;
+      if (o.id === 'modal-zone') { editingZoneId = null; zoneReturnToFarm = false; }
+      if (o.id === 'modal-res') { editingResId = null; resReturnToIndex = null; }
       if (o.id === 'modal-confirm') confirmCb = null;
     }
 
