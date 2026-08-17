@@ -153,7 +153,7 @@
 
     /* ===== Header ===== */
     .app-header {
-      padding: 20px 18px 14px;
+      padding: 20px 18px 18px;
       position: sticky;
       top: 0;
       background: linear-gradient(180deg, var(--bg) 70%, transparent);
@@ -169,11 +169,10 @@
       gap: 12px;
     }
     .brand-title {
-      display: flex;
-      align-items: baseline;
-      gap: 12px;
-      flex-wrap: wrap;
+      display: block;
+      min-width: 0;
     }
+    .brand-title .sub { display: block; margin-top: 3px; }
     .gear-btn {
       flex: none;
       width: 38px;
@@ -228,13 +227,13 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 8px;
-      margin-top: 14px;
     }
+    .bars { margin-top: 18px; }
     .stat {
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
-      padding: 10px 12px;
+      padding: 11px 12px 12px;
       position: relative;
       overflow: hidden;
     }
@@ -252,13 +251,14 @@
       text-transform: uppercase;
       color: var(--text-dim);
       font-weight: 600;
+      margin-bottom: 5px;
     }
     .stats-bar.six {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 6px;
     }
-    .stats-bar.six .stat { padding: 9px 4px; }
+    .stats-bar.six .stat { padding: 10px 6px 11px; }
     .stats-bar.six .stat .label { font-size: 9.5px; }
     .stats-bar.six .stat .value { font-size: 16px; }
     .stat .value.gold { color: var(--gold-bright); }
@@ -2150,11 +2150,12 @@
     .module-switch {
       display: flex;
       gap: 4px;
+      margin-top: 16px;
       background: rgba(0, 0, 0, 0.3);
       border: 1px solid var(--border);
       border-radius: 999px;
       padding: 4px;
-      margin: 0 0 14px;
+      margin: 0;
     }
     .mod-btn {
       flex: 1;
