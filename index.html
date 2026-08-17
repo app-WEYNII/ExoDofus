@@ -215,6 +215,7 @@
       font-weight: 500;
     }
 
+    .stats-bar.four { grid-template-columns: repeat(2, 1fr); }
     .stats-bar {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -2634,6 +2635,323 @@
       color: var(--text-dim);
       flex-shrink: 0;
     }
+    /* ============ MODULE ALMANAX ============ */
+    .alma-sec {
+      font-family: var(--font-display);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+      margin: 18px 0 10px;
+    }
+
+    .alma-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-bottom: 10px;
+    }
+    .alma-card.today {
+      background: linear-gradient(160deg, var(--bg-card-hi), var(--bg-card));
+      border-color: var(--gold-deep);
+      box-shadow: var(--shadow-gold);
+    }
+    .alma-card.picked { border-color: var(--blue); }
+    .alma-card.done {
+      border-color: rgba(74, 222, 128, 0.4);
+      background: linear-gradient(160deg, var(--green-soft), var(--bg-card) 55%);
+    }
+    .ac-badge {
+      flex-shrink: 0;
+      align-self: center;
+      font-size: 9.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      color: var(--green);
+      background: var(--green-soft);
+      border: 1px solid rgba(74, 222, 128, 0.35);
+      border-radius: 999px;
+      padding: 3px 9px;
+    }
+    .ac-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .ac-when {
+      flex: 1;
+      min-width: 0;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      color: var(--text-dim);
+      padding-top: 6px;
+    }
+    .ac-tools { display: flex; gap: 6px; flex-shrink: 0; }
+    .ac-type {
+      font-family: var(--font-display);
+      font-size: 19px;
+      line-height: 1.25;
+      color: var(--gold-bright);
+      margin-bottom: 6px;
+    }
+    .alma-card.today .ac-type { font-size: 23px; }
+    .ac-desc {
+      font-size: 13.5px;
+      line-height: 1.55;
+      color: var(--text);
+    }
+
+    .ac-offer {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 12px;
+      padding: 12px;
+      background: var(--bg-elev);
+      border: 1px solid var(--border-hi);
+      border-radius: var(--radius-sm);
+    }
+    .ac-img { width: 44px; height: 44px; flex-shrink: 0; }
+    .icon-wrap {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .icon-wrap img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .icon-fb {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--gold-soft);
+      border: 1px solid var(--gold-deep);
+      border-radius: 9px;
+      color: var(--gold-bright);
+      font-family: var(--font-display);
+      font-size: 14px;
+      letter-spacing: 0.02em;
+    }
+    .ac-body { flex: 1; min-width: 0; }
+    .ac-item {
+      display: block;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--gold-bright);
+      line-height: 1.25;
+    }
+    .ac-sub { display: block; font-size: 11.5px; color: var(--text-soft); margin-top: 2px; }
+    .ac-qty {
+      flex-shrink: 0;
+      font-family: var(--font-display);
+      font-size: 28px;
+      line-height: 1;
+      color: var(--gold-bright);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .ac-steps { display: flex; gap: 8px; margin-top: 10px; }
+    .step {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 9px 8px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--bg-elev);
+      color: var(--text-dim);
+      font-size: 12.5px;
+      font-weight: 600;
+      font-family: var(--font-body);
+    }
+    .step .sb {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 17px;
+      height: 17px;
+      border-radius: 999px;
+      border: 1px solid currentColor;
+      font-size: 10px;
+      flex-shrink: 0;
+    }
+    .step.on {
+      color: var(--green);
+      border-color: rgba(74, 222, 128, 0.45);
+      background: var(--green-soft);
+    }
+
+    .pin-btn, .chk {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      background: var(--bg-elev);
+      color: var(--text-dim);
+      font-size: 14px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .pin-btn.on { color: var(--gold-bright); border-color: var(--gold-deep); }
+    .chk.on { color: var(--blue); border-color: var(--blue); background: var(--blue-soft); }
+
+    .mult-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      margin-bottom: 12px;
+    }
+    .mult-row .ml-lbl { flex: 1; font-size: 13px; font-weight: 600; }
+    .mult-row .ml-sub { display: block; font-size: 11px; color: var(--text-dim); font-weight: 400; }
+    .mult-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 17px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .mult-val {
+      min-width: 30px;
+      text-align: center;
+      font-family: var(--font-display);
+      font-size: 19px;
+      color: var(--gold-bright);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .alma-nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 12px 0;
+    }
+    .alma-nav .nav-btn {
+      width: 38px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 15px;
+    }
+    .alma-nav .nav-lbl {
+      flex: 1;
+      text-align: center;
+      font-family: var(--font-display);
+      font-size: 15px;
+      color: var(--gold-bright);
+    }
+    .alma-filters {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .alma-filters select, .alma-filters input {
+      width: 100%;
+      min-width: 0;
+      background: var(--bg-elev);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 9px 10px;
+      font-family: var(--font-body);
+      font-size: 13.5px;
+    }
+    .alma-range {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin: 12px 0;
+    }
+    .alma-range label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 10px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-dim);
+      font-weight: 700;
+    }
+    .alma-range input {
+      flex: 1;
+      min-width: 0;
+      background: none;
+      border: none;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 13.5px;
+    }
+    .alma-tools { display: flex; gap: 8px; margin-bottom: 12px; }
+    .alma-tools .btn { flex: 1; }
+
+    .prep-line {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .prep-line:last-of-type { border-bottom: none; }
+    .prep-img { width: 30px; height: 30px; flex-shrink: 0; }
+    .prep-img.icon-fb { font-size: 11px; }
+    .prep-body { flex: 1; min-width: 0; }
+    .prep-item { display: block; font-size: 14px; font-weight: 600; color: var(--gold-bright); }
+    .prep-sub { display: block; font-size: 11px; color: var(--text-dim); }
+    .prep-qty {
+      flex-shrink: 0;
+      font-variant-numeric: tabular-nums;
+      font-size: 16px;
+      color: var(--gold);
+    }
+    .prep-line.ok .prep-item { color: var(--green); }
+
+    .alma-tally {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .alma-tally .at-cell {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 9px 8px;
+      text-align: center;
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-dim);
+      font-weight: 700;
+    }
+    .alma-tally .at-cell b {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 17px;
+      color: var(--gold-bright);
+      letter-spacing: 0;
+      text-transform: none;
+      font-variant-numeric: tabular-nums;
+    }
   </style>
 </head>
 <body>
@@ -2650,6 +2968,7 @@
     <div class="module-switch">
       <button class="mod-btn active" data-mod="songes">☾ Songes</button>
       <button class="mod-btn" data-mod="farm">⛏ Farm</button>
+      <button class="mod-btn" data-mod="alma">📅 Almanax</button>
       <button class="mod-btn" data-mod="exos">⚒ Exos</button>
     </div>
 
@@ -2721,6 +3040,25 @@
         <div class="value kamas-num" id="fstat-dj">0</div>
       </div>
     </div>
+
+    <div class="stats-bar four hidden" id="bar-alma">
+      <div class="stat">
+        <div class="label">Comptes</div>
+        <div class="value kamas-num" id="astat-chars">1</div>
+      </div>
+      <div class="stat">
+        <div class="label">Prochain</div>
+        <div class="value kamas-num" id="astat-next">—</div>
+      </div>
+      <div class="stat">
+        <div class="label">Kamas</div>
+        <div class="value gold kamas-num" id="astat-kamas">—</div>
+      </div>
+      <div class="stat">
+        <div class="label">Almatons</div>
+        <div class="value gold kamas-num" id="astat-almatons">—</div>
+      </div>
+    </div>
   </header>
 
   <nav class="tabs hidden" data-mod="exos">
@@ -2734,6 +3072,12 @@
     <button class="tab" data-view="compos">Compos</button>
     <button class="tab" data-view="legends">Légendes</button>
     <button class="tab" data-view="sstats">Stats</button>
+  </nav>
+
+  <nav class="tabs hidden" data-mod="alma">
+    <button class="tab active" data-view="alma-day">Jour</button>
+    <button class="tab" data-view="alma-cal">Calendrier</button>
+    <button class="tab" data-view="alma-pin">Épinglés</button>
   </nav>
 
   <nav class="tabs hidden" data-mod="farm">
@@ -2891,6 +3235,43 @@
         <div class="title">Pas encore de données</div>
         <div>Enregistre quelques sessions pour voir les tendances</div>
       </div>
+    </section>
+    <!-- Almanax : Jour -->
+    <section class="view" id="view-alma-day">
+      <div id="alma-alert"></div>
+      <div id="alma-mult"></div>
+      <div id="alma-today"></div>
+      <div id="alma-next"></div>
+    </section>
+
+    <!-- Almanax : Calendrier -->
+    <section class="view" id="view-alma-cal">
+      <div class="subtabs" id="alma-grans">
+        <button class="sub-btn" data-agran="week">Semaine</button>
+        <button class="sub-btn" data-agran="month">Mois</button>
+        <button class="sub-btn" data-agran="year">Année</button>
+        <button class="sub-btn" data-agran="range">Plage</button>
+      </div>
+      <div class="alma-nav" id="alma-navrow">
+        <button class="nav-btn" id="alma-prev" aria-label="Période précédente">‹</button>
+        <span class="nav-lbl" id="alma-period"></span>
+        <button class="nav-btn" id="alma-next-p" aria-label="Période suivante">›</button>
+      </div>
+      <div class="alma-range hidden" id="alma-rangerow">
+        <label>Du <input type="date" id="alma-from" /></label>
+        <label>Au <input type="date" id="alma-to" /></label>
+      </div>
+      <div class="alma-filters">
+        <select id="alma-type"></select>
+        <input type="text" id="alma-q" placeholder="Rechercher…" autocomplete="off" />
+      </div>
+      <div id="alma-sum"></div>
+      <div id="alma-list"></div>
+    </section>
+
+    <!-- Almanax : Épinglés -->
+    <section class="view" id="view-alma-pin">
+      <div id="alma-pins"></div>
     </section>
   </main>
 
@@ -3891,6 +4272,7 @@
       renderRanking();
       renderSonges();
       renderFarm();
+      renderAlma();
     }
 
     function renderStats() {
@@ -7828,6 +8210,503 @@
       });
     }
 
+    // ============================================================
+    // MODULE : ALMANAX
+    // ============================================================
+    // Le calendrier se répète à date fixe d'une année sur l'autre : les entrées
+    // sont donc indexées sur « MM-JJ » et pas sur une année précise.
+    // Colonnes : clé, méryde, type de bonus, offrande, quantité, kamas, description, image.
+    const ALMA_DATA = [["01-01","Mazic","Jour de l'an","Métronome du Début-Temps",1,8400,"Onome attend les aventuriers qui veulent célébrer la nouvelle année près du temple de Xélor. Sa bénédiction accorde un sortilège temporaire, le bond du Début-Temps, que vous serez capable de lancer durant 12 heures.","164174"],["01-02","Arouz","Économie d'ingrédients","Michette",4,395,"Les Paysans économisent 15 % de leurs ingrédients lorsqu'ils fabriquent des objets.","33011"],["01-03","Orage","Challenges augmentés","Capuche d'Armécréante",1,21990,"Les bonus apportés par les challenges réussis sont augmentés de 150 % dans le donjon de la Tempête de l'Eliocalypse.","15999"],["01-04","Thomahon","Butin","Cœur de Crapeur",3,16140,"Les chances d'obtenir du butin sont augmentées de 75 % dans la zone des Larmes d'Ouronigride.","51472"],["01-05","Ling","Récolte abondante","Frostiz",10,10995,"Les quantités de Frostiz récupérées par les Paysans sont augmentées de 200 %.","34552"],["01-06","Sebklav","Quête répétable","Poils de Barbe du Grand Pa Wabbit",6,2111,"Une quête répétable spéciale est disponible aujourd'hui près de l'atelier des paysans du village d'Amakna. Réalisable à partir du niveau 20, elle est indépendante de la quête d'offrande.","54114"],["01-07","Yvad","Points d'expérience","Boue du Boo",6,615,"Les gains d'expérience sont augmentés de 50 % sur les créatures de type Gadouilleux.","15116"],["01-08","Leszak","Challenges augmentés","Serviette de Plage",6,395,"Les bonus apportés par les challenges réussis sont augmentés de 150 % dans le donjon du Château Ensablé.","55130"],["01-09","Stun","Objets de qualité","Épée Sacrée",1,769,"La qualité des objets fabriqués dans la ville de Bonta est augmentée.","6001"],["01-10","Trôma","Élevage de montures","Ceinture de Célérité",1,1253,"Toutes les variétés de dragodindes, volkornes et muldos roux donnent naissance à un bébé supplémentaire.","10017"],["01-11","Ashvey","Butin","Miroir de Dopeul",6,1231,"Les chances d'obtenir du butin sont augmentées de 50 % sur les créatures de type Dopeuls.","15092"],["01-12","Rojers","Minerai abondant","Argent",30,4200,"Les quantités d'Argent récupérées par les Mineurs sont augmentées de 125 %.","39028"],["01-13","Katlestyn","Challenges augmentés","Bave de Nessil",2,21990,"Les bonus apportés par les challenges réussis sont augmentés de 150 % dans les 4 zones des remparts du Château Harebourg et dans la Tour de la Clepsydre.","15828"],["01-14","Guigui","Bois abondant","Bois de Tremble",10,10995,"Les quantités de Bois de Tremble récupérées par les Bûcherons sont augmentées de 125 %.","38677"],["01-15","Poupline","Butin","Botte trouée de Mégabwork",6,4551,"Les chances d'obtenir du butin sont augmentées de 50 % sur les créatures de type Bworks de Cania.","15648"],["01-16","Bubba","Challenge supplémentaire","Relique Familiale",6,1517,"Un challenge supplémentaire est généré contre les monstres présents dans la zone de la Bordure de Brâkmar.","15094"],["01-17","Kia","Challenges augmentés","Glande d'Arak-haï",9,4551,"Les bonus apportés par les challenges réussis sont augmentés de 125 % sur les créatures de type Arak-haï.","164064"],["01-18","Yêcetu","Pêche abondante","Poisson-Chaton",40,593,"Les quantités de poissons récupérées par les Pêcheurs de tous niveaux sont augmentées de 100 %.","41277"],["01-19","Eskarina","Anomalies temporelles","Pagne d'Alashasss",2,21990,null,"10339"],["01-20","Inkola","Butin","Poil de Rat Brâkmarien",2,6662,"Les chances d'obtenir du butin sont augmentées de 50 % sur les créatures de type Rats Brâkmariens.","165034"],["01-21","Magikow","Fabrication intensive","Bouteille de Gloutoburg",1,11984,"Pour chaque objet fabriqué, les Alchimistes ont 25 % de chances de créer un second objet.","79177"],["01-22","Danizzal","Cueillette abondante","Ortie",40,197,"Les quantités d'Ortie récupérées par les Alchimistes sont augmentées de 125 %.","36642"],["01-23","Kestra","Forgemagie améliorée","Rune So",2,769,"Les Sculptemages ont 15 % de chances de ne pas consumer de rune lorsqu'ils tentent d'améliorer une arme.","78013"],["01-24","Shiva","Challenges augmentés","Bourgeon d'Abraknyde Sombre Irascible",2,9741,"Les bonus apportés par les challenges réussis sont augmentés de 150 % dans le donjon de la Clairière du Chêne Mou.","108230"],["01-25","Billfer","Points d'expérience","Tibia de Koalak Fossoyeur",5,6662,"Les gains d'expérience sont augmentés de 75 % dans la zone du Cimetière Primitif.","47640"],["01-26","Pierrock","Bois abondant","Bois de Chêne",40,1187,"Les quantités de Bois de Chêne récupérées par les Bûcherons sont augmentées de 125 %.","38092"],["01-27","Maribri","Fabrication intensive","Carasau",4,395,"Pour chaque objet fabriqué, les Paysans ont 25 % de chances de créer un second objet.","33007"],["01-28","Koppapi","Challenges augmentés","Queue de Rat Pine",2,11654,"Les bonus apportés par les challenges réussis sont augmentés de 150 % dans le donjon du Repaire de Sphincter Cell.","65521"],["01-29","Krala","Challenge supplémentaire","Laine de Bouftou",6,593,"Un challenge supplémentaire est généré contre les monstres présents dans la zone du Coin des Bouftous.","57056"],["01-30","Lôrf","Butin","Bourse Suspecte",6,1517,"Les chances d'obtenir du butin sont augmentées de 50 % sur les créatures de type Bandits, dont les Artisans sombres.","141010"],["01-31","Teskirf","Cueillette abondante","Menthe Sauvage",40,1187,"Les quantités de Menthe Sauvage récupérées par les Alchimistes sont augmentées de 125 %.","36052"],["02-01","Tolgnas","Points d'expérience et butin en larmes","Blessure du Sacrieur",1,769,"Les gains d'expérience lors des combats contre les monstres et les chances d'obtenir du butin sont augmentés de 50 % pour tous les aventuriers qui sont sous l'influence d'une Idole de Tolgnas.","9013"],["02-02","Ruevas","La Grande Bouffe","Brioche à la viande de bouftou",2,4771,"Les bonus apportés par les challenges réussis sont augmentés de 125 % sur toutes les créatures considérées comme des Bouftous, y compris les boufmouths et les boufcouls. De plus, les gains d'expérience sont augmentés de 50 % pour les Chasseurs, les Paysans et les Pêcheurs.","33071"],["02-03","Marke","Points d'expérience","Bombe de Graboule",6,4551,"Les gains d'expérience sont augmentés de 50 % sur les créatures de type Magik Riktus.","15983"],["02-04","Eritem","Butin","Molaire de Blérice",2,19944,"Les chances d'obtenir du butin sont augmentées de 75 % dans la zone des Crocs de verre.","47681"],["02-05","Val","Percepteurs avides","Fil de Néfileuse",1,4551,"Le butin généré par les Percepteurs est augmenté de 200 % dans les donjons de niveau 80 à 110.","164065"],["02-06","Misdup","Économie d'ingrédients","Marteau de Boisaille",2,769,"Les Forgerons économisent 15 % de leurs ingrédients lorsqu'ils fabriquent des objets.","7001"],["02-07","Kimykay","Anomalies temporelles","Lamelle de Champa Vert",6,1143,"Les gains d'expérience sont augmentés de 50 % dans toutes les zones influencées par une anomalie temporelle. De plus, les gains d'expérience et les chances d'obtenir du butin sont augmentés de 25 % dans la zone du Bord de la Forêt Maléfique.","119013"],["02-08","Eramas","Bois abondant","Bois de Frêne",40,197,"Les quantités de Bois de Frêne récupérées par les Bûcherons sont augmentées de 125 %.","38017"],["02-09","Kilistin","Butin","Tignasse de Kanihilan",2,13721,"Les chances d'obtenir du butin sont augmentées de 100 % dans le donjon de la Grotte de Kanigroula.","54699"],["02-10","Meash","Élevage de montures","Pic de Dragodinde Dorée",6,3628,"Toutes les variétés de dragodindes, volkornes et muldos dorés donnent naissance à un bébé supplémentaire.","47598"],["02-11","Bazûkana","Pêche abondante","Bar Rikain",40,7190,"Les quantités de Bar Rikain et de Tanche récupérées par les Pêcheurs sont augmentées de 125 %.","41290"],["02-12","Karlita","Challenges augmentés","Poils de Mulounoké",5,5563,"Les bonus apportés par les challenges réussis sont augmentés de 125 % sur les créatures de type Mulous.","54008"],["02-13","Edyxo","Minerai abondant","Cuivre",30,769,"Les quantités de Cuivre récupérées par les Mineurs sont augmentées de 125 %.","39108"],["02-14","Duf","Expérience amoureuse","Shigekax Passion",9,593,"Tous les personnages atteints par la Malédiction du Ballotin voient leurs gains d'expérience augmentés de 100 % lors des combats contre les monstres.","42004"],["02-15","Güss","Coffres aux trésors","Potion de Vieillesse",1,11984,"Des Coffres de Güss peuvent être gagnés à la fin des chasses aux trésors.","12002"],["02-16","Tehego","Économie d'ingrédients","Beignet Astrubien",6,593,"Les Chasseurs économisent 15 % de leurs ingrédients lorsqu'ils fabriquent des objets.","69115"],["02-17","Eidnas","Butin","Écorce de Champaknyde",1,17240,"Les chances d'obtenir du butin sont augmentées de 50 % sur les créatures de type Fungus.","96109"],["02-18","Amirniana","Points d'expérience","Écorce d'Abrakne Sombre",6,4551,"Les gains d'expérience sont augmentés de 50 % sur les créatures de type Abraknydiens Sombres.","96670"],["02-19","Karat","Pêche abondante","Carpe d'Iem",40,1187,"Les quantités de Poisson-Chaton et de Carpe d'Iem récupérées par les Pêcheurs sont augmentées de 125 %.","41305"],["02-20","Atog","Challenges augmentés","Croupion du Bitouf aérien",3,13062,"Les bonus apportés par les challenges réussis sont augmentés de 150 % dans les zones du Feuillage et du Tronc de l'arbre Hakam.","15022"],["02-21","Bii","Butin","Bière bwork",9,1737,"Les chances d'obtenir du butin sont augmentées de 75 % dans les zones du Village des Bworks et du Campement des Bworks.","37001"],["02-22","Ludobel","Points d'expérience","Peau de Dragueuse",5,7872,"Les gains d'expérience sont augmentés de 75 % dans la zone du Sanctuaire des Dragoeufs.","59609"],["02-23","Rumo","Challenges augmentés","Corne de Malbois",2,12116,"Les bonus apportés par les challenges réussis sont augmentés de 150 % dans le donjon du Tertre du long sommeil.","47877"],["02-24","Vinstyl","Challenge supplémentaire","Cuir d'Eskoglyphe",2,21990,"Un challenge supplémentaire est généré contre les monstres présents dans les salles de la Base Abyssale.","56670"],["02-25","Kanabal","Butin","Goulobule rouge",1,21990,"Les chances d'obtenir du butin sont augmentées de 100 % dans le donjon du Manoir de Katrepat.","164139"],["02-26","Krisdip","Challenges augmentés","Armure de Blindur",2,19153,"Les bonus apportés par les challenges réussis sont augmentés de 125 % sur les créatures de type Marteaux-Aigris.","165058"],["02-27","Tiko","Gibier abondant","Marinade Sucrée-Salée",4,14601,"Les quantités de Viande Saignante et de Viande Persillée récupérées par les Chasseurs sont augmentées de 125 %.","69789"],["02-28","Tidihef","Points d'expérience","Plume de Domoizelle",3,5563,"Les gains d'expérience sont augmentés de 100 % dans le donjon de l'Arbre de Moon.","53663"],["03-01","Jonat","Économie d'ingrédients","La Chaîne Nhanor Kibrill",1,769,"Les Bijoutiers économisent 15 % de leurs ingrédients lorsqu'ils fabriquent des objets.","1012"],["03-02","Meluze","Points d'expérience","Crâne d'Aventurier",5,7630,"Les bonus apportés par les challenges réussis sont augmentés de 150 % dans la zone de la Vallée de la Morh'Kitu.","47031"],["03-03","Marifriss","Bois abondant","Bois de Charme",20,7190,"Les quantités de Bois de Charme et de Bois de Bambou Sombre récupérées par les Bûcherons sont augmentées de 125 %.","38138"],["03-04","Fitsef","Cadeaux surprises","Bottes Karnaval",1,17987,"Des Pochettes-Surprises ont été ajoutées aux butins des monstres. Lorsqu'elles sont utilisées, elles permettent d'obtenir des Beignets de Karnaval ou bien de se retrouver déguisé en monstre Tout-Fou.","11256"],["03-05","Darkchy","Anomalies temporelles","Poil de Gliglitch",3,12116,"Les chances d'obtenir du butin sont augmentées de 50 % dans toutes les zones influencées par une anomalie temporelle. De plus, les gains d'expérience et les chances d'obtenir du butin sont augmentés de 25 % dans la zone des Landes de Cania.","54364"],["03-06","Marilez","Objets de qualité","Baguette de Glace",1,769,"La qualité des objets fabriqués dans la ville de la Bourgade est augmentée.","3002"],["03-07","Tella","Challenges augmentés","Tête de lance de Fangshu",4,10599,"Les bonus apportés par les challenges réussis sont augmentés de 125 % sur les créatures de type Kozaru.","164676"],["03-08","Davkaz","Butin","Patte de Wabbit",6,1627,"Les chances d'obtenir du butin sont augmentées de 50 % sur les créatures de type Wabbits, Wabbits mutants et Gawde du Wa.","103440"],["03-09","Totot","Récolte abondante","Houblon",50,1187,"Les quantités de Houblon récupérées par les Paysans sont augmentées de 125 %.","34080"],["03-10","Inndo","Élevage de montures","Foudroyeur en Frêne",1,1165,"Toutes les variétés de dragodindes, volkornes et muldos indigo ainsi que de volkornes saphir donnent naissance à un bébé supplémentaire.","93004"],["03-11","Laetux","Challenge supplémentaire","Dent de Crocodaille",8,1517,"Un challenge supplémentaire est généré contre les monstres présents dans les zones des Marécages d'Amakna, des Marécages nauséabonds et des Marécages sans fond.","47234"],["03-12","Tajonoo","Économie d'ingrédients","Poisson Pané Frit",3,1737,"Les Pêcheurs économisent 15 % de leurs ingrédients lorsqu'ils fabriquent des objets.","49071"],["03-13","Maëmon","Expérience Robillesque","Œil de Harrogant",2,21990,"Les gains d'expérience sont augmentés de 75 % sur tous les gardiens de donjon.","109602"],["03-14","Todobaï","Cueillette abondante","Trèfle à",40,593,"Les quantités de Trèfles à 5 Feuilles récupérées par les Alchimistes sont augmentées de 125 %.","36067"],["03-15","Cycloune","Challenge supplémentaire","Gratrooll",5,7872,"Un challenge supplémentaire est généré contre les créatures de type Troolls de Litneg.","60001"],["03-16","Orété","Points d'expérience","Jouet de Gamine Zoth",4,8774,"Les gains d'expérience sont augmentés de 50 % sur les créatures de type Zoths.","15099"],["03-17","Wish","Fortune des Leprechauns","Cape du Piou Vert",1,769,"Les aventuriers en quête de binouzetons peuvent récupérer deux fois plus de pièces sur les Leprechauns.","17105"],["03-18","Ninefi","Forgemagie améliorée","Rune Fui",2,769,"Les Façomages ont 15 % de chances de ne pas consumer de rune lorsqu'ils tentent d'améliorer un objet.","78076"],["03-19","Icleen","Minerai abondant","Manganèse",30,2001,"Les quantités de Manganèse récupérées par les Mineurs sont augmentées de 125 %.","39397"],["03-20","Elosi","Points d'expérience","Queue de Mantaze",2,21990,"Les gains d'expérience sont augmentés de 100 % dans le Vaisseau du Capitaine Meno.","65769"],["03-21","Cébeyon","Nouveau Calendrier Test","Bave de Bouftou",6,21990,"#N/A","15057"],["03-22","Konala","Butin","Incus de Verglasseur",2,21990,"Les chances d'obtenir du butin sont augmentées de 100 % dans la Forgefroide de Missiz Frizz.","47809"],["03-23","Perviom","Apparition des ressources","Gravure de Crachin",1,3276,"La vitesse d'apparition des bois de tous types est augmentée de 100 %.","15211"],["03-24","Socren","Points d'expérience","Ailes de Scarafeuille Blanc",6,1099,"Les gains d'expérience sont augmentés de 50 % sur les créatures de type Scarafeuilles.","104213"],["03-25","Fala","Butin","Antenne de Bacterrib",2,21990,"Les chances d'obtenir du butin sont augmentées de 50 % sur les créatures de type Krobes.","164046"],["03-26","Dees","Challenges augmentés","Incisive de Glourmand",1,19944,"Les bonus apportés par les challenges réussis sont augmentés de 125 % sur les créatures de type Gloursons.","47686"],["03-27","Sha","Gibier abondant","Papillote au Citron",4,1781,"Les quantités de Viande Minérale et de Viande Frelatée récupérées par les Chasseurs sont augmentées de 125 %.","69744"],["03-28","Clynt","Points d'expérience","Canine de Kanimate",2,21990,"Les gains d'expérience sont augmentés de 100 % dans le Transporteur de Sylargh.","47814"],["03-29","Ocarian","Butin","Boulon de Cybwork",2,17240,"Les chances d'obtenir du butin sont augmentées de 100 % dans la Grotte du Bworker.","15820"],["03-30","Mahadine","Points d'expérience","Queue de Fennex",6,3980,"Les gains d'expérience sont augmentés de 50 % sur les créatures de type Animaux du désert.","65771"],["03-31","Kimbru","Challenges augmentés","Dent de Larve Émeraude",6,2836,"Les bonus apportés par les challenges réussis sont augmentés de 150 % dans le donjon des Larves.","47654"],["04-01","Azra","Points d'expérience et butin sur les créatures marines","Fluide Glacial",3,395,"Les gains d'expérience et les chances d'obtenir du butin sont augmentés de 50 % sur tous les monstres considérés comme des créatures marines (pichons, monstres des plages, corailleurs, crustorails, tortues de Moon, crabe Hijacob, gélikan, Kralamoure Géant, monstres des abysses de Sufokia, Mercemers, Submergés, Crocodailles de Crocuzko).","15100"],["04-02","Yamato","Challenge supplémentaire","Abreuvoir en Frêne",1,4200,"Un challenge supplémentaire est généré contre les monstres présents dans la zone du Territoire Cacterre.","93001"],["04-03","Jébédaï","Points d'expérience","Lanterne usée",3,15436,"Les gains d'expérience sont augmentés de 75 % dans la zone du Mont des Tombeaux.","164738"],["04-04","Typlanêt","Objets de qualité","Ceinture de Sécurité",1,769,"La qualité des objets fabriqués dans la ville de Sufokia est augmentée.","10007"],["04-05","Tasmalin","Cueillette abondante","Edelweiss",40,1407,"Les quantités d'Edelweiss récupérées par les Alchimistes sont augmentées de 125 %.","35191"],["04-06","Itourp","Butin","Canine de Mergranlou",5,5563,"Les chances d'obtenir du butin sont augmentées de 75 % dans la zone des Hauts des Hurlements.","47106"],["04-07","Bensom","Récolte abondante","Orge",50,197,"Les quantités d'Orge récupérées par les Paysans sont augmentées de 125 %.","34082"],["04-08","Enaibi","Points d'expérience","Carapace Verte",6,1517,"Les gains d'expérience sont augmentés de 75 % dans la zone de la Plage de la Tortue.","24018"],["04-09","Mak","Challenges augmentés","Plume de Gobvious",5,5343,"Les bonus apportés par les challenges réussis sont augmentés de 150 % dans le donjon du Théâtre de Dramak.","53658"],["04-10","Nunu","Élevage de montures","Anneau Fortifiant",2,769,"Toutes les variétés de dragodindes, volkornes et muldos pourpres ainsi que de volkornes jade donnent naissance à un bébé supplémentaire.","9029"],["04-11","Jay","Anomalies temporelles","Bout de Blop Coco",6,593,"Les gains d'expérience sont augmentés de 50 % dans toutes les zones influencées par une anomalie temporelle. De plus, les gains d'expérience et les chances d'obtenir du butin sont augmentés de 25 % dans la zone du Lac de Cania.","15281"],["04-12","Mobbib","Butin","Os de Jiangshi-Nobi",3,13721,"Les chances d'obtenir du butin sont augmentées de 50 % sur les créatures de type Armée de Brume.","164767"],["04-13","Gorzarel","Bois abondant","Bois de Kaliptus",40,6377,"Les quantités de Bois d'Ébène et de Bois de Kaliptus récupérées par les Bûcherons sont augmentées de 125 %.","38001"],["04-14","Bûnty","Butin","Plume du Kwak de Vent",4,1407,"Les chances d'obtenir du butin sont augmentées de 100 % dans le Nid du Kwakwa.","53113"],["04-15","Mascha","Fabrication intensive","Baffeur en Frêne",1,1165,"Pour chaque objet fabriqué, les Bricoleurs ont 25 % de chances de créer un second objet.","93005"],["04-16","Favarez","Pêche abondante","Greuvette",40,197,"Les quantités de Greuvette et de Crabe Sourimi récupérées par les Pêcheurs sont augmentées de 125 %.","41292"],["04-17","Sehb","Butin","Multygely",1,4507,"Les chances d'obtenir du butin sont augmentées de 75 % dans la zone de la péninsule des Gelées.","42026"],["04-18","Duc","Points d'expérience","Cuir de Cuirboule",2,21990,"Les gains d'expérience sont augmentés de 100 % dans le donjon des Salons privés de Klime.","56668"],["04-19","Tchoub","Minerai abondant","Or",30,7190,"Les quantités d'Or récupérées par les Mineurs sont augmentées de 125 %.","39022"],["04-20","Etnop","Quête répétable et chocomania","Œuf de Dragoeuf Calcaire",1,6662,"Une quête répétable spéciale est disponible aujourd'hui près du sanctuaire des Zobals. Réalisable à partir du niveau 20, elle est indépendante de la quête d'offrande. De plus, les gains d'expérience et les chances d'obtenir du butin sont augmentés de 30 % dans toutes les zones de l'Île de Pwâk.","105648"],["04-21","Scheik","Coffres aux trésors","Boule polie",1,5871,"Des Coffres de Scheik peuvent être gagnés à la fin des chasses aux trésors.","51008"],["04-22","Sylfaen","Butin","Dent de Tilamproie",2,21990,"Les chances d'obtenir du butin sont augmentées de 50 % sur les créatures de type Monstres des ruines sous-marines.","47851"],["04-23","Katelruz","Points d'expérience","Bave de Ouassingue",5,5761,"Les gains d'expérience sont augmentés de 50 % sur les créatures de type Monstres des Tourbières.","15093"],["04-24","Lakha","Challenge supplémentaire","Pierre du Craqueleur",6,2836,"Un challenge supplémentaire est généré contre les monstres présents dans la zone de la Montagne des Craqueleurs.","51127"],["04-25","Rakreveï","Gibier abondant","Viande Rassie",6,4947,"Les quantités de Viande Rassie et de Viande Exsudative récupérées par les Chasseurs sont augmentées de 125 %.","63473"],["04-26","Fako","Quêtes et kamas","Kamatrix",1,5981,"Les gains de kamas sont augmentés de 100 % pour toutes les quêtes.","15881"],["04-27","Proff","Challenges augmentés","Oreille de Foufayteur",6,2990,"Les bonus apportés par les challenges réussis sont augmentés de 125 % sur les créatures de type Ruffians de Cania.","106562"],["04-28","Shinkarré","Minerai abondant","Cristal",1,2374,"Les quantités de minerai récupérées par les Mineurs de tous niveaux sont augmentées de 100 %.","50098"],["04-29","Mylka","Butin","Plume de Tofu",6,989,"Les chances d'obtenir du butin sont augmentées de 50 % sur les créatures de type Tofus.","53014"],["04-30","Franek","Cueillette abondante","Graine de Pandouille",40,4200,"Les quantités de Plantes récupérées par les Alchimistes de tous niveaux sont augmentées de 100 %.","58067"],["05-01","Esthoma","Fabrique Féérique","Capsule Explosive",2,1517,"Les gains d'expérience sont augmentés de 50 % pour tous les métiers. De plus, pour chaque Fée d'Artifice fabriquée, les personnages ont 25 % de chances de créer une seconde Fée et 15 % de chances d'économiser des ingrédients. Ils peuvent aussi récupérer 2 fois plus de Capsules Explosives en combattant des Bworks Mages.","15711"],["05-02","Gymcitro","Points d'expérience","Langue de Champodonte",1,17240,"Les gains d'expérience sont augmentés de 100 % dans le donjon du Temple du Grand Ougah.","15765"],["05-03","Rikku","Anomalies temporelles","Croupion de Truchmuche",4,8510,"Les bonus apportés par les challenges réussis sont augmentés de 75 % dans toutes les zones influencées par une anomalie temporelle. De plus, les gains d'expérience et les chances d'obtenir du butin sont augmentés de 25 % dans la zone du Cirque de Cania.","164039"],["05-04","Malava","Butin","Longue-vue de Gob-Trotteur",6,989,"Les chances d'obtenir du butin sont augmentées de 50 % sur les créatures de type Gobelins d'Amakna.","24286"],["05-05","Bo","Challenge supplémentaire","Fragment de Pierre Pointue",6,2748,"Un challenge supplémentaire est généré contre les monstres présents dans la zone des Plaines Rocheuses.","51455"],["05-06","Bipup","Bois abondant","Bois d'Érable",40,2001,"Les quantités de Bombu et d'Érable récupérées par les Bûcherons sont augmentées de 125 %.","38153"],["05-07","Azkatraz","Challenges augmentés","Dent de Klémort",1,21990,"Les bonus apportés par les challenges réussis sont augmentés de 150 % dans les donjons de la Tour de Solar et de la Tour de Bethel.","40713"],["05-08","Bigg","Quête répétable","Pomme de Terre",20,197,"Une quête répétable spéciale est disponible aujourd'hui près du château d'Amakna. Réalisable à partir du niveau 20, elle est indépendante de la quête d'offrande.","68135"],["05-09","Bern","Butin","Pierre Médicinale",6,2001,"Les chances d'obtenir du butin sont augmentées de 75 % dans la zone du Canyon Sauvage.","51496"],["05-10","Loumi","Élevage de montures","Pic de Dragodinde",6,2462,"Toutes les variétés de dragodindes, volkornes et muldos turquoise donnent naissance à un bébé supplémentaire.","47597"],["05-11","Duanaf","Forgemagie élémentaire","Fiole à élément",1,5981,"Les chances de transformer une arme via une potion de forgemagie élémentaire sont doublées.","71057"],["05-12","Zebdara","Récolte abondante","Malt",50,4200,"Les quantités de Malt récupérées par les Paysans sont augmentées de 125 %.","34083"],["05-13","Todeb","Challenges augmentés","Dédicace de Skeunk pour Émeraude",1,8400,"Les bonus apportés par les challenges réussis sont augmentés de 150 % dans le donjon du Repaire de Skeunk.","15804"],["05-14","Emil","Objets de qualité","Bouclier de Bowisse",1,4529,"La qualité des objets fabriqués dans le village et la forêt d'Amakna est augmentée.","82021"],["05-15","Nell","Cadeaux Surprises","Collier de Khan Karkass",2,769,"Des Boufballes Surprises ont été ajoutées aux butins des monstres. Lorsqu'elles sont utilisées, elles permettent d'obtenir des Bouf'gommes de différents parfums.","1273"],["05-16","Ku","Apparition des ressources","Belladone",40,7190,"La vitesse d'apparition des fleurs et des plantes cueillies par les Alchimistes est augmentée de 100 %.","35638"],["05-17","Khâm","Butin","Étoffe du Roissingue",1,21154,"Les chances d'obtenir du butin sont augmentées de 50 % sur les créatures de type Monstres des Tourbières.","55019"],["05-18","Kevlatahmu","Anomalies temporelles","Pollen de Bulbiflore",3,6662,"Le butin généré par les Percepteurs est augmenté de 100 % dans toutes les zones influencées par une anomalie temporelle. De plus, les gains d'expérience et les chances d'obtenir du butin sont augmentés de 25 % dans la zone de Plantala.","164668"],["05-19","Tyrben","Minerai abondant","Étain",30,2990,"Les quantités d'Étain et de Silicate récupérées par les Mineurs sont augmentées de 125 %.","39078"],["05-20","Jember","Économie d'ingrédients","Bouclier Tonbarien",1,1407,"Les Façonneurs économisent 15 % de leurs ingrédients lorsqu'ils fabriquent des objets.","82475"],["05-21","Ntamak","Expérience des métiers","Capouze des Champs",1,769,"Les gains d'expérience sont augmentés de 50 % pour les métiers de fabrication de vêtements et de parures (Bijoutier, Cordonnier et Tailleur).","17065"],["05-22","Krisegis","Expérience des quêtes","Sac du Petit Aventurier",1,2352,"Les gains d'expérience sont augmentés de 100 % pour toutes les quêtes.","81027"],["05-23","Osebo","Pêche abondante","Brochet",40,2001,"Les quantités de Brochet, de Perche et de Lotte récupérées par les Pêcheurs sont augmentées de 125 %.","41400"],["05-24","Daza","Apparition des ressources","Seigle",40,2990,"La vitesse d'apparition des ressources est augmentée de 150 % dans la zone des Champs de Cania.","34561"],["05-25","Seyfani","Points d'expérience","Duvet du Kilibriss",5,13391,"Les gains d'expérience sont augmentés de 75 % dans la zone des Plaines Herbeuses.","54012"],["05-26","Taelstrom","Challenge supplémentaire","Corne de Gamino",4,8927,"Un challenge supplémentaire est généré contre les monstres présents dans la zone du Labyrinthe du Minotoror.","47699"],["05-27","Milidès","Fabrication intensive","Tanche en Matelote",2,17987,"Pour chaque objet fabriqué, les Pêcheurs ont 25 % de chances de créer un second objet.","49151"],["05-28","Izmar","Gibier abondant","Viande Sanguinolente",6,3980,"Les quantités de Viande Sanguinolente récupérées par les Chasseurs sont augmentées de 125%.","63464"],["05-29","Alikindoy","Nature généreuse","Sac du Petit Récolteur",1,1517,"La vitesse d'apparition des ressources de tous types est augmentée de 100 %. De plus, les récolteurs peuvent récupérer des Fleurs de Rosal ou des Fringales de Silouate en affrontant les Protecteurs de ressources.","81026"],["05-30","Xandra","Forgemagie améliorée","Rune Pui",3,769,"Les Forgemages ont 15 % de chances de ne pas consumer de rune lorsqu'ils tentent d'améliorer une arme.","78016"],["05-31","Tiny","Butin","Lamelle de Dramanite",3,17987,"Les chances d'obtenir du butin sont augmentées de 100 % dans le donjon de l'Antre du Korriandre.","119001"],["06-01","Namyknof","Challenge supplémentaire","Pince de Crabe",6,1517,"Un challenge supplémentaire est généré contre les créatures de type Monstres des plages.","47051"],["06-02","Elgero","Vœu de pauvreté","Biscotte",2,3980,"Des Sébiles d'Elgero ont été ajoutées aux butins des monstres des donjons. Lorsqu'elles sont utilisées, elles font disparaître les kamas… et permettent de bénéficier d'un effet aléatoire de charité bien ordonnée.","33012"],["06-03","Mikart","Percepteurs avides","Graine de la Discorde",6,1231,"Le butin généré par les Percepteurs est augmenté de 200 % dans les donjons de niveau 40 à 70.","58472"],["06-04","Martero","Gardiens de la nature","Bouclier du Bouftou",1,1165,"Les protecteurs de ressources ont 5 fois plus de chances d'apparaître pendant les activités de récolte. De plus, la vitesse d'apparition des Archimonstres est augmentée de 200 %.","82020"],["06-05","Aris","Points d'expérience","Coquille de Virustine",2,21990,"Les gains d'expérience sont augmentés de 50 % sur les créatures de type Krobes.","111753"],["06-06","Mendelia","Butin","Œil de Cycloïde",2,21990,"Les chances d'obtenir du butin sont augmentées de 100 % dans le Donjon du Comte Harebourg.","109603"],["06-07","Halden","Points d'expérience","Griffe de Blérauve",2,19944,"Les gains d'expérience sont augmentés de 50 % sur les créatures de type Bléros.","47680"],["06-08","Tigibon","Anomalies temporelles","Roue de Tivelo",6,4551,"Les gains d'expérience des montures sont augmentés de 100 % dans toutes les zones influencées par une anomalie temporelle. De plus, les gains d'expérience et les chances d'obtenir du butin sont augmentés de 25 % dans la zone de la Route des Roulottes.","15977"],["06-09","Toun","Quête répétable","Cawotte",2,2001,"Une quête répétable spéciale est disponible aujourd'hui à l'est de l'atelier des bûcherons de la forêt d'Amakna. Réalisable à partir du niveau 20, elle est indépendante de la quête d'offrande.","68031"],["06-10","Jibejan","Élevage de montures","Lait de Dragodinde",6,2462,"Toutes les variétés de dragodindes, volkornes et muldos amande donnent naissance à un bébé supplémentaire.","15424"],["06-11","Teluomaj","Butin","Bouteille de Bouchonnois",1,21990,"Les chances d'obtenir du butin sont augmentées de 100 % dans le Camp du Comte Razof.","15962"],["06-12","Aazimar","Challenges augmentés","Sang de Harpo",1,21990,"Les bonus apportés par les challenges réussis sont augmentés de 150 % dans le donjon de l'Aquadôme de Merkator.","15840"],["06-13","Blou","Bois abondant","Bois de Bambou",40,3562,"Les quantités de Bambou récupérées par les Bûcherons sont augmentées de 125 %.","38673"],["06-14","Yaka","Économie d'ingrédients","Clef des Champs",1,769,"Les Bricoleurs ont 15 % de chances d'économiser des ingrédients lorsqu'ils fabriquent des objets.","84013"],["06-15","Bek","Points d'expérience","Coccyx du Corailleur",6,1407,"Les gains d'expérience sont augmentés de 100 % dans laGrotte Hesque.","47012"],["06-16","Pytch","Challenge supplémentaire","Coquille de Dragoeuf Ardoise",6,2836,"Un challenge supplémentaire est généré contre les monstres présents dans les zones de la Presqu'île des Dragoeufs.","111211"],["06-17","Seyroth","Challenges augmentés","Racine d'Abraknyde",6,1407,"Les bonus apportés par les challenges réussis sont augmentés de 125 % sur les créatures de type Abraknydiens.","98102"],["06-18","Redfis","Minerai abondant","Cendrepierre",30,8993,"Les quantités de Cendrepierre récupérées par les Mineurs sont augmentées de 125 %.","39403"],["06-19","Lim","Butin","Peau de Crachefoux",4,10599,"Les chances d'obtenir du butin sont augmentées de 75 % dans la zone de Feudala.","59038"],["06-20","Grut","Récolte abondante","Blé",50,197,"Les quantités de Blé récupérées par les Paysans sont augmentées de 125 %.","34009"],["06-21","Atsu","Du miel dans les oreilles","Tambour de Gobaladée",6,395,"Les amateurs de musique peuvent récupérer deux fois plus de pollenectar sur les créatures du Monde des Douze (hors dimensions, zones sous-marines et intérieurs).","24287"],["06-22","Gnat","Challenge supplémentaire","Pince de Crustorail",6,1297,"Un challenge supplémentaire est généré contre les monstres présents dans les zones de la Plage de Corail.","47017"],["06-23","Hellmut","Points d'expérience","Appendice Démoniaque",1,21990,"Les gains d'expérience sont augmentés de 50 % sur les créatures de type Possédés.","176029"],["06-24","Azrou","Butin","Peau de Larve Champêtre",1,2396,"Les chances d'obtenir du butin sont augmentées de 50 % sur les créatures de typeAnimaux des champs.","59652"],["06-25","Oopah","Apparition des ressources","Eau Ferrugineuse",1,395,"La vitesse d'apparition des ressources est augmentée de 150 % dans la zone de la Mine Istairameur.","39404"],["06-26","Bouliks","Objets de qualité","Bouclier Volant",1,769,"La qualité des objets fabriqués sur l'île de Pandala est augmentée.","82017"],["06-27","Ansôh","Butin","Tentacule de Grofond",2,21990,"Les chances d'obtenir du butin sont augmentées de 100 % dans le Temple de Koutoulou.","103729"],["06-28","Ikoan","Anomalies temporelles","Grenat de Momistik",2,21990,"Les bonus apportés par les challenges réussis sont augmentés de 75 % dans toutes les zones influencées par une anomalie temporelle. De plus, les gains d'expérience et les chances d'obtenir du butin sont augmentés de 25 % dans la zone de la Pyramide Maudite.","50727"],["06-29","Poch","Gibier abondant","Viande Noire",2,19944,"Les quantités de Viande Gâtée et de Viande Noire récupérées par les Chasseurs sont augmentées de 125 %.","63439"],["06-30","Lamarilu","Points d'expérience","Bonnet de Gobaliste",6,989,"Les gains d'expérience sont augmentés de 100 % dans l'Akadémie des Gobs.","24288"],["07-01","Rems","Butin","Écaille de Dragoss Charbon",5,5563,"Les chances d'obtenir du butin sont augmentées de 50 % sur les créatures de type Dragoss.","59606"],["07-02","Yanouchk","Challenges augmentés","Œuf de Tofubine",1,7762,"Les bonus apportés par les challenges réussis sont augmentés de 150 % dans le donjon du Tofulailler Royal.","105646"],["07-03","Sirdal","Économie d'ingrédients","Potion Raide Dite",3,747,"Les Alchimistes ont 15 % de chances d'économiser des ingrédients lorsqu'ils fabriquent des objets.","12750"],["07-04","Eiwech","Rêve amaknéen","Friture Amaknéenne",4,3584,"Les gains d'expérience et les chances d'obtenir du butin sont augmentés de 50 % sur tous les monstres présents dans les zones du royaume d'Amakna. De plus, les quantités de Points de rêve obtenus dans les Songes infinis sont augmentées de 100 %.","69752"],["07-05","Alaokit","Butin","Poils magiques de Tanuki",2,9191,"Les chances d'obtenir du butin sont augmentées de 100 % dans le donjon de l'Atelier du Tanukouï San.","164678"],["07-06","Poupik","Pêche abondante","Truite",40,197,"Les quantités de Goujon et de Truite récupérées par les Pêcheurs sont augmentées de 125 %.","41394"],["07-07","Lazura","Récolte abondante","Maïs",50,7190,"Les quantités de Maïs et de Millet récupérées par les Paysans sont augmentées de 125 %.","34554"],["07-08","Unkn","Points d'expérience","Nœud de Marin",2,4551,"Les gains d'expérience sont augmentés de 50 % sur les créatures de type Pirates de Moon.","15129"],["07-09","Blid","Forgemagie améliorée","Rune Pod",2,769,"Les Cordomages ont 15 % de chances de ne pas consumer de rune lorsqu'ils tentent d'améliorer un objet.","78020"],["07-10","Jihelair","Élevage de montures","Arc Sifflant",1,769,"Toutes les variétés de dragodindes, volkornes et muldos prune donnent naissance à un bébé supplémentaire.","2015"],["07-11","Oskerine","Minerai abondant","Bauxite",30,5585,"Les quantités de Bauxite récupérées par les Mineurs sont augmentées de 125 %.","39076"],["07-12","Pasquéoz","Challenge supplémentaire","Poils de barbe de Barbélier",2,21990,"Un challenge supplémentaire est généré contre les créatures de type Clan Martegel.","54713"],["07-13","Klernodie","Butin","Eau de Kwapa",2,9191,"Les chances d'obtenir du butin sont augmentées de 100 % dans le donjon de la Vallée de la Dame des eaux.","164651"],["07-14","Zuart","Expérience du Kolizéum","Chaînes Brisées",6,1517,"Les gains d'expérience sont augmentés de 75 % lors des combats du Kolizéum.","15245"],["07-15","Bouilli","Gibier abondant","Viande Goûtue",2,21990,"Les quantités de Viande Goûtue récupérées par les Chasseurs sont augmentées de 125 %.","63487"],["07-16","Okajin","Anomalies temporelles","Boue Vénérable",2,16866,"Les chances d'obtenir du butin sont augmentées de 50 % dans toutes les zones influencées par une anomalie temporelle. De plus, les gains d'expérience et les chances d'obtenir du butin sont augmentés de 25 % dans les zones des forêts de Vulkania.","15793"],["07-17","Luzbel","Points d'expérience","Peau de Larve Verte",6,395,"Les gains d'expérience sont augmentés de 75 % dans la zone des Prairies d'Astrub.","59034"],["07-18","Titi","Concassage","Mauvaise Pioche",1,395,"Pour chaque rune obtenue en brisant des objets, les concasseurs ont 10 % de chances de créer une seconde rune.","21001"],["07-19","Alucard","Points d'expérience","Peau de Trithon",1,21990,"Les gains d'expérience sont augmentés de 100 % dans le donjon du Palais de Dantinea.","59651"],["07-20","Gurvamon","Apparition des ressources","Huile de Tournesol Sauvage",1,769,"La vitesse d'apparition des céréales récoltées par les Paysans est augmentée de 100 %.","60061"],["07-21","Alhera","Butin","Fragment de pépite de Sakaï",1,18955,"Les chances d'obtenir du butin sont augmentées de 50 % sur les créatures de type Gobelins de Sakaï.","51467"],["07-22","Tholank","Points d'expérience","Sardine à l'Étouffée",3,3144,"Les gains d'expérience sont augmentés de 75 % dans les zones du Port de givre et de La Bourgade.","49096"],["07-23","Kaoly","Expérience des familiers","Chacha",1,747,"Les gains d'expérience des familiers sont augmentés de 50 %.","18001"],["07-24","Xan","Bois abondant","Bois d'Orme",10,8993,"Les quantités de Bambou Sacré et d'Orme récupérées par les Bûcherons sont augmentées de 125 %.","38140"],["07-25","Anulideven","Challenges augmentés","Furoncle de la Mama Bwork",3,17240,"Les bonus apportés par les challenges réussis sont augmentés de 150 % dans la zone de Gisgoul.","15819"],["07-26","Lokhaan","Challenge supplémentaire","Pic de Malépik",3,12116,"Un challenge supplémentaire est généré contre les monstres présents dans les zones de l'Orée enchantée et du Dédale du Dark Vlad.","36658"],["07-27","Benka","Gibier abondant","Boulette de Viande",6,593,"Les quantités de Viande Hachée et de Viande Faisandée récupérées par les Chasseurs sont augmentées de 125 %.","69750"],["07-28","Nobozil","Points d'expérience","Lame brisée de Lichangoro",4,10599,"Les gains d'expérience sont augmentés de 100 % dans le donjon du Dojo du Vent.","164677"],["07-29","Olileb","Butin","Jus de Cacterre",2,9191,"Les chances d'obtenir du butin sont augmentées de 100 % dans le donjon de laCaverne d'El Piko.","15948"],["07-30","Aleb","Troollez manège","Cuir de Boostache Prépubère",3,989,"Les gains d'expérience et les chances d'obtenir du butin sont augmentés de 100 % dans le donjon de la Maison Fantôme. De plus, Leonzi Trool attend les aventuriers à la Foire du Trool. Sa bénédiction permet de trooller à tout va (bonus d'initiative et coups critiques durant 15 combats).","56534"],["07-31","Krisdanh","Points d'expérience","Flèche de Crâmbo",2,19153,"Les gains d'expérience sont augmentés de 50 % sur les créatures de type Chassouilleurs.","15960"],["08-01","Jycêdus","Cueillette abondante","Sauge",40,197,"Les quantités de Sauge récupérées par les Alchimistes sont augmentées de 125 %.","36643"],["08-02","Pô","Challenges augmentés","Plume de Truchideur",4,8400,"Les bonus apportés par les challenges réussis sont augmentés de 125 % sur les créatures de type Truches.","53659"],["08-03","Puliblak","Quête répétable","Potion de cité : Bonta",3,5981,"Une quête répétable spéciale est disponible aujourd'hui au sud des portes de Bonta. Réalisable à partir du niveau 20, elle est indépendante de la quête d'offrande.","12144"],["08-04","Anshâ","Butin","Cendres Matures",4,8400,"Les chances d'obtenir du butin sont augmentées de 100 % dans le Cratère Minus.","48282"],["08-05","Meda","Pêche abondante","Poisskaille",10,10995,"Les quantités de Poisskaille récupérées par les Pêcheurs sont augmentées de 200 %.","41403"],["08-06","Jü","Challenge supplémentaire","Crème à bronzer",6,329,"Un challenge supplémentaire est généré contre les monstres présents dans la zone des Calanques d'Astrub.","15814"],["08-07","Dramon","Challenges augmentés","Racine de Tronkoblop",3,2111,"Les bonus apportés par les challenges réussis sont augmentés de 150 % dans le donjon de l'Antre du Blop Multicolore Royal.","98001"],["08-08","Zeg","Économie d'ingrédients","Aluminite",1,395,"Les Mineurs ont 15 % de chances d'économiser des ingrédients lorsqu'ils fabriquent des objets.","40660"],["08-09","Tix","Butin","Pétale de Tournesol Sauvage",6,395,"Les chances d'obtenir du butin sont augmentées de 50 % sur les créatures de type Plantes des champs.","35632"],["08-10","Rigamix","Élevage de montures","Mangeoire en Frêne",1,6355,"Toutes les variétés de dragodindes, volkornes et muldos capables de se reproduire donnent naissance à un bébé supplémentaire.","93002"],["08-11","Matgap","Butin","Kapokaza",3,15436,"Les chances d'obtenir du butin sont augmentées de 75 % dans la zone du Mont des Tombeaux.","164736"],["08-12","Sab","Gibier abondant","Viande de Brousse",4,12732,"Les quantités de Viande Macérée et de Viande de Brousse récupérées par les Chasseurs sont augmentées de 125 %.","63372"],["08-13","Ouchim","Challenge supplémentaire","Flaque Vénérable",2,16866,"Un challenge supplémentaire est généré contre les créatures de type Monstres de Vulkania.","15794"],["08-14","Margarou","Challenges augmentés","Œil de Crocodaille albinos",1,21990,"Les bonus apportés par les challenges réussis sont augmentés de 125 % sur les créatures de type Crocodailles de Crocuzko.","109621"],["08-15","Orreip","Anomalies en folie","Paupière d'Étoile",6,1517,"Les gains d'expérience, les chances d'obtenir du butin et le butin généré par les Percepteurs sont augmentés de 100 % dans toutes les zones influencées par une anomalie temporelle.","15815"],["08-16","Lortecaps","Cueillette abondante","Ginseng",40,5585,"Les quantités de Ginseng et de Graines de Pandouille récupérées par les Alchimistes sont augmentées de 125 %.","36644"],["08-17","Marjul","Minerai abondant","Bronze",30,593,"Les quantités de Bronze récupérées par les Mineurs sont augmentées de 125 %.","39109"],["08-18","Ynniw","Butin","Corne de Typhomet",2,21990,"Les chances d'obtenir du butin sont augmentées de 50 % sur les créatures de type Ravageurs.","165041"],["08-19","Pilserpus","Objets de qualité","Bottes de Satisfaction",1,769,"La qualité des objets fabriqués dans la ville d'Astrub est augmentée.","11038"],["08-20","Gridoo","Gibier abondant","Viande Avariée",6,3144,"Les quantités de Viande Ladre et de Viande Avariée récupérées par les Chasseurs sont augmentées de 125 %.","63426"],["08-21","Theomak","Challenges augmentés","Terre Stérile",1,21990,"Les bonus apportés par les challenges réussis sont augmentés de 150 % dans les 4 donjons de l'Eliocalypse (Sentence de la Balance, Arbre de mort, Fers de la Tyrannie, Trône de sang).","24276"],["08-22","Pierdem","Pêche abondante","Morue",40,8070,"Les quantités de Morue et d'Espadon récupérées par les Pêcheurs sont augmentées de 125 %.","41413"],["08-23","Guiboun","Butin","Poils de Boulglours",2,19944,"Les chances d'obtenir du butin sont augmentées de 75 % dans les zones du Mont Torrideau et de la Ruche des Gloursons.","54682"],["08-24","Mikala","Points d'expérience","Pustule de Rat Sio",3,6662,"Les gains d'expérience sont augmentés de 100 % dans le donjon de la Sousouricière du Rat Noir.","165026"],["08-25","Lolzeolf","Récolte abondante","Millet",50,8993,"Les quantités de céréales récupérées par les Paysans de tous niveaux sont augmentées de 100 %.","34555"],["08-26","Fizzi","Percepteurs avides","Collier d'esclave",1,21990,"Le butin généré par les Percepteurs est augmenté de 200 % dans les donjons de niveau 200.","15997"],["08-27","Talentyre","Pêche abondante","Requin Marteau-Faucille",40,6377,"Les quantités de Raie Bleue et de Requin Marteau-Faucille récupérées par les Pêcheurs sont augmentées de 125 %.","41322"],["08-28","Noon","Bois abondant","Bois de Noyer",40,593,"Les quantités de Noyer récupérées par les Bûcherons sont augmentées de 125 %.","38095"],["08-29","Dyw","Butin","Fleur de Blopignon",6,2111,"Les chances d'obtenir du butin sont augmentées de 100 % dans le donjon du Clos des Blops.","35008"],["08-30","So","Challenges augmentés","Peau de Don Dorgan",1,5981,"Les bonus apportés par les challenges réussis sont augmentés de 125 % sur les créatures de type Porcos.","59617"],["08-31","Bitkyo","Forgemagie améliorée","Rune Ré Eau",4,769,"Les Costumages ont 15 % de chances de ne pas consumer de rune lorsqu'ils tentent d'améliorer un objet.","78030"],["09-01","Manoush","Points d'expérience","Épine d'Armuguet",2,21990,"Les gains d'expérience sont augmentés de 100 % dans le donjon de la Chambre des maléfices.","47883"],["09-02","Ancestrotek","Vitalité débordante","Potion de Mini Soin Supérieure",4,395,"La régénération des Points de Vie est augmentée de 300 % (hors combat), et les soins par consommables (vie et énergie) sont augmentés de 100 %.","12038"],["09-03","Vikotoru","Butin","Pétale d'encre",1,21990,"Les chances d'obtenir du butin sont augmentées de 50 % sur les créatures de type Yokianzhi d'encre et Yokianzhi de papier.","164854"],["09-04","Lorko","Fabrication intensive","Planche Contreplaquée",1,395,"Pour chaque objet fabriqué, les Bûcherons ont 10 % de chances de créer un second objet.","95001"],["09-05","Lucimay","Challenges augmentés","Plume du Serpiplume",4,8927,"Les bonus apportés par les challenges réussis sont augmentés de 150 % dans la zone et le donjon du Labyrinthe du Minotoror (et son centre).","53004"],["09-06","Zouzo","Points d'expérience","Poil de Renarbo",5,6662,"Les gains d'expérience sont augmentés de 50 % sur les créatures de type Corbacs.","54005"],["09-07","Cherop","Challenge supplémentaire","Sépale de Nerbe",4,10027,"Un challenge supplémentaire est généré contre les créatures de type Florifaune obscure.","36010"],["09-08","Davut","Apparition des ressources","Écume de mer",10,10995,"La vitesse d'apparition des ressources est augmentée de 150 % dans les zones des Profondeurs de Sufokia.","39399"],["09-09","Mud","Points d'expérience","Trident Cassé",6,1517,"Les gains d'expérience sont augmentés de 75 % dans la zone de la Plaine des Porkass.","15512"],["09-10","Mau","Élevage de montures","Aile de Dragodinde",1,2462,"Toutes les variétés de dragodindes, volkornes et muldos ébène ainsi que de volkornes améthyste donnent naissance à un bébé supplémentaire.","104593"],["09-11","Xa","Points d'expérience","Sueur de dragodinde",4,3628,"Les gains d'expérience sont augmentés de 75 % dans la zone du Territoire des Dragodindes Sauvages.","15773"],["09-12","Grugin","Bonta et Brâkmar","Flamme Spectrale",6,1517,"Les récompenses en points d'expérience des quêtes d'alignement sont augmentées de 100 %. De plus, une quête répétable spéciale est disponible aujourd'hui à l'intérieur des milices de Bonta ou de Brâkmar. Réalisable à partir du niveau 20 par les personnages alignés, elle est indépendante de la quête d'offrande.","15247"],["09-13","Yukin","Récolte abondante","Lin",50,2001,"Les quantités de Lin récupérées par les Paysans sont augmentées de 125 %.","34122"],["09-14","Farod","Anomalies temporelles","Sueur Froide de Fantôme",6,1517,"Les gains d'expérience sont augmentés de 50 % dans toutes les zones influencées par une anomalie temporelle. De plus, les gains d'expérience et les chances d'obtenir du butin sont augmentés de 25 % dans la zone de la Bordure de Brâkmar.","15850"],["09-15","Makss","Challenges augmentés","Bractée de Drosérâle",2,21990,"Les bonus apportés par les challenges réussis sont augmentés de 150 % dans le donjon du Laboratoire de Nileza.","36639"],["09-16","Latürb","Butin","Carapace de Ver des Sables",1,15436,"Les chances d'obtenir du butin sont augmentées de 75 % dans les zones de la Gorge des Vents Hurlants et de la Cité Oubliée.","107739"],["09-17","Nosruo","Apparition des ressources","Substrat de Buisson",1,1165,"La vitesse d'apparition des ressources est augmentée de 150 % dans la zone de la Forêt d'Amakna.","26016"],["09-18","Guidys","Points d'expérience","Os de Chafer",9,989,"Les gains d'expérience sont augmentés de 100 % dans le Donjon des Squelettes.","47015"],["09-19","Olvido","Points d'expérience et butin sur les pirates","Rhum de Qualité",6,4551,"Les gains d'expérience et les chances d'obtenir du butin sont augmentés de 50 % sur tous les monstres considérés comme des pirates.","15177"],["09-20","Nido","Gibier abondant","Mijoté Récréatif",4,21594,"Les quantités de Viande Fraîche et de Viande Maigre récupérées par les Chasseurs sont augmentées de 125 %.","69773"],["09-21","Bodirom","Objets de qualité","Épée d'Ha",1,769,"La qualité des objets fabriqués dans la ville de Brâkmar est augmentée.","6006"],["09-22","Djuuma","Challenge supplémentaire","Sable Fin",2,3980,"Un challenge supplémentaire est généré contre les monstres présents dans la zone des Dunes des ossements.","48691"],["09-23","Foluk","Butin","Crinière fleurie",1,5981,"Les chances d'obtenir du butin sont augmentées de 50 % sur les créatures de type Herboricoles.","36002"],["09-24","Emp","Percepteurs avides","Pépite",3,1495,"Le butin généré par les Percepteurs est augmenté de 200 % dans tous les donjons.","50718"],["09-25","Franho","Cadeaux surprises","Crabe Surprise",3,945,"Des Présents surprenants ont été ajoutés aux butins des monstres des donjons. Lorsqu'ils sont utilisés, ils permettent d'obtenir une bonne ou mauvaise surprise.","49074"],["09-26","Nufrank","Minerai abondant","Obsidienne",30,10995,"Les quantités de Dolomite et d'Obsidienne récupérées par les Mineurs sont augmentées de 125 %.","39112"],["09-27","Wasaru","Points d'expérience","Tresse du Poolay",1,10599,"Les gains d'expérience sont augmentés de 100 % dans le donjon de la Canopée du Kimbo.","15020"],["09-28","Sad","Coffres aux trésors","Arc Déroutant",1,769,"Des Coffres de Sad peuvent être gagnés à la fin des chasses aux trésors.","2003"],["09-29","Dethoama","Challenges augmentés","Mât de Fantômat",3,12732,"Les bonus apportés par les challenges réussis sont augmentés de 125 % sur les fantômes de l'Équipage du Grolandais.","38680"],["09-30","Sulp","Butin","Dent en Or de Craqueleur",1,2836,"Les chances d'obtenir du butin sont augmentées de 100 % dans le donjon des Pitons rocheux des Craqueleurs.","47418"],["10-01","Moomoo","Points d'expérience","Aquarakne de Crânonier",2,21990,"Les gains d'expérience sont augmentés de 50 % sur les Trépamorts de la Fratrie des Oubliés : les Calcinés et les Submergés.","111754"],["10-02","Kosal","Bois abondant","Bois de Pin",40,2462,"Les quantités de Bois de Pin et de Bois d'Oliviolet récupérées par les Bûcherons sont augmentées de 125 %.","38686"],["10-03","Chik","Quête répétable","Arc Holic",1,769,"Une quête répétable spéciale est disponible aujourd'hui près de la fontaine du village d'Amakna. Réalisable à partir du niveau 20, elle est indépendante de la quête d'offrande.","2004"],["10-04","Jujü","Challenge supplémentaire","Pom de Pin",2,1517,"Un challenge supplémentaire est généré contre les monstres présents dans la zone de la Futaie enneigée.","36659"],["10-05","Ounirom","Pêche abondante","Kralamoure",40,2462,"Les quantités de Poisson Pané, de Sardine Brillante et de Kralamoure récupérées par les Pêcheurs sont augmentées de 125 %.","41309"],["10-06","Ketzakwet","Butin","Étamine de Floribonde",4,10445,"Les chances d'obtenir du butin sont augmentées de 100 % dans le donjon du Laboratoire du Tynril.","36008"],["10-07","Krûnsh","Points d'expérience","Pic de Ravageur",1,21990,"Les gains d'expérience sont augmentés de 75 % dans la zone du Cauchemar des Ravageurs.","165038"],["10-08","Kroketh","Gibier abondant","Viande Saignante",5,8400,"Les quantités de viande récupérées par les Chasseurs de tous niveaux sont augmentées de 100 %.","63453"],["10-09","Nitsougnal","Challenge supplémentaire","Poils de Pétartifoux",4,10599,"Un challenge supplémentaire est généré contre les créatures de type Firefoux.","54204"],["10-10","Benjo","Élevage de montures","Dent de Dragodinde",6,2836,"Toutes les variétés de dragodindes, volkornes et muldos ivoire donnent naissance à un bébé supplémentaire.","47419"],["10-11","Emattera","Butin","Kolérat Mort",1,2836,"Les chances d'obtenir du butin sont augmentées de 75 % dans la zone de la Désolation de Sidimote.","15524"],["10-12","Diakollec","Voyages dimensionnels","Tige de Bambouto",5,6662,"Les gains d'expérience et les chances d'obtenir du butin sont augmentés de 50 % dans toutes les zones des dimensions divines.","164665"],["10-13","Takeza","Expérience des montures","Parmentier à l'Oignon",4,9191,"Les gains d'expérience des montures sont augmentés de 200 %.","69758"],["10-14","Eylen","Challenges augmentés","Masque de la Vengeance",2,4705,"Les bonus apportés par les challenges réussis sont augmentés de 150 % dans le donjon de la Pyramide d'Ombre.","164030"],["10-15","Dnegeleht","Récolte abondante","Chanvre",50,197,"Les quantités de Chanvre récupérées par les Paysans sont augmentées de 125 %.","34121"],["10-16","Kuri","Points d'expérience","Corne du Boufcoul",5,5563,"Les gains d'expérience sont augmentés de 100 % dans le donjon de la Caverne du Koulosse.","47009"],["10-17","Yaloop","Bois abondant","Bois de Noisetier",40,4859,"Les quantités de Bois de Noisetier et de Bois de Merisier récupérées par les Bûcherons sont augmentées de 125 %.","38143"],["10-18","Fry","Challenges augmentés","Plastron de Tambouraï",3,13721,"Les bonus apportés par les challenges réussis sont augmentés de 125 % sur les créatures de l'Armée de brume.","164765"],["10-19","Zellina","Apparition des ressources","Perche",40,4200,"La vitesse d'apparition des poissons de tous types est augmentée de 100 %.","41313"],["10-20","Sephy","Points d'expérience","Pétale de Papier",1,21990,"Les gains d'expérience sont augmentés de 100 % dans les donjons de la Mémoire d'Orukam et du Souvenir d'Imagiro.","164861"],["10-21","Baba","Fabrication intensive","Poêlée Paysanne",4,8993,"Les quantités d'objets fabriqués par les Chasseurs sont augmentées de 25 %.","69804"],["10-22","Viviantho","Expérience des métiers","Silicate",30,2990,"Les gains d'expérience sont augmentés de 50 % pour les Bûcherons, les Mineurs et les Alchimistes.","39111"],["10-23","Patawaii","Anomalies temporelles","Symbole des Obscuranti",1,20142,"Les chances d'obtenir du butin sont augmentées de 50 % dans toutes les zones influencées par une anomalie temporelle. De plus, les gains d'expérience et les chances d'obtenir du butin sont augmentés de 25 % dans la zone de la Dimension Obscure.","15860"],["10-24","Sili","Minerai abondant","Fer",30,197,"Les quantités de Fer récupérées par les Mineurs sont augmentées de 125 %.","39024"],["10-25","Rikoo","Butin","Poils de Smilomouth",4,8400,"Les chances d'obtenir du butin sont augmentées de 50 % sur les créatures de type Faune des Pins Perdus.","54676"],["10-26","Capt","Points d'expérience","Dent de Wabbit",9,1451,"Les gains d'expérience sont augmentés de 50 % sur les créatures de type Wabbits, Wabbits mutants et Gawde du Wa.","47758"],["10-27","Coyo","Économie d'ingrédients","Bâton Feuillu",1,769,"Les Sculpteurs économisent 15 % de leurs ingrédients lorsqu'ils fabriquent des objets.","4002"],["10-28","Fredocigam","Cueillette abondante","Mandragore",40,5585,"Les quantités de Mandragore et de Belladone récupérées par les Alchimistes sont augmentées de 125 %.","36645"],["10-29","Tchokun","Butin","Malléole de Yomi Givrefoux",3,16140,"Les chances d'obtenir du butin sont augmentées de 75 % dans la zone de la Crevasse Perge.","47678"],["10-30","Macugny","Percepteurs avides","Akaslip d'Akakwa",4,9191,"Le butin généré par les Percepteurs est augmenté de 200 % dans les donjons de niveau 120 à 150.","164654"],["10-31","Asid","Cadeaux surprises","Poils de Barbe du Bwork Mage",6,1517,"Des Surprises de Trikortritt ont été ajoutées aux butins des monstres. Lorsqu'elles sont utilisées, elles permettent d'obtenir des Bonbons d'Halouine ou bien de se retrouver transformé en Petite Chauffe-Soutrille.","54131"],["11-01","Mitomiel","Points d'expérience et butin en slip","Slip de Troollaraj",1,7762,"Les gains d'expérience lors des combats contre les monstres et les chances d'obtenir du butin sont augmentés de 50 % pour tous les aventuriers qui sont équipés d'un slip.","56572"],["11-02","Nikodeus","Butin","Groin de Porkzebuth",2,21990,"Les chances d'obtenir du butin sont augmentées de 75 % dans les zones du Port des Ravageurs et de Pandamonium.","176033"],["11-03","Miloune","Économie d'ingrédients","Cape Abilité",1,769,"Les Tailleurs ont 15 % de chances d'économiser des ingrédients lorsqu'ils fabriquent des objets.","17181"],["11-04","Kacinka","Avis de recherche","Fibre criminelle",1,2836,"La vitesse d'apparition des monstres d'Avis de recherche est augmentée de 200 %. .","55120"],["11-05","Mathrû","Challenges augmentés","Dent de Vatenbière",2,21990,"Les bonus apportés par les challenges réussis sont augmentés de 150 % dans le donjon de la Brasserie du roi Dazak.","47863"],["11-06","Hito","Bois abondant","Bois de Châtaignier",40,197,"Les quantités de Bois de Châtaignier récupérées par les Bûcherons sont augmentées de 125 %.","38086"],["11-07","Pouki","Butin","Pic de Prespic",6,593,"Les chances d'obtenir du butin sont augmentées de 50 % sur les Animaux de la forêt.","47134"],["11-08","Poup","Points d'expérience","Patte de Li-Fo",2,21990,"Les gains d'expérience sont augmentés de 50 % sur les créatures de type Serviteurs de l'Indicible.","103727"],["11-09","Tilapiatsu","Challenges augmentés","Foulard du Sparo",6,2594,"Les bonus apportés par les challenges réussis sont augmentés de 125 % sur les Pirates naufragés et les Pirates de l'Arche d'Otomaï.","15014"],["11-10","Otoul","Élevage de montures","Goujon",40,197,"Toutes les variétés de dragodindes, volkornes et muldos orchidée ainsi que de volkornes rubis donnent naissance à un bébé supplémentaire.","41294"],["11-11","Namsporp","Bénédiction de Miss Triste","Écaille de Crocodaille",6,1517,"Miss Triste attend les aventuriers qui veulent se refaire une laideur près de la fontaine du village d'Amakna. Sa bénédiction transforme temporairement en Crocodaille (effet qui disparaît quand un combat est lancé) et en Souffre-Douleur (bonus de 50 Puissance et 10 dommages fixes durant 15 combats).","59233"],["11-12","Jacoula","Butin","Lanterne de Tourthon",2,21990,"Les chances d'obtenir du butin sont augmentées de 50 % sur les créatures de type Trithons.","15939"],["11-13","Dek","Challenges augmentés","Graine de Scorbute",6,2836,"Les bonus apportés par les challenges réussis sont augmentés de 150 % dans le donjon du Laboratoire de Brumen Tinctorias.","58405"],["11-14","Flouky","Forgemagie améliorée","Rune Vi",4,769,"Les Joaillomages ont 15 % de chances de ne pas consumer de rune lorsqu'ils tentent d'améliorer un objet.","78052"],["11-15","Reniator","Quête répétable","Leurnettes",1,769,"Une quête répétable spéciale est disponible aujourd'hui près de la vieille chapelle d'Astrub. Réalisable à partir du niveau 20, elle est indépendante de la quête d'offrande.","5009"],["11-16","Mustasly","Points d'expérience","Peau de Ramane d'Égoutant",6,2111,"Les gains d'expérience sont augmentés de 50 % sur les Rats Strubiens et les Rats Maknéens.","59622"],["11-17","Messikriss","Gibier abondant","Viande Séchée",5,7146,"Les quantités de Viande séchée récupérées par les Chasseurs sont augmentées de 125 %.","63506"],["11-18","Annbonny","Challenge supplémentaire","Patte de la Gardienne des Égouts",1,13545,"Un challenge supplémentaire est généré contre les monstres présents dans les zones des Canaux Méphitiques et des Entrailles de Brâkmar.","103034"],["11-19","Waro","Économie d'ingrédients","Substrat de Bocage",1,3562,"Les Bûcherons économisent 15 % de leurs ingrédients lorsqu'ils fabriquent des objets.","12729"],["11-20","Julo","Anomalies temporelles","Sang coagulé",2,21990,"Les gains d'expérience des montures sont augmentés de 100 % dans toutes les zones influencées par une anomalie temporelle. De plus, les gains d'expérience et les chances d'obtenir du butin sont augmentés de 25 % dans les zones (hors donjons) des Cavaliers de l'Eliocalypse.","24278"],["11-21","Mûnir","Points d'expérience","Ailes de Moskito",6,395,"Les gains d'expérience sont augmentés de 50 % sur les créatures de type Vermines des champs.","104019"],["11-22","Jeffarctor","Butin","Griffe de Félygiène",3,13391,"Les chances d'obtenir du butin sont augmentées de 50 % sur les créatures de type Kanigs des Dents de Pierre.","47834"],["11-23","Angy","Challenges augmentés","Fragment d'Ectorche",2,21990,"Les bonus apportés par les challenges réussis sont augmentés de 125 % sur les créatures de type Brûlâmes.","15987"],["11-24","Fafah","Récolte abondante","Avoine",50,593,"Les quantités d'Avoine récupérées par les Paysans sont augmentées de 125 %.","34154"],["11-25","Lateralus","Challenge supplémentaire","Laine de Boufmouth légendaire",5,8136,"Un challenge supplémentaire est généré contre les monstres présents dans la zone des Champs de glace.","57212"],["11-26","Uicuic","Butin","Antennes de Vilinsekt",9,989,"Les chances d'obtenir du butin sont augmentées de 50 % sur les Vilinsekts.","164049"],["11-27","Vanderivz","Double butin","Poils de Barbe de Dragodinde",1,6289,"Les aventuriers ont 20 % de chances de générer un second butin sur tous les monstres affrontés dans les donjons.","54657"],["11-28","Troyle","Points d'expérience","Résidu de Solfataré",3,2836,"Les gains d'expérience sont augmentés de 50 % sur les créatures de type Sulfurieux.","51471"],["11-29","Eltux","Minerai abondant","Kobalte",30,1187,"Les quantités de Kobalte récupérées par les mineurs sont augmentées de 125 %.","39077"],["11-30","Inooni","Challenges augmentés","Laine de Yokaï Givrefoux",3,16140,"Les bonus apportés par les challenges réussis sont augmentés de 125 % sur les créatures de type Givrefoux.","57658"],["12-01","Ezimuos","Points d'expérience","Œil de Gouligane",2,21990,"Les gains d'expérience sont augmentés de 50 % sur les créatures de type Goules.","109617"],["12-02","Tiris","Expérience des métiers","Bouclier du tournesol sauvage",1,769,"Les gains d'expérience sont augmentés de 50 % pour les Bricoleurs, les Forgerons, les Sculpteurs et les Façonneurs.","82155"],["12-03","Edacsak","Challenge supplémentaire","Peau de Mansobèse",4,8642,"Un challenge supplémentaire est généré contre les monstres présents dans la zone du Lac Gelé.","59049"],["12-04","Eltruteht","Bois abondant","Bois d'Oliviolet",40,2462,"Les quantités de Bois récupérées par les Bûcherons de tous niveaux sont augmentées de 100 %.","38481"],["12-05","Ologar","Points d'expérience","Casque de Martoa",6,593,"Les gains d'expérience sont augmentés de 75 % dans la zone de la Carrière d'Astrub.","25149"],["12-06","Adam","Kolizétons","Charbon",6,2594,"La quantité de jetons gagnée en Kolizéum est augmentée de 100 %.","39075"],["12-07","Kountar","Butin","Étoffe de Dok Alako",6,3474,"Les chances d'obtenir du butin sont augmentées de 50 % sur les Koalaks et les Koalaks sauvages.","55720"],["12-08","Moko","Cueillette abondante","Perce-Neige",10,10995,"Les quantités de Perce-Neige récupérées par les Alchimistes sont augmentées de 200 %.","35635"],["12-09","Ingmar","Points d'expérience","Poil de Rat Bontarien",2,6662,"Les gains d'expérience sont augmentés de 100 % dans le donjon du Garde-manger du Rat Blanc.","165035"],["12-10","Foya","Élevage de montures","Queue de Dragodinde",1,2462,"Toutes les variétés de dragodindes, volkornes et muldos émeraude donnent naissance à un bébé supplémentaire.","65595"],["12-11","Bovjouski","Économie d'ingrédients","Pacmabottes",2,769,"Les Cordonniers économisent 15 % de leurs ingrédients lorsqu'ils fabriquent des objets.","11206"],["12-12","Mig","Quête répétable","Potion de cité : Brâkmar",3,5981,"Une quête répétable spéciale est disponible aujourd'hui près des portes de Brâkmar. Réalisable à partir du niveau 20, elle est indépendante de la quête d'offrande.","12145"],["12-13","Sêpt","Apparition des ressources","Dolomite",30,8993,"La vitesse d'apparition des minerais de tous types est augmentée de 100 %.","39110"],["12-14","Jason","Challenges augmentés","Paupière Dorée de Rykaon",1,21990,"Les bonus apportés par les challenges réussis sont augmentés de 150 % dans le donjon de la Chambre de Tal Kasha.","15953"],["12-15","Eboren","Butin","Cuir de Porkass",6,1517,"Les chances d'obtenir du butin sont augmentées de 75 % dans la zone de la plaine des Porkass.","56429"],["12-16","Lucyvan","Challenge supplémentaire","Emballage de Nowel Écarlate",2,1737,"Un challenge supplémentaire est généré contre les monstres de Nowel.","154000"],["12-17","Ryf","Pêche abondante","Anguille",40,2990,"Les quantités d'Anguille et de Dorade Grise récupérées par les Pêcheurs sont augmentées de 125 %.","41407"],["12-18","Sebsokk","Challenges des donjons","Chance d'Ecaflip",1,769,"Les bonus apportés par les challenges réussis sont augmentés de 150 % dans tous les donjons.","9032"],["12-19","Reivax","Points d'expérience","Flocon de Neige",2,1737,"Les gains d'expérience sont augmentés de 50 % sur les monstres de Nowel.","153007"],["12-20","Benjak","Fabrication intensive","Ébonite",1,1187,"Pour chaque objet fabriqué, les Mineurs ont 10 % de chances de créer un second objet.","40658"],["12-21","Grüg","Challenge supplémentaire","Canine Vampiresque",6,989,"Un challenge supplémentaire est généré contre les monstres présents dans les zones du Cimetière d'Amakna et des Cryptes du Cimetière.","47432"],["12-22","Maxarès","Apparition des ressources","Poisson Pané",40,879,"La vitesse d'apparition des ressources est augmentée de 150 % dans la zone du Port de Madrestam.","41269"],["12-23","Math","Gibier abondant","Viande Tendre",6,1737,"Les quantités de Viande Tendre récupérées par les Chasseurs sont augmentées de 125 %.","63483"],["12-24","Milivar","Coffres aux trésors","Médaille en Chocolat",1,1737,"Des Coffres de Milivar peuvent être gagnés à la fin des chasses aux trésors.","42248"],["12-25","Simsof","Cadeaux surprises","Joli cadeau de Nowel",4,5981,"Des Cadeaux de Nowel ont été ajoutés aux butins des monstres. Lorsqu'ils sont utilisés, ils permettent d'obtenir des ressources ou d'autres objets aléatoires.","89060"],["12-26","Fhenris","Butin","Poil de barbe du Shamansot",4,9873,"Les chances d'obtenir du butin sont augmentées de 100 % dans le donjon de l'Excavation du Mansot Royal.","54674"],["12-27","Korri","Points d'expérience","Fronde de Boufronde",2,19153,"Les gains d'expérience sont augmentés de 50 % sur les créatures de type Marteaux-Aigris.","165061"],["12-28","Ediva","Percepteurs avides","Kaokurimono",3,15436,"Le butin généré par les Percepteurs est augmenté de 200 % dans les donjons de niveau 160 à 190.","164737"],["12-29","Cocoyuyu","Récolte abondante","Riz",40,2990,"Les quantités de Seigle et de Riz récupérées par les Paysans sont augmentées de 125 %.","34010"],["12-30","Dari","Butin","Bidule inutile",1,1561,"Les chances d'obtenir du butin sont augmentées de 50 % sur les créatures de type Automates des Brigandins.","156005"],["12-31","Aisk","Anomalies temporelles","Viande Ladre",6,2396,"Les bonus apportés par les challenges réussis sont augmentés de 75 % dans toutes les zones influencées par une anomalie temporelle. De plus, les gains d'expérience et les chances d'obtenir du butin sont augmentés de 25 % dans la zone de la Forêt des Masques.","63420"]];
+
+    const ALMA = ALMA_DATA.map(r => ({
+      key: r[0], meryde: r[1], type: r[2], item: r[3],
+      qty: r[4], kamas: r[5], desc: r[6], img: r[7],
+    }));
+    const ALMA_BY_KEY = {};
+    ALMA.forEach(a => { ALMA_BY_KEY[a.key] = a; });
+    const ALMA_TYPES = [...new Set(ALMA.map(a => a.type))].sort((a, b) => a.localeCompare(b, 'fr'));
+    const ALMA_MONTHS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin',
+                         'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+    const ALMATON_PER_CHAR = 17;   // gagnés par personnage à chaque offrande rendue
+    const ALMA_MAX_ROWS = 100;     // garde-fou d'affichage sur la vue annuelle
+
+    function almaCfg() {
+      if (!state.settings.alma || typeof state.settings.alma !== 'object') state.settings.alma = {};
+      const a = state.settings.alma;
+      a.chars = Math.max(1, Math.min(99, parseInt(a.chars, 10) || 1));
+      a.lead = Math.max(1, Math.min(90, parseInt(a.lead, 10) || 7));
+      a.gran = ['week', 'month', 'year', 'range'].includes(a.gran) ? a.gran : 'week';
+      const iso = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      const okDate = v => typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v);
+      const now = new Date(); now.setHours(0, 0, 0, 0);
+      if (!okDate(a.from)) a.from = iso(now);
+      if (!okDate(a.to)) a.to = iso(new Date(now.getTime() + 13 * 86400000));
+      if (a.to < a.from) a.to = a.from;
+      a.off = parseInt(a.off, 10) || 0;
+      ['pins', 'sel', 'got', 'done'].forEach(k => { if (!Array.isArray(a[k])) a[k] = []; });
+      if (!a.doneChars || typeof a.doneChars !== 'object') a.doneChars = {};
+      // Les quêtes sont répétables : une validation porte sur une date précise
+      // (AAAA-MM-JJ) et pas sur un jour du calendrier, sinon l'année suivante
+      // serait déjà cochée. Les anciennes clés « MM-JJ » sont rattachées à l'année en cours.
+      const y = new Date().getFullYear();
+      ['got', 'done'].forEach(k => {
+        a[k] = a[k].map(v => (typeof v === 'string' && v.length === 5) ? `${y}-${v}` : v)
+                   .filter(v => typeof v === 'string' && v.length === 10);
+      });
+      if (typeof a.type !== 'string') a.type = '';
+      if (typeof a.q !== 'string') a.q = '';
+      return a;
+    }
+    function almaKeyOf(d) {
+      return `${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+    function almaAt(d) { return ALMA_BY_KEY[almaKeyOf(d)] || null; }
+    function almaToday() { const d = new Date(); d.setHours(0, 0, 0, 0); return d; }
+    // Prochaine occurrence d'une date : on repasse sur l'année suivante si elle est passée
+    function daysUntilKey(key) {
+      const today = almaToday();
+      const [m, d] = key.split('-').map(Number);
+      let t = new Date(today.getFullYear(), m - 1, d);
+      if (t < today) t = new Date(today.getFullYear() + 1, m - 1, d);
+      return Math.round((t - today) / 86400000);
+    }
+    function almaDateLabel(key) {
+      const [m, d] = key.split('-').map(Number);
+      return `${d} ${ALMA_MONTHS[m - 1]}`;
+    }
+    function almaCountdown(n) {
+      if (n === 0) return "aujourd'hui";
+      if (n === 1) return 'demain';
+      return `dans ${n} jours`;
+    }
+    function almaISO(d) {
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+    // Date de la prochaine occurrence d'un jour du calendrier, aujourd'hui compris
+    function isoForKey(key) {
+      const t = almaToday();
+      return almaISO(new Date(t.getTime() + daysUntilKey(key) * 86400000));
+    }
+    function almaQty(a) { return (a.qty || 0) * almaCfg().chars; }
+    function almaKamas(a) { return (a.kamas || 0) * almaCfg().chars; }
+    function almatonsFor(days) { return ALMATON_PER_CHAR * almaCfg().chars * days; }
+    function almaStep(iso) {
+      const cfg = almaCfg();
+      return cfg.done.includes(iso) ? 2 : cfg.got.includes(iso) ? 1 : 0;
+    }
+    function toggleAlmaList(listName, iso) {
+      const cfg = almaCfg();
+      const arr = cfg[listName];
+      const i = arr.indexOf(iso);
+      if (i >= 0) arr.splice(i, 1); else arr.push(iso);
+      // rendre la quête suppose d'avoir les ressources
+      if (listName === 'done' && arr.includes(iso) && !cfg.got.includes(iso)) cfg.got.push(iso);
+      if (listName === 'got' && !arr.includes(iso)) {
+        const j = cfg.done.indexOf(iso);
+        if (j >= 0) cfg.done.splice(j, 1);
+      }
+      // Le multiplicateur est figé au moment de la validation : le changer plus
+      // tard ne doit pas réécrire ce qui a déjà été encaissé.
+      if (cfg.done.includes(iso)) cfg.doneChars[iso] = cfg.chars;
+      else delete cfg.doneChars[iso];
+      save();
+      renderAlma();
+      haptic();
+    }
+    // Cumul de ce qui a réellement été validé, quête par quête
+    function almaTotals() {
+      const cfg = almaCfg();
+      let kamas = 0, tons = 0, n = 0;
+      cfg.done.forEach(iso => {
+        const a = ALMA_BY_KEY[iso.slice(5)];
+        if (!a) return;
+        const c = cfg.doneChars[iso] || cfg.chars;
+        kamas += a.kamas * c;
+        tons += ALMATON_PER_CHAR * c;
+        n++;
+      });
+      return { kamas, tons, n };
+    }
+
+    function renderAlmaBar() {
+      const cfg = almaCfg();
+      const tot = almaTotals();
+      const pins = cfg.pins.map(k => ({ k, d: daysUntilKey(k) })).sort((x, y) => x.d - y.d);
+      const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+      set('astat-chars', cfg.chars);
+      set('astat-next', pins.length ? (pins[0].d === 0 ? 'auj.' : 'J-' + pins[0].d) : '—');
+      set('astat-kamas', tot.kamas ? fmtK(tot.kamas) : '—');
+      set('astat-almatons', tot.tons ? fmtK(tot.tons) : '—');
+    }
+
+    function multRow() {
+      const cfg = almaCfg();
+      return `<div class="mult-row">
+        <span class="ml-lbl">Comptes
+          <span class="ml-sub">${cfg.chars} × 17 = ${fmtNum(almatonsFor(1))} almatons par offrande</span>
+        </span>
+        <button class="mult-btn" id="mult-down" aria-label="Retirer un compte">−</button>
+        <span class="mult-val" id="mult-val">${cfg.chars}</span>
+        <button class="mult-btn" id="mult-up" aria-label="Ajouter un compte">+</button>
+      </div>`;
+    }
+    function wireMult() {
+      const step = n => {
+        const cfg = almaCfg();
+        cfg.chars = Math.max(1, Math.min(99, cfg.chars + n));
+        save();
+        renderAlma();
+        haptic();
+      };
+      const up = document.getElementById('mult-up'), down = document.getElementById('mult-down');
+      if (up) up.addEventListener('click', () => step(1));
+      if (down) down.addEventListener('click', () => step(-1));
+    }
+
+    // L'icône vient du CDN d'Ankama, qui a changé de forme d'URL : l'ancienne
+    // adresse directe ne répond plus partout, la nouvelle passe par s.ankama.com.
+    // On tente la première, puis la seconde, puis on retombe sur une pastille
+    // lisible — un trou vide ressemblerait à un bug d'affichage.
+    const ALMA_IMG_HOSTS = [
+      'https://static.ankama.com/dofus/www/game/items/200/',
+      'https://s.ankama.com/www/static.ankama.com/dofus/www/game/items/200/',
+    ];
+    function almaImgFail(el) {
+      const alt = el.getAttribute('data-alt');
+      if (alt) { el.removeAttribute('data-alt'); el.src = alt; return; }
+      const wrap = el.parentElement;
+      el.remove();
+      wrap.classList.add('icon-fb');
+      wrap.textContent = wrap.dataset.fb || '?';
+    }
+    function almaIcon(a, cls) {
+      const mono = escapeHtml((a.item || '?').trim().slice(0, 2).toUpperCase());
+      if (!a.img) return `<span class="${cls} icon-fb">${mono}</span>`;
+      const file = `${escapeHtml(a.img)}.w75h75.png`;
+      return `<span class="${cls} icon-wrap" data-fb="${mono}">
+        <img src="${ALMA_IMG_HOSTS[0]}${file}" data-alt="${ALMA_IMG_HOSTS[1]}${file}"
+             alt="${escapeHtml(a.item)}" referrerpolicy="no-referrer" decoding="async"
+             onerror="almaImgFail(this)" />
+      </span>`;
+    }
+    function stepButtons(iso) {
+      const st = almaStep(iso);
+      return `<div class="ac-steps">
+        <button class="step${st >= 1 ? ' on' : ''}" data-agot="${iso}">
+          <span class="sb">${st >= 1 ? '✓' : '1'}</span> Ressources
+        </button>
+        <button class="step${st >= 2 ? ' on' : ''}" data-adone="${iso}">
+          <span class="sb">${st >= 2 ? '✓' : '2'}</span> ${st >= 2 ? 'Rendue' : 'Quête rendue'}
+        </button>
+      </div>`;
+    }
+
+    // Carte détaillée d'un jour : le bonus complet, l'offrande en évidence,
+    // et les deux niveaux de validation.
+    function almaCard(a, key, iso, opts) {
+      const o = opts || {};
+      const cfg = almaCfg();
+      const todayISO = almaISO(almaToday());
+      const todayKey = almaKeyOf(almaToday());
+      const st = almaStep(iso);
+      const past = iso < todayISO;
+      const dd = daysUntilKey(key);
+      const when = iso === todayISO ? "Aujourd'hui"
+        : past ? `${almaDateLabel(key)} ${iso.slice(0, 4)}`
+        : `${almaDateLabel(key)} · ${almaCountdown(dd)}`;
+      return `<div class="alma-card${iso === todayISO ? ' today' : ''}${cfg.sel.includes(key) ? ' picked' : ''}${st === 2 ? ' done' : ''}">
+        <div class="ac-top">
+          <span class="ac-when">${escapeHtml(when)} · ${escapeHtml(a.meryde)}</span>
+          <span class="ac-tools">
+            ${st === 2 ? '<span class="ac-badge">rendue</span>' : ''}
+            ${o.chk ? `<button class="chk${cfg.sel.includes(key) ? ' on' : ''}" data-asel="${key}" aria-label="Sélectionner">${cfg.sel.includes(key) ? '✓' : ''}</button>` : ''}
+            <button class="pin-btn${cfg.pins.includes(key) ? ' on' : ''}" data-apin="${key}" aria-label="Épingler">${cfg.pins.includes(key) ? '★' : '☆'}</button>
+          </span>
+        </div>
+        <div class="ac-type">${escapeHtml(a.type)}</div>
+        <div class="ac-desc">${escapeHtml(a.desc || '')}</div>
+        <div class="ac-offer">
+          ${almaIcon(a, 'ac-img')}
+          <span class="ac-body">
+            <span class="ac-item">${escapeHtml(a.item)}</span>
+            <span class="ac-sub">${a.qty} par compte · ${fmtNum(almaKamas(a))} kamas · ${fmtNum(almatonsFor(1))} almatons</span>
+          </span>
+          <span class="ac-qty">${fmtNum(almaQty(a))}</span>
+        </div>
+        ${stepButtons(iso)}
+      </div>`;
+    }
+
+    function wireAlmaCards(root) {
+      const scope = root || document;
+      const bind = (attr, fn) => scope.querySelectorAll(`[${attr}]`).forEach(b =>
+        b.addEventListener('click', e => { e.stopPropagation(); fn(b.getAttribute(attr)); }));
+      bind('data-apin', k => {
+        const cfg = almaCfg();
+        const i = cfg.pins.indexOf(k);
+        if (i >= 0) cfg.pins.splice(i, 1); else cfg.pins.push(k);
+        save();
+        renderAlma();
+        haptic();
+      });
+      bind('data-asel', k => {
+        const cfg = almaCfg();
+        const i = cfg.sel.indexOf(k);
+        if (i >= 0) cfg.sel.splice(i, 1); else cfg.sel.push(k);
+        save();
+        renderAlma();
+        haptic();
+      });
+      bind('data-agot', k => toggleAlmaList('got', k));
+      bind('data-adone', k => toggleAlmaList('done', k));
+    }
+
+    function renderAlmaDay() {
+      const cfg = almaCfg();
+      const today = almaToday();
+      const todayKey = almaKeyOf(today);
+
+      const soon = cfg.pins.map(k => ({ k, d: daysUntilKey(k), a: ALMA_BY_KEY[k] }))
+        .filter(p => p.a && p.d <= cfg.lead)
+        .sort((x, y) => x.d - y.d);
+      const alert = document.getElementById('alma-alert');
+      alert.innerHTML = soon.map(p => `<button class="price-alert" data-agoto="${p.k}">
+        <span class="pa-icon">★</span><span>
+          <b>${escapeHtml(p.a.type)}</b> ${escapeHtml(almaCountdown(p.d))} · ${escapeHtml(p.a.desc || '')}
+        </span></button>`).join('');
+
+      const tot = almaTotals();
+      document.getElementById('alma-mult').innerHTML = multRow() + (tot.n
+        ? `<div class="alma-tally">
+             <span class="at-cell"><b>${tot.n}</b>quête${tot.n > 1 ? 's' : ''} rendue${tot.n > 1 ? 's' : ''}</span>
+             <span class="at-cell"><b>${fmtNum(tot.kamas)}</b>kamas</span>
+             <span class="at-cell"><b>${fmtNum(tot.tons)}</b>almatons</span>
+           </div>`
+        : `<div class="note-box">Valide « Quête rendue » sur un jour pour commencer à cumuler tes kamas et tes almatons. Les quêtes étant répétables, un jour déjà rendu repart à zéro l'année suivante.</div>`);
+
+      const t = almaAt(today);
+      document.getElementById('alma-today').innerHTML = t
+        ? almaCard(t, todayKey, almaISO(today), { chk: false })
+        : `<div class="alma-card"><div class="ac-type">Pas de données</div>
+           <div class="ac-desc">Le calendrier couvre une année complète hors 29 février.</div></div>`;
+
+      const next = [];
+      for (let i = 1; i <= 7; i++) {
+        const d = new Date(today.getTime() + i * 86400000);
+        const a = almaAt(d);
+        if (a) next.push({ a, key: almaKeyOf(d), iso: almaISO(d) });
+      }
+      document.getElementById('alma-next').innerHTML = next.length
+        ? `<div class="alma-sec">À venir</div>${next.map(n => almaCard(n.a, n.key, n.iso, { chk: true })).join('')}`
+        : '';
+
+      wireMult();
+      wireAlmaCards(document.getElementById('alma-today'));
+      wireAlmaCards(document.getElementById('alma-next'));
+      alert.querySelectorAll('[data-agoto]').forEach(b => b.addEventListener('click', () => {
+        const c = almaCfg();
+        c.gran = 'week';
+        c.off = Math.floor(daysUntilKey(b.dataset.agoto) / 7);
+        save();
+        setView('alma-cal');
+        haptic();
+      }));
+    }
+
+    // Jours de la période courante, décalée de `off` semaines, mois ou années
+    function almaPeriodDays() {
+      const cfg = almaCfg();
+      const today = almaToday();
+      const days = [];
+      if (cfg.gran === 'range') {
+        const [fy, fm, fd] = cfg.from.split('-').map(Number);
+        const [ty, tm, td] = cfg.to.split('-').map(Number);
+        const from = new Date(fy, fm - 1, fd), to = new Date(ty, tm - 1, td);
+        for (let d = new Date(from); d <= to && days.length < 400; d.setDate(d.getDate() + 1)) {
+          days.push(new Date(d));
+        }
+        const sameYear = fy === ty;
+        return { days, label: `${fd} ${ALMA_MONTHS[fm - 1]}${sameYear ? '' : ' ' + fy} → ${td} ${ALMA_MONTHS[tm - 1]}${sameYear ? '' : ' ' + ty}` };
+      }
+      if (cfg.gran === 'year') {
+        const y = today.getFullYear() + cfg.off;
+        const base = new Date(y, 0, 1);
+        for (let i = 0; i < 366; i++) {
+          const d = new Date(y, 0, 1 + i);
+          if (d.getFullYear() !== y) break;
+          days.push(d);
+        }
+        return { days, label: String(y) };
+      }
+      if (cfg.gran === 'month') {
+        const base = new Date(today.getFullYear(), today.getMonth() + cfg.off, 1);
+        const end = new Date(base.getFullYear(), base.getMonth() + 1, 0).getDate();
+        for (let i = 1; i <= end; i++) days.push(new Date(base.getFullYear(), base.getMonth(), i));
+        return { days, label: `${ALMA_MONTHS[base.getMonth()]} ${base.getFullYear()}` };
+      }
+      const start = new Date(today);
+      start.setDate(start.getDate() - ((start.getDay() + 6) % 7) + cfg.off * 7);   // lundi
+      for (let i = 0; i < 7; i++) days.push(new Date(start.getTime() + i * 86400000));
+      const last = days[6];
+      return { days, label: `${start.getDate()} ${ALMA_MONTHS[start.getMonth()]} → ${last.getDate()} ${ALMA_MONTHS[last.getMonth()]}` };
+    }
+
+    function renderAlmaCal() {
+      const cfg = almaCfg();
+      document.querySelectorAll('#alma-grans .sub-btn').forEach(b =>
+        b.classList.toggle('on', b.dataset.agran === cfg.gran));
+      // en mode plage, ce sont les deux dates qui font office de navigation
+      const isRange = cfg.gran === 'range';
+      document.getElementById('alma-navrow').classList.toggle('hidden', isRange);
+      document.getElementById('alma-rangerow').classList.toggle('hidden', !isRange);
+      const fromEl = document.getElementById('alma-from'), toEl = document.getElementById('alma-to');
+      if (fromEl.value !== cfg.from) fromEl.value = cfg.from;
+      if (toEl.value !== cfg.to) toEl.value = cfg.to;
+
+      const sel = document.getElementById('alma-type');
+      if (sel.options.length !== ALMA_TYPES.length + 1) {
+        sel.innerHTML = `<option value="">Tous les bonus</option>` +
+          ALMA_TYPES.map(t => `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('');
+      }
+      sel.value = cfg.type;
+      const q = document.getElementById('alma-q');
+      if (q.value !== cfg.q) q.value = cfg.q;
+
+      const { days, label } = almaPeriodDays();
+      document.getElementById('alma-period').textContent = label;
+      if (isRange) {
+        const head = document.getElementById('alma-sum');
+        head.dataset.range = label;
+      }
+
+      const needle = cfg.q.trim().toLowerCase();
+      const all = days.map(d => ({ key: almaKeyOf(d), iso: almaISO(d), a: almaAt(d) }))
+        .filter(r => r.a)
+        .filter(r => !cfg.type || r.a.type === cfg.type)
+        .filter(r => !needle
+          || r.a.item.toLowerCase().includes(needle)
+          || r.a.type.toLowerCase().includes(needle)
+          || (r.a.desc || '').toLowerCase().includes(needle));
+      const rows = all.slice(0, ALMA_MAX_ROWS);
+
+      // Récapitulatif de la sélection : la liste de courses des jours cochés
+      const picked = cfg.sel.map(k => ({ k, a: ALMA_BY_KEY[k] })).filter(x => x.a)
+        .sort((x, y) => x.k.localeCompare(y.k));
+      const sum = document.getElementById('alma-sum');
+      if (!picked.length) {
+        sum.innerHTML = '';
+      } else {
+        const totQty = picked.reduce((s, x) => s + x.a.qty * cfg.chars, 0);
+        const totKamas = picked.reduce((s, x) => s + x.a.kamas * cfg.chars, 0);
+        const ready = picked.filter(x => almaStep(isoForKey(x.k)) >= 1).length;
+        sum.innerHTML = `<div class="chart-card">
+          <div class="chart-title">À préparer</div>
+          <div class="chart-sub">${plural(picked.length, 'jour')} · ${ready}/${picked.length} ${ready > 1 ? 'prêts' : 'prêt'}</div>
+          ${picked.map(x => `<div class="prep-line${almaStep(isoForKey(x.k)) >= 1 ? ' ok' : ''}">
+            ${almaIcon(x.a, 'prep-img')}
+            <span class="prep-body">
+              <span class="prep-item">${escapeHtml(x.a.item)}</span>
+              <span class="prep-sub">${escapeHtml(almaDateLabel(x.k))} · ${escapeHtml(x.a.type)}</span>
+            </span>
+            <span class="prep-qty">${fmtNum(x.a.qty * cfg.chars)}</span>
+          </div>`).join('')}
+          <div class="detail-stats" style="margin-top:12px;">
+            <div class="dstat"><div class="lbl">Objets</div><div class="val small">${fmtNum(totQty)}</div></div>
+            <div class="dstat"><div class="lbl">Kamas</div><div class="val gold small">${fmtNum(totKamas)}</div></div>
+            <div class="dstat"><div class="lbl">Almatons</div><div class="val gold small">${fmtNum(almatonsFor(picked.length))}</div></div>
+          </div>
+          <button class="btn btn-secondary" id="alma-clear" style="width:100%;margin-top:12px;">Vider la sélection</button>
+        </div>`;
+      }
+
+      const list = document.getElementById('alma-list');
+      list.innerHTML = rows.length
+        ? `<div class="alma-tools">
+             <button class="btn btn-secondary" id="alma-all">Tout cocher</button>
+             <button class="btn btn-secondary" id="alma-none">Tout décocher</button>
+           </div>
+           ${all.length > rows.length
+             ? `<div class="note-box">${all.length} jours correspondent, les ${ALMA_MAX_ROWS} premiers sont affichés. Filtre par type de bonus pour aller droit au but.</div>`
+             : ''}
+           ${rows.map(r => almaCard(r.a, r.key, r.iso, { chk: true })).join('')}`
+        : `<div class="empty"><div class="icon">🔍</div>
+             <div class="title">Aucun jour ne correspond</div>
+             <div>Change de période ou retire le filtre</div></div>`;
+
+      wireAlmaCards(list);
+      wireAlmaCards(sum);
+      const clear = document.getElementById('alma-clear');
+      if (clear) clear.addEventListener('click', () => {
+        almaCfg().sel = [];
+        save();
+        renderAlma();
+        haptic();
+      });
+      const allBtn = document.getElementById('alma-all');
+      if (allBtn) allBtn.addEventListener('click', () => {
+        const c = almaCfg();
+        rows.forEach(r => { if (!c.sel.includes(r.key)) c.sel.push(r.key); });
+        save();
+        renderAlma();
+        haptic();
+      });
+      const none = document.getElementById('alma-none');
+      if (none) none.addEventListener('click', () => {
+        const c = almaCfg();
+        c.sel = c.sel.filter(k => !rows.some(r => r.key === k));
+        save();
+        renderAlma();
+        haptic();
+      });
+    }
+
+    function renderAlmaPins() {
+      const cfg = almaCfg();
+      const box = document.getElementById('alma-pins');
+      const pins = cfg.pins.map(k => ({ k, a: ALMA_BY_KEY[k], d: daysUntilKey(k) }))
+        .filter(x => x.a).sort((x, y) => x.d - y.d);
+
+      const settings = `<div class="mult-row">
+        <span class="ml-lbl">Prévenir
+          <span class="ml-sub">Jours d'avance avant un bonus épinglé</span>
+        </span>
+        <button class="mult-btn" id="lead-down" aria-label="Réduire">−</button>
+        <span class="mult-val" id="lead-val">${cfg.lead}</span>
+        <button class="mult-btn" id="lead-up" aria-label="Augmenter">+</button>
+      </div>`;
+
+      box.innerHTML = settings + (pins.length
+        ? `<div class="alma-sec">${plural(pins.length, 'jour')} suivi${pins.length > 1 ? 's' : ''}</div>
+           ${pins.map(p => almaCard(p.a, p.k, isoForKey(p.k), { chk: true })).join('')}`
+        : `<div class="empty"><div class="icon">★</div>
+            <div class="title">Aucun bonus épinglé</div>
+            <div>Touche l'étoile d'un jour pour le suivre ici</div></div>`);
+
+      wireAlmaCards(box);
+      const step = n => {
+        const c = almaCfg();
+        c.lead = Math.max(1, Math.min(90, c.lead + n));
+        save();
+        renderAlma();
+        haptic();
+      };
+      document.getElementById('lead-up').addEventListener('click', () => step(1));
+      document.getElementById('lead-down').addEventListener('click', () => step(-1));
+    }
+
+    function setView(v) {
+      const tab = document.querySelector(`.tab[data-view="${v}"]`);
+      if (tab) tab.click();
+    }
+
+    function renderAlma() {
+      almaCfg();
+      renderAlmaBar();
+      renderAlmaDay();
+      renderAlmaCal();
+      renderAlmaPins();
+    }
+
     // ---- Bascule de module ----
     function setModule(mod) {
       activeModule = mod;
@@ -7836,9 +8715,12 @@
       document.getElementById('bar-exos').classList.toggle('hidden', mod !== 'exos');
       document.getElementById('bar-songes').classList.toggle('hidden', mod !== 'songes');
       document.getElementById('bar-farm').classList.toggle('hidden', mod !== 'farm');
+      document.getElementById('bar-alma').classList.toggle('hidden', mod !== 'alma');
+      document.getElementById('fab-add').classList.toggle('hidden', mod === 'alma');
       const heads = {
         exos: ['Exo', 'Forgemagie'],
         farm: ['Farm', 'Rentabilité des zones'],
+        alma: ['Almanax', 'Offrandes & bonus du jour'],
         songes: ['Songes Infinis', 'Rendement & compos'],
       };
       const head = heads[mod] || heads.songes;
@@ -9680,6 +10562,49 @@
       const el = document.getElementById(id);
       wireNumberInput(el);
       el.addEventListener('input', updateFarmHints);
+    });
+
+    // ---- Almanax ----
+    document.querySelectorAll('#alma-grans .sub-btn').forEach(b =>
+      b.addEventListener('click', () => {
+        const c = almaCfg();
+        c.gran = b.dataset.agran;
+        c.off = 0;
+        save();
+        renderAlma();
+        haptic();
+      }));
+    document.getElementById('alma-prev').addEventListener('click', () => {
+      almaCfg().off--;
+      save();
+      renderAlmaCal();
+      haptic();
+    });
+    document.getElementById('alma-next-p').addEventListener('click', () => {
+      almaCfg().off++;
+      save();
+      renderAlmaCal();
+      haptic();
+    });
+    ['alma-from', 'alma-to'].forEach(id =>
+      document.getElementById(id).addEventListener('change', () => {
+        const c = almaCfg();
+        const v = document.getElementById(id).value;
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(v)) return;
+        if (id === 'alma-from') { c.from = v; if (c.to < c.from) c.to = c.from; }
+        else { c.to = v; if (c.to < c.from) c.from = c.to; }
+        save();
+        renderAlmaCal();
+      }));
+    document.getElementById('alma-type').addEventListener('change', () => {
+      almaCfg().type = document.getElementById('alma-type').value;
+      save();
+      renderAlmaCal();
+    });
+    document.getElementById('alma-q').addEventListener('input', () => {
+      almaCfg().q = document.getElementById('alma-q').value;
+      save();
+      renderAlmaCal();
     });
 
     document.getElementById('add-zone').addEventListener('click', () => openZoneForm());
