@@ -2479,6 +2479,16 @@
     }
     .chrono-card.on { border-color: var(--gold-deep); box-shadow: var(--shadow-gold); }
     .chrono-card.compact { padding: 12px; margin-bottom: 0; }
+    .chrono-warn {
+      margin-top: 8px;
+      font-size: 12px;
+      line-height: 1.45;
+      color: var(--red);
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: var(--radius-sm);
+      padding: 8px 10px;
+    }
     .chrono-card.compact .chrono-time { font-size: 32px; }
     .dstat.wide { grid-column: 1 / -1; }
     .chrono-zone {
@@ -2579,6 +2589,11 @@
     .res-line .rl-val .u { display: block; font-size: 11px; color: var(--text-dim); }
     .res-line.noprice { border-color: rgba(239, 68, 68, 0.35); }
 
+    /* La couleur seule ne doit pas porter l'information : on double d'un signe. */
+    .cmp-table td.win::after { content: ' \25B2'; font-size: 0.78em; }
+    .run-card .val.green::after { content: ' \25B2'; font-size: 0.7em; }
+    .run-card .val.red::after { content: ' \25BC'; font-size: 0.7em; }
+    .pair-side.win .ps-kind::after { content: ' \25B2'; }
     .cmp-table tr.per-row { cursor: pointer; }
     .cmp-table tr.per-row:active td { background: var(--bg-card-hi); }
     .cmp-table td.per-lbl .caret { color: var(--text-dim); font-size: 10px; margin-right: 5px; }
@@ -2809,8 +2824,8 @@
     }
 
     .pin-btn, .chk {
-      width: 32px;
-      height: 32px;
+      width: 42px;
+      height: 42px;
       border-radius: 9px;
       border: 1px solid var(--border);
       background: var(--bg-elev);
@@ -2835,8 +2850,8 @@
     .mult-row .ml-lbl { flex: 1; font-size: 13px; font-weight: 600; }
     .mult-row .ml-sub { display: block; font-size: 11px; color: var(--text-dim); font-weight: 400; }
     .mult-btn {
-      width: 32px;
-      height: 32px;
+      width: 42px;
+      height: 42px;
       border-radius: 8px;
       background: var(--bg-elev);
       border: 1px solid var(--border);
@@ -2861,8 +2876,8 @@
       margin: 12px 0;
     }
     .alma-nav .nav-btn {
-      width: 38px;
-      height: 36px;
+      width: 44px;
+      height: 42px;
       border-radius: var(--radius-sm);
       background: var(--bg-card);
       border: 1px solid var(--border);
@@ -2972,6 +2987,14 @@
       letter-spacing: 0;
       text-transform: none;
       font-variant-numeric: tabular-nums;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
     }
   </style>
 </head>
@@ -3161,8 +3184,8 @@
     <!-- Songes : Runs -->
     <section class="view active" id="view-runs">
       <div class="dry-streak hidden" id="dry-streak"></div>
-      <button class="fold-all hidden" id="fold-all"></button>
-      <button class="price-alert hidden" id="price-alert"></button>
+      <button class="fold-all hidden" id="fold-all" aria-label="Replier ou déplier les journées"></button>
+      <button class="price-alert hidden" id="price-alert" aria-label="Légendes sans prix"></button>
       <div class="filter-row">
         <button class="filter-toggle" id="filter-toggle">
           <span class="ft-label">⚙ Filtres</span>
@@ -3242,7 +3265,7 @@
 
     <!-- Farm : Ressources -->
     <section class="view" id="view-res">
-      <button class="price-alert hidden" id="res-alert"></button>
+      <button class="price-alert hidden" id="res-alert" aria-label="Ressources sans prix"></button>
       <button class="btn btn-primary" id="add-res" style="width:100%;margin-bottom:12px;">+ Nouvelle ressource</button>
       <div id="res-body"></div>
     </section>
@@ -3283,12 +3306,12 @@
         <button class="nav-btn" id="alma-next-p" aria-label="Période suivante">›</button>
       </div>
       <div class="alma-range hidden" id="alma-rangerow">
-        <label>Du <input type="date" id="alma-from" /></label>
-        <label>Au <input type="date" id="alma-to" /></label>
+        <label>Du <input type="date" id="alma-from" aria-label="Début de la plage" /></label>
+        <label>Au <input type="date" id="alma-to" aria-label="Fin de la plage" /></label>
       </div>
       <div class="alma-filters">
-        <select id="alma-type"></select>
-        <input type="text" id="alma-q" placeholder="Rechercher…" autocomplete="off" />
+        <select id="alma-type" aria-label="Filtrer par type de bonus"></select>
+        <input type="text" id="alma-q" aria-label="Rechercher un bonus ou une offrande" placeholder="Rechercher…" autocomplete="off" />
       </div>
       <div id="alma-sum"></div>
       <div id="alma-list"></div>
@@ -3309,12 +3332,12 @@
       <h2 id="form-title">Nouvel exo</h2>
 
       <div class="field">
-        <label>Nom de l'item</label>
+        <label for="f-name">Nom de l'item</label>
         <input type="text" id="f-name" placeholder="Ex : Coiffe Royale Bouftou" maxlength="60" />
       </div>
 
       <div class="field">
-        <label>Exo recherché</label>
+        <label for="f-exo">Exo recherché</label>
         <input type="text" id="f-exo" placeholder="Ex : PA + PM + PO" maxlength="40" />
         <div class="presets">
           <button class="preset" data-preset="PA">PA</button>
@@ -3328,7 +3351,7 @@
       </div>
 
       <div class="field">
-        <label>Chance par tentative</label>
+        <label for="f-chance">Chance par tentative</label>
         <div class="chance-input">
           <span class="frac">1 /</span>
           <input type="number" id="f-chance" placeholder="100" min="1" inputmode="numeric" />
@@ -3337,13 +3360,13 @@
       </div>
 
       <div class="field">
-        <label>Coût de base (kamas)</label>
+        <label for="f-base">Coût de base (kamas)</label>
         <input type="text" id="f-base" placeholder="0" inputmode="numeric" autocomplete="off" />
         <div class="hint">Prix d'achat ou de craft de l'item nu. Tu pourras ajouter chaque achat de runes ensuite, au fur et à mesure.</div>
       </div>
 
       <div class="field">
-        <label>Valeur HDV (kamas)</label>
+        <label for="f-hdv">Valeur HDV (kamas)</label>
         <input type="text" id="f-hdv" placeholder="0" inputmode="numeric" autocomplete="off" />
         <div class="hint">Combien tu peux le revendre une fois exo réussi</div>
       </div>
@@ -3464,7 +3487,7 @@
       <button class="modal-grip" aria-label="Fermer"></button>
       <h2>Acheter des runes</h2>
       <div class="field">
-        <label>Montant en kamas</label>
+        <label for="p-amount">Montant en kamas</label>
         <input type="text" id="p-amount" placeholder="0" inputmode="numeric" autocomplete="off" />
         <div class="hint">Saisis ce que tu viens de dépenser pour cet achat. Le total se met à jour automatiquement.</div>
       </div>
@@ -3480,15 +3503,13 @@
     <div class="modal" style="max-width: 440px;">
       <button class="modal-grip" aria-label="Fermer"></button>
       <h2>Données &amp; sauvegarde</h2>
-      <p style="color: var(--text-soft); margin: 0 0 16px; font-size: 14px;">
-        Exporte régulièrement : les données vivent dans le navigateur et peuvent être effacées si tu retires la PWA.
-      </p>
+      <div class="note-box" id="backup-state"></div>
       <div class="data-actions">
         <button class="btn btn-primary" id="data-export">⬇︎ Exporter (JSON)</button>
         <button class="btn btn-secondary" id="data-csv">⬇︎ Exporter les runs (CSV)</button>
         <button class="btn btn-secondary" id="data-import">⬆︎ Importer</button>
       </div>
-      <input type="file" id="data-file" accept="application/json,.json" style="display:none;" />
+      <input type="file" id="data-file" aria-label="Fichier de sauvegarde à importer" accept="application/json,.json" style="display:none;" />
       <button class="btn btn-danger" id="data-clear" style="width:100%; margin-top: 10px;">🗑 Tout effacer</button>
       <div class="modal-actions">
         <button class="btn btn-secondary" id="data-close">Fermer</button>
@@ -3506,23 +3527,23 @@
       </div>
 
       <div class="field">
-        <label>Date</label>
+        <label for="r-date">Date</label>
         <input type="date" id="r-date" />
       </div>
 
       <div class="field">
-        <label>Durée de la run</label>
+        <label for="r-h">Durée de la run</label>
         <div class="dur-row">
           <div class="dur-cell narrow">
             <input type="text" id="r-h" maxlength="1" placeholder="0" inputmode="numeric" autocomplete="off" />
             <span class="u">h</span>
           </div>
           <div class="dur-cell">
-            <input type="text" id="r-m" maxlength="2" placeholder="0" inputmode="numeric" autocomplete="off" />
+            <input type="text" id="r-m" aria-label="Minutes" maxlength="2" placeholder="0" inputmode="numeric" autocomplete="off" />
             <span class="u">min</span>
           </div>
           <div class="dur-cell">
-            <input type="text" id="r-s" maxlength="2" placeholder="0" inputmode="numeric" autocomplete="off" />
+            <input type="text" id="r-s" aria-label="Secondes" maxlength="2" placeholder="0" inputmode="numeric" autocomplete="off" />
             <span class="u">sec</span>
           </div>
         </div>
@@ -3541,7 +3562,7 @@
       </div>
 
       <div class="field">
-        <label>Butin</label>
+        <label for="r-bribes">Butin</label>
         <div class="loot-grid">
           <div>
             <div class="hint" style="margin:0 0 5px;">Bribes</div>
@@ -3549,7 +3570,7 @@
           </div>
           <div>
             <div class="hint" style="margin:0 0 5px;">Légendaires</div>
-            <input type="text" id="r-legend" placeholder="0" maxlength="1" inputmode="numeric" autocomplete="off" />
+            <input type="text" id="r-legend" aria-label="Légendes obtenues" placeholder="0" maxlength="1" inputmode="numeric" autocomplete="off" />
           </div>
         </div>
         <div class="dur-preview" id="r-bribes-hint"></div>
@@ -3565,7 +3586,7 @@
       </div>
 
       <div class="field">
-        <label>Note <span style="color:var(--text-dim);font-weight:400;">(optionnel)</span></label>
+        <label for="r-note">Note <span style="color:var(--text-dim);font-weight:400;">(optionnel)</span></label>
         <input type="text" id="r-note" placeholder="Ex : mauvais tirage de modificateurs" maxlength="80" />
       </div>
 
@@ -3600,7 +3621,7 @@
       </div>
 
       <div class="field">
-        <label>Nom</label>
+        <label for="c-name">Nom</label>
         <input type="text" id="c-name" placeholder="Ex : Team dégâts" maxlength="40" />
         <div class="hint">Laisse vide pour reprendre la liste des classes.</div>
       </div>
@@ -3643,7 +3664,7 @@
       </div>
 
       <div class="field">
-        <label>Date d'ouverture</label>
+        <label for="ch-date">Date d'ouverture</label>
         <input type="date" id="ch-date" />
       </div>
 
@@ -3653,7 +3674,7 @@
       </div>
 
       <div class="field">
-        <label>Note <span style="color:var(--text-dim);font-weight:400;">(optionnel)</span></label>
+        <label for="ch-note">Note <span style="color:var(--text-dim);font-weight:400;">(optionnel)</span></label>
         <input type="text" id="ch-note" placeholder="Ex : premier coffre du mois" maxlength="80" />
       </div>
 
@@ -3674,7 +3695,7 @@
       </div>
 
       <div class="field" id="cat-single-wrap">
-        <label>Nom</label>
+        <label for="cat-name">Nom</label>
         <input type="text" id="cat-name" placeholder="Ex : Légende de Bram Barbe-Monde" maxlength="60" />
       </div>
 
@@ -3685,19 +3706,19 @@
       </div>
 
       <div class="field">
-        <label>Prix de vente estimé <span style="color:var(--text-dim);font-weight:400;">(kamas)</span></label>
+        <label for="cat-price">Prix de vente estimé <span style="color:var(--text-dim);font-weight:400;">(kamas)</span></label>
         <input type="text" id="cat-price" maxlength="10" inputmode="numeric" autocomplete="off" placeholder="0" />
         <div class="hint" id="cat-price-hint">Sa valeur marchande, que tu l'aies vendue ou non. Modifiable à tout moment, et appliquée rétroactivement à tous tes drops de cet objet.</div>
       </div>
 
       <div class="field" id="cat-img-wrap">
-        <label>Image <span style="color:var(--text-dim);font-weight:400;">(URL, optionnel)</span></label>
+        <label for="cat-img">Image <span style="color:var(--text-dim);font-weight:400;">(URL, optionnel)</span></label>
         <input type="text" id="cat-img" placeholder="https://..." maxlength="300" />
         <div class="hint">Colle l'adresse de l'icône depuis ton navigateur (clic droit → copier l'adresse de l'image).</div>
       </div>
 
       <div class="field" id="cat-bulk-wrap">
-        <label>Ajout en masse</label>
+        <label for="cat-bulk">Ajout en masse</label>
         <textarea id="cat-bulk" rows="6" placeholder="Une légende par ligne&#10;Légende de…&#10;Légende du…"></textarea>
         <div class="hint">Un nom par ligne. Les doublons sont ignorés.</div>
       </div>
@@ -3718,15 +3739,15 @@
         <button class="trash-btn hidden" id="btab-reset" aria-label="Effacer ce barème">🗑</button>
       </div>
       <div class="field">
-        <label>Première vague récompensée</label>
+        <label for="bt-from">Première vague récompensée</label>
         <input type="text" id="bt-from" maxlength="2" placeholder="3" inputmode="numeric" autocomplete="off" />
       </div>
       <div class="field">
-        <label>Bribes à cette vague</label>
+        <label for="bt-at">Bribes à cette vague</label>
         <input type="text" id="bt-at" maxlength="6" placeholder="250" inputmode="numeric" autocomplete="off" />
       </div>
       <div class="field">
-        <label>Bribes par vague supplémentaire</label>
+        <label for="bt-per">Bribes par vague supplémentaire</label>
         <input type="text" id="bt-per" maxlength="6" placeholder="75" inputmode="numeric" autocomplete="off" />
         <div class="hint" id="bt-preview"></div>
       </div>
@@ -3747,13 +3768,13 @@
       <div class="hint" style="margin-bottom:16px;">Les prix sont fixés ici une fois pour toutes. Ils s'appliquent rétroactivement à toutes tes runs.</div>
 
       <div class="field">
-        <label>Reflets par run</label>
+        <label for="eco-rq">Reflets par run</label>
         <input type="text" id="eco-rq" maxlength="5" inputmode="numeric" autocomplete="off" placeholder="1200" />
         <div class="hint">Quantité fixe obtenue à chaque run.</div>
       </div>
 
       <div class="field">
-        <label>Prix unitaire d'un reflet</label>
+        <label for="eco-rp">Prix unitaire d'un reflet</label>
         <input type="text" id="eco-rp" maxlength="9" inputmode="numeric" autocomplete="off" placeholder="0" />
         <div class="hint" id="eco-rtotal"></div>
       </div>
@@ -3781,16 +3802,16 @@
         <button class="trash-btn hidden" id="spend-delete" aria-label="Supprimer">🗑</button>
       </div>
       <div class="field">
-        <label>Date</label>
+        <label for="sp-date">Date</label>
         <input type="date" id="sp-date" />
       </div>
       <div class="field">
-        <label>Montant dépensé</label>
+        <label for="sp-amount">Montant dépensé</label>
         <input type="text" id="sp-amount" maxlength="6" placeholder="0" inputmode="numeric" autocomplete="off" />
         <div class="hint">Ce qui part chez un marchand ne compte pas pour le palier.</div>
       </div>
       <div class="field">
-        <label>Objet <span style="color:var(--text-dim);font-weight:400;">(optionnel)</span></label>
+        <label for="sp-label">Objet <span style="color:var(--text-dim);font-weight:400;">(optionnel)</span></label>
         <input type="text" id="sp-label" placeholder="Ex : ornement" maxlength="60" />
       </div>
       <div class="modal-actions">
@@ -3808,7 +3829,7 @@
         <h2 id="pick-title">Quelle légende ?</h2>
       </div>
       <div class="field pick-search">
-        <input type="text" id="pick-q" placeholder="Rechercher…" autocomplete="off" />
+        <input type="text" id="pick-q" aria-label="Rechercher une légende" placeholder="Rechercher…" autocomplete="off" />
       </div>
       <div class="pick-grid" id="pick-grid"></div>
       <div class="modal-actions" style="margin-top:14px;">
@@ -3832,23 +3853,23 @@
       </div>
 
       <div class="field">
-        <label>Date</label>
+        <label for="f-date">Date</label>
         <input type="date" id="f-date" />
       </div>
 
       <div class="field">
-        <label>Durée de farm</label>
+        <label for="f-h">Durée de farm</label>
         <div class="dur-row">
           <div class="dur-cell narrow">
             <input type="text" id="f-h" maxlength="1" placeholder="0" inputmode="numeric" autocomplete="off" />
             <span class="u">h</span>
           </div>
           <div class="dur-cell">
-            <input type="text" id="f-m" maxlength="2" placeholder="0" inputmode="numeric" autocomplete="off" />
+            <input type="text" id="f-m" aria-label="Minutes" maxlength="2" placeholder="0" inputmode="numeric" autocomplete="off" />
             <span class="u">min</span>
           </div>
           <div class="dur-cell">
-            <input type="text" id="f-s" maxlength="2" placeholder="0" inputmode="numeric" autocomplete="off" />
+            <input type="text" id="f-s" aria-label="Secondes" maxlength="2" placeholder="0" inputmode="numeric" autocomplete="off" />
             <span class="u">sec</span>
           </div>
         </div>
@@ -3862,14 +3883,14 @@
       </div>
 
       <div class="field">
-        <label>Bonus de drop de la zone</label>
+        <label for="f-bonus">Bonus de drop de la zone</label>
         <div class="dur-row">
           <div class="dur-cell">
             <input type="text" id="f-bonus" maxlength="2" placeholder="0" inputmode="numeric" autocomplete="off" />
             <span class="u">%</span>
           </div>
           <div class="dur-cell hidden" id="f-dj-cell">
-            <input type="text" id="f-dj" maxlength="3" placeholder="0" inputmode="numeric" autocomplete="off" />
+            <input type="text" id="f-dj" aria-label="Nombre de donjons enchaînés" maxlength="3" placeholder="0" inputmode="numeric" autocomplete="off" />
             <span class="u">donjons</span>
           </div>
         </div>
@@ -3897,20 +3918,20 @@
       </div>
 
       <div class="field">
-        <label>Total obtenu <span style="color:var(--text-dim);font-weight:400;">(butin complet, kamas)</span></label>
+        <label for="f-gross">Total obtenu <span style="color:var(--text-dim);font-weight:400;">(butin complet, kamas)</span></label>
         <input type="text" id="f-gross" placeholder="0" inputmode="numeric" autocomplete="off" />
         <div class="dur-preview" id="f-gross-hint"></div>
       </div>
 
       <div class="field">
-        <label>Coûts de la session</label>
+        <label for="f-potions">Coûts de la session</label>
         <div class="dur-row">
           <div class="dur-cell">
             <input type="text" id="f-potions" maxlength="2" placeholder="0" inputmode="numeric" autocomplete="off" />
             <span class="u">potions</span>
           </div>
           <div class="dur-cell">
-            <input type="text" id="f-extra" placeholder="0" inputmode="numeric" autocomplete="off" />
+            <input type="text" id="f-extra" aria-label="Autres coûts en kamas" placeholder="0" inputmode="numeric" autocomplete="off" />
             <span class="u">autres</span>
           </div>
         </div>
@@ -3918,7 +3939,7 @@
       </div>
 
       <div class="field">
-        <label>Note <span style="color:var(--text-dim);font-weight:400;">(optionnel)</span></label>
+        <label for="f-note">Note <span style="color:var(--text-dim);font-weight:400;">(optionnel)</span></label>
         <input type="text" id="f-note" placeholder="Ex : mauvais spawn, beaucoup d'agros" maxlength="80" />
       </div>
 
@@ -3949,7 +3970,7 @@
       </div>
 
       <div class="field">
-        <label>Nom</label>
+        <label for="z-name">Nom</label>
         <input type="text" id="z-name" placeholder="Ex : Donjon des Wabbits" maxlength="40" />
       </div>
 
@@ -3959,13 +3980,13 @@
       </div>
 
       <div class="field hidden" id="z-link-field">
-        <label>Zone qui l'entoure</label>
+        <label for="z-link">Zone qui l'entoure</label>
         <select id="z-link"></select>
         <div class="hint">Permet de comparer directement ce donjon à la zone qu'on pourrait farmer à la place.</div>
       </div>
 
       <div class="field">
-        <label>Niveau <span style="color:var(--text-dim);font-weight:400;">(optionnel)</span></label>
+        <label for="z-level">Niveau <span style="color:var(--text-dim);font-weight:400;">(optionnel)</span></label>
         <input type="text" id="z-level" placeholder="Ex : 180" maxlength="3" inputmode="numeric" autocomplete="off" />
       </div>
 
@@ -3996,12 +4017,12 @@
       </div>
 
       <div class="field">
-        <label>Nom</label>
+        <label for="rs-name">Nom</label>
         <input type="text" id="rs-name" placeholder="Ex : Peau de Bouftou" maxlength="50" />
       </div>
 
       <div class="field">
-        <label>Prix unitaire HDV</label>
+        <label for="rs-price">Prix unitaire HDV</label>
         <input type="text" id="rs-price" placeholder="0" inputmode="numeric" autocomplete="off" />
         <div class="hint" id="rs-price-hint"></div>
       </div>
@@ -4030,13 +4051,13 @@
       <div class="modal-head"><h2>Réglages du farm</h2></div>
 
       <div class="field">
-        <label>Bonus de drop d'une anomalie</label>
+        <label for="fc-anom">Bonus de drop d'une anomalie</label>
         <input type="text" id="fc-anom" placeholder="120" maxlength="3" inputmode="numeric" autocomplete="off" />
         <div class="hint">En pourcentage. Sert à ramener les sessions sous anomalie à un rendement comparable aux autres.</div>
       </div>
 
       <div class="field">
-        <label>Prix d'une potion / d'un élixir</label>
+        <label for="fc-potion">Prix d'une potion / d'un élixir</label>
         <input type="text" id="fc-potion" placeholder="0" inputmode="numeric" autocomplete="off" />
         <div class="hint">Multiplié par le nombre de potions saisi sur chaque session.</div>
       </div>
@@ -4171,8 +4192,35 @@
       } catch (e) { state = { items: [], songes: [], compos: [], chests: [], catalogue: [], spends: [],
                               farms: [], zones: [], resources: [], settings: {} }; }
     }
+    const SCHEMA_VERSION = 1;
+    let storageFull = false;
+
+    // Une écriture qui échoue en silence est le seul scénario irrattrapable :
+    // on le rend visible plutôt que de perdre les données sans prévenir.
     function save() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        if (storageFull) {
+          storageFull = false;
+          toast('Sauvegarde rétablie');
+        }
+        return true;
+      } catch (e) {
+        if (!storageFull) {
+          storageFull = true;
+          toast('Stockage saturé : exporte tes données sans tarder');
+        }
+        return false;
+      }
+    }
+    function storageBytes() {
+      try { return (localStorage.getItem(STORAGE_KEY) || '').length; } catch (e) { return 0; }
+    }
+    function daysSinceExport() {
+      const d = state.settings && state.settings.lastExport;
+      if (!d) return null;
+      const t = new Date(d + 'T00:00:00');
+      return Math.max(0, Math.round((almaToday() - t) / 86400000));
     }
     // Le prix d'une ressource est figé au moment de la session : sans ça, changer
     // un prix aujourd'hui revaloriserait rétroactivement tout l'historique.
@@ -4305,14 +4353,35 @@
     // ============================================================
     // RENDU
     // ============================================================
-    function render() {
-      renderStats();
-      renderCurrent();
-      renderArchive();
-      renderRanking();
-      renderSonges();
-      renderFarm();
-      renderAlma();
+    // Rendu ciblé : reconstruire les quatre modules à chaque action coûtait
+    // près d'une seconde sur un gros historique, pour redessiner des vues
+    // invisibles. On ne rend que le module affiché ; les autres sont marqués
+    // « à refaire » et rattrapés au moment où l'on bascule dessus.
+    const dirtyModules = { exos: true, songes: true, farm: true, alma: true };
+
+    function renderModule(m) {
+      if (m === 'exos') {
+        renderStats();
+        renderCurrent();
+        renderArchive();
+        renderRanking();
+      } else if (m === 'songes') renderSonges();
+      else if (m === 'farm') renderFarm();
+      else if (m === 'alma') renderAlma();
+    }
+    function flushRender() {
+      const m = activeModule || 'songes';
+      if (dirtyModules[m]) {
+        renderModule(m);
+        dirtyModules[m] = false;
+      }
+    }
+    // render()          → tout est à refaire (import, effacement, migration)
+    // render('farm')    → seul ce module change ; les autres restent en attente
+    function render(scope) {
+      if (scope && dirtyModules[scope] !== undefined) dirtyModules[scope] = true;
+      else Object.keys(dirtyModules).forEach(k => { dirtyModules[k] = true; });
+      flushRender();
     }
 
     function renderStats() {
@@ -4852,7 +4921,9 @@
     // DONNÉES : EXPORT / IMPORT / RESET
     // ============================================================
     function exportData() {
-      const payload = JSON.stringify(state, null, 2);
+      state.settings.lastExport = todayISO();
+      save();
+      const payload = JSON.stringify({ schema: SCHEMA_VERSION, exportedAt: new Date().toISOString(), ...state }, null, 2);
       const blob = new Blob([payload], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -4863,7 +4934,32 @@
       a.click();
       a.remove();
       setTimeout(() => URL.revokeObjectURL(url), 1000);
+      renderBackupState();
       toast('Sauvegarde exportée');
+    }
+
+    // Bandeau de l'écran Données : poids du stockage et ancienneté de la sauvegarde
+    function renderBackupState() {
+      const el = document.getElementById('backup-state');
+      if (!el) return;
+      const ko = (storageBytes() / 1024).toFixed(0);
+      const d = daysSinceExport();
+      let msg, warn;
+      if (storageFull) {
+        msg = `<b>Stockage saturé.</b> Exporte tes données maintenant, les dernières modifications ne sont plus enregistrées.`;
+        warn = true;
+      } else if (d == null) {
+        msg = `Tes données pèsent <b>${ko} Ko</b> et vivent uniquement dans ce navigateur. Tu n'as encore jamais exporté de sauvegarde.`;
+        warn = true;
+      } else if (d >= 14) {
+        msg = `Tes données pèsent <b>${ko} Ko</b>. Dernière sauvegarde il y a <b>${d} jours</b> — pense à en refaire une.`;
+        warn = true;
+      } else {
+        msg = `Tes données pèsent <b>${ko} Ko</b>. Dernière sauvegarde ${d === 0 ? "aujourd'hui" : d === 1 ? 'hier' : `il y a ${d} jours`}.`;
+        warn = false;
+      }
+      el.className = 'note-box' + (warn ? ' warn' : '');
+      el.innerHTML = msg;
     }
 
     function importData(file) {
@@ -4872,6 +4968,12 @@
         try {
           const data = JSON.parse(reader.result);
           if (!data || (!Array.isArray(data.items) && !Array.isArray(data.songes))) throw new Error('format');
+          // Une sauvegarde plus récente que l'app contiendrait des champs qu'on ne
+          // saurait pas migrer : mieux vaut refuser que corrompre en silence.
+          if (data.schema && data.schema > SCHEMA_VERSION) {
+            toast('Sauvegarde trop récente pour cette version de l\'app');
+            return;
+          }
           const nItems = Array.isArray(data.items) ? data.items.length : 0;
           const nRuns = Array.isArray(data.songes) ? data.songes.length : 0;
           document.getElementById('modal-data').classList.remove('active');
@@ -8882,6 +8984,7 @@
       const head = heads[mod] || heads.songes;
       document.getElementById('app-title').textContent = head[0];
       document.getElementById('app-sub').textContent = head[1];
+      flushRender();
 
       const nav = document.querySelector(`nav.tabs[data-mod="${mod}"]`);
       const activeTab = nav.querySelector('.tab.active') || nav.querySelector('.tab');
@@ -8898,6 +9001,14 @@
     // répondre à la seule question qui compte : vaut-il mieux passer l'exo
     // soi-même, ou farmer le temps équivalent et acheter l'objet tout fait ?
     let exoTimer = null;
+    // Au-delà, un chrono a très probablement été oublié : le signaler évite
+    // qu'une nuit entière ne vienne écraser la moyenne d'une zone ou d'un exo.
+    const CHRONO_ALERT_SEC = 6 * 3600;
+    function chronoWarn(sec) {
+      return sec > CHRONO_ALERT_SEC
+        ? `<div class="chrono-warn">Ce chrono tourne depuis ${fmtDur(sec)}. Oubli ? Corrige la durée avant d'enregistrer.</div>`
+        : '';
+    }
 
     function exoLive() { return (state.settings && state.settings.exoLive) || null; }
     function exoElapsed() {
@@ -8928,6 +9039,12 @@
       const cur = exoLive();
       // une session ouverte sur un autre item est d'abord créditée
       if (cur && cur.itemId !== itemId) commitExoChrono(true);
+      // un seul chrono tourne à la fois : sinon la même heure réelle serait
+      // comptée deux fois, et les deux kamas/heure seraient faux
+      if (liveSession() && liveSession().since) {
+        pauseLive();
+        toast('Session de farm mise en pause');
+      }
       state.settings.exoLive = { itemId, accum: 0, since: Date.now(), startISO: todayISO() };
       save();
       renderExoChrono();
@@ -8947,6 +9064,7 @@
     function resumeExoChrono() {
       const l = exoLive();
       if (!l || l.since) return;
+      if (liveSession() && liveSession().since) { pauseLive(); toast('Session de farm mise en pause'); }
       l.since = Date.now();
       save();
       renderExoChrono();
@@ -8958,6 +9076,12 @@
       const l = exoLive();
       if (!l) return;
       const sec = exoElapsed();
+      if (!silent && sec > CHRONO_ALERT_SEC) {
+        confirmDialog('Enregistrer ' + fmtDur(sec) + ' ?',
+          "C'est long pour une session de forgemagie. Si le chrono a tourné sans toi, abandonne-le plutôt : la durée fausserait ton kamas/heure.",
+          () => { commitExoChrono(true); render('exos'); refreshDetail(); toast('Temps enregistré'); });
+        return;
+      }
       const item = state.items.find(i => i.id === l.itemId);
       if (item && sec > 0) item.timeSec = (item.timeSec || 0) + sec;
       delete state.settings.exoLive;
@@ -9032,6 +9156,7 @@
         <div class="chrono-zone">${running ? 'Chrono en cours' : 'En pause'} · cumul ${fmtChrono(item.timeSec || 0)}</div>
         <div class="chrono-time" data-exotime="1">${fmtChrono(exoElapsed())}</div>
         <div class="chrono-sub">Le temps s'ajoutera à l'exo quand tu l'arrêteras.</div>
+        ${chronoWarn(exoElapsed())}
         <div class="chrono-actions">
           <button class="btn btn-secondary" data-exotoggle="1">${running ? '❙❙ Pause' : '▶ Reprendre'}</button>
           <button class="btn btn-primary" data-exostop="1">■ Arrêter</button>
@@ -9271,6 +9396,11 @@
       return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
     }
     function startLive(zoneId) {
+      // idem côté farm : on crédite le chrono d'exo en cours avant de démarrer
+      if (exoLive()) {
+        commitExoChrono(true);
+        toast('Temps d\'exo enregistré');
+      }
       state.settings.live = { zoneId: zoneId || null, accum: 0, since: Date.now(), startISO: todayISO() };
       save();
       renderChrono();
@@ -9288,6 +9418,7 @@
     function resumeLive() {
       const l = liveSession();
       if (!l || l.since) return;
+      if (exoLive()) { commitExoChrono(true); toast('Temps d\'exo enregistré'); }
       l.since = Date.now();
       save();
       renderChrono();
@@ -9319,7 +9450,7 @@
           <div class="chrono-zone">Chronomètre</div>
           <div class="chrono-time">0:00:00</div>
           <div class="chrono-sub">Lance-le en arrivant sur la zone.</div>
-          ${zones.length ? `<div class="chrono-pick"><select id="chrono-zone">
+          ${zones.length ? `<div class="chrono-pick"><select id="chrono-zone" aria-label="Zone rattachée au chronomètre">
             <option value="">Zone à choisir plus tard</option>
             ${zones.map(z => `<option value="${z.id}"${state.settings.lastZone === z.id ? ' selected' : ''}>${escapeHtml(zoneLabel(z))}</option>`).join('')}
           </select></div>` : `<div class="chrono-pick"><div class="hint">Crée une zone dans l'onglet Zones pour la rattacher.</div></div>`}
@@ -9342,7 +9473,8 @@
         <div class="chrono-zone">${running ? 'Session en cours' : 'En pause'}${z ? ' · ' + escapeHtml(zoneLabel(z)) : ''}</div>
         <div class="chrono-time" id="chrono-time">${fmtChrono(liveElapsed())}</div>
         <div class="chrono-sub">Démarrée le ${escapeHtml(fmtDateShort(l.startISO || todayISO()))}. Elle reste ouverte tant que tu ne la termines pas.</div>
-        ${zones.length ? `<div class="chrono-pick"><select id="chrono-zone">
+        ${chronoWarn(liveElapsed())}
+        ${zones.length ? `<div class="chrono-pick"><select id="chrono-zone" aria-label="Zone rattachée au chronomètre">
           <option value="">Zone non renseignée</option>
           ${zones.map(zz => `<option value="${zz.id}"${l.zoneId === zz.id ? ' selected' : ''}>${escapeHtml(zoneLabel(zz))}</option>`).join('')}
         </select></div>` : ''}
@@ -11044,6 +11176,7 @@
 
     // Données / sauvegarde
     document.getElementById('open-data').addEventListener('click', () => {
+      renderBackupState();
       document.getElementById('modal-data').classList.add('active');
     });
     document.getElementById('data-close').addEventListener('click', closeAllModals);
