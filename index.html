@@ -2478,6 +2478,9 @@
       text-align: center;
     }
     .chrono-card.on { border-color: var(--gold-deep); box-shadow: var(--shadow-gold); }
+    .chrono-card.compact { padding: 12px; margin-bottom: 0; }
+    .chrono-card.compact .chrono-time { font-size: 32px; }
+    .dstat.wide { grid-column: 1 / -1; }
     .chrono-zone {
       font-size: 11px;
       text-transform: uppercase;
@@ -3110,6 +3113,7 @@
   <main>
     <!-- En cours -->
     <section class="view" id="view-current">
+      <div id="exo-chrono"></div>
       <div class="item-list" id="list-current"></div>
       <div class="empty hidden" id="empty-current">
         <div class="icon">⚒️</div>
@@ -3136,6 +3140,7 @@
         <div class="rank-title">Plus de kamas dépensés</div>
         <div class="rank-list" id="rank-kamas"></div>
       </div>
+      <div id="exo-hourly"></div>
       <div class="empty hidden" id="empty-ranking">
         <div class="icon">📜</div>
         <div class="title">Pas encore de classement</div>
@@ -3371,6 +3376,8 @@
         <button class="counter-btn plus-ten" id="d-plus10">+10</button>
       </div>
 
+      <div id="d-chrono" style="margin-bottom: 14px;"></div>
+
       <div class="progress" style="margin-bottom: 14px;">
         <div class="progress-bar" id="d-progress"></div>
       </div>
@@ -3397,6 +3404,18 @@
         <div class="dstat">
           <div class="lbl">Estimé pour réussir</div>
           <div class="val small kamas-num" id="d-estimate">—</div>
+        </div>
+        <div class="dstat">
+          <div class="lbl">Temps passé</div>
+          <div class="val small" id="d-time">—</div>
+        </div>
+        <div class="dstat">
+          <div class="lbl">Temps / tenta</div>
+          <div class="val small" id="d-pertry">—</div>
+        </div>
+        <div class="dstat wide">
+          <div class="lbl" id="d-rate-lbl">Kamas / heure</div>
+          <div class="val gold small kamas-num" id="d-rate">—</div>
         </div>
       </div>
 
@@ -4135,6 +4154,7 @@
         // Migration : convertit l'ancien costPerAttempt en achat unique
         state.items.forEach(item => {
           if (!item.purchases) { item.purchases = []; migrated = true; }
+          if (typeof item.timeSec !== 'number') { item.timeSec = 0; migrated = true; }
           if (item.costPerAttempt != null) {
             if (item.costPerAttempt > 0 && (item.attempts || 0) > 0) {
               item.purchases.push({
@@ -4305,6 +4325,7 @@
     }
 
     function renderCurrent() {
+      renderExoChrono();
       const list = document.getElementById('list-current');
       const empty = document.getElementById('empty-current');
       const items = state.items.filter(i => !i.obtained).sort((a, b) => (b.attempts || 0) - (a.attempts || 0));
@@ -4382,7 +4403,7 @@
       const empty = document.getElementById('empty-ranking');
       if (all.length === 0) {
         empty.classList.remove('hidden');
-        ['rank-most', 'rank-least', 'rank-profit', 'rank-kamas'].forEach(id => {
+        ['rank-most', 'rank-least', 'rank-profit', 'rank-kamas', 'exo-hourly'].forEach(id => {
           document.getElementById(id).innerHTML = '';
         });
         return;
@@ -4418,6 +4439,11 @@
         unit: 'kamas',
         sub: `${item.exoLabel} · ${item.attempts || 0} tentas`,
       }));
+
+      const hourly = document.getElementById('exo-hourly');
+      hourly.innerHTML = exoRateCard() + activityCompareCard();
+      const cfgBtn = hourly.querySelector('#fcfg-open');
+      if (cfgBtn) cfgBtn.addEventListener('click', openFarmCfg);
     }
 
     function fillRank(id, items, fmt) {
@@ -4537,6 +4563,28 @@
       box.classList.add(p >= 0 ? 'green' : 'red');
       lbl.textContent = item.obtained ? 'Rentabilité finale' : 'Rentabilité estimée';
       val.textContent = (p >= 0 ? '+' : '') + fmtFull(p) + ' k';
+
+      const chronoBox = document.getElementById('d-chrono');
+      chronoBox.innerHTML = chronoBlock(item, true);
+      wireChrono(chronoBox);
+      if (exoLive() && exoLive().itemId === item.id && exoLive().since) tickExo();
+
+      document.getElementById('d-time').textContent = item.timeSec ? fmtDur(item.timeSec) : '—';
+      const per = exoSecPerAttempt(item);
+      document.getElementById('d-pertry').textContent = per != null ? fmtDurPrecise(per) : '—';
+      const rate = exoRate(item), proj = exoProjection(item);
+      const rateLbl = document.getElementById('d-rate-lbl');
+      const rateEl = document.getElementById('d-rate');
+      if (item.obtained && rate != null) {
+        rateLbl.textContent = 'Kamas / heure';
+        rateEl.textContent = fmtNum(rate);
+      } else if (proj) {
+        rateLbl.textContent = 'Kamas / heure projeté';
+        rateEl.textContent = fmtNum(proj.rate);
+      } else {
+        rateLbl.textContent = 'Kamas / heure';
+        rateEl.textContent = '—';
+      }
 
       document.getElementById('d-obtain').textContent = item.obtained ? '↺ Remettre en cours' : '✓ Obtenu';
       document.getElementById('d-obtain').classList.toggle('btn-success', !item.obtained);
@@ -4972,6 +5020,7 @@
         state = { items: [], songes: [], compos: [], chests: [], catalogue: [], spends: [],
                   farms: [], zones: [], resources: [], settings: {} };
         stopTick();
+        stopExoTick();
         draftCompoId = null;
         draftZoneId = null;
         save();
@@ -8843,6 +8892,225 @@
     }
 
     // ============================================================
+    // EXOS : FACTEUR TEMPS
+    // ============================================================
+    // Un exo coûte des kamas mais aussi des heures. Sans le temps, impossible de
+    // répondre à la seule question qui compte : vaut-il mieux passer l'exo
+    // soi-même, ou farmer le temps équivalent et acheter l'objet tout fait ?
+    let exoTimer = null;
+
+    function exoLive() { return (state.settings && state.settings.exoLive) || null; }
+    function exoElapsed() {
+      const l = exoLive();
+      if (!l) return 0;
+      return Math.max(0, Math.round((l.accum || 0) + (l.since ? (Date.now() - l.since) / 1000 : 0)));
+    }
+    function exoLiveItem() {
+      const l = exoLive();
+      return l ? state.items.find(i => i.id === l.itemId) || null : null;
+    }
+    function paintExoTimes() {
+      const t = fmtChrono(exoElapsed());
+      document.querySelectorAll('[data-exotime]').forEach(el => { el.textContent = t; });
+    }
+    function tickExo() {
+      if (exoTimer) return;
+      exoTimer = setInterval(() => {
+        const l = exoLive();
+        if (!l || !l.since) { stopExoTick(); return; }
+        paintExoTimes();
+      }, 1000);
+    }
+    function stopExoTick() {
+      if (exoTimer) { clearInterval(exoTimer); exoTimer = null; }
+    }
+    function startExoChrono(itemId) {
+      const cur = exoLive();
+      // une session ouverte sur un autre item est d'abord créditée
+      if (cur && cur.itemId !== itemId) commitExoChrono(true);
+      state.settings.exoLive = { itemId, accum: 0, since: Date.now(), startISO: todayISO() };
+      save();
+      renderExoChrono();
+      refreshDetail();
+      tickExo();
+    }
+    function pauseExoChrono() {
+      const l = exoLive();
+      if (!l || !l.since) return;
+      l.accum = (l.accum || 0) + (Date.now() - l.since) / 1000;
+      l.since = null;
+      save();
+      stopExoTick();
+      renderExoChrono();
+      refreshDetail();
+    }
+    function resumeExoChrono() {
+      const l = exoLive();
+      if (!l || l.since) return;
+      l.since = Date.now();
+      save();
+      renderExoChrono();
+      refreshDetail();
+      tickExo();
+    }
+    // Crédite le temps écoulé sur l'item et ferme la session
+    function commitExoChrono(silent) {
+      const l = exoLive();
+      if (!l) return;
+      const sec = exoElapsed();
+      const item = state.items.find(i => i.id === l.itemId);
+      if (item && sec > 0) item.timeSec = (item.timeSec || 0) + sec;
+      delete state.settings.exoLive;
+      stopExoTick();
+      save();
+      if (!silent) {
+        render();
+        refreshDetail();
+        toast(sec > 0 ? `+${fmtDurPrecise(sec)} sur cet exo` : 'Chrono fermé');
+      }
+    }
+    function discardExoChrono() {
+      confirmDialog('Abandonner le chrono ?', 'Le temps écoulé ne sera pas ajouté à cet exo.', () => {
+        delete state.settings.exoLive;
+        stopExoTick();
+        save();
+        render();
+        refreshDetail();
+        toast('Chrono abandonné');
+      });
+    }
+
+    // ---- Calculs ----
+    function exoHours(item) { return (item.timeSec || 0) / 3600; }
+    // Rendement réalisé : ce que l'exo a rapporté par heure passée dessus
+    function exoRate(item) {
+      const h = exoHours(item);
+      return h > 0 ? profit(item) / h : null;
+    }
+    function exoSecPerAttempt(item) {
+      const n = item.attempts || 0;
+      return n > 0 && item.timeSec > 0 ? item.timeSec / n : null;
+    }
+    // Projection : au rythme actuel, ce que l'exo rapportera à l'heure une fois réussi
+    function exoProjection(item) {
+      const est = estimatedCostToSucceed(item);
+      const per = exoSecPerAttempt(item);
+      if (est == null || per == null || !item.chance) return null;
+      const totalSec = per * item.chance;
+      const h = totalSec / 3600;
+      if (h <= 0) return null;
+      return { rate: ((item.hdvValue || 0) - est) / h, totalSec, est };
+    }
+    // Bilan des exos réussis : seuls ceux-là ont un rendement horaire interprétable,
+    // un exo en cours n'ayant que des dépenses et un temps encore incomplet.
+    function exoTotals() {
+      const done = state.items.filter(i => i.obtained && (i.timeSec || 0) > 0);
+      const sec = done.reduce((s, i) => s + (i.timeSec || 0), 0);
+      const net = done.reduce((s, i) => s + profit(i), 0);
+      const h = sec / 3600;
+      return { n: done.length, sec, net, rate: h > 0 ? net / h : null, items: done };
+    }
+
+    // ---- Chronomètre affiché ----
+    function chronoBlock(item, compact) {
+      const l = exoLive();
+      const mine = l && l.itemId === item.id;
+      const running = mine && !!l.since;
+      if (!mine) {
+        return `<div class="chrono-card${compact ? ' compact' : ''}">
+          <div class="chrono-zone">Temps passé</div>
+          <div class="chrono-time">${fmtChrono(item.timeSec || 0)}</div>
+          <div class="chrono-sub">${exoSecPerAttempt(item) != null
+            ? `${fmtDurPrecise(exoSecPerAttempt(item))} par tentative`
+            : 'Lance le chrono quand tu forgemages.'}</div>
+          <div class="chrono-actions">
+            <button class="btn btn-primary" data-exostart="${item.id}">▶ Démarrer</button>
+          </div>
+        </div>`;
+      }
+      return `<div class="chrono-card on${running ? '' : ' paused'}${compact ? ' compact' : ''}">
+        <div class="chrono-zone">${running ? 'Chrono en cours' : 'En pause'} · cumul ${fmtChrono(item.timeSec || 0)}</div>
+        <div class="chrono-time" data-exotime="1">${fmtChrono(exoElapsed())}</div>
+        <div class="chrono-sub">Le temps s'ajoutera à l'exo quand tu l'arrêteras.</div>
+        <div class="chrono-actions">
+          <button class="btn btn-secondary" data-exotoggle="1">${running ? '❙❙ Pause' : '▶ Reprendre'}</button>
+          <button class="btn btn-primary" data-exostop="1">■ Arrêter</button>
+        </div>
+        <div class="chrono-actions">
+          <button class="btn btn-secondary" data-exodiscard="1" style="flex:1;">Abandonner</button>
+        </div>
+      </div>`;
+    }
+
+    function wireChrono(root) {
+      const scope = root || document;
+      const on = (attr, fn) => scope.querySelectorAll(`[${attr}]`).forEach(b =>
+        b.addEventListener('click', e => { e.stopPropagation(); fn(b.getAttribute(attr)); haptic(); }));
+      on('data-exostart', id => startExoChrono(id));
+      on('data-exotoggle', () => (exoLive() && exoLive().since) ? pauseExoChrono() : resumeExoChrono());
+      on('data-exostop', () => commitExoChrono(false));
+      on('data-exodiscard', () => discardExoChrono());
+      on('data-exogoto', id => { closeAllModals(); openDetail(id); });
+    }
+
+    // Bandeau en tête de la liste : le chrono reste visible hors de la fiche
+    function renderExoChrono() {
+      const box = document.getElementById('exo-chrono');
+      if (!box) return;
+      const item = exoLiveItem();
+      if (!item) { box.innerHTML = ''; return; }
+      const running = !!exoLive().since;
+      box.innerHTML = `<button class="price-alert" data-exogoto="${item.id}">
+        <span class="pa-icon">${running ? '⏱' : '❙❙'}</span><span>
+          <b>${escapeHtml(item.name)}</b> · ${escapeHtml(item.exoLabel)} —
+          <span data-exotime="1">${fmtChrono(exoElapsed())}</span>${running ? '' : ' (en pause)'}
+        </span></button>`;
+      wireChrono(box);
+      if (running) tickExo();
+    }
+
+    // ---- Rentabilité horaire dans le classement ----
+    function exoRateCard() {
+      const tot = exoTotals();
+      const rows = tot.items.map(i => ({ i, r: exoRate(i) }))
+        .filter(x => x.r != null)
+        .sort((a, b) => b.r - a.r);
+      const running = state.items.filter(i => !i.obtained && exoProjection(i))
+        .map(i => ({ i, p: exoProjection(i) }))
+        .sort((a, b) => b.p.rate - a.p.rate)
+        .slice(0, 5);
+
+      if (!rows.length && !running.length) {
+        return `<div class="chart-card">
+          <div class="chart-title">Rentabilité horaire</div>
+          <div class="chart-sub">Chronomètre tes sessions de forgemagie</div>
+          <div class="insight warn">Aucun exo n'a de temps enregistré. Lance le chrono depuis la fiche d'un exo : sans durée, impossible de comparer un exo à une heure de farm.</div>
+        </div>`;
+      }
+
+      const best = rows.length ? rows[0].r : null;
+      return `<div class="chart-card">
+        <div class="chart-title">Rentabilité horaire</div>
+        <div class="chart-sub">${plural(tot.n, 'exo')} réussi${tot.n > 1 ? 's' : ''} · ${fmtDur(tot.sec)} de forgemagie</div>
+        ${rows.length ? rows.map((x, k) => `
+          <div class="yield-row">
+            <span class="yield-lbl" style="width:96px;text-align:left;font-size:11px;">${k + 1}. ${escapeHtml(x.i.name)}</span>
+            <span class="yield-track"><span class="yield-fill" style="width:${best > 0 ? Math.max(0, (x.r / best) * 100) : 0}%"></span></span>
+            <span class="yield-val">${fmtK(x.r)}</span>
+            <span class="yield-n">${fmtDur(x.i.timeSec)}</span>
+          </div>`).join('') : ''}
+        ${running.length ? `<div class="pd-head" style="margin-top:14px;">En cours · projection au rythme actuel</div>
+          ${running.map(x => `<div class="pd-zone">
+            <span class="pd-name">${escapeHtml(x.i.name)}
+              <span class="pd-meta">${x.i.attempts || 0} tentas · ${fmtDurPrecise(exoSecPerAttempt(x.i))}/tenta · ${fmtDur(x.p.totalSec)} estimées au total</span>
+            </span>
+            <span class="pd-rate">${fmtK(x.p.rate)}</span>
+          </div>`).join('')}` : ''}
+        <div class="insight warn">La projection suppose que tu réussiras au bout du nombre de tentatives attendu et que ton rythme ne change pas. Sur un exo rare, la variance est énorme : c'est un ordre de grandeur, pas une prévision.</div>
+      </div>`;
+    }
+
+    // ============================================================
     // MODULE : FARM
     // ============================================================
     // Une session de farm = une zone, une durée, un butin. Tout l'enjeu est de
@@ -9734,65 +10002,78 @@
     }
 
     // ---- Comparatif entre activités ----
-    // Les deux modules produisent des kamas/h : c'est la seule question qui
-    // compte au bout du compte — que faire de l'heure qui vient.
+    // Les trois modules produisent des kamas/h : c'est la seule question qui
+    // compte au bout du compte — que faire de l'heure qui vient, et faut-il
+    // passer un exo soi-même ou farmer de quoi l'acheter déjà fait.
     function activityCompareCard() {
       const fr = farmSessions();
       const fSec = fr.reduce((s, r) => s + (r.durationSec || 0), 0);
       const fNet = fr.reduce((s, r) => s + sessionNet(r), 0);
-      const fRate = fSec > 0 && farmConfigured() ? fNet / (fSec / 3600) : null;
+      const farmA = {
+        rate: fSec > 0 && farmConfigured() ? fNet / (fSec / 3600) : null,
+        sec: fSec || null, net: fr.length ? fNet : null, n: fr.length || null,
+      };
 
       const sr = statRuns();
       const eTot = ecoConfigured() ? economyTotals(sr) : null;
-      const sRate = eTot ? eTot.perHour : null;
+      const songeA = {
+        rate: eTot ? eTot.perHour : null,
+        sec: eTot ? (eTot.sec || null) : null,
+        net: eTot ? eTot.total : null,
+        n: sr.length || null,
+      };
 
-      const best = (state.zones || []).map(zoneStats)
-        .filter(g => g.n >= FARM_MIN && g.medNet != null)
-        .sort((a, b) => b.medNet - a.medNet)[0] || null;
+      const xt = exoTotals();
+      const exoA = { rate: xt.rate, sec: xt.sec || null, net: xt.n ? xt.net : null, n: xt.n || null };
+
+      const cols = [
+        { key: 'Farm', a: farmA },
+        { key: 'Songes', a: songeA },
+        { key: 'Exo', a: exoA },
+      ];
+      const rated = cols.filter(c => c.a.rate != null);
+      const best = rated.length ? Math.max(...rated.map(c => c.a.rate)) : null;
 
       let verdict;
-      if (fRate == null && sRate == null) {
-        verdict = `Ni le farm ni les songes ne sont valorisés pour l'instant. Renseigne des prix des deux côtés et la comparaison se fera toute seule.`;
-      } else if (fRate == null) {
-        verdict = `Seuls tes songes sont valorisés. Enregistre quelques sessions de farm avec leur butin pour pouvoir trancher.`;
-      } else if (sRate == null) {
-        verdict = `Seul ton farm est valorisé. Renseigne les prix du butin de songes (onglet Kamas des Songes) pour pouvoir comparer.`;
+      if (!rated.length) {
+        verdict = `Aucune activité n'est encore mesurée. Renseigne les prix côté farm et songes, chronomètre tes exos, et la comparaison se fera toute seule.`;
+      } else if (rated.length === 1) {
+        verdict = `Seul <b>${escapeHtml(rated[0].key)}</b> est mesuré pour l'instant : il n'y a rien à quoi le comparer.`;
       } else {
-        const farmWins = fRate >= sRate;
-        const lo = Math.min(fRate, sRate);
-        const pct = lo > 0 ? Math.round((Math.abs(fRate - sRate) / lo) * 100) : null;
-        verdict = `À l'heure, <b>${farmWins ? 'le farm' : 'les songes'}</b> ${pct != null ? `${farmWins ? 'rapporte' : 'rapportent'} <b>${pct}%</b> de plus` : 'prend le dessus'}.`
-          + (best && farmWins ? ` Et en ne gardant que ta meilleure zone (<b>${escapeHtml(zoneLabel(best.zone))}</b>, ${fmtNum(best.medNet)} kamas/h), l'écart se creuse encore.` : '')
-          + (best && !farmWins ? ` Ta meilleure zone seule (<b>${escapeHtml(zoneLabel(best.zone))}</b>) tourne à ${fmtNum(best.medNet)} kamas/h — c'est elle qu'il faut opposer aux songes, pas ta moyenne de farm.` : '');
+        const win = rated.find(c => c.a.rate === best);
+        const second = rated.filter(c => c !== win)
+          .reduce((m, c) => (m == null || c.a.rate > m.a.rate) ? c : m, null);
+        const gap = second && second.a.rate > 0
+          ? Math.round(((best - second.a.rate) / second.a.rate) * 100) : null;
+        verdict = `À l'heure, <b>${escapeHtml(win.key)}</b> arrive en tête${gap != null ? `, ${gap}% devant ${escapeHtml(second.key)}` : ''}. `;
+        if (exoA.rate != null && win.key !== 'Exo') {
+          verdict += `Autrement dit : sur un exo comparable, tu gagnes plus à farmer l'équivalent et acheter l'objet déjà exo qu'à le passer toi-même.`;
+        } else if (win.key === 'Exo') {
+          verdict += `Autrement dit : passer l'exo toi-même paie mieux que farmer de quoi l'acheter — tant que ta réussite reste dans les clous statistiques.`;
+        }
       }
 
-      const cell = (v, other, fmt) => {
-        if (v == null) return `<td class="lose">—</td>`;
-        if (other == null || v === other) return `<td class="tie">${fmt(v)}</td>`;
-        return `<td class="${v > other ? 'win' : 'lose'}">${fmt(v)}</td>`;
-      };
-      const rows = [
-        { lbl: 'Kamas/h', va: fRate, vb: sRate, fmt: v => fmtNum(v) },
-        { lbl: 'Temps cumulé', va: fSec || null, vb: eTot ? eTot.sec || null : null, fmt: fmtDur },
-        { lbl: 'Kamas cumulés', va: fr.length ? fNet : null, vb: eTot ? eTot.total : null, fmt: fmtNum },
-        { lbl: 'Entrées', va: fr.length || null, vb: sr.length || null, fmt: v => v },
-      ];
+      const line = (lbl, pick, fmt, cmp) => `<tr><td>${lbl}</td>${cols.map(c => {
+        const v = pick(c.a);
+        if (v == null) return '<td class="lose">—</td>';
+        if (!cmp) return `<td class="tie">${fmt(v)}</td>`;
+        return `<td class="${v === best ? 'win' : 'lose'}">${fmt(v)}</td>`;
+      }).join('')}</tr>`;
 
       return `<div class="chart-card">
-        <div class="chart-title">Farm ou Songes</div>
-        <div class="chart-sub">Le même indicateur des deux côtés : ce que rapporte une heure</div>
+        <div class="chart-title">Farm, Songes ou Exo</div>
+        <div class="chart-sub">Le même indicateur partout : ce que rapporte une heure</div>
         <div class="cmp-scroll">
           <table class="cmp-table">
-            <tr class="cmp-head"><th></th><th>Farm</th><th>Songes</th></tr>
-            ${rows.map(r => `<tr>
-              <td>${r.lbl}</td>
-              ${r.lbl === 'Kamas/h' ? cell(r.va, r.vb, r.fmt) : `<td class="tie">${r.va != null ? r.fmt(r.va) : '—'}</td>`}
-              ${r.lbl === 'Kamas/h' ? cell(r.vb, r.va, r.fmt) : `<td class="tie">${r.vb != null ? r.fmt(r.vb) : '—'}</td>`}
-            </tr>`).join('')}
+            <tr class="cmp-head"><th></th>${cols.map(c => `<th>${c.key}</th>`).join('')}</tr>
+            ${line('Kamas/h', a => a.rate, v => fmtNum(v), true)}
+            ${line('Temps cumulé', a => a.sec, fmtDur, false)}
+            ${line('Kamas cumulés', a => a.net, fmtNum, false)}
+            ${line('Entrées', a => a.n, v => v, false)}
           </table>
         </div>
         <div class="insight warn">${verdict}
-        Deux réserves avant d'arbitrer : la valeur des songes repose beaucoup sur des légendaires rares, donc son kamas/h bouge énormément tant que tu n'as pas accumulé des dizaines de runs ; et des deux côtés il s'agit de kamas théoriques, pas encaissés.</div>
+        Trois réserves avant d'arbitrer : le kamas/h des exos ne porte que sur ceux que tu as <b>réussis</b>, il ignore donc le temps déjà englouti dans ceux qui traînent ; la valeur des songes repose sur des légendaires rares, donc elle bouge énormément tant que tu n'as pas des dizaines de runs ; et partout il s'agit de kamas théoriques au prix saisi, pas encaissés.</div>
       </div>`;
     }
 
