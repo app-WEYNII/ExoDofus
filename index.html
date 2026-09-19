@@ -3030,6 +3030,10 @@
           <div class="label">Dépensé</div>
           <div class="value kamas-num" id="stat-kamas">0</div>
         </div>
+        <div class="stat">
+          <div class="label">Coût / tenta</div>
+          <div class="value gold kamas-num" id="stat-cpa">—</div>
+        </div>
       </div>
 
       <div class="stats-bar six" id="bar-songes">
@@ -3413,12 +3417,16 @@
 
       <div class="detail-stats">
         <div class="dstat">
-          <div class="lbl">Kamas dépensés</div>
-          <div class="val gold small kamas-num" id="d-spent">0</div>
+          <div class="lbl">Coût imputé</div>
+          <div class="val gold small kamas-num" id="d-cost">0</div>
         </div>
         <div class="dstat">
           <div class="lbl">Valeur HDV</div>
           <div class="val small kamas-num" id="d-hdv">0</div>
+        </div>
+        <div class="dstat">
+          <div class="lbl">Dépensé (achats)</div>
+          <div class="val small kamas-num" id="d-spent">0</div>
         </div>
         <div class="dstat">
           <div class="lbl">Coût / tenta</div>
@@ -3441,6 +3449,8 @@
           <div class="val gold small kamas-num" id="d-rate">—</div>
         </div>
       </div>
+
+      <div class="insight" id="d-cost-note"></div>
 
       <div class="warn-box hidden" id="d-warn">⚠️ Tu as dépassé la valeur HDV : l'exo n'est plus rentable.</div>
 
@@ -4275,29 +4285,82 @@
     // ============================================================
     // CALCULS
     // ============================================================
+    // Trésorerie : ce qui est sorti de la banque pour cet item (item nu + runes).
+    // Ce n'est PAS son coût : les runes achetées en trop dorment en inventaire.
     function totalKamas(item) {
-      const purchasesSum = (item.purchases || []).reduce((s, p) => s + (p.amount || 0), 0);
-      return (item.baseCost || 0) + purchasesSum;
+      return (item.baseCost || 0) + runesBought(item);
+    }
+    function runesBought(item) {
+      return (item.purchases || []).reduce((s, p) => s + (p.amount || 0), 0);
     }
     function cumulativeChance(item) {
       if (!item.chance || item.chance < 1) return 0;
       return 1 - Math.pow(1 - 1 / item.chance, item.attempts || 0);
     }
-    function profit(item) {
-      return (item.hdvValue || 0) - totalKamas(item);
+
+    // ---- Coût d'une tentative ----
+    // Impossible de compter les runes brûlées : la conso est aléatoire (crits,
+    // puissance) et multi-types. Ce qu'on achète n'est donc pas ce qu'on
+    // consomme — le reliquat resservira sur l'item suivant. Diviser les achats
+    // d'un item par ses seules tentatives donnait n'importe quoi : 500k de
+    // runes prises d'avance et 5 tentas faites affichaient 100k la tentative.
+    // Sur tout l'historique, en revanche, ce reliquat est un stock à peu près
+    // stable : le ratio global runes achetées / tentatives est un estimateur
+    // honnête du prix d'une tentative.
+    const RATE_PRIOR = 40; // tentas avant de faire pleinement confiance au taux d'un item
+
+    function globalRuneRate() {
+      let runes = 0, n = 0;
+      state.items.forEach(i => { runes += runesBought(i); n += i.attempts || 0; });
+      return n > 0 && runes > 0 ? { rate: runes / n, n, runes } : null;
     }
-    // Coût moyen d'une tentative = total des runes achetées / nb de tentatives
-    function avgCostPerAttempt(item) {
-      const runes = (item.purchases || []).reduce((s, p) => s + (p.amount || 0), 0);
+    // Taux propre à l'item, lissé vers le taux global tant que l'échantillon est
+    // petit. Un item consomme réellement plus ou moins qu'un autre : on garde
+    // donc sa mesure, mais on ne la croit qu'à hauteur de ce qu'elle pèse.
+    function costPerAttempt(item) {
+      const g = globalRuneRate();
       const n = item.attempts || 0;
-      if (n <= 0 || runes <= 0) return 0;
-      return runes / n;
+      const own = n > 0 && runesBought(item) > 0 ? runesBought(item) / n : null;
+      if (!g) return own;
+      if (own == null) return g.rate;
+      const w = n / (n + RATE_PRIOR);
+      return own * w + g.rate * (1 - w);
     }
-    // Coût total estimé pour réussir l'exo (espérance ≈ "chance" tentatives)
+    // Part de la mesure propre à l'item dans son taux (0 = taux global pur)
+    function rateConfidence(item) {
+      const n = item.attempts || 0;
+      if (!globalRuneRate()) return 1;
+      return runesBought(item) > 0 && n > 0 ? n / (n + RATE_PRIOR) : 0;
+    }
+    // Coût réellement imputable : l'item nu + les tentatives faites, valorisées
+    // au taux estimé. Les runes payées d'avance n'en font pas partie.
+    function imputedCost(item) {
+      return (item.baseCost || 0) + (item.attempts || 0) * (costPerAttempt(item) || 0);
+    }
+    // Runes payées mais pas encore brûlées ici : elles resserviront ailleurs.
+    function runeSurplus(item) {
+      return runesBought(item) - (item.attempts || 0) * (costPerAttempt(item) || 0);
+    }
+    function profit(item) {
+      return (item.hdvValue || 0) - imputedCost(item);
+    }
+    function avgCostPerAttempt(item) { return costPerAttempt(item) || 0; }
+    // Coût total attendu pour réussir : l'item nu + l'espérance de tentatives.
+    // À prendre comme un ordre de grandeur, la médiane est plus basse et la
+    // traîne bien plus longue (cf. quantiles affichés en fiche).
     function estimatedCostToSucceed(item) {
-      const avg = avgCostPerAttempt(item);
-      if (avg <= 0 || !item.chance) return null;
+      const avg = costPerAttempt(item);
+      if (!avg || avg <= 0 || !item.chance) return null;
       return (item.baseCost || 0) + avg * item.chance;
+    }
+    // Nombre de tentatives au-delà duquel le coût imputé dépasse la valeur HDV
+    function breakEvenAttempts(item) {
+      const avg = costPerAttempt(item);
+      const hdv = item.hdvValue || 0;
+      if (!avg || avg <= 0 || hdv <= 0) return null;
+      const room = hdv - (item.baseCost || 0);
+      if (room <= 0) return 0;
+      return Math.floor(room / avg);
     }
     // Les zéros de fin ne se coupent qu'après la virgule : sinon 600 000 s'affichait « 6k »
     function trimDec(s) {
@@ -4391,6 +4454,8 @@
       document.getElementById('stat-items').textContent = active.length;
       document.getElementById('stat-attempts').textContent = totalAttempts;
       document.getElementById('stat-kamas').textContent = fmtK(totalSpent);
+      const g = globalRuneRate();
+      document.getElementById('stat-cpa').textContent = g ? fmtK(g.rate) : '—';
     }
 
     function renderCurrent() {
@@ -4425,7 +4490,7 @@
       card.className = 'item' + (item.obtained ? ' obtained' : '');
       const cum = cumulativeChance(item);
       const overEx = (item.attempts || 0) > (item.chance || 0);
-      const spent = totalKamas(item);
+      const spent = imputedCost(item);
 
       card.innerHTML = `
         <div class="item-body">
@@ -4480,8 +4545,10 @@
       empty.classList.add('hidden');
 
       const sortedMost = [...all].sort((a, b) => (b.attempts || 0) - (a.attempts || 0)).slice(0, 5);
-      const sortedLeast = [...all].filter(i => (i.attempts || 0) > 0).sort((a, b) => (a.attempts || 0) - (b.attempts || 0)).slice(0, 5);
-      const sortedProfit = [...all].sort((a, b) => profit(b) - profit(a)).slice(0, 5);
+      // Réussis uniquement : un exo à peine commencé n'a ni « peu de tentas »
+      // ni une rentabilité, il n'a juste pas encore eu le temps de coûter.
+      const sortedLeast = [...all].filter(i => i.obtained && (i.attempts || 0) > 0).sort((a, b) => (a.attempts || 0) - (b.attempts || 0)).slice(0, 5);
+      const sortedProfit = [...all].filter(i => i.obtained).sort((a, b) => profit(b) - profit(a)).slice(0, 5);
       const sortedKamas = [...all].sort((a, b) => totalKamas(b) - totalKamas(a)).slice(0, 5);
 
       fillRank('rank-most', sortedMost, item => ({
@@ -4607,16 +4674,42 @@
       }
 
       document.getElementById('d-spent').textContent = fmtFull(totalKamas(item));
+      document.getElementById('d-cost').textContent = fmtFull(imputedCost(item));
       document.getElementById('d-hdv').textContent = fmtFull(item.hdvValue || 0);
 
-      const avg = avgCostPerAttempt(item);
+      const avg = costPerAttempt(item);
       document.getElementById('d-avg').textContent = avg > 0 ? fmtFull(avg) : '—';
       const est = estimatedCostToSucceed(item);
       document.getElementById('d-estimate').textContent = est != null ? fmtFull(est) : '—';
 
-      // Alerte rentabilité : dépensé > valeur HDV (et HDV renseignée)
+      // D'où sort le coût imputé, et ce qu'il reste de runes payées d'avance
+      const note = document.getElementById('d-cost-note');
+      const gRate = globalRuneRate();
+      if (!gRate && !runesBought(item)) {
+        note.innerHTML = `Aucun achat de runes enregistré. Tant que rien n'est saisi, le coût se limite à l'item nu et la rentabilité affichée est théorique.`;
+      } else {
+        const conf = rateConfidence(item);
+        const src = conf >= 0.8
+          ? `mesuré sur cet item`
+          : conf <= 0.05
+            ? `repris de ta moyenne globale (${gRate ? fmtK(gRate.rate) : '—'} sur ${gRate ? gRate.n : 0} tentas)`
+            : `${Math.round(conf * 100)}% mesuré sur cet item, le reste lissé vers ta moyenne globale (${gRate ? fmtK(gRate.rate) : '—'})`;
+        const surplus = runeSurplus(item);
+        const surplusTxt = Math.abs(surplus) < (avg || 1)
+          ? ''
+          : surplus > 0
+            ? ` Tu as payé <b>${fmtK(surplus)}</b> de runes de plus que ce que tes tentas ont brûlé : ce reliquat resservira ailleurs, il n'est pas compté ici.`
+            : ` Tu as brûlé <b>${fmtK(-surplus)}</b> de plus que ce que tu as acheté sur cet item : des runes venues d'un stock acheté ailleurs.`;
+        const be = breakEvenAttempts(item);
+        const beTxt = (be != null && !item.obtained)
+          ? ` Au-delà de <b>${be} tenta${be > 1 ? 's' : ''}</b>, tu passes sous la valeur HDV.`
+          : '';
+        note.innerHTML = `Coût / tenta ${src}.${surplusTxt}${beTxt}`;
+      }
+
+      // Alerte rentabilité : coût imputé > valeur HDV (et HDV renseignée)
       const warn = document.getElementById('d-warn');
-      const overBudget = (item.hdvValue || 0) > 0 && totalKamas(item) > item.hdvValue && !item.obtained;
+      const overBudget = (item.hdvValue || 0) > 0 && imputedCost(item) > item.hdvValue && !item.obtained;
       warn.classList.toggle('hidden', !overBudget);
 
       const overEx = (item.attempts || 0) > (item.chance || 0);
@@ -4631,7 +4724,7 @@
       box.classList.remove('green', 'red');
       box.classList.add(p >= 0 ? 'green' : 'red');
       lbl.textContent = item.obtained ? 'Rentabilité finale' : 'Rentabilité estimée';
-      val.textContent = (p >= 0 ? '+' : '') + fmtFull(p) + ' k';
+      val.textContent = (p >= 0 ? '+' : '') + fmtFull(p);
 
       const chronoBox = document.getElementById('d-chrono');
       chronoBox.innerHTML = chronoBlock(item, true);
@@ -4674,7 +4767,7 @@
         const row = document.createElement('div');
         row.className = 'purchase-row';
         row.innerHTML = `
-          <span class="purchase-amount kamas-num">+${fmtFull(p.amount)} k</span>
+          <span class="purchase-amount kamas-num">+${fmtFull(p.amount)}</span>
           <span class="purchase-date">${fmtDate(p.ts)}</span>
           <button class="purchase-del" aria-label="Supprimer">×</button>
         `;
@@ -9216,7 +9309,7 @@
       const best = rows.length ? rows[0].r : null;
       return `<div class="chart-card">
         <div class="chart-title">Rentabilité horaire</div>
-        <div class="chart-sub">${plural(tot.n, 'exo')} réussi${tot.n > 1 ? 's' : ''} · ${fmtDur(tot.sec)} de forgemagie</div>
+        <div class="chart-sub">${plural(tot.n, 'exo')} réussi${tot.n > 1 ? 's' : ''} · ${fmtDur(tot.sec)} de forgemagie${globalRuneRate() ? ` · ${fmtK(globalRuneRate().rate)} la tentative` : ''}</div>
         ${rows.length ? rows.map((x, k) => `
           <div class="yield-row">
             <span class="yield-lbl" style="width:96px;text-align:left;font-size:11px;">${k + 1}. ${escapeHtml(x.i.name)}</span>
