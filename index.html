@@ -262,6 +262,8 @@
     .stats-bar.six .stat .label { font-size: 9.5px; }
     .stats-bar.six .stat .value { font-size: 16px; }
     .stat .value.gold { color: var(--gold-bright); }
+    .stat .value.green { color: var(--green); }
+    .stat .value.red { color: var(--red); }
 
     .stat .value {
       font-family: var(--font-display);
@@ -1857,6 +1859,52 @@
     .insight b { color: var(--text); }
     .insight.warn { border-left-color: var(--blue); }
 
+    /* ---- Courbe de probabilité interactive ---- */
+    .pc-sel { display: flex; gap: 6px; overflow-x: auto; padding: 0 0 10px; -webkit-overflow-scrolling: touch; }
+    .pc-sel::-webkit-scrollbar { display: none; }
+    .pc-chip {
+      flex: 0 0 auto;
+      font-size: 11.5px;
+      padding: 6px 11px;
+      border-radius: 999px;
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      color: var(--text-soft);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .pc-chip.on {
+      background: var(--gold-soft);
+      border-color: var(--gold-deep);
+      color: var(--gold-bright);
+      font-weight: 600;
+    }
+    .prob-chart svg { touch-action: none; cursor: crosshair; }
+    .pc-read { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 10px; }
+    .pc-cell { background: var(--bg-soft); border-radius: var(--radius-sm); padding: 7px 5px; text-align: center; }
+    .pc-cell .lbl {
+      display: block; font-size: 8.5px; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-dim); font-weight: 600;
+    }
+    .pc-cell .val {
+      display: block; font-family: var(--font-display); font-weight: 700;
+      font-size: 13.5px; margin-top: 3px; color: var(--text);
+    }
+    .pc-cell .val.green { color: var(--green); }
+    .pc-cell .val.red { color: var(--red); }
+    .pc-hint { font-size: 10.5px; color: var(--text-dim); text-align: center; margin-top: 8px; }
+    .pc-table { margin-top: 12px; }
+    .pc-row {
+      display: grid; grid-template-columns: 1fr auto auto; gap: 10px;
+      align-items: baseline; padding: 7px 2px; border-top: 1px solid var(--border); font-size: 12px;
+    }
+    .pc-row:first-child { border-top: 0; }
+    .pc-row .pcq { color: var(--text-soft); }
+    .pc-row .pcn { font-family: var(--font-display); font-weight: 700; color: var(--text); }
+    .pc-row .pcc { font-family: var(--font-display); color: var(--gold); min-width: 62px; text-align: right; }
+    .pc-row.past .pcq { color: var(--green); }
+    .pc-row.danger .pcn, .pc-row.danger .pcc { color: var(--red); }
+
     /* ---- Verrou de défilement (iOS) ---- */
     body.kb-open .modal { padding-bottom: 16px; }
 
@@ -3023,16 +3071,16 @@
           <div class="value" id="stat-items">0</div>
         </div>
         <div class="stat">
-          <div class="label">Tentatives</div>
-          <div class="value" id="stat-attempts">0</div>
+          <div class="label">Réussis</div>
+          <div class="value" id="stat-done">0</div>
         </div>
         <div class="stat">
-          <div class="label">Dépensé</div>
-          <div class="value kamas-num" id="stat-kamas">0</div>
+          <div class="label">Tentas / exo</div>
+          <div class="value kamas-num" id="stat-hit">—</div>
         </div>
         <div class="stat">
-          <div class="label">Coût / tenta</div>
-          <div class="value gold kamas-num" id="stat-cpa">—</div>
+          <div class="label">Bénéfice</div>
+          <div class="value gold kamas-num" id="stat-net">—</div>
         </div>
       </div>
 
@@ -3115,6 +3163,7 @@
     <button class="tab active" data-view="current">En cours</button>
     <button class="tab" data-view="ranking">Classement</button>
     <button class="tab" data-view="archive">Réussis</button>
+    <button class="tab" data-view="xstats">Stats</button>
   </nav>
 
   <nav class="tabs" data-mod="songes">
@@ -3167,7 +3216,6 @@
         <div class="rank-title">Plus de kamas dépensés</div>
         <div class="rank-list" id="rank-kamas"></div>
       </div>
-      <div id="exo-hourly"></div>
       <div class="empty hidden" id="empty-ranking">
         <div class="icon">📜</div>
         <div class="title">Pas encore de classement</div>
@@ -3182,6 +3230,16 @@
         <div class="icon">🏆</div>
         <div class="title">Aucun exo réussi</div>
         <div>Tes succès apparaîtront ici</div>
+      </div>
+    </section>
+
+    <!-- Exos : Stats -->
+    <section class="view" id="view-xstats">
+      <div id="xstats-body"></div>
+      <div class="empty hidden" id="empty-xstats">
+        <div class="icon">📊</div>
+        <div class="title">Pas encore de statistiques</div>
+        <div>Ajoute un exo et compte tes tentas</div>
       </div>
     </section>
 
@@ -3414,6 +3472,8 @@
         <div class="big" id="d-prob">0%</div>
         <div class="ctx" id="d-prob-ctx">Aucune tentative pour le moment.</div>
       </div>
+
+      <div id="d-prob-chart"></div>
 
       <div class="detail-stats">
         <div class="dstat">
@@ -4428,6 +4488,7 @@
         renderCurrent();
         renderArchive();
         renderRanking();
+        renderXStats();
       } else if (m === 'songes') renderSonges();
       else if (m === 'farm') renderFarm();
       else if (m === 'alma') renderAlma();
@@ -4447,15 +4508,58 @@
       flushRender();
     }
 
+    // Tentatives moyennes pour sortir un exo. Les tentas des exos encore en
+    // cours comptent au dénominateur : elles ont bel et bien échoué, et les
+    // ignorer ne garderait que les séries gagnantes. Avec des exos non
+    // terminés (données censurées), tentatives totales / réussites reste
+    // l'estimateur correct — c'est aussi, à l'envers, le taux observé.
+    function observedHitRate() {
+      const n = state.items.reduce((s, i) => s + (i.attempts || 0), 0);
+      const hits = state.items.filter(i => i.obtained).length;
+      if (!hits || !n) return null;
+      return { hits, n, one: n / hits };
+    }
+    // Espérance théorique pondérée : sur tes exos, combien de réussites le taux
+    // annoncé prévoyait-il pour ce nombre de tentatives ?
+    function expectedHits() {
+      return state.items.reduce((s, i) => s + (i.chance > 0 ? (i.attempts || 0) / i.chance : 0), 0);
+    }
+
+    // Moyenne de tentatives par exo entamé, à l'instant T. Les exos en cours y
+    // entrent avec leur compteur actuel : la moyenne montera tant qu'ils ne
+    // seront pas passés. C'est un état des lieux, pas une prévision du nombre
+    // de tentas qu'il faut pour sortir un exo (voir la carte Chance observée).
+    function avgAttemptsPerExo() {
+      const tried = state.items.filter(i => (i.attempts || 0) > 0);
+      if (!tried.length) return null;
+      const n = tried.reduce((s, i) => s + (i.attempts || 0), 0);
+      return { avg: n / tried.length, n, k: tried.length };
+    }
+    // Où j'en suis si j'arrête tout maintenant : ce que les exos réussis ont
+    // rapporté, moins ce qui est engagé dans les exos encore ouverts.
+    function exoNetBalance() {
+      let gain = 0, sunk = 0;
+      state.items.forEach(i => {
+        if (i.obtained) gain += (i.hdvValue || 0) - imputedCost(i);
+        else sunk += imputedCost(i);
+      });
+      return { gain, sunk, net: gain - sunk };
+    }
+
     function renderStats() {
       const active = state.items.filter(i => !i.obtained);
-      const totalAttempts = state.items.reduce((s, i) => s + (i.attempts || 0), 0);
-      const totalSpent = state.items.reduce((s, i) => s + totalKamas(i), 0);
+      const done = state.items.filter(i => i.obtained);
       document.getElementById('stat-items').textContent = active.length;
-      document.getElementById('stat-attempts').textContent = totalAttempts;
-      document.getElementById('stat-kamas').textContent = fmtK(totalSpent);
-      const g = globalRuneRate();
-      document.getElementById('stat-cpa').textContent = g ? fmtK(g.rate) : '—';
+      document.getElementById('stat-done').textContent = done.length;
+      const ap = avgAttemptsPerExo();
+      document.getElementById('stat-hit').textContent = ap ? fmtNum(Math.round(ap.avg)) : '—';
+      const bal = exoNetBalance();
+      const netEl = document.getElementById('stat-net');
+      const any = state.items.some(i => (i.attempts || 0) > 0 || totalKamas(i) > 0);
+      netEl.textContent = any ? (bal.net >= 0 ? '+' : '') + fmtK(bal.net) : '—';
+      netEl.classList.toggle('green', any && bal.net >= 0);
+      netEl.classList.toggle('red', any && bal.net < 0);
+      netEl.classList.toggle('gold', !any);
     }
 
     function renderCurrent() {
@@ -4537,7 +4641,7 @@
       const empty = document.getElementById('empty-ranking');
       if (all.length === 0) {
         empty.classList.remove('hidden');
-        ['rank-most', 'rank-least', 'rank-profit', 'rank-kamas', 'exo-hourly'].forEach(id => {
+        ['rank-most', 'rank-least', 'rank-profit', 'rank-kamas'].forEach(id => {
           document.getElementById(id).innerHTML = '';
         });
         return;
@@ -4576,10 +4680,6 @@
         sub: `${item.exoLabel} · ${item.attempts || 0} tentas`,
       }));
 
-      const hourly = document.getElementById('exo-hourly');
-      hourly.innerHTML = exoRateCard() + activityCompareCard();
-      const cfgBtn = hourly.querySelector('#fcfg-open');
-      if (cfgBtn) cfgBtn.addEventListener('click', openFarmCfg);
     }
 
     function fillRank(id, items, fmt) {
@@ -4651,12 +4751,16 @@
       const N = item.attempts || 0;
       document.getElementById('d-prob').textContent = fmtPct(cum);
 
-      // Phrase explicative
+      // Phrase explicative. On parle de médiane et pas d'espérance : « espérance
+      // 100 » laisse croire qu'à la 100e c'est acquis, alors qu'on n'y est qu'à
+      // 63 %. La moitié des exos passent avant 69 tentas, l'autre moitié après,
+      // parfois très loin après.
       const ctxEl = document.getElementById('d-prob-ctx');
+      const q50 = attemptsFor(0.5, item.chance);
       if (N === 0) {
-        ctxEl.innerHTML = `Chaque essai a <b>1 chance sur ${item.chance}</b> de passer. Lance-toi !`;
+        ctxEl.innerHTML = `Chaque essai a <b>1 chance sur ${item.chance}</b> de passer, indépendamment des précédents. La moitié des exos passent avant <b>${q50}</b> tentatives.`;
       } else if (item.obtained) {
-        ctxEl.innerHTML = `Tu l'as eu en <b>${N} tenta${N > 1 ? 's' : ''}</b> sur les <b>${item.chance}</b> attendues en moyenne.`;
+        ctxEl.innerHTML = `Tu l'as eu en <b>${N} tenta${N > 1 ? 's' : ''}</b>, là où la moitié des exos à 1/${item.chance} passent avant <b>${q50}</b>.`;
       } else {
         const cumStr = fmtPct(cum);
         const remStr = fmtPct(1 - cum);
@@ -4670,8 +4774,12 @@
         } else {
           extra = ` Encore tôt, c'est dans la moyenne.`;
         }
-        ctxEl.innerHTML = `<b>${N} tenta${N > 1 ? 's' : ''}</b> faites · espérance <b>${item.chance}</b>. Probabilité cumulée d'avoir réussi : <b>${cumStr}</b>.${extra}`;
+        ctxEl.innerHTML = `<b>${N} tenta${N > 1 ? 's' : ''}</b> faites · médiane <b>${q50}</b>. À ce stade, <b>${cumStr}</b> des exos identiques seraient déjà passés — mais ta prochaine tenta reste à 1/${item.chance}.${extra}`;
       }
+
+      const chartBox = document.getElementById('d-prob-chart');
+      chartBox.innerHTML = exoProbChart(item);
+      wireProbChart(chartBox);
 
       document.getElementById('d-spent').textContent = fmtFull(totalKamas(item));
       document.getElementById('d-cost').textContent = fmtFull(imputedCost(item));
@@ -9326,6 +9434,282 @@
           </div>`).join('')}` : ''}
         <div class="insight warn">La projection suppose que tu réussiras au bout du nombre de tentatives attendu et que ton rythme ne change pas. Sur un exo rare, la variance est énorme : c'est un ordre de grandeur, pas une prévision.</div>
       </div>`;
+    }
+
+    // ============================================================
+    // EXOS : PROBABILITÉS
+    // ============================================================
+    // Une tentative est indépendante des précédentes : 110 échecs ne « chargent »
+    // rien, la suivante reste à 1/chance. Ce qui trompe, c'est l'espérance :
+    // 1 chance sur 100 ne veut pas dire « réussi à la 100e », mais « 100 en
+    // moyenne » — et la moyenne est tirée vers le haut par une longue traîne.
+    // À 100 tentatives sur du 1/100, on n'est qu'à 63 %. Les quantiles disent
+    // bien mieux à quoi s'attendre, et surtout combien budgéter.
+    function probAfter(n, chance) {
+      if (!chance || chance < 1) return 0;
+      return 1 - Math.pow(1 - 1 / chance, Math.max(0, n));
+    }
+    // Nombre de tentatives pour atteindre p de confiance (p = 0.9 → 229 sur du 1/100)
+    function attemptsFor(p, chance) {
+      if (!chance || chance < 1 || p <= 0 || p >= 1) return null;
+      return Math.ceil(Math.log(1 - p) / Math.log(1 - 1 / chance));
+    }
+
+    function exoProbChart(item) {
+      const chance = item.chance || 0;
+      if (chance < 1) return '';
+      const n = item.attempts || 0;
+      const q = p => attemptsFor(p, chance);
+      const be = breakEvenAttempts(item);
+      const cum = probAfter(n, chance);
+      const avg = costPerAttempt(item) || 0;
+      const base = item.baseCost || 0;
+      const hdv = item.hdvValue || 0;
+      const xMax = Math.ceil(Math.max(q(0.9) * 1.2, n * 1.3, be != null ? be * 1.2 : 0, chance) / 10) * 10;
+
+      const W = 340, H = 200, L = 32, R = 12, T = 12, B = 30;
+      const pw = W - L - R, ph = H - T - B;
+      const X = v => L + (v / xMax) * pw;
+      const Y = p => T + ph - p * ph;
+
+      let grid = '';
+      [0, 0.25, 0.5, 0.75, 1].forEach(p => {
+        const y = Y(p);
+        grid += `<line x1="${L}" y1="${y.toFixed(1)}" x2="${W - R}" y2="${y.toFixed(1)}" stroke="var(--border)" stroke-width="1" ${p ? 'stroke-dasharray="2 4"' : ''}/>`;
+        grid += `<text x="${L - 5}" y="${(y + 3.5).toFixed(1)}" text-anchor="end" font-size="9" fill="var(--text-dim)">${Math.round(p * 100)}</text>`;
+      });
+
+      // Repères de quantiles : où tombent 50 % et 90 % sur l'axe des tentas
+      let marks = '';
+      [[0.5, '50%'], [0.9, '90%']].forEach(([p, lbl]) => {
+        const v = q(p);
+        if (v > xMax) return;
+        marks += `<line x1="${X(v).toFixed(1)}" y1="${Y(p).toFixed(1)}" x2="${X(v).toFixed(1)}" y2="${T + ph}" stroke="var(--text-dim)" stroke-width="1" stroke-dasharray="1 4"/>`;
+        marks += `<text x="${X(v).toFixed(1)}" y="${(Y(p) - 5).toFixed(1)}" text-anchor="middle" font-size="8.5" fill="var(--text-dim)">${lbl}</text>`;
+      });
+
+      // Zone de perte : au-delà, le coût imputé dépasse la valeur HDV
+      let danger = '';
+      if (be != null && be < xMax) {
+        danger = `<rect x="${X(be).toFixed(1)}" y="${T}" width="${(W - R - X(be)).toFixed(1)}" height="${ph}" fill="var(--red)" opacity="0.10"/>
+          <line x1="${X(be).toFixed(1)}" y1="${T}" x2="${X(be).toFixed(1)}" y2="${T + ph}" stroke="var(--red)" stroke-width="1.5" stroke-dasharray="3 3"/>`;
+      }
+
+      const pts = [];
+      for (let i = 0; i <= 90; i++) {
+        const v = (xMax / 90) * i;
+        pts.push(`${X(v).toFixed(1)},${Y(probAfter(v, chance)).toFixed(1)}`);
+      }
+      const curve = `<polyline points="${pts.join(' ')}" fill="none" stroke="var(--gold)" stroke-width="2.2" stroke-linejoin="round"/>`;
+
+      // Position réelle (fixe) et curseur déplaçable (démarre sur la position réelle)
+      const here = n > 0 ? `
+        <line x1="${X(n).toFixed(1)}" y1="${T}" x2="${X(n).toFixed(1)}" y2="${T + ph}" stroke="var(--gold-bright)" stroke-width="1" stroke-dasharray="2 3" opacity="0.5"/>
+        <circle cx="${X(n).toFixed(1)}" cy="${Y(cum).toFixed(1)}" r="3.5" fill="var(--gold-bright)" opacity="0.6"/>` : '';
+
+      const cursor = `
+        <line class="pc-cursor" x1="${X(n).toFixed(1)}" y1="${T}" x2="${X(n).toFixed(1)}" y2="${T + ph}" stroke="var(--text)" stroke-width="1"/>
+        <circle class="pc-dot" cx="${X(n).toFixed(1)}" cy="${Y(cum).toFixed(1)}" r="5.5" fill="var(--gold-bright)" stroke="var(--bg-card)" stroke-width="2"/>`;
+
+      // Tableau de seuils : ce que chaque niveau de confiance coûte réellement
+      const seuils = [[0.5, 'Médiane · 50 %'], [0.75, '75 %'], [0.9, '90 %'], [0.99, '99 %']]
+        .map(([p, lbl]) => ({ p, lbl, v: q(p) }));
+      if (be != null) seuils.push({ p: probAfter(be, chance), lbl: 'Seuil de perte', v: be, danger: true });
+      seuils.sort((a, b) => a.v - b.v);
+
+      const table = seuils.map(x => `<div class="pc-row${x.v <= n ? ' past' : ''}${x.danger ? ' danger' : ''}">
+        <span class="pcq">${x.lbl}${x.danger ? '' : ''}</span>
+        <span class="pcn">${fmtNum(x.v)} tentas</span>
+        <span class="pcc">${avg > 0 ? fmtK(base + x.v * avg) : '—'}</span>
+      </div>`).join('');
+
+      const cfg = JSON.stringify({ chance, xMax, L, pw, T, ph, W, base, avg, hdv, n });
+      const margin = hdv > 0 ? hdv - (base + n * avg) : null;
+
+      return `<div class="chart-card prob-chart" data-pc-cfg='${escapeHtml(cfg)}'>
+        <div class="chart-title">Probabilité cumulée · ${escapeHtml(item.name)}</div>
+        <div class="chart-sub">Chances d'avoir réussi après N tentatives, à 1/${chance} par tenta</div>
+        <div class="wave-chart">
+          <svg viewBox="0 0 ${W} ${H}" role="img">
+            ${grid}${danger}${marks}${curve}${here}${cursor}
+            <text x="${W / 2}" y="${H - 2}" text-anchor="middle" font-size="9" fill="var(--text-dim)">tentatives</text>
+          </svg>
+        </div>
+        <div class="pc-read">
+          <div class="pc-cell"><span class="lbl">Tentas</span><span class="val" data-pc="n">${fmtNum(n)}</span></div>
+          <div class="pc-cell"><span class="lbl">Réussi</span><span class="val" data-pc="p">${fmtPct(cum)}</span></div>
+          <div class="pc-cell"><span class="lbl">Coût</span><span class="val" data-pc="c">${avg > 0 ? fmtK(base + n * avg) : '—'}</span></div>
+          <div class="pc-cell"><span class="lbl">Marge HDV</span><span class="val ${margin == null ? '' : margin >= 0 ? 'green' : 'red'}" data-pc="m">${margin == null ? '—' : (margin >= 0 ? '+' : '') + fmtK(margin)}</span></div>
+        </div>
+        <div class="pc-hint">Glisse sur la courbe pour te projeter · <button class="pc-reset" style="color:var(--gold);font-size:10.5px;">revenir à ${fmtNum(n)}</button></div>
+        <div class="pc-table">${table}</div>
+        <div class="chart-legend">
+          <span><span class="lg-line" style="background:var(--gold)"></span> % d'avoir réussi</span>
+          <span><span class="lg-swatch" style="background:var(--gold-bright)"></span> où tu en es</span>
+          ${be != null && be < xMax ? '<span><span class="lg-swatch" style="background:var(--red);opacity:.35"></span> zone de perte</span>' : ''}
+        </div>
+        <div class="insight">${probInsight(item, chance, n, cum, be, avg)}</div>
+      </div>`;
+    }
+
+    function probInsight(item, chance, n, cum, be, avg) {
+      const bits = [];
+      bits.push(`La moitié des exos à 1/${chance} passent avant <b>${attemptsFor(0.5, chance)}</b> tentatives, mais il en faut <b>${attemptsFor(0.9, chance)}</b> pour être à 90 % et <b>${attemptsFor(0.99, chance)}</b> pour 99 %. C'est sur le premier de ces trois chiffres qu'il faut raisonner, et sur le deuxième qu'il faut budgéter — jamais sur ${chance}, qui n'est qu'une moyenne tirée par une longue traîne.`);
+      if (item.obtained) return bits.join(' ');
+      const left = attemptsFor(0.9, chance) - n;
+      bits.push(left > 0
+        ? `Il t'en reste <b>${left}</b> avant d'atteindre 90 % de confiance${avg > 0 ? `, soit environ <b>${fmtK(left * avg)}</b> de runes` : ''}.`
+        : `Tu as dépassé le seuil des 90 % : tu fais partie des <b>${fmtPct(1 - cum)}</b> les plus malchanceux. Ça reste du hasard, pas un blocage — ta prochaine tenta est toujours à 1/${chance}.`);
+      if (be != null) {
+        bits.push(be <= n
+          ? `⚠️ Tu as franchi le seuil de rentabilité (<b>${be}</b> tentas) : chaque tenta creuse la perte, même si l'exo finit par passer.`
+          : `Au-delà de <b>${be}</b> tentas tu passes sous la valeur HDV, et tu n'as que <b>${fmtPct(probAfter(be, chance))}</b> de chances de réussir avant.`);
+      }
+      return bits.join(' ');
+    }
+
+    // Lecture de la courbe au doigt : on ne redessine rien, on déplace le
+    // curseur et on recalcule les quatre chiffres du bandeau.
+    function wireProbChart(root) {
+      (root || document).querySelectorAll('.prob-chart').forEach(box => {
+        if (box.dataset.pcWired) return;
+        box.dataset.pcWired = '1';
+        const c = JSON.parse(box.dataset.pcCfg);
+        const svg = box.querySelector('svg');
+        const cur = box.querySelector('.pc-cursor');
+        const dot = box.querySelector('.pc-dot');
+        const out = k => box.querySelector(`[data-pc="${k}"]`);
+        const paint = v => {
+          const x = c.L + (v / c.xMax) * c.pw;
+          const prob = probAfter(v, c.chance);
+          const y = c.T + c.ph - prob * c.ph;
+          cur.setAttribute('x1', x.toFixed(1));
+          cur.setAttribute('x2', x.toFixed(1));
+          dot.setAttribute('cx', x.toFixed(1));
+          dot.setAttribute('cy', y.toFixed(1));
+          out('n').textContent = fmtNum(v);
+          out('p').textContent = fmtPct(prob);
+          const cost = c.base + v * c.avg;
+          out('c').textContent = c.avg > 0 ? fmtK(cost) : '—';
+          const m = out('m');
+          if (c.hdv > 0) {
+            const margin = c.hdv - cost;
+            m.textContent = (margin >= 0 ? '+' : '') + fmtK(margin);
+            m.classList.toggle('green', margin >= 0);
+            m.classList.toggle('red', margin < 0);
+          }
+        };
+        const at = e => {
+          const r = svg.getBoundingClientRect();
+          const vx = ((e.clientX - r.left) / r.width) * c.W;
+          return Math.max(0, Math.min(c.xMax, Math.round(((vx - c.L) / c.pw) * c.xMax)));
+        };
+        let dragging = false;
+        svg.addEventListener('pointerdown', e => {
+          dragging = true;
+          svg.setPointerCapture(e.pointerId);
+          paint(at(e));
+        });
+        svg.addEventListener('pointermove', e => { if (dragging) paint(at(e)); });
+        const stop = () => { dragging = false; };
+        svg.addEventListener('pointerup', stop);
+        svg.addEventListener('pointercancel', stop);
+        const reset = box.querySelector('.pc-reset');
+        if (reset) reset.addEventListener('click', () => paint(c.n));
+      });
+    }
+
+    // ---- Chance observée vs chance annoncée ----
+    function exoHitRateCard() {
+      const hr = observedHitRate();
+      const exp = expectedHits();
+      const n = state.items.reduce((s, i) => s + (i.attempts || 0), 0);
+      if (!n) return '';
+      if (!hr) {
+        return `<div class="chart-card">
+          <div class="chart-title">Chance observée</div>
+          <div class="chart-sub">${fmtNum(n)} tentative${n > 1 ? 's' : ''} · aucune réussite</div>
+          <div class="insight warn">Le taux annoncé prévoyait <b>${exp.toFixed(2)}</b> réussite${exp >= 2 ? 's' : ''} sur ces ${fmtNum(n)} tentas. Tant que tu n'as rien décroché, il n'y a pas de taux observé à comparer.</div>
+        </div>`;
+      }
+      const luck = exp > 0 ? hr.hits / exp : null;
+      const solid = hr.hits >= 10;
+      return `<div class="chart-card">
+        <div class="chart-title">Chance observée</div>
+        <div class="chart-sub">${hr.hits} réussite${hr.hits > 1 ? 's' : ''} sur ${fmtNum(hr.n)} tentatives · <b>1/${Math.round(hr.one)}</b></div>
+        <div class="insight${solid ? '' : ' warn'}">
+          Le taux annoncé prévoyait <b>${exp.toFixed(1)}</b> réussite${exp >= 2 ? 's' : ''}, tu en as <b>${hr.hits}</b>${luck != null ? ` — soit <b>${Math.round(luck * 100)} %</b> de ce qui était attendu` : ''}.
+          ${solid
+            ? ` L'échantillon commence à être solide : un écart net signale soit un taux réel différent de celui annoncé, soit une malchance qui dure.`
+            : ` <b>Ne conclus rien de ce chiffre.</b> Avec ${hr.hits} réussite${hr.hits > 1 ? 's' : ''}, l'incertitude dépasse largement l'écart observé : il en faut une dizaine avant que le taux mesuré veuille dire quoi que ce soit.`}
+        </div>
+      </div>`;
+    }
+
+    // ---- Dépenses, exo par exo ----
+    function exoSpendCard() {
+      const rows = state.items
+        .filter(i => (i.attempts || 0) > 0 || runesBought(i) > 0)
+        .map(i => ({ i, cpa: costPerAttempt(i) || 0, cash: totalKamas(i), cost: imputedCost(i) }))
+        .sort((a, b) => b.cost - a.cost);
+      if (!rows.length) return '';
+      const cash = rows.reduce((s, r) => s + r.cash, 0);
+      const cost = rows.reduce((s, r) => s + r.cost, 0);
+      const g = globalRuneRate();
+      const bal = exoNetBalance();
+      return `<div class="chart-card">
+        <div class="chart-title">Dépenses par exo</div>
+        <div class="chart-sub">${fmtK(cash)} sortis de la banque · ${fmtK(cost)} réellement imputés${g ? ` · ${fmtK(g.rate)} la tentative en moyenne` : ''}</div>
+        <div class="pc-read" style="grid-template-columns:repeat(3,1fr);margin-bottom:12px;">
+          <div class="pc-cell"><span class="lbl">Gagné</span><span class="val green">${bal.gain >= 0 ? '+' : ''}${fmtK(bal.gain)}</span></div>
+          <div class="pc-cell"><span class="lbl">Engagé en cours</span><span class="val">${fmtK(bal.sunk)}</span></div>
+          <div class="pc-cell"><span class="lbl">Bilan</span><span class="val ${bal.net >= 0 ? 'green' : 'red'}">${bal.net >= 0 ? '+' : ''}${fmtK(bal.net)}</span></div>
+        </div>
+        ${rows.map(r => `<div class="pd-zone">
+          <span class="pd-name">${escapeHtml(r.i.name)}${r.i.obtained ? ' ✓' : ''}
+            <span class="pd-meta">${r.i.attempts || 0} tentas · ${r.cpa > 0 ? fmtK(r.cpa) : '—'}/tenta · ${fmtK(r.cash)} dépensés</span>
+          </span>
+          <span class="pd-rate">${fmtK(r.cost)}</span>
+        </div>`).join('')}
+        <div class="insight">Le bilan compte les exos réussis à leur valeur HDV, moins tout ce qui est engagé dans les exos encore ouverts : il remontera quand ils passeront. Le chiffre de droite est le coût <b>imputé</b> : l'item nu plus les tentas réellement faites. Il diffère du dépensé parce que les runes achetées d'avance ne sont pas encore brûlées.</div>
+      </div>`;
+    }
+
+    function renderXStats() {
+      const box = document.getElementById('xstats-body');
+      const empty = document.getElementById('empty-xstats');
+      if (!box) return;
+      if (!state.items.length) {
+        box.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+
+      // Exos sélectionnables pour la courbe : en cours d'abord, puis réussis.
+      const pickable = state.items.filter(i => (i.chance || 0) >= 1)
+        .sort((a, b) => (a.obtained ? 1 : 0) - (b.obtained ? 1 : 0)
+          || (b.attempts || 0) - (a.attempts || 0));
+      let focusId = state.settings.xstatFocus;
+      if (!pickable.some(i => i.id === focusId)) focusId = pickable.length ? pickable[0].id : null;
+      const focus = pickable.find(i => i.id === focusId) || null;
+
+      const selector = pickable.length > 1
+        ? `<div class="pc-sel">${pickable.map(i => `<button class="pc-chip${i.id === focusId ? ' on' : ''}" data-xfocus="${i.id}">${escapeHtml(i.name)}${i.obtained ? ' ✓' : ''} · ${i.attempts || 0}</button>`).join('')}</div>`
+        : '';
+
+      box.innerHTML = selector + (focus ? exoProbChart(focus) : '')
+        + exoHitRateCard() + exoSpendCard() + exoRateCard() + activityCompareCard();
+
+      box.querySelectorAll('[data-xfocus]').forEach(b => b.addEventListener('click', () => {
+        state.settings.xstatFocus = b.dataset.xfocus;
+        save();
+        renderXStats();
+        haptic();
+      }));
+      wireProbChart(box);
+      const cfgBtn = box.querySelector('#fcfg-open');
+      if (cfgBtn) cfgBtn.addEventListener('click', openFarmCfg);
     }
 
     // ============================================================
