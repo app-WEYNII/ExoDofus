@@ -1905,6 +1905,23 @@
     .pc-row.past .pcq { color: var(--green); }
     .pc-row.danger .pcn, .pc-row.danger .pcc { color: var(--red); }
 
+    /* ---- Simulateur acheter / tenter ---- */
+    .sim-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0 2px; }
+    .sim-f {
+      background: var(--bg-soft); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 7px 9px 6px;
+    }
+    .sim-f .lbl {
+      display: block; font-size: 8.5px; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-dim); font-weight: 600;
+    }
+    .sim-f input {
+      width: 100%; background: transparent; border: 0; padding: 3px 0 0;
+      color: var(--text); font-family: var(--font-display); font-weight: 700; font-size: 14px;
+    }
+    .sim-f input:focus { outline: none; color: var(--gold-bright); }
+    .sim-verdict { font-family: var(--font-display); font-weight: 700; font-size: 15px; margin-top: 14px; }
+
     /* ---- Verrou de défilement (iOS) ---- */
     body.kb-open .modal { padding-bottom: 16px; }
 
@@ -3079,7 +3096,7 @@
           <div class="value kamas-num" id="stat-hit">—</div>
         </div>
         <div class="stat">
-          <div class="label">Bénéfice</div>
+          <div class="label">Économie</div>
           <div class="value gold kamas-num" id="stat-net">—</div>
         </div>
       </div>
@@ -3209,7 +3226,7 @@
         <div class="rank-list" id="rank-least"></div>
       </div>
       <div class="rank-section">
-        <div class="rank-title">Plus rentable</div>
+        <div class="rank-title">Plus grosse économie</div>
         <div class="rank-list" id="rank-profit"></div>
       </div>
       <div class="rank-section">
@@ -3430,7 +3447,7 @@
       <div class="field">
         <label for="f-hdv">Valeur HDV (kamas)</label>
         <input type="text" id="f-hdv" placeholder="0" inputmode="numeric" autocomplete="off" />
-        <div class="hint">Combien tu peux le revendre une fois exo réussi</div>
+        <div class="hint">Le prix d'un item <b>déjà exo</b> au HDV : ce que tu évites de payer en le passant toi-même</div>
       </div>
 
       <div class="modal-actions">
@@ -3481,7 +3498,7 @@
           <div class="val gold small kamas-num" id="d-cost">0</div>
         </div>
         <div class="dstat">
-          <div class="lbl">Valeur HDV</div>
+          <div class="lbl">Prix tout fait</div>
           <div class="val small kamas-num" id="d-hdv">0</div>
         </div>
         <div class="dstat">
@@ -3505,17 +3522,17 @@
           <div class="val small" id="d-pertry">—</div>
         </div>
         <div class="dstat wide">
-          <div class="lbl" id="d-rate-lbl">Kamas / heure</div>
+          <div class="lbl" id="d-rate-lbl">Économie / heure</div>
           <div class="val gold small kamas-num" id="d-rate">—</div>
         </div>
       </div>
 
       <div class="insight" id="d-cost-note"></div>
 
-      <div class="warn-box hidden" id="d-warn">⚠️ Tu as dépassé la valeur HDV : l'exo n'est plus rentable.</div>
+      <div class="warn-box hidden" id="d-warn">⚠️ Tu as dépassé le prix de l'item déjà exo : l'acheter tout fait serait revenu moins cher.</div>
 
       <div class="profit-box" id="d-profit-box">
-        <div class="lbl" id="d-profit-lbl">Rentabilité estimée</div>
+        <div class="lbl" id="d-profit-lbl">Économie estimée</div>
         <div class="val kamas-num" id="d-profit">—</div>
       </div>
 
@@ -4810,7 +4827,7 @@
             : ` Tu as brûlé <b>${fmtK(-surplus)}</b> de plus que ce que tu as acheté sur cet item : des runes venues d'un stock acheté ailleurs.`;
         const be = breakEvenAttempts(item);
         const beTxt = (be != null && !item.obtained)
-          ? ` Au-delà de <b>${be} tenta${be > 1 ? 's' : ''}</b>, tu passes sous la valeur HDV.`
+          ? ` Au-delà de <b>${be} tenta${be > 1 ? 's' : ''}</b>, l'acheter tout fait serait revenu moins cher.`
           : '';
         note.innerHTML = `Coût / tenta ${src}.${surplusTxt}${beTxt}`;
       }
@@ -4831,7 +4848,7 @@
       const val = document.getElementById('d-profit');
       box.classList.remove('green', 'red');
       box.classList.add(p >= 0 ? 'green' : 'red');
-      lbl.textContent = item.obtained ? 'Rentabilité finale' : 'Rentabilité estimée';
+      lbl.textContent = item.obtained ? 'Économie réalisée' : 'Économie estimée';
       val.textContent = (p >= 0 ? '+' : '') + fmtFull(p);
 
       const chronoBox = document.getElementById('d-chrono');
@@ -4839,21 +4856,23 @@
       wireChrono(chronoBox);
       if (exoLive() && exoLive().itemId === item.id && exoLive().since) tickExo();
 
-      document.getElementById('d-time').textContent = item.timeSec ? fmtDur(item.timeSec) : '—';
+      // fmtDur affichait « 0 min » pour trois secondes, ce qui masquait le souci
+      document.getElementById('d-time').textContent = item.timeSec
+        ? (item.timeSec < 3600 ? fmtDurPrecise(item.timeSec) : fmtDur(item.timeSec)) : '—';
       const per = exoSecPerAttempt(item);
       document.getElementById('d-pertry').textContent = per != null ? fmtDurPrecise(per) : '—';
       const rate = exoRate(item), proj = exoProjection(item);
       const rateLbl = document.getElementById('d-rate-lbl');
       const rateEl = document.getElementById('d-rate');
       if (item.obtained && rate != null) {
-        rateLbl.textContent = 'Kamas / heure';
+        rateLbl.textContent = 'Économie / heure';
         rateEl.textContent = fmtNum(rate);
       } else if (proj) {
-        rateLbl.textContent = 'Kamas / heure projeté';
+        rateLbl.textContent = 'Économie / heure projetée';
         rateEl.textContent = fmtNum(proj.rate);
       } else {
-        rateLbl.textContent = 'Kamas / heure';
-        rateEl.textContent = '—';
+        rateLbl.textContent = 'Économie / heure';
+        rateEl.textContent = (item.timeSec || 0) > 0 ? 'temps trop court' : '—';
       }
 
       document.getElementById('d-obtain').textContent = item.obtained ? '↺ Remettre en cours' : '✓ Obtenu';
@@ -4968,7 +4987,7 @@
       });
     }
 
-    function openForm(id) {
+    function openForm(id, pre) {
       editingId = id || null;
       const title = document.getElementById('form-title');
       title.textContent = id ? 'Modifier l\'exo' : 'Nouvel exo';
@@ -4985,6 +5004,11 @@
         });
         // Chance par défaut sur 100 (modifiable)
         document.getElementById('f-chance').value = '100';
+        if (pre) {
+          if (pre.chance) document.getElementById('f-chance').value = pre.chance;
+          setNumberInput(document.getElementById('f-base'), pre.base || 0);
+          setNumberInput(document.getElementById('f-hdv'), pre.hdv || 0);
+        }
       }
       document.getElementById('modal-form').classList.add('active');
       setTimeout(() => document.getElementById('f-name').focus(), 100);
@@ -9284,7 +9308,8 @@
         return;
       }
       const item = state.items.find(i => i.id === l.itemId);
-      if (item && sec > 0) item.timeSec = (item.timeSec || 0) + sec;
+      // en dessous de 10 s, c'est un chrono ouvert par erreur : ne rien créditer
+      if (item && sec >= 10) item.timeSec = (item.timeSec || 0) + sec;
       delete state.settings.exoLive;
       stopExoTick();
       save();
@@ -9306,15 +9331,25 @@
     }
 
     // ---- Calculs ----
+    // Un chrono lancé puis refermé aussitôt laisse deux ou trois secondes sur
+    // l'item. Divisée par ce quasi-zéro, l'économie donnait des kamas/heure à
+    // dix chiffres. On refuse donc les échantillons de temps invraisemblables
+    // plutôt que d'afficher un chiffre faux.
+    const MIN_TIME_SAMPLE = 300;  // moins de 5 min enregistrées : rien à en tirer
+    const MIN_SEC_PER_TRY = 2;    // une tentative ne se passe pas en deux secondes
+    function exoTimeUsable(item) {
+      const t = item.timeSec || 0, n = item.attempts || 0;
+      return t >= MIN_TIME_SAMPLE && n > 0 && t / n >= MIN_SEC_PER_TRY;
+    }
     function exoHours(item) { return (item.timeSec || 0) / 3600; }
-    // Rendement réalisé : ce que l'exo a rapporté par heure passée dessus
+    // Rendement réalisé : ce que l'exo a économisé par heure passée dessus
     function exoRate(item) {
-      const h = exoHours(item);
-      return h > 0 ? profit(item) / h : null;
+      if (!exoTimeUsable(item)) return null;
+      return profit(item) / exoHours(item);
     }
     function exoSecPerAttempt(item) {
-      const n = item.attempts || 0;
-      return n > 0 && item.timeSec > 0 ? item.timeSec / n : null;
+      if (!exoTimeUsable(item)) return null;
+      return item.timeSec / item.attempts;
     }
     // Projection : au rythme actuel, ce que l'exo rapportera à l'heure une fois réussi
     function exoProjection(item) {
@@ -9329,7 +9364,7 @@
     // Bilan des exos réussis : seuls ceux-là ont un rendement horaire interprétable,
     // un exo en cours n'ayant que des dépenses et un temps encore incomplet.
     function exoTotals() {
-      const done = state.items.filter(i => i.obtained && (i.timeSec || 0) > 0);
+      const done = state.items.filter(i => i.obtained && exoTimeUsable(i));
       const sec = done.reduce((s, i) => s + (i.timeSec || 0), 0);
       const net = done.reduce((s, i) => s + profit(i), 0);
       const h = sec / 3600;
@@ -9395,7 +9430,7 @@
       if (running) tickExo();
     }
 
-    // ---- Rentabilité horaire dans le classement ----
+    // ---- Économie horaire : ce que la forgemagie fait gagner par heure ----
     function exoRateCard() {
       const tot = exoTotals();
       const rows = tot.items.map(i => ({ i, r: exoRate(i) }))
@@ -9408,15 +9443,15 @@
 
       if (!rows.length && !running.length) {
         return `<div class="chart-card">
-          <div class="chart-title">Rentabilité horaire</div>
+          <div class="chart-title">Économie horaire</div>
           <div class="chart-sub">Chronomètre tes sessions de forgemagie</div>
-          <div class="insight warn">Aucun exo n'a de temps enregistré. Lance le chrono depuis la fiche d'un exo : sans durée, impossible de comparer un exo à une heure de farm.</div>
+          <div class="insight warn">Aucun exo n'a de durée exploitable. Lance le chrono depuis la fiche d'un exo et laisse-le tourner pendant que tu forgemages : en dessous de cinq minutes enregistrées, le temps par tentative n'est pas mesurable et le calcul serait faux.</div>
         </div>`;
       }
 
       const best = rows.length ? rows[0].r : null;
       return `<div class="chart-card">
-        <div class="chart-title">Rentabilité horaire</div>
+        <div class="chart-title">Économie horaire</div>
         <div class="chart-sub">${plural(tot.n, 'exo')} réussi${tot.n > 1 ? 's' : ''} · ${fmtDur(tot.sec)} de forgemagie${globalRuneRate() ? ` · ${fmtK(globalRuneRate().rate)} la tentative` : ''}</div>
         ${rows.length ? rows.map((x, k) => `
           <div class="yield-row">
@@ -9539,7 +9574,7 @@
           <div class="pc-cell"><span class="lbl">Tentas</span><span class="val" data-pc="n">${fmtNum(n)}</span></div>
           <div class="pc-cell"><span class="lbl">Réussi</span><span class="val" data-pc="p">${fmtPct(cum)}</span></div>
           <div class="pc-cell"><span class="lbl">Coût</span><span class="val" data-pc="c">${avg > 0 ? fmtK(base + n * avg) : '—'}</span></div>
-          <div class="pc-cell"><span class="lbl">Marge HDV</span><span class="val ${margin == null ? '' : margin >= 0 ? 'green' : 'red'}" data-pc="m">${margin == null ? '—' : (margin >= 0 ? '+' : '') + fmtK(margin)}</span></div>
+          <div class="pc-cell"><span class="lbl">Économie</span><span class="val ${margin == null ? '' : margin >= 0 ? 'green' : 'red'}" data-pc="m">${margin == null ? '—' : (margin >= 0 ? '+' : '') + fmtK(margin)}</span></div>
         </div>
         <div class="pc-hint">Glisse sur la courbe pour te projeter · <button class="pc-reset" style="color:var(--gold);font-size:10.5px;">revenir à ${fmtNum(n)}</button></div>
         <div class="pc-table">${table}</div>
@@ -9562,8 +9597,8 @@
         : `Tu as dépassé le seuil des 90 % : tu fais partie des <b>${fmtPct(1 - cum)}</b> les plus malchanceux. Ça reste du hasard, pas un blocage — ta prochaine tenta est toujours à 1/${chance}.`);
       if (be != null) {
         bits.push(be <= n
-          ? `⚠️ Tu as franchi le seuil de rentabilité (<b>${be}</b> tentas) : chaque tenta creuse la perte, même si l'exo finit par passer.`
-          : `Au-delà de <b>${be}</b> tentas tu passes sous la valeur HDV, et tu n'as que <b>${fmtPct(probAfter(be, chance))}</b> de chances de réussir avant.`);
+          ? `⚠️ Tu as franchi le seuil des <b>${be}</b> tentas : tu as déjà mis plus que le prix de l'item tout fait. Comme tu iras au bout quoi qu'il arrive, ça ne change rien à la suite — c'est au moment de choisir de le tenter que ça se jouait.`
+          : `Au-delà de <b>${be}</b> tentas, l'acheter tout fait serait revenu moins cher : tu as <b>${fmtPct(probAfter(be, chance))}</b> de chances de réussir avant d'y arriver.`);
       }
       return bits.join(' ');
     }
@@ -9619,6 +9654,149 @@
       });
     }
 
+    // ============================================================
+    // EXOS : ACHETER OU LE FAIRE SOI-MÊME
+    // ============================================================
+    // L'item n'est pas revendu : il est gardé. La valeur HDV n'est donc pas une
+    // recette, c'est le prix qu'on évite de payer en le passant soi-même. Et
+    // comme un exo commencé est toujours mené au bout, toute la décision se
+    // joue une seule fois — avant de commencer.
+    function globalSecPerAttempt() {
+      let sec = 0, n = 0;
+      state.items.forEach(i => {
+        if (exoTimeUsable(i)) { sec += i.timeSec; n += i.attempts; }
+      });
+      return n > 0 ? sec / n : null;
+    }
+    // Ce que rapporte une heure passée ailleurs : le vrai coût d'opportunité
+    // d'une soirée de forgemagie.
+    function bestAlternativeRate() {
+      const out = [];
+      try {
+        const fr = farmSessions();
+        const fSec = fr.reduce((t, r) => t + (r.durationSec || 0), 0);
+        const fNet = fr.reduce((t, r) => t + sessionNet(r), 0);
+        if (fSec > 0 && farmConfigured()) out.push({ label: 'ton farm', rate: fNet / (fSec / 3600) });
+      } catch (e) { /* module farm pas encore prêt */ }
+      try {
+        if (ecoConfigured()) {
+          const t = economyTotals(statRuns());
+          if (t && t.perHour) out.push({ label: 'tes songes', rate: t.perHour });
+        }
+      } catch (e) { /* module songes pas encore prêt */ }
+      return out.length ? out.reduce((m, x) => (x.rate > m.rate ? x : m)) : null;
+    }
+
+    function exoDecision(chance, base, hdv) {
+      const g = globalRuneRate();
+      if (!chance || chance < 1 || !hdv || hdv <= 0 || !g) return null;
+      const cpa = g.rate;
+      const q50 = attemptsFor(0.5, chance), q90 = attemptsFor(0.9, chance);
+      const cost = n => base + n * cpa;
+      const expected = base + chance * cpa;
+      const save = hdv - expected;
+      const be = Math.floor(Math.max(0, hdv - base) / cpa);
+      const pWin = probAfter(be, chance);
+      const spa = globalSecPerAttempt();
+      const hours = spa ? (spa * chance) / 3600 : null;
+      const perHour = hours > 0 ? save / hours : null;
+      return { cpa, q50, q90, med: cost(q50), p90: cost(q90), expected, save, be, pWin,
+               hours, perHour, alt: bestAlternativeRate() };
+    }
+
+    // Le verdict, hors de tout item enregistré : on ne crée une fiche qu'une
+    // fois la décision prise, jamais pour réfléchir.
+    function verdictBody(chance, base, hdv) {
+      const d = exoDecision(chance, base, hdv);
+      if (!d) {
+        return !globalRuneRate()
+          ? `<div class="insight warn">Renseigne des achats de runes sur un exo existant pour que l'app connaisse ton coût par tentative : sans lui, impossible de comparer.</div>`
+          : `<div class="insight">Remplis la chance et le prix de l'item déjà exo au HDV.</div>`;
+      }
+      const beatsAlt = d.perHour != null && d.alt ? d.perHour >= d.alt.rate : null;
+      let color, titre, verdict;
+      if (d.save <= 0) {
+        color = 'var(--red)';
+        titre = '✕ Achète-le tout fait';
+        verdict = `Le passer toi-même coûte <b>${fmtK(-d.save)}</b> de plus en moyenne que de l'acheter, et tu n'as que <b>${fmtPct(d.pWin)}</b> de chances d'y gagner quand même.`;
+      } else if (beatsAlt === false) {
+        color = 'var(--blue)';
+        titre = '≈ Rentable, mais ton temps vaut mieux ailleurs';
+        verdict = `Tu économiserais <b>${fmtK(d.save)}</b> en moyenne, mais il te faudra environ <b>${fmtDur(d.hours * 3600)}</b> : ça revient à <b>${fmtK(d.perHour)}</b> de l'heure, contre <b>${fmtK(d.alt.rate)}</b> avec ${escapeHtml(d.alt.label)}. Farmer ce temps-là et acheter l'item déjà exo te laisse plus de kamas.`;
+      } else {
+        color = 'var(--green)';
+        titre = '✓ Tente-le toi-même';
+        verdict = `Économie moyenne attendue : <b>${fmtK(d.save)}</b>, avec <b>${fmtPct(d.pWin)}</b> de chances de payer moins cher qu'au HDV.`
+          + (d.perHour != null ? ` Soit <b>${fmtK(d.perHour)}</b> de l'heure${d.alt ? ` (${escapeHtml(d.alt.label)} : ${fmtK(d.alt.rate)})` : ''}.` : '');
+      }
+      return `<div class="sim-verdict" style="color:${color}">${titre}</div>
+        <div class="pc-read">
+          <div class="pc-cell"><span class="lbl">Médian</span><span class="val">${fmtK(d.med)}</span></div>
+          <div class="pc-cell"><span class="lbl">Attendu</span><span class="val">${fmtK(d.expected)}</span></div>
+          <div class="pc-cell"><span class="lbl">Pire cas 90 %</span><span class="val">${fmtK(d.p90)}</span></div>
+          <div class="pc-cell"><span class="lbl">Économie</span><span class="val ${d.save >= 0 ? 'green' : 'red'}">${d.save >= 0 ? '+' : ''}${fmtK(d.save)}</span></div>
+        </div>
+        <div class="insight">${verdict} Une fois sur deux tu t'en sors pour <b>${fmtK(d.med)}</b> au bout de ${fmtNum(d.q50)} tentas, mais une fois sur dix il t'en coûtera plus de <b>${fmtK(d.p90)}</b> : c'est cette traîne qui fait mal, pas la moyenne.</div>`;
+    }
+
+    function simCfg() {
+      if (!state.settings.sim) state.settings.sim = { chance: 100, base: 0, hdv: 0 };
+      return state.settings.sim;
+    }
+    function simCard() {
+      const c = simCfg();
+      return `<div class="chart-card" id="exo-sim">
+        <div class="chart-title">Acheter ou le passer soi-même ?</div>
+        <div class="chart-sub">Simulation libre · rien n'est enregistré tant que tu ne crées pas l'exo</div>
+        <div class="sim-grid">
+          <label class="sim-f"><span class="lbl">Chance 1 sur</span><input type="number" id="sim-chance" inputmode="numeric" min="1" value="${c.chance || 100}"></label>
+          <label class="sim-f"><span class="lbl">Item nu</span><input type="text" id="sim-base" inputmode="numeric" autocomplete="off" placeholder="0"></label>
+          <label class="sim-f"><span class="lbl">Prix tout fait</span><input type="text" id="sim-hdv" inputmode="numeric" autocomplete="off" placeholder="0"></label>
+        </div>
+        <div id="sim-verdict"></div>
+        <div class="modal-actions" style="margin-top:12px;">
+          <button class="btn btn-secondary" id="sim-clear">Effacer</button>
+          <button class="btn btn-primary" id="sim-create">Créer cet exo</button>
+        </div>
+      </div>`;
+    }
+    function wireSim(root) {
+      const c = simCfg();
+      const chanceEl = root.querySelector('#sim-chance');
+      const baseEl = root.querySelector('#sim-base');
+      const hdvEl = root.querySelector('#sim-hdv');
+      if (!chanceEl) return;
+      wireNumberInput(baseEl);
+      wireNumberInput(hdvEl);
+      setNumberInput(baseEl, c.base || 0);
+      setNumberInput(hdvEl, c.hdv || 0);
+      const paint = () => {
+        c.chance = parseInt(chanceEl.value, 10) || 0;
+        c.base = rawNum(baseEl);
+        c.hdv = rawNum(hdvEl);
+        root.querySelector('#sim-verdict').innerHTML = verdictBody(c.chance, c.base, c.hdv);
+      };
+      [chanceEl, baseEl, hdvEl].forEach(el => {
+        el.addEventListener('input', paint);
+        // on n'écrit sur le disque qu'à la sortie du champ, pas à chaque frappe
+        el.addEventListener('change', save);
+        el.addEventListener('blur', save);
+      });
+      root.querySelector('#sim-create').addEventListener('click', () => {
+        openForm(null, { chance: c.chance, base: c.base, hdv: c.hdv });
+        haptic();
+      });
+      root.querySelector('#sim-clear').addEventListener('click', () => {
+        c.base = 0; c.hdv = 0;
+        setNumberInput(baseEl, 0);
+        setNumberInput(hdvEl, 0);
+        save();
+        paint();
+        haptic();
+      });
+      paint();
+    }
+
     // ---- Chance observée vs chance annoncée ----
     function exoHitRateCard() {
       const hr = observedHitRate();
@@ -9661,7 +9839,7 @@
         <div class="chart-title">Dépenses par exo</div>
         <div class="chart-sub">${fmtK(cash)} sortis de la banque · ${fmtK(cost)} réellement imputés${g ? ` · ${fmtK(g.rate)} la tentative en moyenne` : ''}</div>
         <div class="pc-read" style="grid-template-columns:repeat(3,1fr);margin-bottom:12px;">
-          <div class="pc-cell"><span class="lbl">Gagné</span><span class="val green">${bal.gain >= 0 ? '+' : ''}${fmtK(bal.gain)}</span></div>
+          <div class="pc-cell"><span class="lbl">Économisé</span><span class="val green">${bal.gain >= 0 ? '+' : ''}${fmtK(bal.gain)}</span></div>
           <div class="pc-cell"><span class="lbl">Engagé en cours</span><span class="val">${fmtK(bal.sunk)}</span></div>
           <div class="pc-cell"><span class="lbl">Bilan</span><span class="val ${bal.net >= 0 ? 'green' : 'red'}">${bal.net >= 0 ? '+' : ''}${fmtK(bal.net)}</span></div>
         </div>
@@ -9671,7 +9849,7 @@
           </span>
           <span class="pd-rate">${fmtK(r.cost)}</span>
         </div>`).join('')}
-        <div class="insight">Le bilan compte les exos réussis à leur valeur HDV, moins tout ce qui est engagé dans les exos encore ouverts : il remontera quand ils passeront. Le chiffre de droite est le coût <b>imputé</b> : l'item nu plus les tentas réellement faites. Il diffère du dépensé parce que les runes achetées d'avance ne sont pas encore brûlées.</div>
+        <div class="insight">Tu gardes tes items au lieu de les revendre : le bilan mesure donc ce que tu as <b>évité de payer</b> au HDV, moins ce qui est engagé dans les exos encore ouverts. Le chiffre de droite est le coût <b>imputé</b> : l'item nu plus les tentas réellement faites. Il diffère du dépensé parce que les runes achetées d'avance ne sont pas encore brûlées.</div>
       </div>`;
     }
 
@@ -9679,12 +9857,12 @@
       const box = document.getElementById('xstats-body');
       const empty = document.getElementById('empty-xstats');
       if (!box) return;
+      empty.classList.add('hidden');
       if (!state.items.length) {
-        box.innerHTML = '';
-        empty.classList.remove('hidden');
+        box.innerHTML = simCard();
+        wireSim(box);
         return;
       }
-      empty.classList.add('hidden');
 
       // Exos sélectionnables pour la courbe : en cours d'abord, puis réussis.
       const pickable = state.items.filter(i => (i.chance || 0) >= 1)
@@ -9698,8 +9876,9 @@
         ? `<div class="pc-sel">${pickable.map(i => `<button class="pc-chip${i.id === focusId ? ' on' : ''}" data-xfocus="${i.id}">${escapeHtml(i.name)}${i.obtained ? ' ✓' : ''} · ${i.attempts || 0}</button>`).join('')}</div>`
         : '';
 
-      box.innerHTML = selector + (focus ? exoProbChart(focus) : '')
+      box.innerHTML = simCard() + selector + (focus ? exoProbChart(focus) : '')
         + exoHitRateCard() + exoSpendCard() + exoRateCard() + activityCompareCard();
+      wireSim(box);
 
       box.querySelectorAll('[data-xfocus]').forEach(b => b.addEventListener('click', () => {
         state.settings.xstatFocus = b.dataset.xfocus;
