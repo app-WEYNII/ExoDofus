@@ -3061,6 +3061,146 @@
         scroll-behavior: auto !important;
       }
     }
+
+    /* ---- Compteurs +/− du formulaire de run ---- */
+    .stepper { display: grid; grid-template-columns: 40px 1fr 40px; gap: 6px; align-items: stretch; }
+    .stepper input { text-align: center; min-width: 0; }
+    .st-btn {
+      border: 1px solid var(--border-hi);
+      background: var(--bg-elev);
+      color: var(--text);
+      border-radius: var(--radius-sm);
+      font-size: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    .st-btn.plus { background: var(--gold-soft); border-color: var(--gold-deep); color: var(--gold-bright); }
+    .st-btn:active { transform: scale(0.94); }
+    .src-dot { flex-shrink: 0; display: inline-block; }
+
+    /* ---- Valeur de la run pendant la saisie ---- */
+    .run-value {
+      background: var(--gold-soft);
+      border: 1px solid rgba(217, 166, 72, 0.3);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      margin: 4px 0 12px;
+    }
+    .run-value .rv-main { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; font-size: 14px; color: var(--text-soft); }
+    .run-value .rv-main b { color: var(--gold-bright); font-size: 16px; }
+    .run-value .rv-sub { font-size: 11.5px; color: var(--text-dim); margin-top: 4px; }
+
+    /* ---- Run en cours ---- */
+    .live-start {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+      background: var(--bg-card);
+      border: 1px dashed var(--border-hi);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      color: var(--text);
+      font-family: var(--font-body);
+      cursor: pointer;
+    }
+    .live-start:active { transform: scale(0.99); }
+    .live-start .ls-ic {
+      width: 34px; height: 34px; flex-shrink: 0;
+      display: grid; place-items: center;
+      border-radius: 50%;
+      background: var(--gold-soft);
+      color: var(--gold-bright);
+      font-size: 13px;
+    }
+    .live-start .ls-txt { display: flex; flex-direction: column; font-size: 14px; }
+    .live-start .ls-txt span { font-size: 12px; color: var(--text-soft); margin-top: 1px; }
+
+    .live-run {
+      background: linear-gradient(160deg, var(--bg-card-hi), var(--bg-card));
+      border: 1px solid var(--gold-deep);
+      box-shadow: var(--shadow-gold);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+    .lr-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 12px; }
+    .lr-title { font-family: var(--font-display); font-weight: 700; font-size: 16px; color: var(--gold-bright); }
+    .lr-meta { font-size: 12px; color: var(--text-soft); text-align: right; }
+    .lr-runes { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+    .lr-rune {
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+      text-align: center;
+    }
+    .lr-name { font-size: 12px; color: var(--text-soft); line-height: 1.3; min-height: 2.6em; display: flex; align-items: center; justify-content: center; }
+    .lr-count { font-family: var(--font-display); font-size: 34px; font-weight: 700; line-height: 1.1; color: var(--text); margin: 2px 0 8px; }
+    .lr-btns { display: grid; grid-template-columns: 44px 1fr; gap: 6px; }
+    .lr-btns button {
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      padding: 12px 0;
+    }
+    .lr-minus { background: var(--bg-elev); border: 1px solid var(--border-hi); color: var(--text-soft); font-size: 18px; }
+    .lr-minus:disabled { opacity: 0.35; }
+    .lr-plus {
+      background: linear-gradient(135deg, var(--gold-deep), var(--gold));
+      border: none;
+      color: #1a1307;
+      font-size: 18px;
+    }
+    .lr-btns button:active { transform: scale(0.95); }
+    .lr-legends { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .lr-leg {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 12.5px;
+      background: var(--bg-soft);
+      border: 1px solid var(--border-hi);
+      border-radius: 999px;
+      padding: 4px 4px 4px 10px;
+    }
+    .lr-leg-x {
+      background: none; border: none; color: var(--text-dim);
+      font-size: 12px; padding: 2px 6px; cursor: pointer;
+    }
+    .lr-leg-add {
+      font-size: 12.5px;
+      font-family: var(--font-body);
+      background: none;
+      border: 1px dashed var(--gold-deep);
+      color: var(--gold-bright);
+      border-radius: 999px;
+      padding: 5px 12px;
+      cursor: pointer;
+    }
+    .lr-value { font-size: 12.5px; color: var(--text-soft); margin-top: 10px; }
+    .lr-value b { color: var(--gold-bright); }
+
+    /* ---- Légendes : run ou coffre ---- */
+    .src-split { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .src-panel {
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      min-width: 0;
+    }
+    .sp-head { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--text-soft); }
+    .sp-big { font-family: var(--font-display); font-size: 28px; font-weight: 700; line-height: 1.15; margin-top: 6px; color: var(--text); }
+    .sp-lbl { font-size: 11.5px; color: var(--text-dim); margin-bottom: 8px; }
+    .sp-lines { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--text-soft); line-height: 1.4; }
+    .sp-lines b { color: var(--text); font-weight: 600; }
+
+    .recal-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+    .recal-row .btn { padding-left: 14px; padding-right: 14px; }
   </style>
 </head>
 <body>
@@ -3262,6 +3402,7 @@
 
     <!-- Songes : Runs -->
     <section class="view active" id="view-runs">
+      <div id="run-live"></div>
       <div class="dry-streak hidden" id="dry-streak"></div>
       <button class="fold-all hidden" id="fold-all" aria-label="Replier ou déplier les journées"></button>
       <button class="price-alert hidden" id="price-alert" aria-label="Légendes sans prix"></button>
@@ -3687,6 +3828,8 @@
         </button>
       </div>
 
+      <div class="run-value hidden" id="r-value" aria-live="polite"></div>
+
       <div class="modal-actions">
         <button class="btn btn-secondary" id="run-cancel">Annuler</button>
         <button class="btn btn-primary" id="run-save">Enregistrer</button>
@@ -3853,6 +3996,19 @@
         <h2>Prix du butin</h2>
       </div>
       <div class="hint" style="margin-bottom:16px;">Les prix sont fixés ici une fois pour toutes. Ils s'appliquent rétroactivement à toutes tes runs.</div>
+
+      <div class="field">
+        <label for="eco-cp">Prix d'un coffre</label>
+        <input type="text" id="eco-cp" maxlength="13" inputmode="numeric" autocomplete="off" placeholder="0" />
+        <div class="hint">Réparti sur les runs qui ont fourni ses bribes, à son ouverture. Laisse à 0 pour compter le prix de la légende obtenue.</div>
+      </div>
+
+      <div class="field">
+        <label for="eco-acc">Comptes dans la team</label>
+        <input type="text" id="eco-acc" maxlength="1" inputmode="numeric" autocomplete="off" placeholder="1" />
+        <div class="hint">Les bribes saisies sur une run sont celles d'un compte : chaque palier donne un coffre par compte.</div>
+        <div class="hint" id="eco-cp-hint"></div>
+      </div>
 
       <div class="field">
         <label for="eco-rq">Reflets par run</label>
@@ -4276,15 +4432,40 @@
           }
         });
         if (migrated) save();
-      } catch (e) { state = { items: [], songes: [], compos: [], chests: [], catalogue: [], spends: [],
-                              farms: [], zones: [], resources: [], settings: {} }; }
+      } catch (e) {
+        // Échec de lecture ou de migration : surtout ne pas repartir d'un état
+        // vide, la prochaine sauvegarde écraserait tout. On met le brut de côté
+        // et on bloque l'écriture tant que la situation n'est pas réglée.
+        loadFailed = true;
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          const prefix = STORAGE_KEY + '-secours-';
+          let already = false;
+          for (let i = 0; i < localStorage.length; i++) {
+            const k = localStorage.key(i);
+            if (k && k.startsWith(prefix) && localStorage.getItem(k) === raw) { already = true; break; }
+          }
+          if (raw && !already) localStorage.setItem(prefix + Date.now(), raw);
+        } catch (err) { /* stockage plein : le brut reste au moins sous la clé d'origine */ }
+        console.error('Chargement impossible :', e);
+        state = { items: [], songes: [], compos: [], chests: [], catalogue: [], spends: [],
+                  farms: [], zones: [], resources: [], settings: {} };
+      }
     }
     const SCHEMA_VERSION = 1;
     let storageFull = false;
+    let loadFailed = false;   // vrai si les données n'ont pas pu être relues : écriture bloquée
 
     // Une écriture qui échoue en silence est le seul scénario irrattrapable :
     // on le rend visible plutôt que de perdre les données sans prévenir.
     function save() {
+      if (loadFailed) {
+        toast('Données illisibles : rien n\'est enregistré. Importe une sauvegarde.');
+        return false;
+      }
+      clearTimeout(saveTimer);
+      saveTimer = null;
+      allocCache = null;   // toute écriture peut changer la répartition des coffres
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
         if (storageFull) {
@@ -4300,6 +4481,15 @@
         return false;
       }
     }
+    // Sauvegarde différée pour les saisies rapides (frappe dans un formulaire) :
+    // on regroupe les écritures, et on vide la file dès que l'app passe en
+    // arrière-plan — c'est là qu'iOS est susceptible de la tuer.
+    let saveTimer = null;
+    function scheduleSave() {
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(save, 400);
+    }
+    function flushSave() { if (saveTimer) save(); }
     function storageBytes() {
       try { return (localStorage.getItem(STORAGE_KEY) || '').length; } catch (e) { return 0; }
     }
@@ -5170,7 +5360,10 @@
       const ko = (storageBytes() / 1024).toFixed(0);
       const d = daysSinceExport();
       let msg, warn;
-      if (storageFull) {
+      if (loadFailed) {
+        msg = `<b>Tes données n'ont pas pu être relues.</b> Elles ont été mises de côté sans être effacées, et plus rien n'est enregistré. Importe ta dernière sauvegarde pour repartir.`;
+        warn = true;
+      } else if (storageFull) {
         msg = `<b>Stockage saturé.</b> Exporte tes données maintenant, les dernières modifications ne sont plus enregistrées.`;
         warn = true;
       } else if (d == null) {
@@ -5206,6 +5399,7 @@
             'Importer cette sauvegarde ?',
             `Elle contient ${plural(nItems, 'exo')} et ${plural(nRuns, 'run')} de songes, et remplacera tes données actuelles.`,
             () => {
+              loadFailed = false;   // repartir d'un état choisi lève le blocage d'écriture
               state = {
                 items: Array.isArray(data.items) ? data.items : [],
                 songes: Array.isArray(data.songes) ? data.songes : [],
@@ -5344,6 +5538,7 @@
 
     function clearAllData() {
       confirmDialog('Tout effacer ?', 'Tous tes exos, tes compos, tes runs, tes coffres, ton catalogue et tes sessions de farm seront définitivement supprimés.', () => {
+        loadFailed = false;   // repartir d'un état choisi lève le blocage d'écriture
         state = { items: [], songes: [], compos: [], chests: [], catalogue: [], spends: [],
                   farms: [], zones: [], resources: [], settings: {} };
         stopTick();
@@ -5969,6 +6164,11 @@
         loot.push(`${badge}<span class="lname">★ ${escapeHtml(info.name || 'sans nom')}</span>`);
       });
       if (r.runes) loot.push(`<span class="lchip">Runes <b>${fmtNum(r.runes)}</b></span>`);
+      if (ecoConfigured()) {
+        const alloc = chestAllocation();
+        if (alloc.share[r.id]) loot.push(`<span class="lchip">Coffre <b>+${fmtK(alloc.share[r.id])}</b></span>`);
+        else if (alloc.pending[r.id]) loot.push(`<span class="lchip">Bribes en attente de coffre</span>`);
+      }
 
       const card = document.createElement('div');
       card.className = 'run-card' + (r.excluded ? ' excluded' : '');
@@ -5999,6 +6199,7 @@
       const all = sortedRuns().reverse();
       const runs = applyFilters(all);
       list.innerHTML = '';
+      renderRunLive();
       renderDryStreak();
       renderPriceAlert();
       renderFilterDrawer(all);
@@ -6359,6 +6560,7 @@
       if (wasFromRun) {
         draftCompoId = id;      // la compo tout juste créée devient celle de la run
         renderCompoSelect();
+        runFormChanged();
       } else {
         renderSonges();
       }
@@ -6644,8 +6846,23 @@
       el.textContent = (q && p) ? `Soit ${fmtFull(q * p)} kamas par run.` : '';
     }
 
+    // Ce que vaut une bribe saisie, coffre au prix indiqué
+    function ecoChestHint() {
+      const el = document.getElementById('eco-cp-hint');
+      const price = rawNum(document.getElementById('eco-cp'));
+      const acc = Math.min(8, Math.max(1, parseInt(document.getElementById('eco-acc').value, 10) || 1));
+      if (!price) { el.textContent = ''; return; }
+      const per = price / chestBribeCost();
+      el.textContent = acc > 1
+        ? `Une bribe vaut ${fmtNum(per)} kamas par compte, soit ${fmtNum(per * acc)} kamas par bribe saisie avec ${acc} comptes.`
+        : `Une bribe vaut ${fmtNum(per)} kamas.`;
+    }
+
     function openEcoForm() {
       const e = eco();
+      setNumberInput(document.getElementById('eco-cp'), e.chestPrice);
+      document.getElementById('eco-acc').value = e.accounts > 1 ? e.accounts : '';
+      ecoChestHint();
       setNumberInput(document.getElementById('eco-rq'), e.refletsPerRun);
       setNumberInput(document.getElementById('eco-rp'), e.refletPrice);
       draftRunes = e.runeTypes.map(t => ({ ...t }));
@@ -6656,6 +6873,8 @@
 
     function saveEco() {
       state.settings.eco = {
+        chestPrice: rawNum(document.getElementById('eco-cp')),
+        accounts: Math.min(8, Math.max(1, parseInt(document.getElementById('eco-acc').value, 10) || 1)),
         refletsPerRun: rawNum(document.getElementById('eco-rq')),
         refletPrice: rawNum(document.getElementById('eco-rp')),
         runeTypes: draftRunes
@@ -6724,7 +6943,7 @@
     }
 
     // ---- Sélecteur de légende ----
-    let pickCtx = null;   // { target: 'run'|'chest', index }
+    let pickCtx = null;   // { target: 'run'|'chest'|'live', index } — 'live' ajoute à la run en cours
 
     function openPicker(target, index) {
       pickCtx = { target, index };
@@ -6734,9 +6953,30 @@
     }
 
     function currentPickSlot() {
-      if (!pickCtx) return null;
+      if (!pickCtx || pickCtx.target === 'live') return null;
       const arr = pickCtx.target === 'run' ? draftLegends : draftChestLegends;
       return arr[pickCtx.index] || null;
+    }
+    // Range la légende choisie là où le sélecteur a été ouvert
+    function assignPicked(e) {
+      if (!pickCtx || !e) return;
+      const ref = { catId: e.id, name: e.name };
+      if (pickCtx.target === 'live') {
+        const d = runDraft();
+        if (d) {
+          d.legends = [...(Array.isArray(d.legends) ? d.legends : []), ref];
+          save();
+          renderRunLive();
+          toast(`${e.name} ajoutée à la run`);
+        }
+      } else if (pickCtx.target === 'run') {
+        draftLegends[pickCtx.index] = ref;
+        paintQualities();
+        runFormChanged();
+      } else {
+        draftChestLegends[pickCtx.index] = ref;
+        paintChestLegends();
+      }
     }
 
     function renderPickGrid(query) {
@@ -6766,10 +7006,8 @@
         b.addEventListener('click', () => {
           if (!pickCtx) { document.getElementById('modal-pick').classList.remove('active'); return; }
           const e = catById(b.dataset.pick);
-          const arr = pickCtx.target === 'run' ? draftLegends : draftChestLegends;
-          arr[pickCtx.index] = { catId: e.id, name: e.name };
           document.getElementById('modal-pick').classList.remove('active');
-          if (pickCtx.target === 'run') paintQualities(); else paintChestLegends();
+          assignPicked(e);
           pickCtx = null;
           haptic();
         });
@@ -6836,9 +7074,7 @@
       if (pickCtx) {
         const created = name ? catByName(name) : null;
         if (created) {
-          const arr = pickCtx.target === 'run' ? draftLegends : draftChestLegends;
-          arr[pickCtx.index] = { catId: created.id, name: created.name };
-          if (pickCtx.target === 'run') paintQualities(); else paintChestLegends();
+          assignPicked(created);
           pickCtx = null;
         } else {
           openPicker(pickCtx.target, pickCtx.index);
@@ -6974,12 +7210,95 @@
       </div>`;
     }
 
+
+    // ---- Run ou coffre : deux sources qui ne se comparent pas pareil ----
+    // En run, la question est « combien de runs pour une légende » ; en coffre,
+    // c'est « combien de bribes pour une légende ». On les garde séparées.
+    function legendSourceCard(runs, drops) {
+      const dec = (x, d = 1) => x.toFixed(d).replace('.', ',');
+      const runDrops = drops.filter(d => d.src === 'run');
+      const chestDrops = drops.filter(d => d.src === 'chest');
+      const nRuns = runs.length;
+      const nRd = runDrops.length;
+      const nChests = (state.chests || []).length;
+      const nCd = chestDrops.length;
+      if (!nRuns && !nChests) return '';
+
+      const hours = runs.reduce((s, r) => s + (r.durationSec || 0), 0) / 3600;
+      const withLeg = runs.filter(r => (r.legends || []).length).length;
+      const ratio = nRd ? nRuns / nRd : null;
+      // Fourchette à 95 % d'un comptage de Poisson (approximation de Wilson-Hilferty
+      // simplifiée) : sur peu de drops, le ratio brut bouge énormément.
+      let range = '';
+      if (nRd >= 3) {
+        const lo = Math.pow(Math.sqrt(nRd) - 0.98, 2);
+        const hi = Math.pow(Math.sqrt(nRd + 1) + 0.98, 2);
+        range = `entre ${dec(nRuns / hi)} et ${dec(nRuns / lo)} runs`;
+      }
+      const priceOf = l => (l.entry && l.entry.price) || 0;
+      const runKamas = runDrops.reduce((a, l) => a + priceOf(l), 0);
+      const chestKamas = chestDrops.reduce((a, l) => a + priceOf(l), 0);
+      const cost = chestBribeCost();
+      const bribesEarned = runs.reduce((s, r) => s + (r.bribes || 0), 0);
+
+      // Par intensité : le taux de drop peut dépendre du palier
+      const byInt = INTENSITIES.map(i => {
+        const rs = runs.filter(r => r.intensity === i.k);
+        const n = rs.reduce((a, r) => a + (r.legends || []).length, 0);
+        return { i, runs: rs.length, n };
+      }).filter(x => x.runs >= 3);
+
+      const runPanel = `
+        <div class="src-panel">
+          <div class="sp-head"><span class="src-dot run"></span>En run</div>
+          <div class="sp-big kamas-num">${ratio != null ? dec(ratio) : '—'}</div>
+          <div class="sp-lbl">${ratio != null ? 'runs par légende' : 'aucune légende droppée'}</div>
+          <div class="sp-lines">
+            <span><b>${nRd}</b> ${nRd > 1 ? 'légendes' : 'légende'} sur <b>${nRuns}</b> ${nRuns > 1 ? 'runs' : 'run'}</span>
+            ${nRuns ? `<span><b>${Math.round((withLeg / nRuns) * 100)} %</b> des runs en donnent au moins une</span>` : ''}
+            ${nRd && hours > 0 ? `<span>Une toutes les <b>${fmtDur((hours / nRd) * 3600)}</b> de jeu</span>` : ''}
+            ${runKamas ? `<span><b>${fmtNum(runKamas)}</b> kamas · <b>${fmtNum(runKamas / nRd)}</b> l'unité</span>` : ''}
+          </div>
+        </div>`;
+
+      const chestPanel = `
+        <div class="src-panel">
+          <div class="sp-head"><span class="src-dot chest"></span>En coffre</div>
+          <div class="sp-big kamas-num">${nCd ? fmtNum(Math.round((nChests * cost) / nCd)) : '—'}</div>
+          <div class="sp-lbl">${nCd ? 'bribes par légende' : 'aucun coffre ouvert'}</div>
+          <div class="sp-lines">
+            <span><b>${nCd}</b> ${nCd > 1 ? 'légendes' : 'légende'} dans <b>${nChests}</b> ${nChests > 1 ? 'coffres' : 'coffre'}</span>
+            ${nChests ? `<span><b>${dec(nCd / nChests, 2)}</b> légende par coffre</span>` : ''}
+            ${chestKamas ? `<span><b>${fmtNum(chestKamas)}</b> kamas · <b>${fmtNum(chestKamas / nChests)}</b> par coffre</span>` : ''}
+          </div>
+        </div>`;
+
+      // Ce que rapportent en run les bribes d'un coffre : relie les deux sources
+      const perChestInRun = (nRd && bribesEarned > 0) ? (nRd / bribesEarned) * cost : null;
+
+      return `<div class="chart-card">
+        <div class="chart-title">Run ou coffre</div>
+        <div class="chart-sub">${plural(drops.length, 'légende')} au total · ${nRd} en run, ${nCd} en coffre</div>
+        <div class="src-split">${runPanel}${chestPanel}</div>
+        ${range ? `<div class="insight">Avec ${plural(nRd, 'drop')}, ton vrai rythme se situe probablement ${range} par légende.${nRd < 10 ? ' La fourchette se resserrera avec les runs.' : ''}</div>`
+          : nRd ? `<div class="insight warn">Sur ${plural(nRd, 'drop')}, ce ratio peut encore varier du simple au triple.</div>` : ''}
+        ${perChestInRun != null ? `<div class="insight">Le temps de gagner les ${fmtNum(cost)} bribes d'un coffre, tu droppes en moyenne <b>${dec(perChestInRun)}</b> ${perChestInRun >= 2 ? 'légendes' : 'légende'} en run.</div>` : ''}
+        ${byInt.length >= 2 ? `<div class="chart-sub" style="margin:14px 0 6px;">Runs par légende selon l'intensité</div>
+          ${byInt.map(x => `
+            <div class="chest-entry">
+              <span class="bd"><span class="t1">${escapeHtml(x.i.label)}</span>
+                <span class="t2">${plural(x.n, 'légende')} sur ${plural(x.runs, 'run')}</span></span>
+              <span class="price-tag${x.n ? '' : ' none'}">${x.n ? `1 / ${dec(x.runs / x.n)}` : 'aucune'}</span>
+            </div>`).join('')}
+          <div class="orphan-note">Palier avec moins de 3 runs : non affiché.</div>` : ''}
+      </div>`;
+    }
+
     // ---- Rendu de l'onglet Légendes ----
+    let collSrc = 'all';   // filtre de provenance de la collection : all | run | chest
     function renderLegends() {
       const body = document.getElementById('legends-body');
       const drops = allLegendDrops();
-      const fromChest = drops.filter(d => d.src === 'chest');
-      const fromRun = drops.filter(d => d.src === 'run');
       if (!Array.isArray(state.chests)) state.chests = [];
       if (!Array.isArray(state.catalogue)) state.catalogue = [];
       const nChests = state.chests.length;
@@ -6987,12 +7306,13 @@
 
       // Cohérence entre les bribes cumulées et les coffres réellement ouverts
       const { metric, target, offset } = goalCfg();
-      const earned = statRuns().reduce((s, r) => s + (r.bribes || 0), 0) + (metric === 'bribes' ? offset : 0);
-      const expected = metric === 'bribes' ? Math.floor(earned / target) : null;
+      const earned = bribesEarnedAll() - spentTotal() + (metric === 'bribes' ? offset : 0);
+      const expected = metric === 'bribes' ? Math.floor(earned / target) * teamAccounts() : null;
       const gap = expected != null ? expected - nChests : null;
 
+      const pool = collSrc === 'all' ? drops : drops.filter(d => d.src === collSrc);
       const catRows = state.catalogue.map(e => {
-        const mine = drops.filter(d => (d.entry && d.entry.id === e.id));
+        const mine = pool.filter(d => (d.entry && d.entry.id === e.id));
         return { entry: e, n: mine.length, runs: mine.filter(m => m.src === 'run').length,
                  chests: mine.filter(m => m.src === 'chest').length };
       }).sort((a, b) =>
@@ -7014,23 +7334,6 @@
           </div>
           ${gap != null && gap !== 0 ? `<div class="insight warn">Tes bribes cumulées correspondent à <b>${expected}</b> ${expected > 1 ? 'paliers' : 'palier'}, mais tu as enregistré <b>${nChests}</b> ${nChests > 1 ? 'coffres' : 'coffre'}. ${gap > 0 ? `Il t'en manque ${gap} à saisir.` : `Tu en as saisi ${-gap} de plus — peut-être des coffres obtenus avant le suivi.`}</div>` : ''}
           <button class="btn btn-primary" id="add-chest" style="width:100%;margin-top:12px;">+ J'ai ouvert un coffre</button>
-        </div>
-
-        <div class="chart-card">
-          <div class="chart-title">Provenance des légendes</div>
-          <div class="chart-sub">${plural(drops.length, 'légende')} au total</div>
-          <div class="yield-row">
-            <span class="yield-lbl" style="width:52px;text-align:left;">Coffres</span>
-            <span class="yield-track"><span class="yield-fill" style="width:${drops.length ? (fromChest.length / drops.length) * 100 : 0}%"></span></span>
-            <span class="yield-val">${drops.length ? Math.round((fromChest.length / drops.length) * 100) : 0} %</span>
-            <span class="yield-n">${fromChest.length}</span>
-          </div>
-          <div class="yield-row">
-            <span class="yield-lbl" style="width:52px;text-align:left;">Runs</span>
-            <span class="yield-track"><span class="yield-fill" style="width:${drops.length ? (fromRun.length / drops.length) * 100 : 0}%;background:linear-gradient(90deg,#2f5aa8,var(--blue));"></span></span>
-            <span class="yield-val">${drops.length ? Math.round((fromRun.length / drops.length) * 100) : 0} %</span>
-            <span class="yield-n">${fromRun.length}</span>
-          </div>
           ${nChests ? `<div class="chart-sub" style="margin-top:14px;">Historique des coffres</div>
           <div style="margin-top:6px;">
             ${[...state.chests].sort((a, b) => (b.date || '').localeCompare(a.date || '')).map(c => `
@@ -7050,9 +7353,16 @@
           </div>` : ''}
         </div>
 
+        ${legendSourceCard(statRuns(), drops)}
+
         <div class="chart-card">
           <div class="chart-title">Collection</div>
-          <div class="chart-sub">${owned} / ${state.catalogue.length} légendes obtenues au moins une fois</div>
+          <div class="chart-sub">${owned} / ${state.catalogue.length} légendes obtenues au moins une fois${collSrc === 'run' ? ' en run' : collSrc === 'chest' ? ' en coffre' : ''}</div>
+          <div class="period-row" id="coll-src">
+            <button class="per-btn${collSrc === 'all' ? ' on' : ''}" data-csrc="all">Toutes</button>
+            <button class="per-btn${collSrc === 'run' ? ' on' : ''}" data-csrc="run">En run</button>
+            <button class="per-btn${collSrc === 'chest' ? ' on' : ''}" data-csrc="chest">En coffre</button>
+          </div>
           <div class="sec-actions">
             <button class="btn btn-secondary" id="add-cat">+ Ajouter au catalogue</button>
           </div>
@@ -7085,6 +7395,8 @@
         ${dropRateCard(drops)}
       `;
 
+      body.querySelectorAll('[data-csrc]').forEach(b =>
+        b.addEventListener('click', () => { collSrc = b.dataset.csrc; renderLegends(); haptic(); }));
       const addChest = document.getElementById('add-chest');
       if (addChest) addChest.addEventListener('click', () => openChestForm());
       const addCat = document.getElementById('add-cat');
@@ -7316,10 +7628,15 @@
         <div class="legend-list">
           ${[...entries].reverse().map(l => `
             <div class="legend-entry">
+              <span class="src-dot ${l.src}" title="${l.src === 'chest' ? 'Coffre' : 'Run'}"></span>
               <span class="qdot ${l.q}"></span>
               <span class="nm${l.name ? '' : ' unnamed'}">${l.name ? escapeHtml(l.name) : 'sans nom'}</span>
               <span class="dt">${l.entry && l.entry.price ? fmtNum(l.entry.price) : '—'}</span>
             </div>`).join('')}
+        </div>
+        <div class="chart-legend">
+          <span><span class="lg-swatch" style="background:var(--blue)"></span> en run</span>
+          <span><span class="lg-swatch" style="background:var(--gold)"></span> en coffre</span>
         </div>` : ''}
         ${unnamed ? `<div class="insight warn">${plural(unnamed, 'légende')} sans nom. Filtre tes runs sur « ★ Légendaire » pour les retrouver et compléter.</div>` : ''}
         ${total < 8 ? `<div class="insight warn">Sur ${plural(total, 'légende')} seulement, cette répartition est du bruit. Il en faut une vingtaine avant d'en tirer quoi que ce soit.</div>` : ''}
@@ -7334,10 +7651,22 @@
       return { perRun, perHour: sec > 0 ? got / (sec / 3600) : null };
     }
 
+    // Bribes réellement gagnées : toutes les runs comptent, y compris celles
+    // exclues des stats ou hors du filtre d'intensité — en jeu, elles ont payé.
+    function bribesEarnedAll() {
+      return state.songes.reduce((s, r) => s + (r.bribes || 0), 0);
+    }
+    // Stock de départ qui fait coller l'app à ton solde en jeu :
+    // solde = départ + gagné − dépensé − coffres × palier
+    function offsetFromBalance(balance) {
+      return balance - bribesEarnedAll() + spentTotal()
+        + ((state.chests || []).length / teamAccounts()) * chestBribeCost();
+    }
+
     function goalCardHTML(runs) {
       const { metric, target, offset } = goalCfg();
       const meta = GOAL_METRICS[metric];
-      const earned = runs.reduce((s, r) => s + (r[metric] || 0), 0);
+      const earned = metric === 'bribes' ? bribesEarnedAll() : runs.reduce((s, r) => s + (r[metric] || 0), 0);
       // les bribes dépensées chez un marchand ne comptent pas pour le palier
       const spent = metric === 'bribes' ? spentTotal() : 0;
       const total = Math.max(0, earned + offset - spent);
@@ -7367,8 +7696,9 @@
 
       // Le compteur repart à zéro à chaque palier ; on signale ceux qui n'ont
       // pas encore été enregistrés comme coffres ouverts
-      const claimed = metric === 'bribes' ? (state.chests || []).length : cycles;
-      const due = Math.max(0, cycles - claimed);
+      const due = metric === 'bribes'
+        ? Math.max(0, cycles * teamAccounts() - (state.chests || []).length)
+        : 0;
 
       return `
         <div class="chart-card">
@@ -7421,6 +7751,13 @@
               <div class="lbl">Déjà acquis avant le suivi</div>
               <input type="text" id="goal-offset" inputmode="numeric" placeholder="0" value="${offset ? fmtNum(offset) : ''}" />
             </div>
+            ${metric === 'bribes' ? `<div class="wide">
+              <div class="lbl">Ou recale avec ton solde en jeu${teamAccounts() > 1 ? ' (un compte)' : ''}</div>
+              <div class="recal-row">
+                <input type="text" id="goal-balance" inputmode="numeric" placeholder="bribes possédées aujourd'hui" />
+                <button class="btn btn-secondary" id="goal-recal">Recaler</button>
+              </div>
+            </div>` : ''}
           </div>
         </div>
       `;
@@ -7459,6 +7796,20 @@
       if (offsetEl) {
         wireNumberInput(offsetEl);
         offsetEl.addEventListener('change', () => setGoal({ offset: rawNum(offsetEl) }));
+      }
+      const balEl = document.getElementById('goal-balance');
+      if (balEl) {
+        wireNumberInput(balEl);
+        document.getElementById('goal-recal').addEventListener('click', () => {
+          if (!balEl.value.trim()) { flagInvalid('goal-balance'); toast('Indique ton solde de bribes en jeu'); return; }
+          const off = offsetFromBalance(rawNum(balEl));
+          if (off < 0) {
+            toast(`Incohérent de ${fmtNum(-off)} bribes : une dépense manque, ou un coffre est en trop`);
+            return;
+          }
+          setGoal({ offset: off });
+          toast(`Stock de départ recalé à ${fmtNum(off)} bribes`);
+        });
       }
     }
 
@@ -7503,7 +7854,7 @@
     // ============================================================
     // ÉCONOMIE : valorisation du butin en kamas
     // ============================================================
-    const ECO_DEFAULTS = { refletsPerRun: 1200, refletPrice: 0 };
+    const ECO_DEFAULTS = { refletsPerRun: 1200, refletPrice: 0, chestPrice: 0, accounts: 1 };
     // Les deux seules runes qui valent quelque chose : toujours proposées à la saisie
     const DEFAULT_RUNES = [
       { id: 'rune-merv', name: 'Astrale Merveilleuse', price: 0 },
@@ -7515,13 +7866,15 @@
       return {
         refletsPerRun: e.refletsPerRun != null ? Math.max(0, e.refletsPerRun | 0) : ECO_DEFAULTS.refletsPerRun,
         refletPrice: Math.max(0, e.refletPrice | 0),
+        chestPrice: Math.max(0, Math.round(Number(e.chestPrice) || 0)),
+        accounts: Math.min(8, Math.max(1, e.accounts | 0 || 1)),
         runeTypes: (Array.isArray(e.runeTypes) && e.runeTypes.length)
           ? e.runeTypes : DEFAULT_RUNES.map(t => ({ ...t })),
       };
     }
     function ecoConfigured() {
       const e = eco();
-      return e.refletPrice > 0 || e.runeTypes.some(t => t.price > 0) ||
+      return e.refletPrice > 0 || e.chestPrice > 0 || e.runeTypes.some(t => t.price > 0) ||
         (state.catalogue || []).some(c => (c.price || 0) > 0);
     }
 
@@ -7542,26 +7895,93 @@
       }, 0);
     }
 
-    // Décomposition de la valeur d'une run
+    // Décomposition de la valeur d'une run. Les bribes ne valent rien tant
+    // qu'elles dorment : c'est l'ouverture d'un coffre qui leur donne une valeur,
+    // reversée aux runs qui les ont gagnées (part « chests »).
     function runValue(r) {
       const e = eco();
       const reflets = e.refletsPerRun * e.refletPrice;
       const runes = e.runeTypes.reduce((sum, t) =>
         sum + (((r.runeQty || {})[t.id] || 0) * (t.price || 0)), 0);
       const legends = legendsValue(r.legends);
-      return { reflets, runes, legends, total: reflets + runes + legends };
+      const chests = r.id ? (chestAllocation().share[r.id] || 0) : 0;
+      return { reflets, runes, legends, chests, total: reflets + runes + legends + chests };
     }
-    function chestValue(c) { return legendsValue(c.legends); }
+    // Un prix de coffre fixé l'emporte sur la légende tirée : la chance est lissée.
+    // À 0, c'est le prix de la légende réellement obtenue qui compte.
+    function chestValue(c) {
+      const p = eco().chestPrice;
+      return p > 0 ? p : legendsValue(c.legends);
+    }
+    // Chaque compte a ses propres bribes et ouvre son propre coffre au palier.
+    // Les bribes saisies sur une run sont celles d'UN compte : un palier atteint
+    // donne donc autant de coffres que de comptes.
+    function teamAccounts() { return eco().accounts; }
+    function chestBribeCost() {
+      const g = goalCfg();
+      return g.metric === 'bribes' ? g.target : GOAL_METRICS.bribes.target;
+    }
 
-    // Rentabilité globale : les coffres viennent des runs, leur valeur s'y rattache
+    // ---- Redistribution des coffres sur les runs ----
+    // Les bribes forment une file, dans l'ordre où elles ont été gagnées : le
+    // stock d'avant le suivi d'abord, puis chaque run. Chaque coffre ouvert
+    // consomme un palier de bribes en tête de file et reverse sa valeur réelle
+    // aux runs consommées, au prorata des bribes que chacune a fournies. Les
+    // dépenses chez un marchand consomment aussi la file, sans rien reverser.
+    // Ce qui reste en file attend le prochain coffre.
+    let allocCache = null;   // remis à zéro à chaque sauvegarde
+    function chestAllocation() {
+      if (allocCache) return allocCache;
+      const cost = chestBribeCost();
+      const g = goalCfg();
+      const offset = g.metric === 'bribes' ? g.offset : 0;
+      const queue = [];
+      if (offset > 0) queue.push({ id: null, left: offset });
+      sortedRuns().forEach(r => { if ((r.bribes || 0) > 0) queue.push({ id: r.id, left: r.bribes }); });
+
+      const events = [
+        ...(state.chests || []).map(c => ({ chest: c, date: c.date || '', ts: c.createdAt || 0 })),
+        ...(state.spends || []).map(sp => ({ spend: sp, date: sp.date || '', ts: sp.createdAt || 0 })),
+      ].sort((a, b) => a.date.localeCompare(b.date) || a.ts - b.ts);
+
+      const share = {}, pending = {};
+      let attributed = 0, unattributed = 0, qi = 0;
+      events.forEach(ev => {
+        const chestNeed = cost / teamAccounts();
+        let need = ev.chest ? chestNeed : Math.max(0, ev.spend.amount || 0);
+        const perBribe = ev.chest ? chestValue(ev.chest) / chestNeed : 0;
+        while (need > 0 && qi < queue.length) {
+          const q = queue[qi];
+          const take = Math.min(q.left, need);
+          q.left -= take;
+          need -= take;
+          if (need < 1e-6) need = 0;   // paliers non entiers (ex. 3 comptes)
+          if (perBribe) {
+            const k = take * perBribe;
+            if (q.id) { share[q.id] = (share[q.id] || 0) + k; attributed += k; }
+            else unattributed += k;   // bribes gagnées avant le suivi
+          }
+          if (q.left <= 1e-6) qi++;
+        }
+        // coffre saisi sans assez de bribes enregistrées pour le payer
+        if (perBribe && need > 0) unattributed += need * perBribe;
+      });
+      let pendingTotal = 0;
+      queue.slice(qi).forEach(q => {
+        if (q.id && q.left > 1e-6) { pending[q.id] = q.left; pendingTotal += q.left; }
+      });
+      allocCache = { share, pending, pendingTotal, attributed, unattributed, cost };
+      return allocCache;
+    }
+
+    // Rentabilité globale
     function economyTotals(runs) {
-      let reflets = 0, runes = 0, legends = 0, sec = 0;
+      let reflets = 0, runes = 0, legends = 0, chests = 0, sec = 0;
       runs.forEach(r => {
         const v = runValue(r);
-        reflets += v.reflets; runes += v.runes; legends += v.legends;
+        reflets += v.reflets; runes += v.runes; legends += v.legends; chests += v.chests;
         sec += r.durationSec || 0;
       });
-      const chests = (state.chests || []).reduce((a, c) => a + chestValue(c), 0);
       const total = reflets + runes + legends + chests;
       const hours = sec / 3600;
       return { reflets, runes, legends, chests, total, sec, hours,
@@ -7578,7 +7998,7 @@
         return `<div class="chart-card">
           <div class="chart-title">Rentabilité</div>
           <div class="chart-sub">Combien tes runs rapportent réellement</div>
-          <div class="insight warn">Aucun prix renseigné. Indique le prix d'un reflet, celui des runes que tu revends, et le prix de vente de tes légendes — l'app calculera ensuite tes kamas par heure.</div>
+          <div class="insight warn">Aucun prix renseigné. Indique le prix d'un reflet, celui des runes que tu revends et le prix de vente de tes légendes : l'app calculera ensuite tes kamas par heure.</div>
           <button class="btn btn-primary" id="eco-open" style="width:100%;margin-top:12px;">Régler les prix</button>
         </div>`;
       }
@@ -7613,6 +8033,13 @@
         ${line('Runes', t.runes, share(t.runes), 'linear-gradient(90deg,#2f5aa8,var(--blue))')}
         ${line('Drops', t.legends, share(t.legends), 'linear-gradient(90deg,#3f8a5a,#58c47a)')}
         ${line('Coffres', t.chests, share(t.chests))}
+        ${(() => {
+          const a = chestAllocation();
+          const notes = [];
+          if (a.pendingTotal > 0) notes.push(`<b>${fmtNum(a.pendingTotal)}</b> bribes attendent le prochain coffre : les runs qui les ont gagnées seront revalorisées à son ouverture.`);
+          if (a.unattributed > 0) notes.push(`${fmtNum(a.unattributed)} kamas de coffres viennent de bribes gagnées avant le suivi : ils ne sont rattachés à aucune run.`);
+          return notes.length ? `<div class="insight">${notes.join(' ')}</div>` : '';
+        })()}
 
         ${missing.length ? `<div class="insight warn"><b>${plural(missing.length, 'légende')}</b> obtenue${missing.length > 1 ? 's' : ''} sans prix : ${missing.slice(0, 3).map(c => escapeHtml(c.name)).join(', ')}${missing.length > 3 ? '…' : ''}. Ces drops ne comptent pas — ta rentabilité réelle est plus élevée que ce chiffre.</div>` : ''}
         ${e.refletPrice > 0 ? `<div class="insight">Les reflets sont comptés forfaitairement à ${fmtFull(e.refletsPerRun)} par run. Si ce nombre varie chez toi, le total dérivera d'autant.</div>` : ''}
@@ -7641,9 +8068,12 @@
         <div class="chart-title">Prix du butin</div>
         <div class="chart-sub">Ce sur quoi reposent tous les calculs de kamas</div>
 
+        ${row('Coffre', e.chestPrice, e.chestPrice
+          ? `${fmtNum((e.chestPrice / chestBribeCost()) * e.accounts)} kamas par bribe saisie${e.accounts > 1 ? ` (${e.accounts} comptes)` : ''}`
+          : 'prix de la légende obtenue')}
         ${row('Reflet', e.refletPrice, `${fmtNum(e.refletsPerRun)} par run → ${fmtNum(e.refletsPerRun * e.refletPrice)} kamas`)}
         ${e.runeTypes.map(t => row(t.name, t.price, 'à l\'unité')).join('')}
-        <button class="btn btn-secondary" id="eco-open2" style="width:100%;margin-top:10px;">Modifier reflets et runes</button>
+        <button class="btn btn-secondary" id="eco-open2" style="width:100%;margin-top:10px;">Modifier coffre, reflets et runes</button>
 
         <div class="chart-sub" style="margin:18px 0 8px;">Légendes valorisées</div>
         ${priced.length
@@ -8381,18 +8811,31 @@
     }
     function totalRunes(q) { return Object.values(q || {}).reduce((a, b) => a + b, 0); }
 
-    // Un champ de quantité par rune suivie
-    function renderRuneInputs(r) {
+    // Un compteur par rune suivie : les runes tombent souvent, un appui sur +
+    // vaut mieux qu'une saisie. Le champ reste éditable pour corriger d'un coup.
+    function renderRuneInputs(qty) {
       const box = document.getElementById('r-runes-grid');
       const types = eco().runeTypes;
       box.innerHTML = types.map(t => `
         <div>
           <div class="hint" style="margin:0 0 5px;">${escapeHtml(t.name)}</div>
-          <input type="text" data-rune="${t.id}" maxlength="3" inputmode="numeric"
-                 autocomplete="off" placeholder="0"
-                 value="${r && r.runeQty && r.runeQty[t.id] ? r.runeQty[t.id] : ''}" />
+          <div class="stepper">
+            <button type="button" class="st-btn minus" data-step="-1" aria-label="Retirer une ${escapeHtml(t.name)}">−</button>
+            <input type="text" data-rune="${t.id}" maxlength="3" inputmode="numeric"
+                   autocomplete="off" placeholder="0" aria-label="${escapeHtml(t.name)}"
+                   value="${qty && qty[t.id] ? qty[t.id] : ''}" />
+            <button type="button" class="st-btn plus" data-step="1" aria-label="Ajouter une ${escapeHtml(t.name)}">+</button>
+          </div>
         </div>`).join('');
       box.querySelectorAll('input').forEach(wireLootField);
+      box.querySelectorAll('.st-btn').forEach(b => {
+        b.addEventListener('click', () => {
+          const inp = b.parentNode.querySelector('input');
+          const v = Math.min(999, Math.max(0, (parseInt(inp.value, 10) || 0) + Number(b.dataset.step)));
+          inp.value = v ? String(v) : '';
+          haptic();
+        });
+      });
     }
 
     // Un emplacement par légende déclarée ; le classement vient du catalogue
@@ -8493,6 +8936,53 @@
       el.classList.remove('bad');
     }
 
+    // État courant du formulaire, sans validation : sert à l'enregistrement,
+    // à l'aperçu en kamas et au brouillon de la run en cours.
+    function readRunForm() {
+      const num = id => Math.max(0, parseInt(document.getElementById(id).value, 10) || 0);
+      const runeQty = readRuneQty();
+      const legends = draftLegends.filter(l => l.catId || l.name)
+        .map(l => ({ catId: l.catId || null, name: (l.name || '').trim() }));
+      return {
+        date: document.getElementById('r-date').value || todayISO(),
+        durationSec: readDurationFields(),
+        wave: draftWave,
+        intensity: draftIntensity,
+        bribes: num('r-bribes'),
+        runeQty,
+        runes: totalRunes(runeQty),
+        legend: legends.length,
+        compoId: draftCompoId,
+        excluded: draftExcluded,
+        legends,
+        note: document.getElementById('r-note').value.trim(),
+      };
+    }
+
+    // Ce que la run rapporte, à mesure qu'on la remplit
+    function paintRunValue() {
+      const el = document.getElementById('r-value');
+      if (!el) return;
+      if (!ecoConfigured()) { el.classList.add('hidden'); return; }
+      const r = readRunForm();
+      if (editingRunId) r.id = editingRunId;   // une run existante garde sa part de coffre
+      const v = runValue(r);
+      const h = r.durationSec / 3600;
+      const parts = [];
+      if (v.chests) parts.push(`coffres ${fmtNum(v.chests)}`);
+      if (v.reflets) parts.push(`reflets ${fmtNum(v.reflets)}`);
+      if (v.runes) parts.push(`runes ${fmtNum(v.runes)}`);
+      if (v.legends) parts.push(`légendes ${fmtNum(v.legends)}`);
+      el.classList.remove('hidden');
+      el.innerHTML = `
+        <div class="rv-main">
+          <span><b class="kamas-num">${fmtNum(v.total)}</b> kamas</span>
+          <span>${h > 0 ? `<b class="kamas-num">${fmtNum(v.total / h)}</b> kamas/h` : 'renseigne la durée pour le kamas/h'}</span>
+        </div>
+        ${parts.length ? `<div class="rv-sub">${parts.join(' + ')}</div>` : ''}
+        ${!editingRunId && r.bribes ? `<div class="rv-sub">Les ${fmtNum(r.bribes)} bribes compteront à l'ouverture du prochain coffre.</div>` : ''}`;
+    }
+
     function openRunForm(id) {
       editingRunId = id || null;
       const r = id ? state.songes.find(x => x.id === id) : null;
@@ -8505,12 +8995,11 @@
       document.getElementById('r-s').value = r && sec % 60 ? sec % 60 : '';
 
       document.getElementById('r-bribes').value = r && r.bribes ? r.bribes : '';
-      renderRuneInputs(r);
+      renderRuneInputs(r ? r.runeQty : null);
       document.getElementById('r-legend').value = r && r.legend ? r.legend : '';
       document.getElementById('r-note').value = r ? (r.note || '') : '';
       draftLegends = (r && Array.isArray(r.legends))
         ? r.legends.map(l => ({ catId: l.catId || null, name: l.name || '' })) : [];
-      syncQualities(false);
 
       draftWave = r ? (r.wave || 0) : 0;
       draftExcluded = r ? !!r.excluded : false;
@@ -8529,6 +9018,9 @@
       }
       // en édition, la valeur existante fait foi ; en création, on autorise le calcul
       bribesAutofilled = !r;
+      // une run en cours reprend exactement là où elle en était
+      if (!r && runDraft()) applyRunDraft(runDraft());
+      syncQualities(false);
       buildWaveGrid();
       paintIntens();
       paintExcludedToggle();
@@ -8536,6 +9028,7 @@
       updateDurPreview();
       document.getElementById('run-delete').classList.toggle('hidden', !r);
       document.getElementById('run-dup-row').classList.toggle('hidden', !r);
+      paintRunValue();
       document.getElementById('modal-run').classList.add('active');
     }
 
@@ -8547,6 +9040,8 @@
     function duplicateRun() {
       const src = state.songes.find(x => x.id === editingRunId);
       if (!src) return;
+      // la copie deviendrait le brouillon et écraserait la run en cours
+      if (runDraft()) { toast('Termine ou abandonne d\'abord la run en cours'); return; }
       editingRunId = null;
       document.getElementById('run-title').textContent = 'Nouvelle run';
       document.getElementById('r-date').value = todayISO();
@@ -8562,22 +9057,7 @@
         toast('Renseigne la durée de la run');
         return;
       }
-      const num = id => Math.max(0, parseInt(document.getElementById(id).value, 10) || 0);
-      const payload = {
-        date: document.getElementById('r-date').value || todayISO(),
-        durationSec: sec,
-        wave: draftWave,
-        intensity: draftIntensity,
-        bribes: num('r-bribes'),
-        runeQty: readRuneQty(),
-        runes: totalRunes(readRuneQty()),
-        legend: draftLegends.filter(l => l.catId || l.name).length,
-        compoId: draftCompoId,
-        excluded: draftExcluded,
-        legends: draftLegends.filter(l => l.catId || l.name)
-          .map(l => ({ catId: l.catId || null, name: (l.name || '').trim() })),
-        note: document.getElementById('r-note').value.trim(),
-      };
+      const payload = readRunForm();
 
       const wasEditing = !!editingRunId;
       if (editingRunId) {
@@ -8585,6 +9065,7 @@
         if (r) Object.assign(r, payload);
       } else {
         state.songes.push({ id: uid(), ...payload, createdAt: Date.now() });
+        delete state.settings.runDraft;   // la run est close : son brouillon disparaît
       }
       save();
       renderSonges();
@@ -8604,6 +9085,180 @@
         editingRunId = null;
         toast('Run supprimée');
       });
+    }
+
+
+    // ============================================================
+    // SONGES : RUN EN COURS
+    // ============================================================
+    // Pendant la run, les runes tombent au fil des étages : on les compte à la
+    // volée, sans ouvrir le formulaire. Tout vit dans un brouillon enregistré à
+    // chaque appui, qui survit à la fermeture de l'app. La durée, la vague et
+    // les bribes se saisissent en fin de run, depuis le récap du jeu.
+    function runDraft() {
+      const d = state.settings && state.settings.runDraft;
+      return d && typeof d === 'object' ? d : null;
+    }
+    function lastRunDefaults() {
+      const last = sortedRuns()[state.songes.length - 1];
+      return {
+        intensity: last ? (last.intensity || null) : null,
+        compoId: (last && getCompo(last.compoId)) ? last.compoId : null,
+      };
+    }
+    function startRunDraft() {
+      const def = lastRunDefaults();
+      state.settings.runDraft = {
+        startedAt: Date.now(), date: todayISO(),
+        intensity: def.intensity, compoId: def.compoId,
+        wave: 0, bribes: '', bribesAuto: true, h: '', m: '', s: '',
+        runeQty: {}, legends: [], note: '', excluded: false,
+      };
+      save();
+      renderRunLive();
+      haptic();
+    }
+    function discardRunDraft() {
+      confirmDialog('Abandonner la run en cours ?', 'Les runes et légendes déjà comptées seront perdues.', () => {
+        delete state.settings.runDraft;
+        save();
+        renderRunLive();
+        toast('Run abandonnée');
+      });
+    }
+
+    // Remplit le formulaire depuis le brouillon (appelé par openRunForm)
+    function applyRunDraft(d) {
+      document.getElementById('run-title').textContent = 'Run en cours';
+      document.getElementById('r-date').value = d.date || todayISO();
+      document.getElementById('r-h').value = d.h || '';
+      document.getElementById('r-m').value = d.m || '';
+      document.getElementById('r-s').value = d.s || '';
+      document.getElementById('r-bribes').value = d.bribes || '';
+      bribesAutofilled = !d.bribes || d.bribesAuto !== false;
+      renderRuneInputs(d.runeQty || {});
+      draftLegends = (Array.isArray(d.legends) ? d.legends : [])
+        .map(l => ({ catId: (l && l.catId) || null, name: (l && l.name) || '' }));
+      document.getElementById('r-legend').value = draftLegends.length || '';
+      document.getElementById('r-note').value = d.note || '';
+      draftWave = d.wave || 0;
+      if ('intensity' in d) draftIntensity = IMAP[d.intensity] ? d.intensity : null;
+      if ('compoId' in d) draftCompoId = getCompo(d.compoId) ? d.compoId : null;
+      draftExcluded = !!d.excluded;
+    }
+
+    // Recopie le formulaire dans le brouillon : une run commencée ne se perd plus
+    function captureRunDraft() {
+      if (editingRunId || !document.getElementById('modal-run').classList.contains('active')) return;
+      const prev = runDraft();
+      state.settings.runDraft = {
+        startedAt: prev ? prev.startedAt : Date.now(),
+        date: document.getElementById('r-date').value || todayISO(),
+        h: document.getElementById('r-h').value,
+        m: document.getElementById('r-m').value,
+        s: document.getElementById('r-s').value,
+        intensity: draftIntensity,
+        wave: draftWave,
+        bribes: document.getElementById('r-bribes').value,
+        bribesAuto: bribesAutofilled,
+        runeQty: readRuneQty(),
+        legends: draftLegends.map(l => ({ catId: l.catId || null, name: l.name || '' })),
+        compoId: draftCompoId,
+        note: document.getElementById('r-note').value,
+        excluded: draftExcluded,
+      };
+      scheduleSave();
+      renderRunLive();
+    }
+    function runFormChanged() {
+      if (!document.getElementById('modal-run').classList.contains('active')) return;
+      paintRunValue();
+      captureRunDraft();
+    }
+
+    function liveStep(runeId, delta) {
+      const d = runDraft();
+      if (!d) return;
+      if (!d.runeQty || typeof d.runeQty !== 'object') d.runeQty = {};
+      const v = Math.min(999, Math.max(0, (d.runeQty[runeId] || 0) + delta));
+      if (v) d.runeQty[runeId] = v; else delete d.runeQty[runeId];
+      save();
+      renderRunLive();
+      haptic();
+    }
+    function liveRemoveLegend(i) {
+      const d = runDraft();
+      if (!d || !Array.isArray(d.legends)) return;
+      const [gone] = d.legends.splice(i, 1);
+      save();
+      renderRunLive();
+      toast(`${(gone && resolveLegend(gone).name) || 'Légende'} retirée`);
+    }
+
+    function renderRunLive() {
+      const box = document.getElementById('run-live');
+      if (!box) return;
+      const d = runDraft();
+      if (!d) {
+        box.innerHTML = `<button class="live-start" id="lr-start">
+          <span class="ls-ic">▶</span>
+          <span class="ls-txt"><b>Démarrer une run</b><span>Compte tes runes et légendes pendant que tu joues</span></span>
+        </button>`;
+        document.getElementById('lr-start').addEventListener('click', startRunDraft);
+        return;
+      }
+
+      const started = new Date(d.startedAt || Date.now());
+      const hhmm = started.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+      const sinceTxt = d.date && d.date !== todayISO() ? `${dayLabel(d.date).toLowerCase()} à ${hhmm}` : `depuis ${hhmm}`;
+      const meta = [sinceTxt];
+      if (IMAP[d.intensity]) meta.push(IMAP[d.intensity].label);
+      const compo = getCompo(d.compoId);
+      if (compo) meta.push(compoLabel(compo));
+
+      const types = eco().runeTypes;
+      const qty = d.runeQty || {};
+      const legends = Array.isArray(d.legends) ? d.legends : [];
+      const partial = runValue({ bribes: 0, runeQty: qty, legends });
+      const lootKamas = partial.runes + partial.legends;
+
+      box.innerHTML = `<div class="live-run">
+        <div class="lr-head">
+          <span class="lr-title">Run en cours</span>
+          <span class="lr-meta">${escapeHtml(meta.join(' · '))}</span>
+        </div>
+        <div class="lr-runes">
+          ${types.map(t => `
+            <div class="lr-rune">
+              <div class="lr-name">${escapeHtml(t.name)}</div>
+              <div class="lr-count kamas-num">${qty[t.id] || 0}</div>
+              <div class="lr-btns">
+                <button class="lr-minus" data-lr="${escapeHtml(t.id)}" data-d="-1" aria-label="Retirer une ${escapeHtml(t.name)}"${qty[t.id] ? '' : ' disabled'}>−</button>
+                <button class="lr-plus" data-lr="${escapeHtml(t.id)}" data-d="1" aria-label="Ajouter une ${escapeHtml(t.name)}">+1</button>
+              </div>
+            </div>`).join('')}
+        </div>
+        <div class="lr-legends">
+          ${legends.map((l, i) => {
+            const info = resolveLegend(l);
+            return `<span class="lr-leg">${info.q ? `<span class="qdot ${info.q}"></span>` : ''}★ ${escapeHtml(info.name || 'sans nom')}<button class="lr-leg-x" data-lrx="${i}" aria-label="Retirer cette légende">✕</button></span>`;
+          }).join('')}
+          <button class="lr-leg-add" id="lr-leg-add">+ Légende</button>
+        </div>
+        ${ecoConfigured() && lootKamas > 0 ? `<div class="lr-value">Déjà <b class="kamas-num">${fmtNum(lootKamas)}</b> kamas en runes et légendes</div>` : ''}
+        <div class="chrono-actions">
+          <button class="btn btn-secondary" id="lr-drop">Abandonner</button>
+          <button class="btn btn-primary" id="lr-finish">Terminer la run</button>
+        </div>
+      </div>`;
+
+      box.querySelectorAll('[data-lr]').forEach(b =>
+        b.addEventListener('click', () => liveStep(b.dataset.lr, Number(b.dataset.d))));
+      box.querySelectorAll('[data-lrx]').forEach(b =>
+        b.addEventListener('click', () => liveRemoveLegend(Number(b.dataset.lrx))));
+      document.getElementById('lr-leg-add').addEventListener('click', () => { openPicker('live', -1); haptic(); });
+      document.getElementById('lr-drop').addEventListener('click', discardRunDraft);
+      document.getElementById('lr-finish').addEventListener('click', () => { openRunForm(); haptic(); });
     }
 
     // ============================================================
@@ -11593,7 +12248,19 @@
       else openForm();
     });
 
-    document.getElementById('run-cancel').addEventListener('click', () => { closeAllModals(); editingRunId = null; });
+    document.getElementById('run-cancel').addEventListener('click', () => {
+      const keptDraft = !editingRunId && runDraft();
+      closeAllModals();
+      editingRunId = null;
+      if (keptDraft) toast('Run gardée en cours');
+    });
+    // Toute modification du formulaire met à jour l'aperçu en kamas et le
+    // brouillon. Le délai laisse les gestionnaires propres à chaque champ passer d'abord.
+    ['input', 'click'].forEach(type =>
+      document.getElementById('modal-run').addEventListener(type, () => setTimeout(runFormChanged, 0)));
+    // L'app peut être tuée dès qu'elle passe en arrière-plan : on vide la file d'écriture
+    document.addEventListener('visibilitychange', () => { if (document.hidden) flushSave(); });
+    window.addEventListener('pagehide', flushSave);
     document.getElementById('run-save').addEventListener('click', saveRun);
     document.getElementById('run-delete').addEventListener('click', deleteRun);
     setupDurationInputs();
@@ -11649,6 +12316,9 @@
       wireNumberInput(el);
       el.addEventListener('input', ecoRefletPreview);
     });
+    wireNumberInput(document.getElementById('eco-cp'));
+    ['eco-cp', 'eco-acc'].forEach(id => document.getElementById(id).addEventListener('input', ecoChestHint));
+    document.getElementById('eco-acc').addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, ''); });
     wireNumberInput(document.getElementById('cat-price'));
 
     document.getElementById('spend-cancel').addEventListener('click', () => {
@@ -11948,6 +12618,9 @@
     refreshNameList();
     render();
     handleSharedCompo();
+    if (loadFailed) {
+      setTimeout(() => toast('Données illisibles, mises de côté. Importe une sauvegarde.'), 600);
+    }
 
     // Service Worker pour le mode offline
     if ('serviceWorker' in navigator) {
