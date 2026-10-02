@@ -3293,6 +3293,13 @@
     .gs-box.on { background: var(--green); border-color: var(--green); }
     .gs-row input { padding: 9px 10px; font-size: 14px; }
     .gs-x { height: 36px; border-radius: var(--radius-sm); border: 1px solid var(--border-hi); background: var(--bg-elev); color: var(--text-dim); cursor: pointer; }
+
+
+    .tab.tab-mini { flex: 0 0 auto; padding-left: 12px; padding-right: 12px; }
+    .ak-big { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: var(--gold-bright); margin: 8px 0 6px; }
+    .ak-lines { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--text-soft); }
+    .ak-lines b { color: var(--text); font-weight: 600; }
+    .ak-warn { color: var(--gold-bright); }
   </style>
 </head>
 <body>
@@ -3398,11 +3405,11 @@
           <div class="value kamas-num" id="astat-next">—</div>
         </div>
         <div class="stat">
-          <div class="label">Kamas</div>
+          <div class="label">Kamas quêtes</div>
           <div class="value gold kamas-num" id="astat-kamas">—</div>
         </div>
         <div class="stat">
-          <div class="label">Almatons</div>
+          <div class="label">Kamas almatons</div>
           <div class="value gold kamas-num" id="astat-almatons">—</div>
         </div>
       </div>
@@ -3432,6 +3439,7 @@
     <button class="tab active" data-view="alma-day">Jour</button>
     <button class="tab" data-view="alma-cal">Calendrier</button>
     <button class="tab" data-view="alma-pin">Épinglés</button>
+    <button class="tab tab-mini" data-view="alma-kamas" aria-label="Kamas de l'almanax">Kamas</button>
   </nav>
 
   <nav class="tabs hidden" data-mod="farm">
@@ -3617,6 +3625,11 @@
       <div id="alma-mult"></div>
       <div id="alma-today"></div>
       <div id="alma-next"></div>
+    </section>
+
+    <!-- Almanax : Kamas (quêtes et almatons) -->
+    <section class="view" id="view-alma-kamas">
+      <div id="alma-kamas"></div>
     </section>
 
     <!-- Almanax : Calendrier -->
@@ -3895,6 +3908,36 @@
       <div class="modal-actions">
         <button class="btn btn-secondary" id="goal-cancel">Annuler</button>
         <button class="btn btn-primary" id="goal-save">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-almause">
+    <div class="modal">
+      <button class="modal-grip" aria-label="Fermer"></button>
+      <h2>Tes almatons</h2>
+      <div class="hint" style="margin-bottom:16px;">Ce contre quoi tu les échanges, pour les convertir en kamas.</div>
+      <div class="field">
+        <label for="alu-name">Objet obtenu</label>
+        <input type="text" id="alu-name" maxlength="40" placeholder="Galet" autocomplete="off" />
+      </div>
+      <div class="field">
+        <label for="alu-cost">Almatons par unité</label>
+        <input type="text" id="alu-cost" maxlength="5" inputmode="numeric" placeholder="75" autocomplete="off" />
+      </div>
+      <div class="field">
+        <label for="alu-price">Prix de vente d'une unité</label>
+        <input type="text" id="alu-price" maxlength="13" inputmode="numeric" placeholder="0" autocomplete="off" />
+        <div class="hint" id="alu-hint"></div>
+      </div>
+      <div class="field">
+        <label for="alu-stock">Almatons déjà possédés <span style="color:var(--text-dim);font-weight:400;">(optionnel)</span></label>
+        <input type="text" id="alu-stock" maxlength="9" inputmode="numeric" placeholder="0" autocomplete="off" />
+        <div class="hint">Ceux que tu avais avant de valider tes quêtes dans l'app, pour qu'ils comptent aussi.</div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="alu-cancel">Annuler</button>
+        <button class="btn btn-primary" id="alu-save">Enregistrer</button>
       </div>
     </div>
   </div>
@@ -4707,6 +4750,8 @@
       saveTimer = null;
       allocCache = null;   // toute écriture peut changer la répartition des coffres
       palierCache = null;
+      // l'accueil résume tout : n'importe quelle écriture le rend périmé
+      if (typeof dirtyModules === 'object') dirtyModules.home = true;
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
         if (storageFull) {
@@ -9952,6 +9997,8 @@
       }));
       (state.catalogue || []).forEach(c => add('cat:' + c.id, 'Légendes', c.name, c.price || 0, v => { c.price = v; }));
       (state.resources || []).forEach(r => add('res:' + r.id, 'Farm', r.name, r.price || 0, v => { r.price = v; }));
+      const au = almaCfg().use;
+      add('alma:use', 'Almanax', au.name, au.price, v => { almaCfg().use.price = v; });
       return out;
     }
     function priceStale(p) {
@@ -9984,7 +10031,7 @@
       const list = reviewAll ? allPrices() : stalePrices();
       const box = document.getElementById('pr-body');
       const maxAge = priceMaxAge();
-      const groups = ['Songes', 'Légendes', 'Farm'];
+      const groups = ['Songes', 'Légendes', 'Farm', 'Almanax'];
       document.getElementById('pr-sub').textContent = list.length
         ? (reviewAll ? `${(list.length) + ' prix'} renseignés` : `${(list.length) + ' prix'} à revoir : plus de ${maxAge} jours, ou antérieurs à une mise à jour`)
         : 'Tous tes prix sont à jour';
@@ -10566,6 +10613,14 @@
       });
       if (typeof a.type !== 'string') a.type = '';
       if (typeof a.q !== 'string') a.q = '';
+      // Ce que deviennent les almatons : échangés contre un objet (galets par défaut)
+      const u = a.use && typeof a.use === 'object' ? a.use : {};
+      a.use = {
+        name: (typeof u.name === 'string' && u.name.trim()) ? u.name.trim().slice(0, 40) : 'Galet',
+        cost: Math.max(1, parseInt(u.cost, 10) || 75),
+        price: Math.max(0, parseInt(u.price, 10) || 0),
+        stock: Math.max(0, parseInt(u.stock, 10) || 0),   // almatons possédés avant le suivi
+      };
       return a;
     }
     function almaKeyOf(d) {
@@ -10636,7 +10691,48 @@
         tons += ALMATON_PER_CHAR * c;
         n++;
       });
-      return { kamas, tons, n };
+      // Tous les almatons sont convertis au prix de l'objet contre lequel tu
+      // les échanges, reliquat compris : c'est leur valeur, échangés ou non.
+      const u = cfg.use;
+      const earned = tons;
+      tons += u.stock;
+      const units = tons / u.cost;
+      const tonsKamas = Math.round(units * u.price);
+      return { kamas, earned, tons, n, units, tonsKamas, total: kamas + tonsKamas, use: u };
+    }
+
+
+    // ---- Usage des almatons ----
+    function aluHint() {
+      const cost = Math.max(1, rawNum(document.getElementById('alu-cost')) || 75);
+      const price = rawNum(document.getElementById('alu-price'));
+      const perChar = ALMATON_PER_CHAR / cost;
+      const chars = almaCfg().chars;
+      document.getElementById('alu-hint').textContent = price
+        ? `Soit ${fmtNum(price / cost)} kamas l'almaton. Une quête rendue sur ${chars} ${chars > 1 ? 'comptes' : 'compte'} rapporte ${fmtNum(ALMATON_PER_CHAR * chars)} almatons, ≈ ${fmtNum(perChar * chars * price)} kamas.`
+        : '';
+    }
+    function openAlmaUse() {
+      const u = almaCfg().use;
+      document.getElementById('alu-name').value = u.name;
+      document.getElementById('alu-cost').value = u.cost;
+      setNumberInput(document.getElementById('alu-price'), u.price);
+      setNumberInput(document.getElementById('alu-stock'), u.stock);
+      aluHint();
+      document.getElementById('modal-almause').classList.add('active');
+    }
+    function saveAlmaUse() {
+      const cfg = almaCfg();
+      const cost = rawNum(document.getElementById('alu-cost'));
+      if (!cost) { flagInvalid('alu-cost'); toast('Indique le nombre d\'almatons par unité'); return; }
+      const price = rawNum(document.getElementById('alu-price'));
+      if (price !== cfg.use.price) touchPrice('alma:use');
+      cfg.use = { name: document.getElementById('alu-name').value.trim() || 'Galet', cost, price,
+                  stock: rawNum(document.getElementById('alu-stock')) };
+      save();
+      document.getElementById('modal-almause').classList.remove('active');
+      render('alma');
+      toast('Usage des almatons enregistré');
     }
 
     function renderAlmaBar() {
@@ -10647,7 +10743,7 @@
       set('astat-chars', cfg.chars);
       set('astat-next', pins.length ? (pins[0].d === 0 ? 'auj.' : 'J-' + pins[0].d) : '—');
       set('astat-kamas', tot.kamas ? fmtK(tot.kamas) : '—');
-      set('astat-almatons', tot.tons ? fmtK(tot.tons) : '—');
+      set('astat-almatons', tot.tonsKamas ? fmtK(tot.tonsKamas) : '—');
     }
 
     function multRow() {
@@ -10787,11 +10883,11 @@
         </span></button>`).join('');
 
       const tot = almaTotals();
-      document.getElementById('alma-mult').innerHTML = multRow() + (tot.n
+      document.getElementById('alma-mult').innerHTML = (tot.n
         ? `<div class="alma-tally">
              <span class="at-cell"><b>${tot.n}</b>quête${tot.n > 1 ? 's' : ''} rendue${tot.n > 1 ? 's' : ''}</span>
-             <span class="at-cell"><b>${fmtNum(tot.kamas)}</b>kamas</span>
-             <span class="at-cell"><b>${fmtNum(tot.tons)}</b>almatons</span>
+             <span class="at-cell"><b>${fmtNum(tot.earned)}</b>almatons</span>
+             <span class="at-cell"><b>${fmtK(tot.total)}</b>kamas</span>
            </div>`
         : `<div class="note-box">Valide « Quête rendue » sur un jour pour commencer à cumuler tes kamas et tes almatons. Les quêtes étant répétables, un jour déjà rendu repart à zéro l'année suivante.</div>`);
 
@@ -10811,7 +10907,6 @@
         ? `<div class="alma-sec">À venir</div>${next.map(n => almaCard(n.a, n.key, n.iso, { chk: true })).join('')}`
         : '';
 
-      wireMult();
       wireAlmaCards(document.getElementById('alma-today'));
       wireAlmaCards(document.getElementById('alma-next'));
       alert.querySelectorAll('[data-agoto]').forEach(b => b.addEventListener('click', () => {
@@ -11018,6 +11113,55 @@
       renderAlmaDay();
       renderAlmaCal();
       renderAlmaPins();
+      renderAlmaKamas();
+    }
+
+    // ---- Onglet Kamas : quêtes d'un côté, almatons de l'autre ----
+    function renderAlmaKamas() {
+      const box = document.getElementById('alma-kamas');
+      if (!box) return;
+      const tot = almaTotals();
+      const u = tot.use;
+      const name = escapeHtml(u.name.toLowerCase());
+      const share = v => tot.total > 0 ? Math.round((v / tot.total) * 100) : 0;
+      box.innerHTML = `
+        ${multRow()}
+        <div class="chart-card">
+          <div class="chart-title">Kamas des quêtes</div>
+          <div class="chart-sub">Récompenses des offrandes rendues</div>
+          <div class="ak-big kamas-num">${fmtNum(tot.kamas)}</div>
+          <div class="ak-lines">
+            <span><b>${tot.n}</b> quête${tot.n > 1 ? 's' : ''} rendue${tot.n > 1 ? 's' : ''}</span>
+            ${tot.n ? `<span><b>${fmtNum(tot.kamas / tot.n)}</b> kamas par quête</span>` : ''}
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-title">Kamas des almatons</div>
+          <div class="chart-sub">Tous tes almatons, convertis au prix du ${name}</div>
+          <div class="ak-big kamas-num">${u.price ? fmtNum(tot.tonsKamas) : '—'}</div>
+          <div class="ak-lines">
+            <span><b>${fmtNum(tot.tons)}</b> almatons${u.stock ? ` (dont ${fmtNum(u.stock)} déjà possédés)` : ''}</span>
+            <span>≈ <b>${(Math.floor(tot.units * 10) / 10).toString().replace('.', ',')}</b> ${name}${tot.units >= 2 ? 's' : ''} à ${fmtNum(u.cost)} almatons</span>
+            ${u.price ? `<span>${name} à <b>${fmtNum(u.price)}</b> · <b>${fmtNum(u.price / u.cost)}</b> kamas l'almaton</span>`
+                      : `<span class="ak-warn">Prix du ${name} non renseigné</span>`}
+          </div>
+          <button class="btn btn-secondary" id="alma-use-open" style="width:100%;margin-top:12px;">${u.price ? 'Modifier' : `Indiquer le prix d'un ${name}`}</button>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-title">Total almanax</div>
+          <div class="ak-big kamas-num">${fmtNum(tot.total)}</div>
+          ${tot.total > 0 ? `
+            <div class="yield-row"><span class="yield-lbl" style="width:74px;text-align:left;">Quêtes</span>
+              <span class="yield-track"><span class="yield-fill" style="width:${share(tot.kamas)}%"></span></span>
+              <span class="yield-val">${share(tot.kamas)} %</span></div>
+            <div class="yield-row"><span class="yield-lbl" style="width:74px;text-align:left;">Almatons</span>
+              <span class="yield-track"><span class="yield-fill" style="width:${share(tot.tonsKamas)}%;background:linear-gradient(90deg,#7a5bb8,var(--purple))"></span></span>
+              <span class="yield-val">${share(tot.tonsKamas)} %</span></div>` : ''}
+        </div>`;
+      document.getElementById('alma-use-open').addEventListener('click', () => { openAlmaUse(); haptic(); });
+      wireMult();
     }
 
     // ---- Bascule de module ----
@@ -11040,6 +11184,8 @@
       const head = heads[mod] || heads.songes;
       document.getElementById('app-title').textContent = head[0];
       document.getElementById('app-sub').textContent = head[1];
+      // l'accueil est toujours recalculé à l'affichage : il dépend de tous les modules
+      if (mod === 'home') dirtyModules.home = true;
       flushRender();
       saveNav({ mod });
 
@@ -13533,6 +13679,17 @@
       editingGoalId = null;
     });
     document.getElementById('goal-delete').addEventListener('click', deleteGoal);
+
+    wireNumberInput(document.getElementById('alu-price'));
+    wireNumberInput(document.getElementById('alu-stock'));
+    document.getElementById('alu-cost').addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, ''); aluHint(); });
+    document.getElementById('alu-price').addEventListener('input', aluHint);
+    document.getElementById('alu-save').addEventListener('click', saveAlmaUse);
+    // la tuile « Comptes » du bandeau mène au réglage
+    const charsTile = document.getElementById('astat-chars').closest('.stat');
+    charsTile.style.cursor = 'pointer';
+    charsTile.addEventListener('click', () => { setView('alma-kamas'); haptic(); });
+    document.getElementById('alu-cancel').addEventListener('click', () => document.getElementById('modal-almause').classList.remove('active'));
 
     document.getElementById('pr-close').addEventListener('click', () => {
       document.getElementById('modal-prices').classList.remove('active');
