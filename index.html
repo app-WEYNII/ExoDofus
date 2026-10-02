@@ -3300,6 +3300,20 @@
     .ak-lines { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--text-soft); }
     .ak-lines b { color: var(--text); font-weight: 600; }
     .ak-warn { color: var(--gold-bright); }
+
+    /* ---- Ventes de légendes ---- */
+    .sale-list { display: flex; flex-direction: column; margin-top: 12px; }
+    .sale-row {
+      display: flex; align-items: center; gap: 10px; width: 100%; text-align: left;
+      padding: 9px 2px; background: none; border: none; border-bottom: 1px solid var(--border);
+      color: var(--text); font-family: var(--font-body); cursor: pointer;
+    }
+    .sale-row:last-child { border-bottom: none; }
+    .sr-bd { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .sr-nm { font-size: 13.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .sr-dt { font-size: 11.5px; color: var(--text-dim); }
+    .sr-st { flex-shrink: 0; font-size: 12px; color: var(--text-soft); }
+    .sr-st.sold { color: var(--green); font-weight: 600; }
   </style>
 </head>
 <body>
@@ -3942,6 +3956,34 @@
     </div>
   </div>
 
+  <div class="modal-overlay" id="modal-sell">
+    <div class="modal">
+      <button class="modal-grip" aria-label="Fermer"></button>
+      <h2 id="sell-title">Légende</h2>
+      <div class="hint" id="sell-sub" style="margin:-6px 0 14px;"></div>
+      <div class="seg" id="sell-kind">
+        <button class="seg-btn on" data-sk="kept">Gardée</button>
+        <button class="seg-btn" data-sk="sold">Vendue</button>
+      </div>
+      <div id="sell-kept-info" class="hint"></div>
+      <div id="sell-fields" class="hidden">
+        <div class="field">
+          <label for="sell-price">Prix de vente</label>
+          <input type="text" id="sell-price" maxlength="13" inputmode="numeric" placeholder="0" autocomplete="off" />
+          <div class="hint">Figé : changer la cote de la légende plus tard ne le modifiera pas.</div>
+        </div>
+        <div class="field">
+          <label for="sell-date">Date de la vente</label>
+          <input type="date" id="sell-date" />
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="sell-cancel">Annuler</button>
+        <button class="btn btn-primary" id="sell-save">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
   <div class="modal-overlay" id="modal-prices">
     <div class="modal">
       <button class="modal-grip" aria-label="Fermer"></button>
@@ -4179,7 +4221,7 @@
       <div class="field">
         <label for="cat-price">Prix de vente estimé <span style="color:var(--text-dim);font-weight:400;">(kamas)</span></label>
         <input type="text" id="cat-price" maxlength="10" inputmode="numeric" autocomplete="off" placeholder="0" />
-        <div class="hint" id="cat-price-hint">Sa valeur marchande, que tu l'aies vendue ou non. Modifiable à tout moment, et appliquée rétroactivement à tous tes drops de cet objet.</div>
+        <div class="hint" id="cat-price-hint">Sa cote actuelle. Elle s'applique à toutes les légendes que tu gardes ; une légende vendue garde son prix de vente.</div>
       </div>
 
       <div class="field" id="cat-img-wrap">
@@ -4236,7 +4278,7 @@
       <div class="modal-head">
         <h2>Prix du butin</h2>
       </div>
-      <div class="hint" style="margin-bottom:16px;">Les prix sont fixés ici une fois pour toutes. Ils s'appliquent rétroactivement à toutes tes runs.</div>
+      <div class="hint" style="margin-bottom:16px;">Un prix modifié s'applique à partir de maintenant : tes runs et coffres passés gardent le prix en vigueur à leur date.</div>
 
       <div class="field">
         <label for="eco-cp">Prix d'un coffre</label>
@@ -4649,14 +4691,17 @@
         delete holder.qualities;
         holder.legends = holder.legends.filter(l => l && typeof l === 'object').map(l => {
           const name = String(l.name || '').slice(0, 60);
-          if (l.catId && catIds.has(l.catId)) return { catId: l.catId, name };
+          const sold = l.sold && typeof l.sold === 'object' && parseInt(l.sold.price, 10) > 0
+            ? { price: parseInt(l.sold.price, 10), date: l.sold.date || null, at: l.sold.at || null } : null;
+          const out = ref => sold ? { ...ref, sold } : ref;
+          if (l.catId && catIds.has(l.catId)) return out({ catId: l.catId, name });
           let e = name ? byName(name) : null;
           if (!e && l.catId === undefined && name) {
             e = { id: uid(), name, img: '', q: QMAP[l.q] ? l.q : 'mid', price: 0 };
             st.catalogue.push(e);
             catIds.add(e.id);
           }
-          return { catId: e ? e.id : null, name: e ? e.name : name };
+          return out({ catId: e ? e.id : null, name: e ? e.name : name });
         });
         holder.legend = holder.legends.length;
       };
@@ -6837,9 +6882,9 @@
     // Toutes les légendes obtenues, quelle qu'en soit la provenance
     function allLegendDrops() {
       const fromRuns = statRuns().flatMap(r =>
-        (r.legends || []).map(l => ({ ...l, ...resolveLegend(l), src: 'run', date: r.date, runId: r.id })));
+        (r.legends || []).map((l, idx) => ({ ...l, ...resolveLegend(l), src: 'run', date: r.date, runId: r.id, idx })));
       const fromChests = (state.chests || []).flatMap(c =>
-        (c.legends || []).map(l => ({ ...l, ...resolveLegend(l), src: 'chest', date: c.date, chestId: c.id })));
+        (c.legends || []).map((l, idx) => ({ ...l, ...resolveLegend(l), src: 'chest', date: c.date, chestId: c.id, idx })));
       return [...fromRuns, ...fromChests].sort((a, b) => (a.date || '').localeCompare(b.date || ''));
     }
 
@@ -7065,11 +7110,11 @@
           .map(t => ({ id: t.id || uid(), name: t.name.trim().slice(0, 24), price: Math.max(0, t.price | 0) })),
       };
       const after = eco();
-      if (after.chestPrice !== before.chestPrice) touchPrice('eco:chest');
-      if (after.refletPrice !== before.refletPrice) touchPrice('eco:reflet');
+      if (after.chestPrice !== before.chestPrice) { touchPrice('eco:chest'); recordPrice('eco:chest', before.chestPrice, after.chestPrice); }
+      if (after.refletPrice !== before.refletPrice) { touchPrice('eco:reflet'); recordPrice('eco:reflet', before.refletPrice, after.refletPrice); }
       after.runeTypes.forEach(t => {
         const old = before.runeTypes.find(x => x.id === t.id);
-        if (!old || old.price !== t.price) touchPrice('rune:' + t.id);
+        if (!old || old.price !== t.price) { touchPrice('rune:' + t.id); recordPrice('rune:' + t.id, old ? old.price : 0, t.price); }
       });
       save();
       renderSonges();
@@ -7316,7 +7361,7 @@
       document.getElementById('ch-date').value = c ? (c.date || todayISO()) : todayISO();
       document.getElementById('ch-note').value = c ? (c.note || '') : '';
       draftChestLegends = c && (c.legends || []).length
-        ? [{ catId: c.legends[0].catId || null, name: c.legends[0].name || '' }]
+        ? [{ catId: c.legends[0].catId || null, name: c.legends[0].name || '', ...(c.legends[0].sold ? { sold: c.legends[0].sold } : {}) }]
         : [{ catId: null, name: '' }];
       paintChestLegends();
       document.getElementById('chest-delete').classList.toggle('hidden', !c);
@@ -7330,7 +7375,7 @@
         date: document.getElementById('ch-date').value || todayISO(),
         note: document.getElementById('ch-note').value.trim(),
         legends: draftChestLegends.filter(l => l.catId || l.name)
-          .map(l => ({ catId: l.catId || null, name: (l.name || '').trim() })),
+          .map(l => ({ catId: l.catId || null, name: (l.name || '').trim(), ...(l.sold ? { sold: l.sold } : {}) })),
       };
       const wasEditing = !!editingChestId;
       if (editingChestId) {
@@ -7426,7 +7471,7 @@
         const hi = Math.pow(Math.sqrt(nRd + 1) + 0.98, 2);
         range = `entre ${dec(nRuns / hi)} et ${dec(nRuns / lo)} runs`;
       }
-      const priceOf = l => (l.entry && l.entry.price) || 0;
+      const priceOf = l => legendDropValue(l);
       const runKamas = runDrops.reduce((a, l) => a + priceOf(l), 0);
       const chestKamas = chestDrops.reduce((a, l) => a + priceOf(l), 0);
       const cost = chestBribeCost();
@@ -7483,6 +7528,108 @@
             </div>`).join('')}
           <div class="orphan-note">Palier avec moins de 3 runs : non affiché.</div>` : ''}
       </div>`;
+    }
+
+
+    // ---- Légendes vendues ou gardées ----
+    // Gardée : elle suit sa cote du catalogue. Vendue : elle vaut son prix de
+    // vente, figé une fois pour toutes.
+    function allDropsForSale() {
+      const fromRuns = state.songes.flatMap(r => (r.legends || []).map((l, idx) =>
+        ({ l, ...resolveLegend(l), src: 'run', date: r.date, holder: r, idx })));
+      const fromChests = (state.chests || []).flatMap(c => (c.legends || []).map((l, idx) =>
+        ({ l, ...resolveLegend(l), src: 'chest', date: c.date, holder: c, idx })));
+      return [...fromRuns, ...fromChests].filter(d => d.l && (d.l.catId || d.l.name))
+        .sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+    }
+    let salesShowAll = false;
+    function legendSalesCard() {
+      const drops = allDropsForSale();
+      if (!drops.length) return '';
+      const sold = drops.filter(d => d.l.sold && d.l.sold.price > 0);
+      const kept = drops.filter(d => !(d.l.sold && d.l.sold.price > 0));
+      const soldK = sold.reduce((a, d) => a + d.l.sold.price, 0);
+      const keptK = kept.reduce((a, d) => a + legendDropValue(d.l), 0);
+      const shown = salesShowAll ? drops : drops.slice(0, 8);
+      return `<div class="chart-card">
+        <div class="chart-title">Vendues ou gardées</div>
+        <div class="chart-sub">Touche une légende pour indiquer si tu l'as vendue</div>
+        <div class="src-split" style="margin-top:10px;">
+          <div class="src-panel">
+            <div class="sp-head">Vendues</div>
+            <div class="sp-big kamas-num">${fmtK(soldK)}</div>
+            <div class="sp-lbl">${plural(sold.length, 'légende')} · prix figés</div>
+          </div>
+          <div class="src-panel">
+            <div class="sp-head">Gardées</div>
+            <div class="sp-big kamas-num">${fmtK(keptK)}</div>
+            <div class="sp-lbl">${plural(kept.length, 'légende')} · à la cote actuelle</div>
+          </div>
+        </div>
+        <div class="sale-list">
+          ${shown.map(d => {
+            const isSold = d.l.sold && d.l.sold.price > 0;
+            return `<button class="sale-row" data-sale="${d.src}:${escapeHtml(d.holder.id)}:${d.idx}">
+              <span class="src-dot ${d.src}"></span>
+              <span class="sr-bd">
+                <span class="sr-nm">${escapeHtml(d.name || 'sans nom')}</span>
+                <span class="sr-dt">${fmtDateShort(d.date)} · ${d.src === 'chest' ? 'coffre' : 'run'}</span>
+              </span>
+              <span class="sr-st${isSold ? ' sold' : ''}">${isSold ? `Vendue ${fmtK(d.l.sold.price)}` : `Gardée${legendDropValue(d.l) ? ' · ' + fmtK(legendDropValue(d.l)) : ''}`}</span>
+            </button>`;
+          }).join('')}
+        </div>
+        ${drops.length > 8 ? `<button class="wk-today" id="sales-more">${salesShowAll ? 'Réduire' : `Tout afficher (${drops.length})`}</button>` : ''}
+      </div>`;
+    }
+
+    let sellCtx = null, sellKind = 'kept';
+    function sellTarget() {
+      if (!sellCtx) return null;
+      const list = sellCtx.src === 'chest' ? (state.chests || []) : state.songes;
+      const holder = list.find(x => x.id === sellCtx.id);
+      return holder && holder.legends ? { holder, l: holder.legends[sellCtx.idx] } : null;
+    }
+    function paintSellKind() {
+      document.querySelectorAll('#sell-kind .seg-btn').forEach(b => b.classList.toggle('on', b.dataset.sk === sellKind));
+      document.getElementById('sell-fields').classList.toggle('hidden', sellKind !== 'sold');
+      const t = sellTarget();
+      const e = t && resolveLegend(t.l).entry;
+      document.getElementById('sell-kept-info').textContent = sellKind === 'kept'
+        ? (e && e.price ? `Elle compte à sa cote actuelle (${fmtNum(e.price)} kamas), qui suit tes mises à jour du catalogue.`
+                        : 'Elle compte à sa cote du catalogue, pas encore renseignée.')
+        : '';
+    }
+    function openSell(key) {
+      const [src, id, idx] = key.split(':');
+      sellCtx = { src, id, idx: Number(idx) };
+      const t = sellTarget();
+      if (!t || !t.l) return;
+      const info = resolveLegend(t.l);
+      document.getElementById('sell-title').textContent = info.name || 'Légende';
+      document.getElementById('sell-sub').textContent = `${t.holder === undefined ? '' : (src === 'chest' ? 'Coffre' : 'Run')} du ${fmtDateShort(t.holder.date)}`;
+      sellKind = t.l.sold && t.l.sold.price > 0 ? 'sold' : 'kept';
+      setNumberInput(document.getElementById('sell-price'), t.l.sold ? t.l.sold.price : (info.entry && info.entry.price) || 0);
+      document.getElementById('sell-date').value = (t.l.sold && t.l.sold.date) || todayISO();
+      paintSellKind();
+      document.getElementById('modal-sell').classList.add('active');
+    }
+    function saveSell() {
+      const t = sellTarget();
+      if (!t || !t.l) return;
+      if (sellKind === 'sold') {
+        const price = rawNum(document.getElementById('sell-price'));
+        if (!price) { flagInvalid('sell-price'); toast('Indique le prix de vente'); return; }
+        t.l.sold = { price, date: document.getElementById('sell-date').value || todayISO(), at: Date.now() };
+      } else {
+        delete t.l.sold;
+      }
+      save();
+      document.getElementById('modal-sell').classList.remove('active');
+      sellCtx = null;
+      render('songes');
+      renderLegends();
+      toast(sellKind === 'sold' ? 'Vente enregistrée' : 'Légende gardée');
     }
 
     // ---- Rendu de l'onglet Légendes ----
@@ -7546,6 +7693,8 @@
 
         ${legendSourceCard(statRuns(), drops)}
 
+        ${legendSalesCard()}
+
         <div class="chart-card">
           <div class="chart-title">Collection</div>
           <div class="chart-sub">${owned} / ${state.catalogue.length} légendes obtenues au moins une fois${collSrc === 'run' ? ' en run' : collSrc === 'chest' ? ' en coffre' : ''}</div>
@@ -7586,6 +7735,10 @@
         ${dropRateCard(drops)}
       `;
 
+      body.querySelectorAll('[data-sale]').forEach(b =>
+        b.addEventListener('click', () => { openSell(b.dataset.sale); haptic(); }));
+      const more = document.getElementById('sales-more');
+      if (more) more.addEventListener('click', () => { salesShowAll = !salesShowAll; renderLegends(); });
       body.querySelectorAll('[data-csrc]').forEach(b =>
         b.addEventListener('click', () => { collSrc = b.dataset.csrc; renderLegends(); haptic(); }));
       const addChest = document.getElementById('add-chest');
@@ -7822,7 +7975,7 @@
               <span class="src-dot ${l.src}" title="${l.src === 'chest' ? 'Coffre' : 'Run'}"></span>
               <span class="qdot ${l.q}"></span>
               <span class="nm${l.name ? '' : ' unnamed'}">${l.name ? escapeHtml(l.name) : 'sans nom'}</span>
-              <span class="dt">${l.entry && l.entry.price ? fmtNum(l.entry.price) : '—'}</span>
+              <span class="dt">${legendDropValue(l) ? fmtNum(legendDropValue(l)) : '—'}${l.sold ? ' ✓' : ''}</span>
             </div>`).join('')}
         </div>
         <div class="chart-legend">
@@ -8073,17 +8226,21 @@
     function unpricedLegends() {
       const seen = new Map();
       allLegendDrops().forEach(d => {
-        if (d.entry && !d.entry.price) seen.set(d.entry.id, d.entry);
+        if (d.entry && !d.entry.price && !(d.sold && d.sold.price > 0)) seen.set(d.entry.id, d.entry);
       });
       return [...seen.values()];
     }
 
     // Valeur d'un lot de légendes, d'après le prix figé sur chaque entrée du catalogue
+    // Une légende vendue vaut son prix de vente, figé ; une légende gardée
+    // vaut sa cote actuelle dans le catalogue.
+    function legendDropValue(l) {
+      if (l && l.sold && l.sold.price > 0) return l.sold.price;
+      const e = resolveLegend(l).entry;
+      return e && e.price ? e.price : 0;
+    }
     function legendsValue(legends) {
-      return (legends || []).reduce((sum, l) => {
-        const e = resolveLegend(l).entry;
-        return sum + (e && e.price ? e.price : 0);
-      }, 0);
+      return (legends || []).reduce((sum, l) => sum + legendDropValue(l), 0);
     }
 
     // Décomposition de la valeur d'une run. Les bribes ne valent rien tant
@@ -8091,9 +8248,10 @@
     // reversée aux runs qui les ont gagnées (part « chests »).
     function runValue(r) {
       const e = eco();
-      const reflets = e.refletsPerRun * e.refletPrice;
+      const ts = itemTime(r.date, r.createdAt);
+      const reflets = e.refletsPerRun * priceAt('eco:reflet', ts, e.refletPrice);
       const runes = e.runeTypes.reduce((sum, t) =>
-        sum + (((r.runeQty || {})[t.id] || 0) * (t.price || 0)), 0);
+        sum + (((r.runeQty || {})[t.id] || 0) * priceAt('rune:' + t.id, ts, t.price || 0)), 0);
       const legends = legendsValue(r.legends);
       const chests = r.id ? (chestAllocation().share[r.id] || 0) : 0;
       return { reflets, runes, legends, chests, total: reflets + runes + legends + chests };
@@ -8101,7 +8259,10 @@
     // Un prix de coffre fixé l'emporte sur la légende tirée : la chance est lissée.
     // À 0, c'est le prix de la légende réellement obtenue qui compte.
     function chestValue(c) {
-      const p = eco().chestPrice;
+      // une légende vendue donne la vraie valeur du coffre
+      const sold = (c.legends || []).filter(l => l && l.sold && l.sold.price > 0);
+      if (sold.length) return sold.reduce((a, l) => a + l.sold.price, 0);
+      const p = priceAt('eco:chest', itemTime(c.date, c.createdAt), eco().chestPrice);
       return p > 0 ? p : legendsValue(c.legends);
     }
     // Chaque compte a ses propres bribes et ouvre son propre coffre au palier.
@@ -9146,7 +9307,7 @@
       const num = id => Math.max(0, parseInt(document.getElementById(id).value, 10) || 0);
       const runeQty = readRuneQty();
       const legends = draftLegends.filter(l => l.catId || l.name)
-        .map(l => ({ catId: l.catId || null, name: (l.name || '').trim() }));
+        .map(l => ({ catId: l.catId || null, name: (l.name || '').trim(), ...(l.sold ? { sold: l.sold } : {}) }));
       return {
         date: document.getElementById('r-date').value || todayISO(),
         durationSec: readDurationFields(),
@@ -9203,7 +9364,7 @@
       document.getElementById('r-legend').value = r && r.legend ? r.legend : '';
       document.getElementById('r-note').value = r ? (r.note || '') : '';
       draftLegends = (r && Array.isArray(r.legends))
-        ? r.legends.map(l => ({ catId: l.catId || null, name: l.name || '' })) : [];
+        ? r.legends.map(l => ({ catId: l.catId || null, name: l.name || '', ...(l.sold ? { sold: l.sold } : {}) })) : [];
 
       draftWave = r ? (r.wave || 0) : 0;
       draftExcluded = r ? !!r.excluded : false;
@@ -9966,6 +10127,49 @@
       }
     }
 
+
+    // ============================================================
+    // HISTORIQUE DES PRIX
+    // ============================================================
+    // Un prix changé aujourd'hui vaut à partir d'aujourd'hui : une run, un
+    // coffre ou une quête passés gardent le prix en vigueur à leur date. Au
+    // premier changement, l'ancien prix est inscrit comme valable pour tout le
+    // passé, ce qui laisse l'historique existant intact.
+    function priceHistMap() {
+      if (!state.settings.priceHist || typeof state.settings.priceHist !== 'object') state.settings.priceHist = {};
+      return state.settings.priceHist;
+    }
+    function recordPrice(key, oldVal, newVal) {
+      oldVal = oldVal || 0; newVal = newVal || 0;
+      if (oldVal === newVal) return;
+      const map = priceHistMap();
+      // Un prix jamais renseigné est inconnu, pas nul : le premier prix
+      // saisi vaut aussi pour le passé, sans créer d'historique.
+      if (!(map[key] && map[key].length) && !oldVal) return;
+      const h = map[key] || (map[key] = []);
+      if (!h.length) h.push([0, oldVal]);
+      h.push([Date.now(), newVal]);
+    }
+    function priceAt(key, ts, current) {
+      const h = priceHistMap()[key];
+      if (!Array.isArray(h) || !h.length) return current;
+      if (ts >= h[h.length - 1][0]) return current;   // depuis le dernier changement : le prix actuel
+      let v = h[0][1];
+      for (const [t, p] of h) { if (t <= ts) v = p; else break; }
+      return v;
+    }
+    // Instant de référence d'une saisie datée : son heure d'enregistrement si
+    // elle a eu lieu le jour même, sinon la fin de la journée concernée.
+    function itemTime(dateIso, createdAt) {
+      const iso = dateIso || todayISO();
+      if (createdAt) {
+        const d = new Date(createdAt);
+        const ciso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        if (ciso === iso) return createdAt;
+      }
+      return new Date(iso + 'T23:59:59').getTime();
+    }
+
     // ============================================================
     // ÂGE DES PRIX
     // ============================================================
@@ -9989,16 +10193,27 @@
       const e = eco();
       const out = [];
       const add = (key, group, label, value, set) => { if (value > 0) out.push({ key, group, label, value, set, at: priceAtMap()[key] || null }); };
-      add('eco:chest', 'Songes', 'Coffre', e.chestPrice, v => { state.settings.eco = { ...e, chestPrice: v }; });
-      add('eco:reflet', 'Songes', 'Reflet', e.refletPrice, v => { state.settings.eco = { ...eco(), refletPrice: v }; });
+      add('eco:chest', 'Songes', 'Coffre', e.chestPrice, v => {
+        recordPrice('eco:chest', eco().chestPrice, v);
+        state.settings.eco = { ...eco(), chestPrice: v };
+      });
+      add('eco:reflet', 'Songes', 'Reflet', e.refletPrice, v => {
+        recordPrice('eco:reflet', eco().refletPrice, v);
+        state.settings.eco = { ...eco(), refletPrice: v };
+      });
       e.runeTypes.forEach(t => add('rune:' + t.id, 'Songes', t.name, t.price, v => {
         const cur = eco();
+        const old = cur.runeTypes.find(x => x.id === t.id);
+        recordPrice('rune:' + t.id, old ? old.price : 0, v);
         state.settings.eco = { ...cur, runeTypes: cur.runeTypes.map(x => x.id === t.id ? { ...x, price: v } : x) };
       }));
       (state.catalogue || []).forEach(c => add('cat:' + c.id, 'Légendes', c.name, c.price || 0, v => { c.price = v; }));
       (state.resources || []).forEach(r => add('res:' + r.id, 'Farm', r.name, r.price || 0, v => { r.price = v; }));
       const au = almaCfg().use;
-      add('alma:use', 'Almanax', au.name, au.price, v => { almaCfg().use.price = v; });
+      add('alma:use', 'Almanax', au.name, au.price, v => {
+        recordPrice('alma:use', almaCfg().use.price, v);
+        almaCfg().use.price = v;
+      });
       return out;
     }
     function priceStale(p) {
@@ -10603,6 +10818,7 @@
       a.off = parseInt(a.off, 10) || 0;
       ['pins', 'sel', 'got', 'done'].forEach(k => { if (!Array.isArray(a[k])) a[k] = []; });
       if (!a.doneChars || typeof a.doneChars !== 'object') a.doneChars = {};
+      if (!a.doneAt || typeof a.doneAt !== 'object') a.doneAt = {};   // instant de validation, pour le prix
       // Les quêtes sont répétables : une validation porte sur une date précise
       // (AAAA-MM-JJ) et pas sur un jour du calendrier, sinon l'année suivante
       // serait déjà cochée. Les anciennes clés « MM-JJ » sont rattachées à l'année en cours.
@@ -10620,6 +10836,7 @@
         cost: Math.max(1, parseInt(u.cost, 10) || 75),
         price: Math.max(0, parseInt(u.price, 10) || 0),
         stock: Math.max(0, parseInt(u.stock, 10) || 0),   // almatons possédés avant le suivi
+        stockAt: parseInt(u.stockAt, 10) || null,
       };
       return a;
     }
@@ -10673,8 +10890,13 @@
       }
       // Le multiplicateur est figé au moment de la validation : le changer plus
       // tard ne doit pas réécrire ce qui a déjà été encaissé.
-      if (cfg.done.includes(iso)) cfg.doneChars[iso] = cfg.chars;
-      else delete cfg.doneChars[iso];
+      if (cfg.done.includes(iso)) {
+        cfg.doneChars[iso] = cfg.chars;
+        if (!cfg.doneAt[iso]) cfg.doneAt[iso] = Date.now();
+      } else {
+        delete cfg.doneChars[iso];
+        delete cfg.doneAt[iso];
+      }
       save();
       renderAlma();
       haptic();
@@ -10691,13 +10913,21 @@
         tons += ALMATON_PER_CHAR * c;
         n++;
       });
-      // Tous les almatons sont convertis au prix de l'objet contre lequel tu
-      // les échanges, reliquat compris : c'est leur valeur, échangés ou non.
+      // Tous les almatons sont convertis, reliquat compris, au prix de l'objet
+      // en vigueur le jour où la quête a été rendue.
       const u = cfg.use;
+      let tk = 0;
+      cfg.done.forEach(iso => {
+        if (!ALMA_BY_KEY[iso.slice(5)]) return;
+        const c = cfg.doneChars[iso] || cfg.chars;
+        const ts = cfg.doneAt[iso] || itemTime(iso);
+        tk += (ALMATON_PER_CHAR * c * priceAt('alma:use', ts, u.price)) / u.cost;
+      });
+      tk += (u.stock * priceAt('alma:use', u.stockAt || Date.now(), u.price)) / u.cost;
       const earned = tons;
       tons += u.stock;
       const units = tons / u.cost;
-      const tonsKamas = Math.round(units * u.price);
+      const tonsKamas = Math.round(tk);
       return { kamas, earned, tons, n, units, tonsKamas, total: kamas + tonsKamas, use: u };
     }
 
@@ -10726,9 +10956,10 @@
       const cost = rawNum(document.getElementById('alu-cost'));
       if (!cost) { flagInvalid('alu-cost'); toast('Indique le nombre d\'almatons par unité'); return; }
       const price = rawNum(document.getElementById('alu-price'));
-      if (price !== cfg.use.price) touchPrice('alma:use');
-      cfg.use = { name: document.getElementById('alu-name').value.trim() || 'Galet', cost, price,
-                  stock: rawNum(document.getElementById('alu-stock')) };
+      if (price !== cfg.use.price) { touchPrice('alma:use'); recordPrice('alma:use', cfg.use.price, price); }
+      const stock = rawNum(document.getElementById('alu-stock'));
+      cfg.use = { name: document.getElementById('alu-name').value.trim() || 'Galet', cost, price, stock,
+                  stockAt: stock !== cfg.use.stock ? Date.now() : (cfg.use.stockAt || Date.now()) };
       save();
       document.getElementById('modal-almause').classList.remove('active');
       render('alma');
@@ -11138,12 +11369,12 @@
 
         <div class="chart-card">
           <div class="chart-title">Kamas des almatons</div>
-          <div class="chart-sub">Tous tes almatons, convertis au prix du ${name}</div>
+          <div class="chart-sub">Tous tes almatons, convertis au prix du ${name} en vigueur le jour de chaque quête</div>
           <div class="ak-big kamas-num">${u.price ? fmtNum(tot.tonsKamas) : '—'}</div>
           <div class="ak-lines">
             <span><b>${fmtNum(tot.tons)}</b> almatons${u.stock ? ` (dont ${fmtNum(u.stock)} déjà possédés)` : ''}</span>
             <span>≈ <b>${(Math.floor(tot.units * 10) / 10).toString().replace('.', ',')}</b> ${name}${tot.units >= 2 ? 's' : ''} à ${fmtNum(u.cost)} almatons</span>
-            ${u.price ? `<span>${name} à <b>${fmtNum(u.price)}</b> · <b>${fmtNum(u.price / u.cost)}</b> kamas l'almaton</span>`
+            ${u.price ? `<span>${name} à <b>${fmtNum(u.price)}</b> aujourd'hui · <b>${fmtNum(u.price / u.cost)}</b> kamas l'almaton</span>`
                       : `<span class="ak-warn">Prix du ${name} non renseigné</span>`}
           </div>
           <button class="btn btn-secondary" id="alma-use-open" style="width:100%;margin-top:12px;">${u.price ? 'Modifier' : `Indiquer le prix d'un ${name}`}</button>
@@ -13504,7 +13735,7 @@
       const totals = resTotals();
       const t = r ? totals[r.id] : null;
       document.getElementById('rs-price-hint').textContent = t && t.qty
-        ? `${fmtNum(t.qty)} unités déjà enregistrées : le prix s'applique rétroactivement.` : '';
+        ? `${fmtNum(t.qty)} unités déjà enregistrées : elles gardent le prix de leur session, le nouveau prix vaut pour les suivantes.` : '';
       document.getElementById('res-delete').classList.toggle('hidden', !r);
       document.getElementById('modal-res').classList.add('active');
     }
@@ -13690,6 +13921,15 @@
     charsTile.style.cursor = 'pointer';
     charsTile.addEventListener('click', () => { setView('alma-kamas'); haptic(); });
     document.getElementById('alu-cancel').addEventListener('click', () => document.getElementById('modal-almause').classList.remove('active'));
+
+    document.querySelectorAll('#sell-kind .seg-btn').forEach(b => b.addEventListener('click', () => {
+      sellKind = b.dataset.sk; paintSellKind(); haptic();
+    }));
+    wireNumberInput(document.getElementById('sell-price'));
+    document.getElementById('sell-save').addEventListener('click', saveSell);
+    document.getElementById('sell-cancel').addEventListener('click', () => {
+      document.getElementById('modal-sell').classList.remove('active'); sellCtx = null;
+    });
 
     document.getElementById('pr-close').addEventListener('click', () => {
       document.getElementById('modal-prices').classList.remove('active');
