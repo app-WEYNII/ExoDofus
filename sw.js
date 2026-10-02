@@ -1,5 +1,5 @@
 // Incrémente cette version à CHAQUE déploiement pour forcer la mise à jour du cache.
-const CACHE = 'dofus-exos-v29';
+const CACHE = 'dofus-exos-v30';
 
 const ASSETS = [
   './',
