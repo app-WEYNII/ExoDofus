@@ -3218,6 +3218,81 @@
     .home-goal .progress, .home-goal .progress-bar { display: block; }
     .hg-sub { font-size: 12.5px; color: var(--text-soft); }
     .hg-sub b { color: var(--text); }
+
+    /* ---- Objectifs ---- */
+    .seg { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 999px; padding: 4px; margin-bottom: 16px; }
+    .seg-btn { padding: 9px 8px; border-radius: 999px; font-size: 13px; font-weight: 600; color: var(--text-dim); background: none; border: none; font-family: var(--font-body); cursor: pointer; }
+    .seg-btn.on { background: linear-gradient(135deg, var(--gold-deep), var(--gold)); color: #14100a; }
+    .wk-nav { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; gap: 8px; margin: 4px 0 10px; }
+    .wk-arrow { height: 44px; border-radius: var(--radius-sm); border: 1px solid var(--border-hi); background: var(--bg-card); color: var(--text); font-size: 22px; cursor: pointer; }
+    .wk-mid { text-align: center; }
+    .wk-rel { font-family: var(--font-display); font-size: 17px; font-weight: 700; color: var(--gold-bright); }
+    .wk-range { font-size: 12.5px; color: var(--text-soft); }
+    .wk-today { display: block; margin: -2px auto 12px; background: none; border: none; color: var(--gold-bright); font-size: 12.5px; text-decoration: underline; cursor: pointer; font-family: var(--font-body); }
+    .gl-total { display: block; height: 5px; border-radius: 999px; background: rgba(255,255,255,0.06); overflow: hidden; margin: 8px 0 4px; }
+    .gl-total span { display: block; height: 100%; background: linear-gradient(90deg, #3f8a5a, var(--green)); }
+    .gl-list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+    .gl-card {
+      display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px 10px;
+      background: var(--bg-soft); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px;
+    }
+    .gl-card.done { border-color: rgba(74, 222, 128, 0.35); }
+    .gl-card.carried { opacity: 0.7; }
+    .gl-main { display: flex; align-items: center; gap: 10px; min-width: 0; cursor: pointer; }
+    .gl-ic { font-size: 15px; flex-shrink: 0; }
+    .gl-bd { display: flex; flex-direction: column; min-width: 0; }
+    .gl-t { font-size: 14px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .gl-card.done .gl-t { color: var(--text-soft); }
+    .gl-s { display: flex; flex-wrap: wrap; gap: 4px 8px; font-size: 12px; color: var(--text-soft); margin-top: 2px; }
+    .gl-tag { color: var(--gold-bright); }
+    .gl-st.done { color: var(--green); font-weight: 600; }
+    .gl-st.carried { color: var(--text-dim); }
+    .gl-bar { grid-column: 1 / -1; display: block; height: 4px; border-radius: 999px; background: rgba(255,255,255,0.06); overflow: hidden; }
+    .gl-bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--gold-deep), var(--gold-bright)); }
+    .gl-card.done .gl-bar span { background: linear-gradient(90deg, #3f8a5a, var(--green)); }
+    .gl-check { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--border-hi); background: none; color: #14100a; font-weight: 800; font-size: 16px; cursor: pointer; }
+    .gl-check.on { background: var(--green); border-color: var(--green); }
+    .gl-steps { display: flex; gap: 6px; }
+    .gl-steps button { height: 36px; border-radius: var(--radius-sm); font-weight: 700; cursor: pointer; font-family: var(--font-body); touch-action: manipulation; }
+    .gl-minus { width: 36px; background: var(--bg-elev); border: 1px solid var(--border-hi); color: var(--text-soft); font-size: 17px; }
+    .gl-minus:disabled { opacity: 0.35; }
+    .gl-plus { padding: 0 14px; background: linear-gradient(135deg, var(--gold-deep), var(--gold)); border: none; color: #1a1307; font-size: 15px; }
+    .wa-list { display: flex; flex-direction: column; margin-top: 6px; }
+    .wa-row { display: grid; grid-template-columns: 62px 1fr auto; gap: 10px; align-items: center; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+    .wa-row:last-child { border-bottom: none; }
+    .wa-d { color: var(--text-soft); text-transform: capitalize; }
+    .wa-t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .wa-row.pin .wa-t { color: var(--gold-bright); font-weight: 600; }
+    .wa-row.today .wa-d { color: var(--gold-bright); font-weight: 700; }
+    .wa-pin { color: var(--gold-bright); }
+    .wk-up { border: 1px solid var(--border); border-radius: var(--radius-sm); margin-top: 8px; }
+    .wk-up.on { border-color: var(--gold-deep); }
+    .wk-hist { cursor: pointer; }
+    .home-goals { display: flex !important; flex-direction: column; gap: 10px; }
+    .hgl-row { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; }
+    .hgl-t { font-size: 13.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .hgl-v { font-size: 12px; color: var(--text-soft); }
+    .hgl-all { font-size: 13px; color: var(--text-soft); }
+
+    /* ---- Sous-objectifs ---- */
+    .gl-subs { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 2px; margin-top: 2px; }
+    .gl-sub {
+      display: flex; align-items: center; gap: 10px; width: 100%; text-align: left;
+      background: none; border: none; padding: 7px 2px; color: var(--text); font-family: var(--font-body);
+      font-size: 13.5px; cursor: pointer; touch-action: manipulation;
+    }
+    .gl-sub-box {
+      width: 22px; height: 22px; flex-shrink: 0; border-radius: 6px; border: 2px solid var(--border-hi);
+      display: grid; place-items: center; font-size: 12px; font-weight: 800; color: #14100a;
+    }
+    .gl-sub.on .gl-sub-box { background: var(--green); border-color: var(--green); }
+    .gl-sub.on .gl-sub-t { color: var(--text-dim); text-decoration: line-through; }
+    .gl-sub:disabled { cursor: default; }
+    .gs-row { display: grid; grid-template-columns: 22px 1fr 36px; gap: 8px; align-items: center; margin-bottom: 6px; }
+    .gs-box { width: 22px; height: 22px; border-radius: 6px; border: 2px solid var(--border-hi); display: grid; place-items: center; font-size: 12px; font-weight: 800; color: #14100a; }
+    .gs-box.on { background: var(--green); border-color: var(--green); }
+    .gs-row input { padding: 9px 10px; font-size: 14px; }
+    .gs-x { height: 36px; border-radius: var(--radius-sm); border: 1px solid var(--border-hi); background: var(--bg-elev); color: var(--text-dim); cursor: pointer; }
   </style>
 </head>
 <body>
@@ -3334,6 +3409,11 @@
     </div>
   </header>
 
+  <nav class="tabs hidden" data-mod="home">
+    <button class="tab active" data-view="home">Résumé</button>
+    <button class="tab" data-view="goals">Objectifs</button>
+  </nav>
+
   <nav class="tabs hidden" data-mod="exos">
     <button class="tab active" data-view="current">En cours</button>
     <button class="tab" data-view="ranking">Classement</button>
@@ -3365,6 +3445,9 @@
     <!-- Accueil : l'essentiel des quatre modules -->
     <section class="view" id="view-home">
       <div id="home-body"></div>
+    </section>
+    <section class="view" id="view-goals">
+      <div id="goals-body"></div>
     </section>
 
     <!-- En cours -->
@@ -3751,6 +3834,71 @@
   </div>
 
   <!-- Modal: Données / Sauvegarde -->
+  <div class="modal-overlay" id="modal-goal">
+    <div class="modal">
+      <button class="modal-grip" aria-label="Fermer"></button>
+      <div class="modal-head">
+        <h2 id="goal-title">Nouvel objectif</h2>
+        <button class="trash-btn hidden" id="goal-delete" aria-label="Supprimer cet objectif">🗑</button>
+      </div>
+      <div class="hint" id="goal-week-lbl" style="margin:-6px 0 14px;"></div>
+
+      <div class="seg" id="goal-kind">
+        <button class="seg-btn on" data-kind="task">Tâche libre</button>
+        <button class="seg-btn" data-kind="metric">Mesuré par l'app</button>
+      </div>
+
+      <div id="goal-task-fields">
+        <div class="field">
+          <label for="goal-name">Objectif</label>
+          <input type="text" id="goal-name" maxlength="80" placeholder="Ex : monter le Sram 200" autocomplete="off" />
+        </div>
+        <div class="field">
+          <label for="goal-count">Nombre à atteindre <span style="color:var(--text-dim);font-weight:400;">(optionnel)</span></label>
+          <input type="text" id="goal-count" maxlength="4" inputmode="numeric" placeholder="Ex : 10 donjons" autocomplete="off" />
+          <div class="hint">Avec un nombre, tu avances à coups de +1. Sans, c'est une simple case à cocher.</div>
+        </div>
+        <div class="field">
+          <label>Sous-objectifs <span style="color:var(--text-dim);font-weight:400;">(optionnel)</span></label>
+          <div id="goal-subs"></div>
+          <button class="btn btn-secondary" id="goal-sub-add" style="width:100%;margin-top:8px;">+ Ajouter un sous-objectif</button>
+          <div class="hint">La tâche est atteinte quand tout est coché. Tant qu'elle ne l'est pas, elle passe à la semaine suivante avec ce qui est déjà fait.</div>
+        </div>
+      </div>
+
+      <div id="goal-metric-fields" class="hidden">
+        <div class="field">
+          <label for="goal-metric">Ce que l'app mesure</label>
+          <select id="goal-metric"></select>
+        </div>
+        <div class="field hidden" id="goal-int-field">
+          <label for="goal-int">Intensité</label>
+          <select id="goal-int"></select>
+        </div>
+        <div class="field">
+          <label for="goal-target" id="goal-target-lbl">Objectif</label>
+          <input type="text" id="goal-target" maxlength="13" autocomplete="off" placeholder="0" />
+          <div class="hint" id="goal-target-hint"></div>
+        </div>
+      </div>
+
+      <div class="field" id="goal-repeat-field">
+        <label for="goal-repeat">Répéter</label>
+        <select id="goal-repeat">
+          <option value="1">Cette semaine seulement</option>
+          <option value="2">Cette semaine et la suivante</option>
+          <option value="4">4 semaines</option>
+          <option value="8">8 semaines</option>
+        </select>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="goal-cancel">Annuler</button>
+        <button class="btn btn-primary" id="goal-save">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
   <div class="modal-overlay" id="modal-prices">
     <div class="modal">
       <button class="modal-grip" aria-label="Fermer"></button>
@@ -4381,7 +4529,7 @@
     // sont recadrés : une version plus récente de l'app ne perd rien.
     function normalizeState(st) {
       if (!st || typeof st !== 'object') st = {};
-      ['items', 'songes', 'compos', 'chests', 'catalogue', 'spends', 'farms', 'zones', 'resources']
+      ['items', 'songes', 'compos', 'chests', 'catalogue', 'spends', 'farms', 'zones', 'resources', 'goals']
         .forEach(k => { if (!Array.isArray(st[k])) st[k] = []; });
       if (!st.settings || typeof st.settings !== 'object') st.settings = {};
       const S = st.settings;
@@ -4502,6 +4650,16 @@
         .map(c => ({ ...c, id: c.id || uid(), date: c.date || todayISO(),
                      note: String(c.note || '').slice(0, 80), createdAt: c.createdAt || Date.now() }));
       st.chests.forEach(linkLegends);
+
+      // Objectifs de la semaine
+      st.goals = st.goals.filter(g => g && typeof g === 'object' && /^\d{4}-\d{2}-\d{2}$/.test(g.week || ''))
+        .map(g => ({ ...g, id: g.id || uid(), kind: g.kind === 'metric' ? 'metric' : 'task',
+                     title: String(g.title || '').slice(0, 80),
+                     target: g.target == null || g.target === '' ? null : Math.max(0, Number(g.target) || 0),
+                     progress: int(g.progress), done: !!g.done, carried: !!g.carried,
+                     subs: (Array.isArray(g.subs) ? g.subs : []).filter(x => x && typeof x === 'object' && String(x.title || '').trim())
+                       .map(x => ({ id: x.id || uid(), title: String(x.title).slice(0, 80), done: !!x.done })),
+                     createdAt: g.createdAt || Date.now() }));
 
       st.catalogue.sort((a, b) => a.name.localeCompare(b.name, 'fr'));
       return st;
@@ -4765,7 +4923,7 @@
         renderArchive();
         renderRanking();
         renderXStats();
-      } else if (m === 'home') renderHome();
+      } else if (m === 'home') { carryOverGoals(); renderHome(); renderGoals(); }
       else if (m === 'songes') renderSonges();
       else if (m === 'farm') renderFarm();
       else if (m === 'alma') renderAlma();
@@ -5508,7 +5666,7 @@
       confirmDialog('Tout effacer ?', 'Tous tes exos, tes compos, tes runs, tes coffres, ton catalogue et tes sessions de farm seront définitivement supprimés.', () => {
         loadFailed = false;   // repartir d'un état choisi lève le blocage d'écriture
         state = { items: [], songes: [], compos: [], chests: [], catalogue: [], spends: [],
-                  farms: [], zones: [], resources: [], settings: {} };
+                  farms: [], zones: [], resources: [], goals: [], settings: {} };
         stopTick();
         stopExoTick();
         draftCompoId = null;
@@ -9092,6 +9250,470 @@
 
 
 
+
+    // ============================================================
+    // OBJECTIFS DE LA SEMAINE
+    // ============================================================
+    // Deux sortes d'objectifs : les tâches libres (ce que l'app ne voit pas,
+    // cochées à la main ou avancées à coups de +1) et les objectifs mesurés,
+    // calculés à partir des données des modules sur la semaine concernée.
+    // Les semaines vont du lundi au dimanche. Un objectif raté est reporté
+    // automatiquement sur la semaine en cours, pour ce qu'il en reste.
+    function goalsArr() {
+      if (!Array.isArray(state.goals)) state.goals = [];
+      return state.goals;
+    }
+    function isoOf(d) {
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+    function weekStart(d) {
+      const x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+      x.setDate(x.getDate() - ((x.getDay() + 6) % 7));   // lundi
+      return isoOf(x);
+    }
+    function addWeeks(iso, n) {
+      const d = new Date(iso + 'T12:00:00');
+      d.setDate(d.getDate() + 7 * n);
+      return isoOf(d);
+    }
+    function currentWeek() { return weekStart(new Date()); }
+    function weekDiff(a, b) { return Math.round((new Date(b + 'T12:00:00') - new Date(a + 'T12:00:00')) / (7 * 86400000)); }
+    function weekRangeText(iso) {
+      const a = new Date(iso + 'T12:00:00'), b = new Date(addWeeks(iso, 1) + 'T12:00:00');
+      b.setDate(b.getDate() - 1);
+      const f = d => d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+      return `${f(a)} → ${f(b)}`;
+    }
+    function weekRelText(iso) {
+      const n = weekDiff(currentWeek(), iso);
+      if (n === 0) return 'Cette semaine';
+      if (n === 1) return 'Semaine prochaine';
+      if (n === -1) return 'Semaine dernière';
+      return n > 0 ? `Dans ${n} semaines` : `Il y a ${-n} semaines`;
+    }
+
+    // ---- Ce que l'app sait mesurer ----
+    const GOAL_METRICS_DEF = {
+      kamas_total:  { label: 'Kamas gagnés (Songes + Farm)', unit: 'kamas' },
+      kamas_songes: { label: 'Kamas en Songes', unit: 'kamas', songes: true },
+      kamas_farm:   { label: 'Kamas en Farm', unit: 'kamas' },
+      paliers:      { label: 'Paliers de coffre', unit: 'count', dec: true },
+      runs:         { label: 'Runs de Songes', unit: 'count', songes: true },
+      bribes:       { label: 'Bribes gagnées', unit: 'count', songes: true },
+      songes_h:     { label: 'Heures de Songes', unit: 'hours', songes: true },
+      farm_h:       { label: 'Heures de farm', unit: 'hours' },
+      alma:         { label: 'Jours d\'Almanax rendus', unit: 'count' },
+    };
+    function goalMeasure(g) {
+      const from = g.week, to = addWeeks(g.week, 1);
+      const inW = d => d && d >= from && d < to;
+      const runs = state.songes.filter(r => !r.excluded && inW(r.date) && (!g.intensity || r.intensity === g.intensity));
+      const farms = () => farmSessions().filter(f => inW(f.date));
+      const sec = arr => arr.reduce((t, x) => t + (x.durationSec || 0), 0);
+      switch (g.metric) {
+        case 'kamas_songes': return runs.reduce((t, r) => t + runValue(r).total, 0);
+        case 'kamas_farm': return farms().reduce((t, f) => t + sessionNet(f), 0);
+        case 'kamas_total':
+          return state.songes.filter(r => !r.excluded && inW(r.date)).reduce((t, r) => t + runValue(r).total, 0)
+            + farms().reduce((t, f) => t + sessionNet(f), 0);
+        case 'paliers': return (state.chests || []).filter(c => inW(c.date)).length / teamAccounts();
+        case 'runs': return runs.length;
+        case 'bribes': return runs.reduce((t, r) => t + (r.bribes || 0), 0);
+        case 'songes_h': return sec(runs) / 3600;
+        case 'farm_h': return sec(farms()) / 3600;
+        case 'alma': return almaCfg().done.filter(inW).length;
+        default: return 0;
+      }
+    }
+    function fmtGoalValue(metric, v) {
+      const def = GOAL_METRICS_DEF[metric] || {};
+      if (def.unit === 'kamas') return fmtK(v);
+      if (def.unit === 'hours') return `${(Math.round(v * 10) / 10).toString().replace('.', ',')} h`;
+      if (def.dec && v % 1) return v.toFixed(2).replace('.', ',');
+      return fmtNum(Math.floor(v));
+    }
+    function goalAuto(g) {
+      const def = GOAL_METRICS_DEF[g.metric];
+      if (!def) return 'Objectif';
+      const int = g.intensity && IMAP[g.intensity] ? ` en ${IMAP[g.intensity].label}` : '';
+      return `${def.label}${int}`;
+    }
+    // Progression : { value, target, ratio, done }
+    function goalState(g) {
+      if (g.kind === 'metric') {
+        const value = goalMeasure(g), target = g.target || 0;
+        return { value, target, ratio: target > 0 ? Math.min(1, value / target) : 0, done: target > 0 && value >= target };
+      }
+      if (Array.isArray(g.subs) && g.subs.length) {
+        const value = g.subs.filter(x => x.done).length, target = g.subs.length;
+        return { value, target, ratio: value / target, done: value >= target, subs: true };
+      }
+      if (g.target) {
+        const value = g.progress || 0;
+        return { value, target: g.target, ratio: Math.min(1, value / g.target), done: value >= g.target };
+      }
+      return { value: g.done ? 1 : 0, target: 1, ratio: g.done ? 1 : 0, done: !!g.done };
+    }
+
+    // ---- Report automatique ----
+    // Une semaine terminée : chaque objectif non atteint passe sur la semaine
+    // en cours pour ce qu'il en reste. Un objectif mesuré identique déjà prévu
+    // absorbe le reste plutôt que d'être doublé (sinon les mêmes heures
+    // compteraient deux fois).
+    function carryOverGoals() {
+      const cur = currentWeek();
+      let changed = false;
+      goalsArr().filter(g => g.week < cur && !g.carried)
+        .sort((a, b) => a.week.localeCompare(b.week))
+        .forEach(g => {
+          const st = goalState(g);
+          if (st.done) return;
+          g.carried = true;
+          changed = true;
+          if (g.kind === 'metric') {
+            const left = Math.max(0, (g.target || 0) - st.value);
+            if (!left) return;
+            const twin = goalsArr().find(x => x.week === cur && x.kind === 'metric' && x.metric === g.metric
+              && (x.intensity || null) === (g.intensity || null));
+            if (twin) {
+              twin.target = (twin.target || 0) + left;
+              twin.carriedAmount = (twin.carriedAmount || 0) + left;
+              twin.carriedFrom = g.week;
+            } else {
+              goalsArr().push({ id: uid(), week: cur, kind: 'metric', metric: g.metric, intensity: g.intensity || null,
+                                title: g.title || '', target: left, progress: 0, done: false, carried: false,
+                                carriedFrom: g.week, createdAt: Date.now() });
+            }
+          } else {
+            const hasSubs = Array.isArray(g.subs) && g.subs.length;
+            // avec des sous-objectifs, on garde ce qui est déjà coché : la tâche
+            // continue là où elle en était
+            const left = !hasSubs && g.target ? g.target - (g.progress || 0) : null;
+            goalsArr().push({ id: uid(), week: cur, kind: 'task', title: g.title, target: left, progress: 0,
+                              done: false, carried: false, carriedFrom: g.week, createdAt: Date.now(),
+                              subs: hasSubs ? g.subs.map(x => ({ id: uid(), title: x.title, done: !!x.done })) : [] });
+          }
+        });
+      if (changed) save();
+    }
+
+    // ---- Vue Objectifs ----
+    let goalsWeek = null;   // semaine affichée
+    function goalCardHTMLFor(g, readOnly) {
+      const st = goalState(g);
+      const title = g.kind === 'metric' ? (g.title || goalAuto(g)) : g.title;
+      const carriedTag = g.carriedFrom ? `<span class="gl-tag">reporté du ${new Date(g.carriedFrom + 'T12:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}${g.carriedAmount ? ` (+${fmtGoalValue(g.metric, g.carriedAmount)})` : ''}</span>` : '';
+      const status = st.done ? '<span class="gl-st done">✓ Atteint</span>'
+        : g.carried ? '<span class="gl-st carried">→ Reporté</span>' : '';
+      let ctrl = '';
+      if (st.subs) {
+        ctrl = '';
+      } else if (g.kind === 'task' && !g.target) {
+        ctrl = `<button class="gl-check${g.done ? ' on' : ''}" data-gcheck="${g.id}" aria-label="${g.done ? 'Décocher' : 'Cocher'}"${readOnly ? ' disabled' : ''}>${g.done ? '✓' : ''}</button>`;
+      } else if (g.kind === 'task' && !readOnly) {
+        ctrl = `<span class="gl-steps">
+          <button class="gl-minus" data-gstep="${g.id}" data-d="-1" aria-label="Retirer 1"${g.progress ? '' : ' disabled'}>−</button>
+          <button class="gl-plus" data-gstep="${g.id}" data-d="1" aria-label="Ajouter 1">+1</button>
+        </span>`;
+      }
+      const showBar = st.subs || !(g.kind === 'task' && !g.target);
+      const valTxt = g.kind === 'metric'
+        ? `${fmtGoalValue(g.metric, st.value)} / ${fmtGoalValue(g.metric, st.target)}`
+        : st.subs ? `${st.value} / ${st.target} sous-objectifs`
+        : g.target ? `${fmtNum(st.value)} / ${fmtNum(st.target)}` : '';
+      const subsHTML = st.subs ? `<div class="gl-subs">${g.subs.map(x => `
+          <button class="gl-sub${x.done ? ' on' : ''}" data-gsub="${g.id}" data-sid="${x.id}"${readOnly ? ' disabled' : ''}>
+            <span class="gl-sub-box">${x.done ? '✓' : ''}</span>
+            <span class="gl-sub-t">${escapeHtml(x.title)}</span>
+          </button>`).join('')}</div>` : '';
+      return `<div class="gl-card${st.done ? ' done' : ''}${g.carried && !st.done ? ' carried' : ''}">
+        <div class="gl-main" data-gedit="${g.id}">
+          <span class="gl-ic">${g.kind === 'metric' ? '📈' : st.subs ? '☰' : '✎'}</span>
+          <span class="gl-bd">
+            <span class="gl-t">${escapeHtml(title)}</span>
+            <span class="gl-s">${valTxt ? `<span>${valTxt}</span>` : ''}${carriedTag}${status}</span>
+          </span>
+        </div>
+        ${ctrl}
+        ${showBar ? `<span class="gl-bar"><span style="width:${(st.ratio * 100).toFixed(1)}%"></span></span>` : ''}
+        ${subsHTML}
+      </div>`;
+    }
+
+    function weekAlmaHTML(week) {
+      const cfg = almaCfg();
+      const rows = [];
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(week + 'T12:00:00');
+        d.setDate(d.getDate() + i);
+        const a = almaAt(d);
+        const key = almaKeyOf(d);
+        const pinned = cfg.pins.includes(key);
+        const isToday = isoOf(d) === isoOf(new Date());
+        rows.push(`<div class="wa-row${pinned ? ' pin' : ''}${isToday ? ' today' : ''}">
+          <span class="wa-d">${d.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric' })}</span>
+          <span class="wa-t">${a ? escapeHtml(a.type) : '—'}</span>
+          ${pinned ? '<span class="wa-pin">★</span>' : ''}
+        </div>`);
+      }
+      return rows.join('');
+    }
+
+    function renderGoals() {
+      const box = document.getElementById('goals-body');
+      if (!box) return;
+      const cur = currentWeek();
+      if (!goalsWeek) goalsWeek = cur;
+      const wk = goalsWeek;
+      const past = wk < cur;
+      const list = goalsArr().filter(g => g.week === wk)
+        .sort((a, b) => (goalState(a).done - goalState(b).done) || (a.createdAt || 0) - (b.createdAt || 0));
+      const done = list.filter(g => goalState(g).done).length;
+
+      // Les semaines à venir : de quoi planifier d'un coup d'œil
+      const upcoming = [];
+      for (let i = 1; i <= 6; i++) {
+        const w = addWeeks(cur, i);
+        const n = goalsArr().filter(g => g.week === w).length;
+        const pins = [];
+        for (let k = 0; k < 7; k++) {
+          const d = new Date(w + 'T12:00:00');
+          d.setDate(d.getDate() + k);
+          const key = almaKeyOf(d);
+          if (almaCfg().pins.includes(key) && ALMA_BY_KEY[key]) pins.push(ALMA_BY_KEY[key].type);
+        }
+        upcoming.push({ w, n, pins });
+      }
+      // Bilan des 8 dernières semaines terminées
+      const hist = [];
+      for (let i = 8; i >= 1; i--) {
+        const w = addWeeks(cur, -i);
+        const gs = goalsArr().filter(g => g.week === w);
+        if (!gs.length) continue;
+        hist.push({ w, n: gs.length, ok: gs.filter(g => goalState(g).done).length });
+      }
+      const histTot = hist.reduce((a, h) => a + h.n, 0), histOk = hist.reduce((a, h) => a + h.ok, 0);
+
+      box.innerHTML = `
+        <div class="wk-nav">
+          <button class="wk-arrow" id="wk-prev" aria-label="Semaine précédente">‹</button>
+          <div class="wk-mid">
+            <div class="wk-rel">${weekRelText(wk)}</div>
+            <div class="wk-range">${weekRangeText(wk)}</div>
+          </div>
+          <button class="wk-arrow" id="wk-next" aria-label="Semaine suivante">›</button>
+        </div>
+        ${wk !== cur ? `<button class="wk-today" id="wk-today">Revenir à cette semaine</button>` : ''}
+
+        <div class="chart-card">
+          <div class="chart-title">Objectifs</div>
+          <div class="chart-sub">${list.length ? `${done} / ${list.length} atteint${done > 1 ? 's' : ''}` : past ? 'Aucun objectif cette semaine-là' : 'Rien de prévu pour l\'instant'}</div>
+          ${list.length ? `<span class="gl-total"><span style="width:${list.length ? (done / list.length) * 100 : 0}%"></span></span>` : ''}
+          <div class="gl-list">${list.map(g => goalCardHTMLFor(g, past)).join('')}</div>
+          ${past ? '' : `<button class="btn btn-primary" id="goal-add" style="width:100%;margin-top:12px;">+ Ajouter un objectif</button>`}
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-title">Almanax de la semaine</div>
+          <div class="chart-sub">Les jours épinglés ★ sont mis en avant</div>
+          <div class="wa-list">${weekAlmaHTML(wk)}</div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-title">Prochaines semaines</div>
+          <div class="chart-sub">Touche une semaine pour la planifier</div>
+          ${upcoming.map(u => `
+            <button class="home-row wk-up${u.w === wk ? ' on' : ''}" data-wk="${u.w}">
+              <span class="hr-bd">
+                <span class="hr-t">${weekRelText(u.w)} · ${weekRangeText(u.w)}</span>
+                <span class="hr-s">${u.n ? plural(u.n, 'objectif') : 'rien de prévu'}${u.pins.length ? ` · ★ ${u.pins.map(escapeHtml).join(', ')}` : ''}</span>
+              </span>
+              <span class="hr-chev">›</span>
+            </button>`).join('')}
+        </div>
+
+        ${hist.length ? `<div class="chart-card">
+          <div class="chart-title">Bilan</div>
+          <div class="chart-sub">${histOk} / ${histTot} objectifs tenus sur les ${plural(hist.length, 'dernière semaine', 'dernières semaines')} planifiées · ${Math.round((histOk / histTot) * 100)} %</div>
+          ${hist.map(h => `
+            <div class="yield-row wk-hist" data-wk="${h.w}">
+              <span class="yield-lbl" style="width:66px;text-align:left;">${new Date(h.w + 'T12:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}</span>
+              <span class="yield-track"><span class="yield-fill" style="width:${(h.ok / h.n) * 100}%"></span></span>
+              <span class="yield-val">${h.ok}/${h.n}</span>
+            </div>`).join('')}
+          ${histTot >= 8 && histOk / histTot < 0.5 ? '<div class="insight warn">Moins de la moitié de tes objectifs sont tenus : tu te fixes peut-être trop de choses par semaine.</div>' : ''}
+        </div>` : ''}`;
+
+      const go = w => { goalsWeek = w; renderGoals(); window.scrollTo({ top: 0, behavior: 'smooth' }); haptic(); };
+      document.getElementById('wk-prev').addEventListener('click', () => go(addWeeks(wk, -1)));
+      document.getElementById('wk-next').addEventListener('click', () => go(addWeeks(wk, 1)));
+      const t = document.getElementById('wk-today');
+      if (t) t.addEventListener('click', () => go(cur));
+      box.querySelectorAll('[data-wk]').forEach(el => el.addEventListener('click', () => go(el.dataset.wk)));
+      const add = document.getElementById('goal-add');
+      if (add) add.addEventListener('click', () => openGoalForm(null));
+      box.querySelectorAll('[data-gedit]').forEach(el => el.addEventListener('click', () => {
+        if (!past) openGoalForm(el.dataset.gedit);
+      }));
+      box.querySelectorAll('[data-gcheck]').forEach(el => el.addEventListener('click', () => {
+        const g = goalsArr().find(x => x.id === el.dataset.gcheck);
+        if (!g) return;
+        g.done = !g.done;
+        save();
+        render('home');
+        haptic();
+      }));
+      box.querySelectorAll('[data-gsub]').forEach(el => el.addEventListener('click', () => {
+        const g = goalsArr().find(x => x.id === el.dataset.gsub);
+        const sub = g && (g.subs || []).find(x => x.id === el.dataset.sid);
+        if (!sub) return;
+        sub.done = !sub.done;
+        save();
+        render('home');
+        if (sub.done && goalState(g).done) toast(`${g.title} : terminé ✓`);
+        haptic();
+      }));
+      box.querySelectorAll('[data-gstep]').forEach(el => el.addEventListener('click', () => {
+        const g = goalsArr().find(x => x.id === el.dataset.gstep);
+        if (!g) return;
+        g.progress = Math.max(0, (g.progress || 0) + Number(el.dataset.d));
+        save();
+        render('home');
+        haptic();
+      }));
+    }
+
+    // ---- Formulaire ----
+    let editingGoalId = null, draftGoalKind = 'task', draftSubs = [];
+    function paintGoalSubs() {
+      const box = document.getElementById('goal-subs');
+      box.innerHTML = draftSubs.map((x, i) => `
+        <div class="gs-row">
+          <span class="gs-box${x.done ? ' on' : ''}">${x.done ? '✓' : ''}</span>
+          <input type="text" maxlength="80" data-gs="${i}" value="${escapeHtml(x.title)}" placeholder="Ex : étape ${i + 1}" autocomplete="off" />
+          <button class="gs-x" data-gsx="${i}" aria-label="Retirer ce sous-objectif">✕</button>
+        </div>`).join('');
+      box.querySelectorAll('[data-gs]').forEach(el => el.addEventListener('input', () => { draftSubs[+el.dataset.gs].title = el.value; }));
+      box.querySelectorAll('[data-gsx]').forEach(el => el.addEventListener('click', () => {
+        draftSubs.splice(+el.dataset.gsx, 1);
+        paintGoalSubs();
+        haptic();
+      }));
+      // un compteur et des sous-objectifs ne se combinent pas
+      const count = document.getElementById('goal-count');
+      count.disabled = draftSubs.length > 0;
+      if (draftSubs.length) count.value = '';
+    }
+    function paintGoalKind() {
+      document.querySelectorAll('#goal-kind .seg-btn').forEach(b => b.classList.toggle('on', b.dataset.kind === draftGoalKind));
+      document.getElementById('goal-task-fields').classList.toggle('hidden', draftGoalKind !== 'task');
+      document.getElementById('goal-metric-fields').classList.toggle('hidden', draftGoalKind !== 'metric');
+      paintGoalMetric();
+    }
+    function paintGoalMetric() {
+      const m = document.getElementById('goal-metric').value;
+      const def = GOAL_METRICS_DEF[m] || {};
+      document.getElementById('goal-int-field').classList.toggle('hidden', !def.songes);
+      const lbl = { kamas: 'Kamas à atteindre', hours: 'Heures à atteindre', count: 'Nombre à atteindre' }[def.unit] || 'Objectif';
+      document.getElementById('goal-target-lbl').textContent = lbl;
+      const inp = document.getElementById('goal-target');
+      inp.setAttribute('inputmode', def.unit === 'hours' || def.dec ? 'decimal' : 'numeric');
+      inp.placeholder = def.unit === 'kamas' ? 'Ex : 50 000 000' : def.unit === 'hours' ? 'Ex : 6 ou 1,5' : m === 'paliers' ? 'Ex : 1' : 'Ex : 15';
+      // Repère : ce que tu fais d'habitude sur une semaine
+      const hint = document.getElementById('goal-target-hint');
+      const cur = currentWeek();
+      const vals = [1, 2, 3, 4].map(i => goalMeasure({ metric: m, week: addWeeks(cur, -i), intensity: document.getElementById('goal-int').value || null }));
+      const avg = vals.reduce((a, v) => a + v, 0) / vals.length;
+      hint.textContent = avg > 0 ? `Ta moyenne sur les 4 dernières semaines : ${fmtGoalValue(m, avg)}` : '';
+    }
+    function readGoalTarget(metric) {
+      const def = GOAL_METRICS_DEF[metric] || {};
+      const raw = document.getElementById('goal-target').value;
+      if (def.unit === 'hours' || def.dec) return Math.max(0, parseFloat(raw.replace(/\s/g, '').replace(',', '.')) || 0);
+      return rawNum(raw);
+    }
+    function openGoalForm(id) {
+      editingGoalId = id || null;
+      const g = id ? goalsArr().find(x => x.id === id) : null;
+      const week = g ? g.week : (goalsWeek || currentWeek());
+      document.getElementById('goal-title').textContent = g ? 'Modifier l\'objectif' : 'Nouvel objectif';
+      document.getElementById('goal-week-lbl').textContent = `${weekRelText(week)} · ${weekRangeText(week)}`;
+      draftGoalKind = g ? g.kind : 'task';
+      const sel = document.getElementById('goal-metric');
+      sel.innerHTML = Object.entries(GOAL_METRICS_DEF).map(([k, d]) => `<option value="${k}">${escapeHtml(d.label)}</option>`).join('');
+      const isel = document.getElementById('goal-int');
+      isel.innerHTML = `<option value="">Toutes</option>` + INTENSITIES.map(i => `<option value="${i.k}">${escapeHtml(i.label)}</option>`).join('');
+      document.getElementById('goal-name').value = g && g.kind === 'task' ? g.title : '';
+      document.getElementById('goal-count').value = g && g.kind === 'task' && g.target ? g.target : '';
+      draftSubs = g && Array.isArray(g.subs) ? g.subs.map(x => ({ ...x })) : [];
+      paintGoalSubs();
+      sel.value = g && g.kind === 'metric' ? g.metric : 'kamas_total';
+      isel.value = g && g.intensity ? g.intensity : '';
+      const tgt = document.getElementById('goal-target');
+      if (g && g.kind === 'metric') {
+        const def = GOAL_METRICS_DEF[g.metric] || {};
+        tgt.value = def.unit === 'kamas' || (def.unit === 'count' && !def.dec) ? fmtNum(g.target) : String(g.target).replace('.', ',');
+      } else tgt.value = '';
+      document.getElementById('goal-repeat').value = '1';
+      document.getElementById('goal-repeat-field').classList.toggle('hidden', !!g);
+      document.getElementById('goal-delete').classList.toggle('hidden', !g);
+      paintGoalKind();
+      document.getElementById('modal-goal').classList.add('active');
+      if (!g) setTimeout(() => document.getElementById('goal-name').focus(), 50);
+    }
+    function saveGoal() {
+      const week = editingGoalId ? goalsArr().find(x => x.id === editingGoalId).week : (goalsWeek || currentWeek());
+      let payload;
+      if (draftGoalKind === 'task') {
+        const title = document.getElementById('goal-name').value.trim();
+        if (!title) { flagInvalid('goal-name'); toast('Donne un nom à ton objectif'); return; }
+        const subs = draftSubs.map(x => ({ id: x.id || uid(), title: (x.title || '').trim().slice(0, 80), done: !!x.done }))
+          .filter(x => x.title);
+        payload = { kind: 'task', title, target: subs.length ? null : (rawNum(document.getElementById('goal-count')) || null),
+                    subs, metric: undefined, intensity: undefined };
+      } else {
+        const metric = document.getElementById('goal-metric').value;
+        const target = readGoalTarget(metric);
+        if (!(target > 0)) { flagInvalid('goal-target'); toast('Indique la valeur à atteindre'); return; }
+        const def = GOAL_METRICS_DEF[metric];
+        payload = { kind: 'metric', metric, target, title: '',
+                    intensity: def.songes ? (document.getElementById('goal-int').value || null) : null };
+      }
+      if (editingGoalId) {
+        const g = goalsArr().find(x => x.id === editingGoalId);
+        if (g) {
+          // la cible change : un report déjà absorbé n'a plus de sens à afficher
+          if (g.kind !== payload.kind || g.metric !== payload.metric || g.target !== payload.target) delete g.carriedAmount;
+          Object.assign(g, payload);
+          if (g.kind === 'task' && g.target && g.progress > g.target) g.progress = g.target;
+        }
+      } else {
+        const n = parseInt(document.getElementById('goal-repeat').value, 10) || 1;
+        for (let i = 0; i < n; i++) {
+          goalsArr().push({ id: uid(), week: addWeeks(week, i), progress: 0, done: false, carried: false,
+                            createdAt: Date.now() + i, ...payload,
+                            subs: (payload.subs || []).map(x => ({ ...x, id: uid(), done: false })) });
+        }
+      }
+      save();
+      document.getElementById('modal-goal').classList.remove('active');
+      editingGoalId = null;
+      render('home');
+      toast('Objectif enregistré');
+    }
+    function deleteGoal() {
+      const id = editingGoalId;
+      if (!id) return;
+      document.getElementById('modal-goal').classList.remove('active');
+      confirmDialog('Supprimer cet objectif ?', 'Il disparaîtra de sa semaine.', () => {
+        state.goals = goalsArr().filter(g => g.id !== id);
+        editingGoalId = null;
+        save();
+        render('home');
+        toast('Objectif supprimé');
+      });
+    }
+
     // ============================================================
     // ACCUEIL
     // ============================================================
@@ -9164,6 +9786,27 @@
       if (hasData && (since == null || since > 7)) todo.push(homeRow('data-act="data"', '⬇︎', 'Sauvegarde à faire',
         since == null ? 'Aucun export pour l\'instant' : `Dernier export il y a ${since} jours`));
       if (todo.length) parts.push(`<div class="home-sec">À faire</div><div class="home-card">${todo.join('')}</div>`);
+
+      // ---- Objectifs de la semaine ----
+      const wkGoals = goalsArr().filter(x => x.week === currentWeek());
+      if (wkGoals.length) {
+        const ok = wkGoals.filter(x => goalState(x).done).length;
+        const open = wkGoals.filter(x => !goalState(x).done).slice(0, 4);
+        parts.push(`<div class="home-sec">Objectifs de la semaine · ${ok}/${wkGoals.length}</div>
+          <button class="home-card home-goals" data-go="home:goals">
+            ${open.length ? open.map(x => {
+              const st = goalState(x);
+              const t = x.kind === 'metric' ? (x.title || goalAuto(x)) : x.title;
+              const v = x.kind === 'metric' ? `${fmtGoalValue(x.metric, st.value)} / ${fmtGoalValue(x.metric, st.target)}`
+                : (st.subs || x.target) ? `${st.value} / ${st.target}` : '';
+              return `<span class="hgl-row"><span class="hgl-t">${escapeHtml(t)}</span><span class="hgl-v">${v}</span>
+                <span class="gl-bar"><span style="width:${(st.ratio * 100).toFixed(1)}%"></span></span></span>`;
+            }).join('') : '<span class="hgl-all">Tout est atteint cette semaine ✓</span>'}
+          </button>`);
+      } else {
+        parts.push(`<div class="home-sec">Objectifs de la semaine</div>
+          <button class="home-card home-goals" data-go="home:goals"><span class="hgl-all">Aucun objectif cette semaine · touche pour en fixer</span></button>`);
+      }
 
       // ---- Almanax du jour ----
       const today = almaToday();
@@ -10401,14 +11044,10 @@
       saveNav({ mod });
 
       document.querySelectorAll('.view').forEach(s => s.classList.remove('active'));
-      if (mod === 'home') {
-        document.getElementById('view-home').classList.add('active');
-      } else {
-        const nav = document.querySelector(`nav.tabs[data-mod="${mod}"]`);
-        const activeTab = nav.querySelector('.tab.active') || nav.querySelector('.tab');
-        activeTab.classList.add('active');
-        document.getElementById('view-' + activeTab.dataset.view).classList.add('active');
-      }
+      const nav = document.querySelector(`nav.tabs[data-mod="${mod}"]`);
+      const activeTab = nav.querySelector('.tab.active') || nav.querySelector('.tab');
+      activeTab.classList.add('active');
+      document.getElementById('view-' + activeTab.dataset.view).classList.add('active');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -12866,6 +13505,35 @@
       else openForm();
     });
 
+    document.querySelectorAll('#goal-kind .seg-btn').forEach(b => b.addEventListener('click', () => {
+      draftGoalKind = b.dataset.kind;
+      paintGoalKind();
+      haptic();
+    }));
+    document.getElementById('goal-metric').addEventListener('change', paintGoalMetric);
+    document.getElementById('goal-int').addEventListener('change', paintGoalMetric);
+    document.getElementById('goal-target').addEventListener('input', e => {
+      const def = GOAL_METRICS_DEF[document.getElementById('goal-metric').value] || {};
+      if (def.unit === 'kamas' || (def.unit === 'count' && !def.dec)) {
+        const d = e.target.value.replace(/\D/g, '');
+        e.target.value = d ? fmtNum(parseInt(d, 10)) : '';
+      }
+    });
+    document.getElementById('goal-count').addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, ''); });
+    document.getElementById('goal-save').addEventListener('click', saveGoal);
+    document.getElementById('goal-sub-add').addEventListener('click', () => {
+      draftSubs.push({ id: uid(), title: '', done: false });
+      paintGoalSubs();
+      const inputs = document.querySelectorAll('#goal-subs input');
+      if (inputs.length) inputs[inputs.length - 1].focus();
+      haptic();
+    });
+    document.getElementById('goal-cancel').addEventListener('click', () => {
+      document.getElementById('modal-goal').classList.remove('active');
+      editingGoalId = null;
+    });
+    document.getElementById('goal-delete').addEventListener('click', deleteGoal);
+
     document.getElementById('pr-close').addEventListener('click', () => {
       document.getElementById('modal-prices').classList.remove('active');
       render();
@@ -13215,6 +13883,7 @@
       if (o.id === 'modal-run') editingRunId = null;
       if (o.id === 'modal-compo') { editingCompoId = null; compoReturnToRun = false; }
       if (o.id === 'modal-chest') editingChestId = null;
+      if (o.id === 'modal-goal') editingGoalId = null;
       if (o.id === 'modal-cat') editingCatId = null;
       if (o.id === 'modal-pick') pickCtx = null;
       if (o.id === 'modal-spend') editingSpendId = null;
