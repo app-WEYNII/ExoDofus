@@ -684,11 +684,7 @@
       margin-top: 4px;
       letter-spacing: 0.02em;
     }
-    .field-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
+
 
     .chance-input {
       display: flex;
@@ -1205,17 +1201,8 @@
     .qbadge.bien { background: #58c47a; }
     .qbadge.exc  { background: linear-gradient(135deg, var(--gold-deep), var(--gold-bright)); }
 
-    /* ---- Filtres de runs ---- */
-    .filter-bar {
-      display: flex;
-      gap: 6px;
-      overflow-x: auto;
-      padding-bottom: 4px;
-      margin-bottom: 10px;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-    }
-    .filter-bar::-webkit-scrollbar { display: none; }
+
+
     .fchip {
       flex-shrink: 0;
       padding: 7px 13px;
@@ -1269,17 +1256,8 @@
       border-color: var(--gold);
     }
     .int-btn:active { transform: scale(0.95); }
-    .ichip {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      padding: 2px 7px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.07);
-      color: var(--text-soft);
-      white-space: nowrap;
-    }
-    .ichip.set { background: var(--gold-soft); color: var(--gold-bright); }
+
+
 
     /* ---- Compteur depuis le dernier légendaire ---- */
     .dry-streak {
@@ -1579,84 +1557,23 @@
     .pick-card .lg-name { min-height: 0; }
     .pick-empty { text-align: center; color: var(--text-dim); font-size: 13px; padding: 22px 10px; }
 
-    /* ---- Panneau de seuil ---- */
-    .filter-panel {
-      background: var(--bg-card);
-      border: 1px solid var(--gold);
-      border-radius: var(--radius);
-      padding: 14px;
-      margin-bottom: 10px;
-    }
-    .fp-head {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-    .fp-title {
-      font-family: var(--font-display);
-      font-size: 13px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--gold);
-    }
-    .fp-count { font-size: 12px; color: var(--text-dim); }
-    .fp-count b { color: var(--gold-bright); font-variant-numeric: tabular-nums; }
-    .fp-value {
-      font-family: var(--font-display);
-      font-size: 30px;
-      font-weight: 700;
-      color: var(--gold-bright);
-      text-align: center;
-      font-variant-numeric: tabular-nums;
-      line-height: 1.1;
-      margin-bottom: 2px;
-    }
-    .fp-value .op { font-size: 17px; color: var(--text-dim); }
-    .fp-hint { text-align: center; font-size: 11px; color: var(--text-dim); margin-bottom: 12px; }
-    .fp-slider {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 100%;
-      height: 5px;
-      border-radius: 999px;
-      background: var(--bg-soft);
-      outline: none;
-      margin: 4px 0 14px;
-      padding: 0;
-      border: none;
-    }
-    .fp-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--gold-deep), var(--gold-bright));
-      box-shadow: var(--shadow-gold);
-      cursor: pointer;
-    }
-    .fp-slider::-moz-range-thumb {
-      width: 26px; height: 26px; border: none; border-radius: 50%;
-      background: linear-gradient(135deg, var(--gold-deep), var(--gold-bright));
-      cursor: pointer;
-    }
-    .fp-presets { display: flex; gap: 5px; margin-bottom: 12px; }
-    .fp-preset {
-      flex: 1;
-      padding: 7px 3px;
-      border-radius: var(--radius-sm);
-      background: var(--bg-soft);
-      border: 1px solid var(--border);
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--text-dim);
-    }
-    .fp-preset.on { background: var(--gold-soft); border-color: var(--gold); color: var(--gold-bright); }
-    .fp-preset:active { transform: scale(0.95); }
-    .fp-actions { display: flex; gap: 8px; }
-    .fp-actions .btn { flex: 1; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /* ---- Nom des légendaires ---- */
     .qual-item input {
@@ -1754,12 +1671,7 @@
     .src-dot.run { background: var(--blue); }
     .src-dot.chest { background: var(--gold); }
 
-    .chest-counter {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-bottom: 12px;
-    }
+
     .chest-entry {
       display: flex;
       align-items: center;
@@ -3201,6 +3113,111 @@
 
     .recal-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
     .recal-row .btn { padding-left: 14px; padding-right: 14px; }
+
+    /* ---- Comparaison de paliers ---- */
+    .cmp-pick { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 12px 0; }
+    .cmp-pick label { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+    .cmp-pick span { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.04em; }
+    .cmp-pick select { padding: 9px 10px; font-size: 13px; width: 100%; }
+    .cmp-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr) minmax(0, 1fr);
+      gap: 8px;
+      align-items: baseline;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .cmp-row:last-of-type { border-bottom: none; }
+    .cmp-head { border-bottom: 1px solid var(--border-hi); padding-top: 4px; }
+    .cmp-head .cmp-v { font-size: 11.5px; color: var(--gold-bright); font-weight: 600; }
+    .cmp-l { color: var(--text-soft); display: flex; flex-direction: column; }
+    .cmp-h { font-size: 10.5px; color: var(--text-dim); }
+    .cmp-v { text-align: right; font-variant-numeric: tabular-nums; color: var(--text); display: flex; flex-direction: column; align-items: flex-end; }
+    .cmp-v.txt { font-size: 12px; color: var(--text-soft); }
+    .cmp-d { font-size: 11px; font-weight: 600; margin-top: 1px; }
+    .cmp-d.up { color: var(--green); }
+    .cmp-d.down { color: var(--red); }
+    .cmp-sec { font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 0.06em; margin: 14px 0 2px; }
+    .cmp-compo { display: flex; justify-content: space-between; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+    .cmp-compo:last-child { border-bottom: none; }
+    .cmp-compo .nm { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .cmp-compo .v { color: var(--text-soft); font-size: 12px; white-space: nowrap; }
+    .pal-entry { cursor: pointer; }
+    .pal-entry.on { border-color: var(--gold-deep); }
+
+    /* ---- Revue des prix ---- */
+    .pr-group { font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 0.06em; margin: 14px 0 6px; }
+    .pr-group:first-child { margin-top: 0; }
+    .pr-row {
+      display: grid; grid-template-columns: minmax(0, 1fr) 118px 40px; gap: 8px; align-items: center;
+      padding: 8px 0; border-bottom: 1px solid var(--border);
+    }
+    .pr-info { display: flex; flex-direction: column; min-width: 0; }
+    .pr-name { font-size: 13.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .pr-age { font-size: 11.5px; color: var(--text-dim); }
+    .pr-row.stale .pr-age { color: var(--gold-bright); }
+    .pr-input { text-align: right; padding: 8px 10px; font-size: 14px; }
+    .pr-ok {
+      height: 38px; border-radius: var(--radius-sm); border: 1px solid var(--border-hi);
+      background: var(--bg-elev); color: var(--text-soft); font-size: 16px; cursor: pointer;
+    }
+    .pr-row.stale .pr-ok { background: var(--gold-soft); border-color: var(--gold-deep); color: var(--gold-bright); }
+    .pr-settings { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border-hi); display: flex; flex-direction: column; gap: 10px; }
+    .pr-set-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 13px; color: var(--text-soft); }
+    .pr-step { display: flex; align-items: center; gap: 10px; }
+    .pr-step b { min-width: 34px; text-align: center; color: var(--text); }
+
+    /* ---- Accueil ---- */
+    .mod-btn.mod-home { flex: 0 0 42px; padding-left: 0; padding-right: 0; font-size: 17px; }
+    .home-sec { font-size: 11.5px; color: var(--gold); text-transform: uppercase; letter-spacing: 0.06em; margin: 18px 2px 8px; }
+    .home-sec:first-child { margin-top: 4px; }
+    .home-card {
+      display: block; width: 100%; text-align: left;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+      color: var(--text); font-family: var(--font-body);
+    }
+    button.home-card { padding: 14px; cursor: pointer; }
+    button.home-card:active, .home-row:active { background: var(--bg-card-hi); }
+    .home-row {
+      display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
+      padding: 12px 14px; background: none; border: none; border-bottom: 1px solid var(--border);
+      color: var(--text); font-family: var(--font-body); cursor: pointer;
+    }
+    .home-row:last-child { border-bottom: none; }
+    .hr-ic {
+      width: 34px; height: 34px; flex-shrink: 0; display: grid; place-items: center;
+      border-radius: 50%; background: var(--gold-soft); color: var(--gold-bright); font-size: 15px;
+    }
+    .hr-bd { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .hr-t { font-size: 14px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .hr-s { font-size: 12px; color: var(--text-soft); margin-top: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .hr-chev { color: var(--text-dim); font-size: 20px; }
+    .hr-side { flex-shrink: 0; text-align: right; }
+    .hr-clock { font-family: var(--font-display); font-size: 17px; font-weight: 700; color: var(--gold-bright); }
+    .hr-k { display: flex; flex-direction: column; align-items: flex-end; font-size: 12px; color: var(--text-soft); }
+    .hr-k b { font-size: 15px; color: var(--gold-bright); }
+    .home-alma { display: flex !important; flex-direction: column; gap: 8px; }
+    .ha-top { display: flex; align-items: center; gap: 12px; }
+    .ha-icon { width: 44px; height: 44px; flex-shrink: 0; border-radius: var(--radius-sm); background: var(--bg-soft); display: grid; place-items: center; overflow: hidden; font-size: 13px; font-weight: 700; color: var(--text-soft); }
+    .ha-icon img { width: 100%; height: 100%; object-fit: contain; }
+    .ha-bd { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .ha-off { font-size: 15px; }
+    .ha-off b { color: var(--gold-bright); font-size: 17px; }
+    .ha-sub { font-size: 12px; color: var(--text-soft); }
+    .ha-st { flex-shrink: 0; font-size: 11.5px; padding: 4px 9px; border-radius: 999px; background: var(--bg-soft); color: var(--text-soft); border: 1px solid var(--border-hi); }
+    .ha-st.half { color: var(--gold-bright); border-color: var(--gold-deep); }
+    .ha-st.done { color: var(--green); border-color: rgba(74, 222, 128, 0.4); background: var(--green-soft); }
+    .ha-type { font-size: 13px; font-weight: 600; color: var(--text); }
+    .ha-desc { font-size: 13px; color: var(--text-soft); line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .ha-soon { font-size: 12px; color: var(--gold-bright); }
+    .home-goal { display: flex !important; flex-direction: column; gap: 8px; }
+    .hg-top { display: flex; justify-content: space-between; font-size: 14px; }
+    .hg-top b { color: var(--gold-bright); font-family: var(--font-display); font-size: 18px; }
+    .home-goal .progress, .home-goal .progress-bar { display: block; }
+    .hg-sub { font-size: 12.5px; color: var(--text-soft); }
+    .hg-sub b { color: var(--text); }
   </style>
 </head>
 <body>
@@ -3215,6 +3232,7 @@
     </div>
 
     <div class="module-switch">
+      <button class="mod-btn mod-home" data-mod="home" aria-label="Accueil">⌂</button>
       <button class="mod-btn active" data-mod="songes">☾ Songes</button>
       <button class="mod-btn" data-mod="farm">⛏ Farm</button>
       <button class="mod-btn" data-mod="alma">📅 Almanax</button>
@@ -3344,6 +3362,11 @@
   </nav>
 
   <main>
+    <!-- Accueil : l'essentiel des quatre modules -->
+    <section class="view" id="view-home">
+      <div id="home-body"></div>
+    </section>
+
     <!-- En cours -->
     <section class="view" id="view-current">
       <div id="exo-chrono"></div>
@@ -3449,6 +3472,7 @@
         <button class="sub-btn on" data-s="general">Général</button>
         <button class="sub-btn" data-s="kamas">Kamas</button>
         <button class="sub-btn" data-s="vagues">Vagues</button>
+        <button class="sub-btn" data-s="paliers">Paliers</button>
       </div>
       <div class="period-row hidden" id="intens-stats"></div>
       <div id="sstats-body"></div>
@@ -3727,6 +3751,32 @@
   </div>
 
   <!-- Modal: Données / Sauvegarde -->
+  <div class="modal-overlay" id="modal-prices">
+    <div class="modal">
+      <button class="modal-grip" aria-label="Fermer"></button>
+      <h2>Prix à vérifier</h2>
+      <div class="hint" id="pr-sub" style="margin-bottom:12px;"></div>
+      <div id="pr-body"></div>
+      <div class="pr-settings">
+        <div class="pr-set-row">
+          <span>Revoir un prix au bout de</span>
+          <span class="pr-step">
+            <button class="mult-btn" id="pr-age-down" aria-label="Moins de jours">−</button>
+            <b id="pr-age"></b>
+            <button class="mult-btn" id="pr-age-up" aria-label="Plus de jours">+</button>
+          </span>
+        </div>
+        <button class="btn btn-secondary" id="pr-confirm-all" style="width:100%;">✓ Tous les prix affichés sont encore bons</button>
+        <button class="btn btn-secondary" id="pr-update" style="width:100%;">Une mise à jour du jeu vient de sortir</button>
+        <div class="hint">Tous les prix vérifiés avant aujourd'hui repassent à revoir.</div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="pr-all">Tout afficher</button>
+        <button class="btn btn-primary" id="pr-close">Terminé</button>
+      </div>
+    </div>
+  </div>
+
   <div class="modal-overlay" id="modal-data">
     <div class="modal" style="max-width: 440px;">
       <button class="modal-grip" aria-label="Fermer"></button>
@@ -4324,114 +4374,146 @@
     let confirmCb = null;
     let activeModule = 'songes';
 
+    // ---- Normalisation unique de l'état ----
+    // Appelée au chargement ET à l'import : une sauvegarde importée passe par
+    // exactement les mêmes migrations et contrôles que les données locales.
+    // Les champs inconnus sont conservés (étalement), seuls les champs connus
+    // sont recadrés : une version plus récente de l'app ne perd rien.
+    function normalizeState(st) {
+      if (!st || typeof st !== 'object') st = {};
+      ['items', 'songes', 'compos', 'chests', 'catalogue', 'spends', 'farms', 'zones', 'resources']
+        .forEach(k => { if (!Array.isArray(st[k])) st[k] = []; });
+      if (!st.settings || typeof st.settings !== 'object') st.settings = {};
+      const S = st.settings;
+      if (S.bribesOffset != null && !S.goal) {
+        S.goal = { metric: 'bribes', target: 25000, offset: S.bribesOffset };
+        delete S.bribesOffset;
+      }
+      const int = (v, min = 0) => Math.max(min, parseInt(v, 10) || 0);
+
+      // Farm
+      st.zones = st.zones.filter(z => z && typeof z === 'object' && z.name)
+        .map(z => ({ ...z, id: z.id || uid(), name: String(z.name).slice(0, 40),
+                     kind: z.kind === 'donjon' ? 'donjon' : 'zone',
+                     level: int(z.level) || null, linkId: z.linkId || null,
+                     hidden: !!z.hidden, createdAt: z.createdAt || Date.now() }));
+      st.resources = st.resources.filter(r => r && typeof r === 'object' && r.name)
+        .map(r => ({ ...r, id: r.id || uid(), name: String(r.name).slice(0, 50),
+                     price: int(r.price), flat: !!r.flat, createdAt: r.createdAt || Date.now() }));
+      st.farms = st.farms.filter(f => f && typeof f === 'object')
+        .map(f => ({ ...f, id: f.id || uid(), date: f.date || todayISO(),
+                     targets: (Array.isArray(f.targets) ? f.targets : []).filter(t => t && t.resId)
+                       .map(t => ({ ...t, resId: t.resId, qty: int(t.qty),
+                                    price: t.price == null ? null : int(t.price) })) }));
+      // Le prix d'une ressource est figé au moment de la session : sans ça,
+      // changer un prix aujourd'hui revaloriserait tout l'historique.
+      st.farms.forEach(f => f.targets.forEach(t => {
+        if (t.price == null) {
+          const r = st.resources.find(x => x.id === t.resId);
+          t.price = r ? (r.price || 0) : 0;
+        }
+      }));
+
+      // Exos : ancien costPerAttempt → achat unique
+      st.items.forEach(item => {
+        if (!Array.isArray(item.purchases)) item.purchases = [];
+        if (typeof item.timeSec !== 'number') item.timeSec = 0;
+        if (item.costPerAttempt != null) {
+          if (item.costPerAttempt > 0 && (item.attempts || 0) > 0) {
+            item.purchases.push({ id: 'mig_' + item.id, amount: item.costPerAttempt * item.attempts,
+                                  ts: item.createdAt || Date.now() });
+          }
+          delete item.costPerAttempt;
+        }
+      });
+
+      st.compos.forEach(c => { if (!Array.isArray(c.classes)) c.classes = []; c.hidden = !!c.hidden; });
+
+      // Catalogue de légendes
+      st.catalogue = st.catalogue.filter(e => e && typeof e === 'object' && e.name)
+        .map(e => ({ ...e, id: e.id || uid(), name: String(e.name).slice(0, 60),
+                     img: String(e.img || '').slice(0, 300), q: QMAP[e.q] ? e.q : 'mid', price: int(e.price) }));
+      // Amorçage unique des 26 légendes du jeu (le drapeau respecte les suppressions)
+      if (!S.legendsSeeded) {
+        LEGENDS_DB.forEach(n => {
+          if (!st.catalogue.some(e => normName(e.name) === normName(n))) {
+            st.catalogue.push({ id: uid(), name: n, img: '', q: 'mid', price: 0 });
+          }
+        });
+        S.legendsSeeded = true;
+      }
+
+      // Légendes des runs et des coffres → références au catalogue.
+      // Les très anciennes données (sans catId) créent leur entrée au besoin ;
+      // une référence cassée est rattachée par le nom, sans ressusciter une
+      // légende que tu aurais supprimée du catalogue.
+      const catIds = new Set(st.catalogue.map(e => e.id));
+      const byName = name => st.catalogue.find(x => normName(x.name) === normName(name));
+      const linkLegends = holder => {
+        if (!Array.isArray(holder.legends)) {
+          const quals = Array.isArray(holder.qualities) ? holder.qualities : [];
+          holder.legends = [];
+          for (let k = 0; k < (holder.legend || 0); k++) holder.legends.push({ q: quals[k], name: '' });
+        }
+        delete holder.qualities;
+        holder.legends = holder.legends.filter(l => l && typeof l === 'object').map(l => {
+          const name = String(l.name || '').slice(0, 60);
+          if (l.catId && catIds.has(l.catId)) return { catId: l.catId, name };
+          let e = name ? byName(name) : null;
+          if (!e && l.catId === undefined && name) {
+            e = { id: uid(), name, img: '', q: QMAP[l.q] ? l.q : 'mid', price: 0 };
+            st.catalogue.push(e);
+            catIds.add(e.id);
+          }
+          return { catId: e ? e.id : null, name: e ? e.name : name };
+        });
+        holder.legend = holder.legends.length;
+      };
+
+      // Runs
+      st.songes = st.songes.filter(r => r && typeof r === 'object');
+      st.songes.forEach(r => {
+        if (!r.id) r.id = uid();
+        if (r.compoId === undefined) {
+          // compo saisie à la volée → set enregistré
+          if (Array.isArray(r.compo) && r.compo.length) {
+            const key = classesKey(r.compo);
+            let c = st.compos.find(x => classesKey(x.classes) === key);
+            if (!c) {
+              c = { id: uid(), name: '', classes: [...r.compo], createdAt: Date.now() };
+              st.compos.push(c);
+            }
+            r.compoId = c.id;
+          } else r.compoId = null;
+        }
+        delete r.compo;
+        if (r.compoId && !st.compos.some(c => c.id === r.compoId)) r.compoId = null;
+        r.wave = Math.min(HARD_CAP, int(r.wave));
+        r.durationSec = int(r.durationSec);
+        ['bribes', 'reflets', 'runes'].forEach(k => { r[k] = int(r[k]); });
+        r.excluded = !!r.excluded;
+        r.intensity = IMAP[r.intensity] ? r.intensity : null;
+        if (!r.runeQty || typeof r.runeQty !== 'object') r.runeQty = {};
+        linkLegends(r);
+      });
+
+      // Coffres
+      st.chests = st.chests.filter(c => c && typeof c === 'object')
+        .map(c => ({ ...c, id: c.id || uid(), date: c.date || todayISO(),
+                     note: String(c.note || '').slice(0, 80), createdAt: c.createdAt || Date.now() }));
+      st.chests.forEach(linkLegends);
+
+      st.catalogue.sort((a, b) => a.name.localeCompare(b.name, 'fr'));
+      return st;
+    }
+
     function load() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
-        if (raw) state = JSON.parse(raw);
-        if (!Array.isArray(state.items)) state.items = [];
-        if (!Array.isArray(state.songes)) state.songes = [];
-        if (!Array.isArray(state.compos)) state.compos = [];
-        if (!Array.isArray(state.chests)) state.chests = [];
-        if (!Array.isArray(state.catalogue)) state.catalogue = [];
-        if (!Array.isArray(state.spends)) state.spends = [];
-        if (!Array.isArray(state.farms)) state.farms = [];
-        if (!Array.isArray(state.zones)) state.zones = [];
-        if (!Array.isArray(state.resources)) state.resources = [];
-
-        if (!state.settings || typeof state.settings !== 'object') state.settings = {};
+        state = normalizeState(raw ? JSON.parse(raw) : null);
         collapsedDays = new Set(Array.isArray(state.settings.collapsedDays) ? state.settings.collapsedDays : []);
-        if (state.settings.bribesOffset != null && !state.settings.goal) {
-          state.settings.goal = { metric: 'bribes', target: 25000, offset: state.settings.bribesOffset };
-          delete state.settings.bribesOffset;
-        }
-
-        let migrated = false;
-        farmPriceMigration();
-
-        // Migration : légendaires → références au catalogue
-        const ensureCat = (name, q) => {
-          if (!name) return null;
-          let e = state.catalogue.find(x => normName(x.name) === normName(name));
-          if (!e) {
-            e = { id: uid(), name: String(name).slice(0, 60), img: '', q: QMAP[q] ? q : 'mid' };
-            state.catalogue.push(e);
-          } else if (!QMAP[e.q] && QMAP[q]) e.q = q;
-          return e;
-        };
-        const migrateLegends = (holder) => {
-          const quals = Array.isArray(holder.qualities) ? holder.qualities : [];
-          if (!Array.isArray(holder.legends)) {
-            holder.legends = [];
-            for (let i = 0; i < (holder.legend || 0); i++) holder.legends.push({ q: quals[i], name: '' });
-          }
-          holder.legends = holder.legends.map(l => {
-            if (l && l.catId !== undefined) return l;
-            const e = ensureCat(l && l.name, l && l.q);
-            return { catId: e ? e.id : null, name: e ? e.name : ((l && l.name) || '') };
-          });
-          delete holder.qualities;
-        };
-        state.songes.forEach(r => {
-          if (Array.isArray(r.legends) && r.legends.every(l => l && l.catId !== undefined)) return;
-          migrateLegends(r);
-          r.legend = r.legends.length;
-          migrated = true;
-        });
-        (state.chests || []).forEach(c => {
-          if (Array.isArray(c.legends) && c.legends.every(l => l && l.catId !== undefined)) return;
-          migrateLegends(c);
-          migrated = true;
-        });
-        // les entrées de catalogue sans classement prennent une valeur neutre
-        state.catalogue.forEach(e => { if (!QMAP[e.q]) { e.q = 'mid'; migrated = true; } });
-
-        // Amorçage unique : les 26 légendes du jeu. Le drapeau évite de faire
-        // réapparaître celles que l'utilisateur aurait volontairement supprimées.
-        if (!state.settings.legendsSeeded) {
-          LEGENDS_DB.forEach(n => {
-            if (!state.catalogue.some(e => normName(e.name) === normName(n))) {
-              state.catalogue.push({ id: uid(), name: n, img: '', q: 'mid' });
-            }
-          });
-          state.catalogue.sort((a, b) => a.name.localeCompare(b.name, 'fr'));
-          state.settings.legendsSeeded = true;
-          migrated = true;
-        }
-
-        // Migration : les compos saisies à la volée deviennent des sets enregistrés
-        state.songes.forEach(r => {
-          if (r.compoId !== undefined) return;
-          if (Array.isArray(r.compo) && r.compo.length) {
-            const key = classesKey(r.compo);
-            let c = state.compos.find(x => classesKey(x.classes) === key);
-            if (!c) {
-              c = { id: uid(), name: '', classes: [...r.compo], createdAt: Date.now() };
-              state.compos.push(c);
-            }
-            r.compoId = c.id;
-          } else {
-            r.compoId = null;
-          }
-          delete r.compo;
-          migrated = true;
-        });
-        // Migration : convertit l'ancien costPerAttempt en achat unique
-        state.items.forEach(item => {
-          if (!item.purchases) { item.purchases = []; migrated = true; }
-          if (typeof item.timeSec !== 'number') { item.timeSec = 0; migrated = true; }
-          if (item.costPerAttempt != null) {
-            if (item.costPerAttempt > 0 && (item.attempts || 0) > 0) {
-              item.purchases.push({
-                id: 'mig_' + item.id,
-                amount: item.costPerAttempt * item.attempts,
-                ts: item.createdAt || Date.now(),
-              });
-            }
-            delete item.costPerAttempt;
-            migrated = true;
-          }
-        });
-        if (migrated) save();
+        // une migration a modifié quelque chose : on l'écrit tout de suite
+        if (raw && JSON.stringify(state) !== raw) save();
       } catch (e) {
         // Échec de lecture ou de migration : surtout ne pas repartir d'un état
         // vide, la prochaine sauvegarde écraserait tout. On met le brut de côté
@@ -4452,7 +4534,7 @@
                   farms: [], zones: [], resources: [], settings: {} };
       }
     }
-    const SCHEMA_VERSION = 1;
+    const SCHEMA_VERSION = 2;   // 2 : coffres répartis, prix datés, run en cours
     let storageFull = false;
     let loadFailed = false;   // vrai si les données n'ont pas pu être relues : écriture bloquée
 
@@ -4466,6 +4548,7 @@
       clearTimeout(saveTimer);
       saveTimer = null;
       allocCache = null;   // toute écriture peut changer la répartition des coffres
+      palierCache = null;
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
         if (storageFull) {
@@ -4498,19 +4581,6 @@
       if (!d) return null;
       const t = new Date(d + 'T00:00:00');
       return Math.max(0, Math.round((almaToday() - t) / 86400000));
-    }
-    // Le prix d'une ressource est figé au moment de la session : sans ça, changer
-    // un prix aujourd'hui revaloriserait rétroactivement tout l'historique.
-    function farmPriceMigration() {
-      let changed = false;
-      (state.farms || []).forEach(f => (f.targets || []).forEach(t => {
-        if (t.price == null) {
-          const r = (state.resources || []).find(x => x.id === t.resId);
-          t.price = r ? (r.price || 0) : 0;
-          changed = true;
-        }
-      }));
-      return changed;
     }
     function uid() {
       return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
@@ -4611,7 +4681,6 @@
     function profit(item) {
       return (item.hdvValue || 0) - imputedCost(item);
     }
-    function avgCostPerAttempt(item) { return costPerAttempt(item) || 0; }
     // Coût total attendu pour réussir : l'item nu + l'espérance de tentatives.
     // À prendre comme un ordre de grandeur, la médiane est plus basse et la
     // traîne bien plus longue (cf. quantiles affichés en fiche).
@@ -4687,7 +4756,7 @@
     // près d'une seconde sur un gros historique, pour redessiner des vues
     // invisibles. On ne rend que le module affiché ; les autres sont marqués
     // « à refaire » et rattrapés au moment où l'on bascule dessus.
-    const dirtyModules = { exos: true, songes: true, farm: true, alma: true };
+    const dirtyModules = { home: true, exos: true, songes: true, farm: true, alma: true };
 
     function renderModule(m) {
       if (m === 'exos') {
@@ -4696,7 +4765,8 @@
         renderArchive();
         renderRanking();
         renderXStats();
-      } else if (m === 'songes') renderSonges();
+      } else if (m === 'home') renderHome();
+      else if (m === 'songes') renderSonges();
       else if (m === 'farm') renderFarm();
       else if (m === 'alma') renderAlma();
     }
@@ -4712,6 +4782,7 @@
     function render(scope) {
       if (scope && dirtyModules[scope] !== undefined) dirtyModules[scope] = true;
       else Object.keys(dirtyModules).forEach(k => { dirtyModules[k] = true; });
+      dirtyModules.home = true;   // l'accueil résume tous les modules
       flushRender();
     }
 
@@ -5400,111 +5471,8 @@
             `Elle contient ${plural(nItems, 'exo')} et ${plural(nRuns, 'run')} de songes, et remplacera tes données actuelles.`,
             () => {
               loadFailed = false;   // repartir d'un état choisi lève le blocage d'écriture
-              state = {
-                items: Array.isArray(data.items) ? data.items : [],
-                songes: Array.isArray(data.songes) ? data.songes : [],
-                compos: Array.isArray(data.compos) ? data.compos : [],
-                chests: Array.isArray(data.chests) ? data.chests : [],
-                catalogue: Array.isArray(data.catalogue) ? data.catalogue : [],
-                spends: Array.isArray(data.spends) ? data.spends : [],
-                farms: Array.isArray(data.farms) ? data.farms : [],
-                zones: Array.isArray(data.zones) ? data.zones : [],
-                resources: Array.isArray(data.resources) ? data.resources : [],
-                settings: (data.settings && typeof data.settings === 'object') ? data.settings : {},
-              };
-              // Farm : on re-sécurise les collections avant tout calcul
-              state.zones = state.zones
-                .filter(z => z && typeof z === 'object' && z.name)
-                .map(z => ({ id: z.id || uid(), name: String(z.name).slice(0, 40),
-                             kind: z.kind === 'donjon' ? 'donjon' : 'zone',
-                             level: Math.max(0, parseInt(z.level, 10) || 0) || null,
-                             linkId: z.linkId || null,
-                             hidden: !!z.hidden, createdAt: z.createdAt || Date.now() }));
-              state.resources = state.resources
-                .filter(r => r && typeof r === 'object' && r.name)
-                .map(r => ({ id: r.id || uid(), name: String(r.name).slice(0, 50),
-                             price: Math.max(0, parseInt(r.price, 10) || 0),
-                             flat: !!r.flat, createdAt: r.createdAt || Date.now() }));
-              state.farms = state.farms
-                .filter(s => s && typeof s === 'object')
-                .map(s => ({ ...s, id: s.id || uid(), date: s.date || todayISO(),
-                             targets: (Array.isArray(s.targets) ? s.targets : [])
-                               .filter(t => t && t.resId)
-                               .map(t => ({ resId: t.resId, qty: Math.max(0, parseInt(t.qty, 10) || 0),
-                                            price: t.price == null ? null : Math.max(0, parseInt(t.price, 10) || 0) })) }));
-              farmPriceMigration();
-              // re-sécurise les champs essentiels
-              state.items.forEach(it => { if (!it.purchases) it.purchases = []; });
-              state.compos.forEach(c => {
-                if (!Array.isArray(c.classes)) c.classes = [];
-                c.hidden = !!c.hidden;
-              });
-              state.catalogue = state.catalogue
-                .filter(e => e && typeof e === 'object' && e.name)
-                .map(e => ({ id: e.id || uid(), name: String(e.name).slice(0, 60),
-                             img: String(e.img || '').slice(0, 300), q: QMAP[e.q] ? e.q : 'mid',
-                             price: Math.max(0, parseInt(e.price, 10) || 0) }));
-              state.chests = state.chests
-                .filter(c => c && typeof c === 'object')
-                .map(c => ({
-                  id: c.id || uid(),
-                  date: c.date || todayISO(),
-                  note: String(c.note || '').slice(0, 80),
-                  createdAt: c.createdAt || Date.now(),
-                  legends: (Array.isArray(c.legends) ? c.legends : [])
-                    .filter(l => l && typeof l === 'object')
-                    .map(l => ({ catId: l.catId || null, name: String(l.name || '').slice(0, 60), q: l.q })),
-                }));
-              state.songes.forEach(r => {
-                if (r.compoId === undefined) {
-                  // sauvegarde antérieure aux compos enregistrées
-                  if (Array.isArray(r.compo) && r.compo.length) {
-                    const key = classesKey(r.compo);
-                    let c = state.compos.find(x => classesKey(x.classes) === key);
-                    if (!c) {
-                      c = { id: uid(), name: '', classes: [...r.compo], createdAt: Date.now() };
-                      state.compos.push(c);
-                    }
-                    r.compoId = c.id;
-                  } else r.compoId = null;
-                }
-                delete r.compo;
-                if (r.compoId && !state.compos.some(c => c.id === r.compoId)) r.compoId = null;
-                r.wave = Math.min(HARD_CAP, Math.max(0, parseInt(r.wave, 10) || 0));
-                r.durationSec = parseInt(r.durationSec, 10) || 0;
-                ['bribes', 'reflets', 'runes', 'legend'].forEach(k => {
-                  r[k] = Math.max(0, parseInt(r[k], 10) || 0);
-                });
-                r.excluded = !!r.excluded;
-                r.intensity = IMAP[r.intensity] ? r.intensity : null;
-                if (!r.runeQty || typeof r.runeQty !== 'object') r.runeQty = {};
-                if (!Array.isArray(r.legends)) {
-                  const quals = Array.isArray(r.qualities) ? r.qualities : [];
-                  r.legends = [];
-                  for (let i = 0; i < (r.legend || 0); i++) r.legends.push({ name: '', q: quals[i] });
-                }
-                delete r.qualities;
-                r.legends = r.legends
-                  .filter(l => l && typeof l === 'object')
-                  .map(l => ({ catId: l.catId || null, name: String(l.name || '').slice(0, 60), q: l.q }));
-                r.legend = r.legends.length;
-              });
-              // relie les drops importés au catalogue, en le complétant si besoin
-              const linkAfterImport = (holder) => {
-                holder.legends = (holder.legends || []).map(l => {
-                  if (l.catId && state.catalogue.some(e => e.id === l.catId)) return { catId: l.catId, name: l.name };
-                  let e = l.name ? state.catalogue.find(x => normName(x.name) === normName(l.name)) : null;
-                  if (!e && l.name) {
-                    e = { id: uid(), name: l.name, img: '', q: QMAP[l.q] ? l.q : 'mid' };
-                    state.catalogue.push(e);
-                  }
-                  return { catId: e ? e.id : null, name: e ? e.name : (l.name || '') };
-                });
-                holder.legend = holder.legends.length;
-              };
-              state.songes.forEach(linkAfterImport);
-              state.chests.forEach(linkAfterImport);
-              state.catalogue.sort((a, b) => a.name.localeCompare(b.name, 'fr'));
+              const { schema, exportedAt, ...payload } = data;
+              state = normalizeState(payload);
 
               draftCompoId = null;
               activeFilters.clear();
@@ -6119,7 +6087,16 @@
       const el = document.getElementById('price-alert');
       if (!el) return;
       const missing = unpricedLegends();
-      if (!missing.length) { el.classList.add('hidden'); return; }
+      if (!missing.length) {
+        const stale = stalePrices();
+        if (!stale.length) { el.classList.add('hidden'); return; }
+        el.classList.remove('hidden');
+        el.innerHTML = `<span class="pa-icon">⏱</span><span>
+          <b>${(stale.length) + ' prix'}</b> à revoir : ${stale.slice(0, 3).map(p => escapeHtml(p.label)).join(', ')}${stale.length > 3 ? '…' : ''}.
+          Tes kamas/h en dépendent — touche pour vérifier.</span>`;
+        el.onclick = () => { openPriceReview(false); haptic(); };
+        return;
+      }
       el.classList.remove('hidden');
       el.innerHTML = `<span class="pa-icon">⚠︎</span><span>
         <b>${plural(missing.length, 'légende')}</b> obtenue${missing.length > 1 ? 's' : ''} sans prix de vente :
@@ -6164,6 +6141,8 @@
         loot.push(`${badge}<span class="lname">★ ${escapeHtml(info.name || 'sans nom')}</span>`);
       });
       if (r.runes) loot.push(`<span class="lchip">Runes <b>${fmtNum(r.runes)}</b></span>`);
+      const pal = palierOfRun(r.id);
+      if (pal) loot.unshift(`<span class="lchip">🎁 Palier <b>${pal}</b></span>`);
       if (ecoConfigured()) {
         const alloc = chestAllocation();
         if (alloc.share[r.id]) loot.push(`<span class="lchip">Coffre <b>+${fmtK(alloc.share[r.id])}</b></span>`);
@@ -6872,6 +6851,7 @@
     }
 
     function saveEco() {
+      const before = eco();
       state.settings.eco = {
         chestPrice: rawNum(document.getElementById('eco-cp')),
         accounts: Math.min(8, Math.max(1, parseInt(document.getElementById('eco-acc').value, 10) || 1)),
@@ -6881,6 +6861,13 @@
           .filter(t => (t.name || '').trim())
           .map(t => ({ id: t.id || uid(), name: t.name.trim().slice(0, 24), price: Math.max(0, t.price | 0) })),
       };
+      const after = eco();
+      if (after.chestPrice !== before.chestPrice) touchPrice('eco:chest');
+      if (after.refletPrice !== before.refletPrice) touchPrice('eco:reflet');
+      after.runeTypes.forEach(t => {
+        const old = before.runeTypes.find(x => x.id === t.id);
+        if (!old || old.price !== t.price) touchPrice('rune:' + t.id);
+      });
       save();
       renderSonges();
       renderSongesStats();
@@ -7039,7 +7026,11 @@
       if (editingCatId) {
         const e = state.catalogue.find(x => x.id === editingCatId);
         if (!name) { flagInvalid('cat-name'); return; }
-        if (e) { e.name = name; e.img = img; e.q = draftCatQ; e.price = catPriceInput(); }
+        if (e) {
+          const np = catPriceInput();
+          if (np !== (e.price || 0)) touchPrice('cat:' + e.id);
+          e.name = name; e.img = img; e.q = draftCatQ; e.price = np;
+        }
       } else {
         const lines = [];
         if (name) lines.push(name);
@@ -7049,8 +7040,10 @@
         let added = 0, skipped = 0;
         lines.forEach(n => {
           if (state.catalogue.some(e => normName(e.name) === normName(n))) { skipped++; return; }
-          state.catalogue.push({ id: uid(), name: n.slice(0, 60), img: (lines.length === 1 ? img : ''),
-                                 q: draftCatQ, price: (lines.length === 1 ? catPriceInput() : 0) });
+          const ne = { id: uid(), name: n.slice(0, 60), img: (lines.length === 1 ? img : ''),
+                       q: draftCatQ, price: (lines.length === 1 ? catPriceInput() : 0) };
+          if (ne.price) touchPrice('cat:' + ne.id);
+          state.catalogue.push(ne);
           added++;
         });
         toast(added
@@ -7112,11 +7105,6 @@
         box.appendChild(legendSlotEl(l, i, 1, idx => openPicker('chest', idx))));
     }
 
-    // Un coffre contient toujours exactement une légende
-    function syncChestLegends() {
-      if (draftChestLegends.length !== 1) draftChestLegends = [draftChestLegends[0] || { catId: null, name: '' }];
-      paintChestLegends();
-    }
 
     function openChestForm(id) {
       editingChestId = id || null;
@@ -8069,11 +8057,12 @@
         <div class="chart-sub">Ce sur quoi reposent tous les calculs de kamas</div>
 
         ${row('Coffre', e.chestPrice, e.chestPrice
-          ? `${fmtNum((e.chestPrice / chestBribeCost()) * e.accounts)} kamas par bribe saisie${e.accounts > 1 ? ` (${e.accounts} comptes)` : ''}`
+          ? `${fmtNum((e.chestPrice / chestBribeCost()) * e.accounts)} kamas par bribe saisie${e.accounts > 1 ? ` (${e.accounts} comptes)` : ''} · ${priceAgeOf('eco:chest')}`
           : 'prix de la légende obtenue')}
-        ${row('Reflet', e.refletPrice, `${fmtNum(e.refletsPerRun)} par run → ${fmtNum(e.refletsPerRun * e.refletPrice)} kamas`)}
-        ${e.runeTypes.map(t => row(t.name, t.price, 'à l\'unité')).join('')}
+        ${row('Reflet', e.refletPrice, `${fmtNum(e.refletsPerRun)} par run → ${fmtNum(e.refletsPerRun * e.refletPrice)} kamas${e.refletPrice ? ' · ' + priceAgeOf('eco:reflet') : ''}`)}
+        ${e.runeTypes.map(t => row(t.name, t.price, t.price ? `à l'unité · ${priceAgeOf('rune:' + t.id)}` : 'à l\'unité')).join('')}
         <button class="btn btn-secondary" id="eco-open2" style="width:100%;margin-top:10px;">Modifier coffre, reflets et runes</button>
+        <button class="btn btn-secondary" id="pr-open" style="width:100%;margin-top:8px;">${(() => { const n = stalePrices().length; return n ? `⏱ ${(n) + ' prix'} à revoir` : '⏱ Vérifier tous les prix'; })()}</button>
 
         <div class="chart-sub" style="margin:18px 0 8px;">Légendes valorisées</div>
         ${priced.length
@@ -8481,6 +8470,16 @@
     function renderSongesStats() {
       const body = document.getElementById('sstats-body');
       const empty = document.getElementById('empty-sstats');
+      // Les paliers ont leur propre découpage : ni période ni filtre d'intensité
+      const onPaliers = state.settings.statsTab === 'paliers';
+      document.querySelectorAll('#stats-subtabs .sub-btn').forEach(b =>
+        b.classList.toggle('on', b.dataset.s === (onPaliers ? 'paliers' : (['vagues', 'kamas'].includes(state.settings.statsTab) ? state.settings.statsTab : 'general'))));
+      document.getElementById('intens-stats').style.display = onPaliers ? 'none' : '';
+      if (onPaliers && state.songes.length) {
+        empty.classList.add('hidden');
+        renderPaliers(body);
+        return;
+      }
       const runs = statRuns();
       if (!runs.length) {
         body.innerHTML = '';
@@ -8592,6 +8591,8 @@
         const b = document.getElementById(id);
         if (b) b.addEventListener('click', openEcoForm);
       });
+      const prOpen = document.getElementById('pr-open');
+      if (prOpen) prOpen.addEventListener('click', () => openPriceReview(stalePrices().length === 0));
       document.querySelectorAll('[data-catprice]').forEach(el =>
         el.addEventListener('click', () => openCatForm(el.dataset.catprice)));
     }
@@ -9087,6 +9088,537 @@
       });
     }
 
+
+
+
+
+    // ============================================================
+    // ACCUEIL
+    // ============================================================
+    // Ce qui tourne, ce qui attend, et la semaine en un coup d'œil. Chaque
+    // bloc mène au module concerné.
+    let homeTimer = null;
+    function isoDaysAgo(n) {
+      const d = new Date();
+      d.setDate(d.getDate() - n);
+      return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+    }
+    function homeRow(attrs, icon, title, sub, side) {
+      return `<button class="home-row" ${attrs}>
+        <span class="hr-ic">${icon}</span>
+        <span class="hr-bd"><span class="hr-t">${title}</span>${sub ? `<span class="hr-s">${sub}</span>` : ''}</span>
+        ${side ? `<span class="hr-side">${side}</span>` : '<span class="hr-chev">›</span>'}
+      </button>`;
+    }
+
+    function renderHome() {
+      const box = document.getElementById('home-body');
+      if (!box) return;
+      const parts = [];
+
+      // ---- En cours ----
+      const live = [];
+      const d = runDraft();
+      if (d) {
+        const runes = Object.values(d.runeQty || {}).reduce((a, n) => a + n, 0);
+        const legs = (d.legends || []).length;
+        const hhmm = new Date(d.startedAt || Date.now()).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+        live.push(homeRow('data-go="songes:runs"', '☾', 'Run en cours',
+          `depuis ${hhmm} · ${plural(runes, 'rune')}${legs ? ` · ${plural(legs, 'légende')}` : ''}`));
+      }
+      const fl = liveSession();
+      if (fl) {
+        const z = zoneById(fl.zoneId);
+        live.push(homeRow('data-go="farm:sessions"', '⛏', `Farm${z ? ' · ' + escapeHtml(zoneLabel(z)) : ''}`,
+          fl.since ? 'chrono en marche' : 'en pause',
+          `<span class="hr-clock kamas-num" data-clock="farm">${fmtChrono(liveElapsed())}</span>`));
+      }
+      const xl = exoLive();
+      if (xl) {
+        const it = exoLiveItem();
+        live.push(homeRow('data-go="exos:current"', '⚒', `Exo${it ? ' · ' + escapeHtml(it.name || '') : ''}`,
+          xl.since ? 'chrono en marche' : 'en pause',
+          `<span class="hr-clock kamas-num" data-clock="exo">${fmtChrono(exoElapsed())}</span>`));
+      }
+      if (live.length) parts.push(`<div class="home-sec">En cours</div><div class="home-card">${live.join('')}</div>`);
+
+      // ---- À faire ----
+      const todo = [];
+      if (loadFailed) todo.push(homeRow('data-act="data"', '⚠︎', 'Données illisibles', 'Importe ta dernière sauvegarde'));
+      const g = goalCfg();
+      const accounts = teamAccounts();
+      if (g.metric === 'bribes') {
+        const total = Math.max(0, g.offset + bribesEarnedAll() - spentTotal());
+        const due = Math.floor(total / g.target) * accounts - (state.chests || []).length;
+        if (due > 0) todo.push(homeRow('data-go="songes:sstats" data-stab="general"', '🎁',
+          `${plural(due, 'coffre')} à récupérer`, 'Palier atteint : enregistre-les pour répartir leur valeur'));
+      }
+      const stale = stalePrices();
+      if (stale.length) todo.push(homeRow('data-act="prices"', '⏱', `${(stale.length) + ' prix'} à revoir`,
+        stale.slice(0, 3).map(p => escapeHtml(p.label)).join(', ') + (stale.length > 3 ? '…' : '')));
+      const unpriced = unpricedLegends();
+      if (unpriced.length) todo.push(homeRow(`data-act="cat" data-cat="${escapeHtml(unpriced[0].id)}"`, '★',
+        `${plural(unpriced.length, 'légende')} sans prix`, unpriced.slice(0, 3).map(c => escapeHtml(c.name)).join(', ')));
+      const hasData = state.songes.length || (state.farms || []).length || state.items.length;
+      const since = daysSinceExport();
+      if (hasData && (since == null || since > 7)) todo.push(homeRow('data-act="data"', '⬇︎', 'Sauvegarde à faire',
+        since == null ? 'Aucun export pour l\'instant' : `Dernier export il y a ${since} jours`));
+      if (todo.length) parts.push(`<div class="home-sec">À faire</div><div class="home-card">${todo.join('')}</div>`);
+
+      // ---- Almanax du jour ----
+      const today = almaToday();
+      const a = almaAt(today);
+      if (a) {
+        const cfg = almaCfg();
+        const iso = almaISO(today);
+        const st = almaStep(iso);
+        const stTxt = st >= 2 ? '✓ Quête rendue' : st === 1 ? '✓ Ressources prêtes' : 'À préparer';
+        const soon = cfg.pins.map(k => ({ k, d: daysUntilKey(k), a: ALMA_BY_KEY[k] }))
+          .filter(x => x.a && x.d > 0 && x.d <= cfg.lead).sort((x, y) => x.d - y.d)[0];
+        parts.push(`<div class="home-sec">Almanax du jour</div>
+          <button class="home-card home-alma" data-go="alma:alma-day">
+            <span class="ha-top">
+              ${almaIcon(a, 'ha-icon')}
+              <span class="ha-bd">
+                <span class="ha-off"><b>${fmtNum(a.qty * cfg.chars)}</b> × ${escapeHtml(a.item)}</span>
+                <span class="ha-sub">${a.qty} par compte · ${cfg.chars} ${cfg.chars > 1 ? 'comptes' : 'compte'}</span>
+              </span>
+              <span class="ha-st${st >= 2 ? ' done' : st === 1 ? ' half' : ''}">${stTxt}</span>
+            </span>
+            <span class="ha-type">${escapeHtml(a.type)}</span>
+            ${a.desc ? `<span class="ha-desc">${escapeHtml(a.desc)}</span>` : ''}
+            ${soon ? `<span class="ha-soon">★ Dans ${soon.d} j : ${escapeHtml(soon.a.type)}</span>` : ''}
+          </button>`);
+      }
+
+      // ---- Palier des Songes ----
+      if (state.songes.length && g.metric === 'bribes') {
+        const total = Math.max(0, g.offset + bribesEarnedAll() - spentTotal());
+        const cur = total % g.target;
+        const pct = (cur / g.target) * 100;
+        const recent = sortedRuns().slice(-10).map(r => r.bribes || 0).filter(b => b > 0);
+        const med = median(recent);
+        const left = med ? Math.ceil((g.target - cur) / med) : null;
+        parts.push(`<div class="home-sec">Prochain coffre</div>
+          <button class="home-card home-goal" data-go="songes:sstats" data-stab="general">
+            <span class="hg-top"><span>Palier ${Math.floor(total / g.target) + 1}</span><b>${Math.round(pct)} %</b></span>
+            <span class="progress"><span class="progress-bar" style="width:${pct.toFixed(1)}%"></span></span>
+            <span class="hg-sub">Il manque <b>${fmtNum(g.target - cur)}</b> bribes${left ? ` · environ <b>${left}</b> ${left > 1 ? 'runs' : 'run'}` : ''}${accounts > 1 ? ` · ${accounts} coffres à la clé` : ''}</span>
+          </button>`);
+      }
+
+      // ---- Cette semaine ----
+      const from = isoDaysAgo(6), prevFrom = isoDaysAgo(13);
+      const inWeek = (dt, a0, b0) => dt && dt >= a0 && (!b0 || dt < b0);
+      const sRuns = state.songes.filter(r => !r.excluded && inWeek(r.date, from));
+      const sPrev = state.songes.filter(r => !r.excluded && inWeek(r.date, prevFrom, from));
+      const fSess = farmSessions().filter(f => inWeek(f.date, from));
+      const fPrev = farmSessions().filter(f => inWeek(f.date, prevFrom, from));
+      const sumSec = arr => arr.reduce((t, x) => t + (x.durationSec || 0), 0);
+      const eco = ecoConfigured();
+      const sKamas = arr => arr.reduce((t, r) => t + runValue(r).total, 0);
+      const fKamas = arr => arr.reduce((t, f) => t + sessionNet(f), 0);
+      const kph = (k, sec) => sec > 0 ? k / (sec / 3600) : null;
+      const delta = (now, before) => {
+        if (now == null || !before) return '';
+        const p = Math.round(((now - before) / before) * 100);
+        if (Math.abs(p) < 3) return '';
+        return ` <span class="cmp-d ${p > 0 ? 'up' : 'down'}">${p > 0 ? '+' : ''}${p} %</span>`;
+      };
+      const week = [];
+      if (sRuns.length || sPrev.length) {
+        const sk = kph(sKamas(sRuns), sumSec(sRuns)), pk = kph(sKamas(sPrev), sumSec(sPrev));
+        const bph = kph(sRuns.reduce((t, r) => t + (r.bribes || 0), 0), sumSec(sRuns));
+        week.push(homeRow('data-go="songes:runs"', '☾', 'Songes',
+          `${plural(sRuns.length, 'run')} · ${fmtDur(sumSec(sRuns))}${bph ? ` · ${fmtRate(bph)} b/h` : ''}`,
+          eco && sk ? `<span class="hr-k"><b class="kamas-num">${fmtK(sk)}</b>/h${delta(sk, pk)}</span>` : ''));
+      }
+      if (fSess.length || fPrev.length) {
+        const fk = kph(fKamas(fSess), sumSec(fSess)), pk = kph(fKamas(fPrev), sumSec(fPrev));
+        week.push(homeRow('data-go="farm:sessions"', '⛏', 'Farm',
+          `${plural(fSess.length, 'session')} · ${fmtDur(sumSec(fSess))}`,
+          fk ? `<span class="hr-k"><b class="kamas-num">${fmtK(fk)}</b>/h${delta(fk, pk)}</span>` : ''));
+      }
+      if (week.length) {
+        const totK = (eco ? sKamas(sRuns) : 0) + fKamas(fSess);
+        parts.push(`<div class="home-sec">7 derniers jours${totK ? ` · <span class="kamas-num">${fmtK(totK)}</span> kamas` : ''}</div>
+          <div class="home-card">${week.join('')}</div>`);
+      }
+
+      if (!parts.length) {
+        parts.push(`<div class="empty"><div class="icon">⌂</div><div class="title">Bienvenue</div>
+          <div>Enregistre une run, une session de farm ou un exo : l'essentiel apparaîtra ici.</div></div>`);
+      }
+      box.innerHTML = parts.join('');
+
+      box.querySelectorAll('[data-go]').forEach(el => el.addEventListener('click', () => {
+        const [mod, view] = el.dataset.go.split(':');
+        if (el.dataset.stab) state.settings.statsTab = el.dataset.stab;
+        goTo(mod, view);
+      }));
+      box.querySelectorAll('[data-act]').forEach(el => el.addEventListener('click', () => {
+        const act = el.dataset.act;
+        if (act === 'prices') openPriceReview(false);
+        else if (act === 'cat') openCatForm(el.dataset.cat);
+        else if (act === 'data') document.getElementById('open-data').click();
+        haptic();
+      }));
+
+      // Les chronos en marche défilent tant que l'accueil est affiché
+      clearInterval(homeTimer);
+      homeTimer = null;
+      if ((fl && fl.since) || (xl && xl.since)) {
+        homeTimer = setInterval(() => {
+          if (activeModule !== 'home') { clearInterval(homeTimer); homeTimer = null; return; }
+          const f = box.querySelector('[data-clock="farm"]');
+          if (f) f.textContent = fmtChrono(liveElapsed());
+          const x = box.querySelector('[data-clock="exo"]');
+          if (x) x.textContent = fmtChrono(exoElapsed());
+        }, 1000);
+      }
+    }
+
+    // ============================================================
+    // ÂGE DES PRIX
+    // ============================================================
+    // L'économie bouge à chaque mise à jour du jeu : un prix non revu depuis
+    // longtemps fausse tous les kamas/h en silence. Chaque prix porte donc sa
+    // date de dernière vérification, dans une table à part (settings.priceAt)
+    // pour survivre aux imports sans toucher aux objets eux-mêmes.
+    const PRICE_AGE_DEFAULT = 21;   // jours
+    function priceAtMap() {
+      if (!state.settings.priceAt || typeof state.settings.priceAt !== 'object') state.settings.priceAt = {};
+      return state.settings.priceAt;
+    }
+    function touchPrice(key) { priceAtMap()[key] = Date.now(); }
+    function priceMaxAge() {
+      const d = parseInt(state.settings.priceMaxAge, 10);
+      return d >= 3 && d <= 120 ? d : PRICE_AGE_DEFAULT;
+    }
+
+    // Tous les prix renseignés, avec leur date et de quoi les modifier
+    function allPrices() {
+      const e = eco();
+      const out = [];
+      const add = (key, group, label, value, set) => { if (value > 0) out.push({ key, group, label, value, set, at: priceAtMap()[key] || null }); };
+      add('eco:chest', 'Songes', 'Coffre', e.chestPrice, v => { state.settings.eco = { ...e, chestPrice: v }; });
+      add('eco:reflet', 'Songes', 'Reflet', e.refletPrice, v => { state.settings.eco = { ...eco(), refletPrice: v }; });
+      e.runeTypes.forEach(t => add('rune:' + t.id, 'Songes', t.name, t.price, v => {
+        const cur = eco();
+        state.settings.eco = { ...cur, runeTypes: cur.runeTypes.map(x => x.id === t.id ? { ...x, price: v } : x) };
+      }));
+      (state.catalogue || []).forEach(c => add('cat:' + c.id, 'Légendes', c.name, c.price || 0, v => { c.price = v; }));
+      (state.resources || []).forEach(r => add('res:' + r.id, 'Farm', r.name, r.price || 0, v => { r.price = v; }));
+      return out;
+    }
+    function priceStale(p) {
+      if (!p.at) return true;
+      const reset = state.settings.pricesResetAt || 0;
+      if (p.at < reset) return true;
+      return (Date.now() - p.at) / 86400000 > priceMaxAge();
+    }
+    function stalePrices() { return allPrices().filter(priceStale); }
+    function priceAgeText(p) {
+      if (!p.at) return 'jamais vérifié';
+      const reset = state.settings.pricesResetAt || 0;
+      const d = Math.floor((Date.now() - p.at) / 86400000);
+      const age = d === 0 ? "aujourd'hui" : d === 1 ? 'hier' : `il y a ${d} j`;
+      return p.at < reset ? `${age}, avant la mise à jour` : age;
+    }
+    function priceAgeOf(key) {
+      const p = allPrices().find(x => x.key === key);
+      return p ? priceAgeText(p) : '';
+    }
+
+    // ---- Revue des prix ----
+    function openPriceReview(all) {
+      reviewAll = !!all;
+      paintPriceReview();
+      document.getElementById('modal-prices').classList.add('active');
+    }
+    let reviewAll = false;
+    function paintPriceReview() {
+      const list = reviewAll ? allPrices() : stalePrices();
+      const box = document.getElementById('pr-body');
+      const maxAge = priceMaxAge();
+      const groups = ['Songes', 'Légendes', 'Farm'];
+      document.getElementById('pr-sub').textContent = list.length
+        ? (reviewAll ? `${(list.length) + ' prix'} renseignés` : `${(list.length) + ' prix'} à revoir : plus de ${maxAge} jours, ou antérieurs à une mise à jour`)
+        : 'Tous tes prix sont à jour';
+      box.innerHTML = groups.map(g => {
+        const rows = list.filter(p => p.group === g);
+        if (!rows.length) return '';
+        return `<div class="pr-group">${g}</div>` + rows.map(p => `
+          <div class="pr-row${priceStale(p) ? ' stale' : ''}" data-key="${escapeHtml(p.key)}">
+            <span class="pr-info">
+              <span class="pr-name">${escapeHtml(p.label)}</span>
+              <span class="pr-age">${escapeHtml(priceAgeText(p))}</span>
+            </span>
+            <input type="text" inputmode="numeric" autocomplete="off" class="pr-input" aria-label="Prix de ${escapeHtml(p.label)}" value="${fmtNum(p.value)}" />
+            <button class="pr-ok" aria-label="Prix toujours bon">✓</button>
+          </div>`).join('');
+      }).join('') || `<div class="note-box">Rien à revoir. Reviens après la prochaine mise à jour du jeu.</div>`;
+
+      box.querySelectorAll('.pr-row').forEach(row => {
+        const key = row.dataset.key;
+        const input = row.querySelector('.pr-input');
+        wireNumberInput(input);
+        const commit = (confirmOnly) => {
+          const p = allPrices().find(x => x.key === key);
+          if (!p) return;
+          const v = rawNum(input);
+          if (!confirmOnly && v > 0 && v !== p.value) p.set(v);
+          touchPrice(key);
+          save();
+          render();
+          row.classList.remove('stale');
+          row.querySelector('.pr-age').textContent = "vérifié aujourd'hui";
+          refreshPriceSurfaces();
+        };
+        input.addEventListener('change', () => commit(false));
+        row.querySelector('.pr-ok').addEventListener('click', () => { commit(false); haptic(); });
+      });
+      document.getElementById('pr-age').textContent = `${maxAge} j`;
+    }
+    function refreshPriceSurfaces() {
+      if (typeof renderPriceAlert === 'function') renderPriceAlert();
+    }
+
+    // ============================================================
+    // SONGES : PALIERS (les runs qui ont payé chaque coffre)
+    // ============================================================
+    // Chaque run est rattachée au palier où tombe le milieu de ses bribes, en
+    // suivant la même progression que la carte Objectif : stock de départ, puis
+    // bribes gagnées, moins les dépenses marchand. Toutes les runs comptent pour
+    // le découpage (en jeu, une run exclue a quand même rapporté ses bribes) ;
+    // les stats d'un palier, elles, écartent les runs exclues.
+    let palierCache = null;
+    function paliers() {
+      if (palierCache) return palierCache;
+      const cost = chestBribeCost();
+      const g = goalCfg();
+      const offset = g.metric === 'bribes' ? g.offset : 0;
+      const spends = [...(state.spends || [])].sort((a, b) =>
+        (a.date || '').localeCompare(b.date || '') || (a.createdAt || 0) - (b.createdAt || 0));
+      let progress = offset, si = 0, last = 0;
+      const byRun = {}, list = [];
+      sortedRuns().forEach(r => {
+        while (si < spends.length && (spends[si].date || '') <= (r.date || '')) {
+          progress -= Math.max(0, spends[si].amount || 0);
+          si++;
+        }
+        const b = r.bribes || 0;
+        let idx = Math.floor(Math.max(0, progress + b / 2) / cost);
+        if (idx < last) idx = last;   // une dépense ne fait pas reculer d'un palier
+        last = idx;
+        progress += b;
+        byRun[r.id] = idx;
+        if (!list[idx]) list[idx] = { idx, n: idx + 1, all: [] };
+        list[idx].all.push(r);
+      });
+      const total = Math.max(0, offset + bribesEarnedAll() - spentTotal());
+      const done = Math.floor(total / cost);
+      const out = list.filter(Boolean).map(p => ({
+        ...p,
+        status: p.idx < done ? 'complete' : 'current',
+        partial: p.idx * cost < offset,   // commencé avant le suivi
+        progress: p.idx < done ? 1 : (total - p.idx * cost) / cost,
+      }));
+      palierCache = { list: out, byRun };
+      return palierCache;
+    }
+    function palierOfRun(id) {
+      const p = paliers();
+      return id in p.byRun ? p.byRun[id] + 1 : null;
+    }
+
+    function palierStats(p) {
+      const runs = p.all.filter(r => !r.excluded);
+      const sec = runs.reduce((a, r) => a + (r.durationSec || 0), 0);
+      const hours = sec / 3600;
+      const bribes = runs.reduce((a, r) => a + (r.bribes || 0), 0);
+      const legends = runs.reduce((a, r) => a + (r.legends || []).length, 0);
+      const runes = runs.reduce((a, r) => a + (r.runes || 0), 0);
+      const eco = economyTotals(runs);
+      const dates = p.all.map(r => r.date).filter(Boolean).sort();
+      const from = dates[0], to = dates[dates.length - 1];
+      const days = from ? Math.round((new Date(to + 'T12:00:00') - new Date(from + 'T12:00:00')) / 86400000) + 1 : 0;
+      const waves = runs.map(r => r.wave || 0).filter(w => w > 0);
+      const count = key => {
+        const m = new Map();
+        runs.forEach(r => { const k = r[key] || null; m.set(k, (m.get(k) || 0) + 1); });
+        return [...m.entries()].sort((a, b) => b[1] - a[1]);
+      };
+      const compos = count('compoId').map(([id, n]) => {
+        const rs = runs.filter(r => (r.compoId || null) === id);
+        const rsec = rs.reduce((a, r) => a + (r.durationSec || 0), 0);
+        const rb = rs.reduce((a, r) => a + (r.bribes || 0), 0);
+        return { id, n, label: id ? (compoLabel(getCompo(id)) || 'Compo supprimée') : 'Sans compo',
+                 bph: rsec > 0 ? rb / (rsec / 3600) : null };
+      });
+      return {
+        p, runs, n: runs.length, excluded: p.all.length - runs.length, sec, hours, bribes,
+        from, to, days, legends, runes,
+        bph: hours > 0 ? bribes / hours : null,
+        medBribes: median(runs.map(r => r.bribes || 0)),
+        medDur: median(runs.map(r => r.durationSec || 0).filter(x => x > 0)),
+        wave: waves.length ? mean(waves) : null,
+        kph: eco.perHour, kpr: eco.perRun, kamas: eco.total, chests: eco.chests,
+        runsPerLegend: legends ? runs.length / legends : null,
+        runesPerRun: runs.length ? runes / runs.length : null,
+        intens: count('intensity').map(([k, n]) => ({ k, n, label: IMAP[k] ? IMAP[k].label : 'Non renseignée' })),
+        compos,
+      };
+    }
+
+    let palierA = null, palierB = null;   // numéros comparés
+    function palierLabel(p) {
+      const tags = [];
+      if (p.status === 'current') tags.push(`en cours, ${Math.round(p.progress * 100)} %`);
+      if (p.partial) tags.push('commencé avant le suivi');
+      return `Palier ${p.n}${tags.length ? ` (${tags.join(', ')})` : ''}`;
+    }
+
+    function renderPaliers(body) {
+      const list = paliers().list;
+      if (!list.length) { body.innerHTML = ''; return; }
+      const nums = list.map(p => p.n);
+      if (!nums.includes(palierB)) palierB = nums[nums.length - 1];
+      if (!nums.includes(palierA) || palierA === palierB) {
+        palierA = nums.length > 1 ? nums[Math.max(0, nums.indexOf(palierB) - 1)] : palierB;
+        if (palierA === palierB && nums.length > 1) palierA = nums.find(n => n !== palierB);
+      }
+      const stats = new Map(list.map(p => [p.n, palierStats(p)]));
+      const A = stats.get(palierA), B = stats.get(palierB);
+      const same = palierA === palierB;
+      const dec = (x, d = 1) => x == null ? '—' : x.toFixed(d).replace('.', ',');
+      const span = s => s.from ? (s.from === s.to ? fmtDateShort(s.from) : `${fmtDateShort(s.from)} → ${fmtDateShort(s.to)}`) : '—';
+
+      // Une ligne de comparaison. dir : 1 plus haut = mieux, −1 plus bas = mieux, 0 neutre
+      const row = (label, va, vb, fmt, dir = 0, hint = '') => {
+        let delta = '';
+        if (!same && dir !== 0 && va != null && vb != null && va !== 0) {
+          const pct = ((vb - va) / Math.abs(va)) * 100;
+          if (Math.abs(pct) >= 1) {
+            const good = pct * dir > 0;
+            delta = `<span class="cmp-d ${good ? 'up' : 'down'}">${pct > 0 ? '+' : ''}${Math.round(pct)} %</span>`;
+          }
+        }
+        return `<div class="cmp-row">
+          <span class="cmp-l">${label}${hint ? `<span class="cmp-h">${hint}</span>` : ''}</span>
+          <span class="cmp-v">${va == null ? '—' : fmt(va)}</span>
+          ${same ? '' : `<span class="cmp-v">${vb == null ? '—' : fmt(vb)}${delta}</span>`}
+        </div>`;
+      };
+      const text = (label, ta, tb) => `<div class="cmp-row">
+          <span class="cmp-l">${label}</span>
+          <span class="cmp-v txt">${ta}</span>
+          ${same ? '' : `<span class="cmp-v txt">${tb}</span>`}
+        </div>`;
+      const both = A.p.status === 'complete' && B.p.status === 'complete' && !A.p.partial && !B.p.partial;
+
+      const opts = sel => list.map(p => `<option value="${p.n}"${p.n === sel ? ' selected' : ''}>${escapeHtml(palierLabel(p))}</option>`).join('');
+      const head = `<div class="cmp-row cmp-head">
+          <span class="cmp-l"></span>
+          <span class="cmp-v">Palier ${A.p.n}</span>
+          ${same ? '' : `<span class="cmp-v">Palier ${B.p.n}</span>`}
+        </div>`;
+
+      const compoList = s => s.compos.length ? s.compos.map(c => `
+          <div class="cmp-compo">
+            <span class="nm">${escapeHtml(c.label)}</span>
+            <span class="v">${c.n} run${c.n > 1 ? 's' : ''} · ${Math.round((c.n / s.n) * 100)} %${c.bph != null ? ` · ${fmtRate(c.bph)} b/h` : ''}</span>
+          </div>`).join('') : '<div class="orphan-note">Aucune run</div>';
+
+      // Ce qui a changé entre les deux, en une phrase
+      let verdict = '';
+      if (!same && A.bph && B.bph) {
+        const pct = Math.round(((B.bph - A.bph) / A.bph) * 100);
+        const ca = A.compos[0], cb = B.compos[0];
+        const compoChanged = ca && cb && ca.id !== cb.id;
+        const intChanged = A.intens[0] && B.intens[0] && A.intens[0].k !== B.intens[0].k;
+        const why = [];
+        if (compoChanged) why.push(`compo principale passée de ${escapeHtml(ca.label)} à ${escapeHtml(cb.label)}`);
+        if (intChanged) why.push(`intensité passée de ${escapeHtml(A.intens[0].label)} à ${escapeHtml(B.intens[0].label)}`);
+        if (A.wave != null && B.wave != null && Math.abs(B.wave - A.wave) >= 0.5) why.push(`vague moyenne ${B.wave > A.wave ? 'en hausse' : 'en baisse'} (${dec(A.wave)} → ${dec(B.wave)})`);
+        verdict = `<div class="insight${pct < 0 ? ' warn' : ''}">Palier ${B.p.n} : ${Math.abs(pct) < 3 ? 'même rythme que' : pct > 0 ? `<b>${pct} % plus rapide</b> que` : `<b>${-pct} % plus lent</b> que`} le palier ${A.p.n} en bribes/h.${why.length ? ` Ce qui a changé : ${why.join(' ; ')}.` : ''}</div>`;
+      }
+      const warnings = [];
+      if (!same && (A.n < 5 || B.n < 5)) warnings.push('Moins de 5 runs d\'un côté : les écarts restent fragiles.');
+      if ([A, B].some(s => s.p.partial)) warnings.push('Un palier commencé avant le suivi ne contient qu\'une partie de ses runs : son temps total n\'est pas comparable.');
+      const mixed = [A, B].some(s => s.intens.length > 1);
+      if (mixed) warnings.push('Un palier mélange plusieurs intensités : les bribes/h en dépendent fortement.');
+
+      body.innerHTML = `
+        <div class="chart-card">
+          <div class="chart-title">Comparer deux paliers</div>
+          <div class="chart-sub">Un palier = les runs qui ont fourni les ${fmtNum(chestBribeCost())} bribes d'un coffre${teamAccounts() > 1 ? ` (${teamAccounts()} coffres, un par compte)` : ''}</div>
+          <div class="cmp-pick">
+            <label><span>Palier A</span><select id="pal-a">${opts(palierA)}</select></label>
+            <label><span>Palier B</span><select id="pal-b">${opts(palierB)}</select></label>
+          </div>
+          ${verdict}
+          ${head}
+          <div class="cmp-sec">Période</div>
+          ${text('Dates', span(A), span(B))}
+          ${row('Jours', A.days, B.days, v => fmtNum(v), 0)}
+          ${row('Runs', A.n, B.n, v => fmtNum(v), 0, A.excluded || B.excluded ? 'hors runs exclues' : '')}
+          ${row('Temps de jeu', A.sec, B.sec, v => fmtDur(v), both ? -1 : 0, both ? 'pour boucler le palier' : '')}
+          <div class="cmp-sec">Rapidité</div>
+          ${row('Bribes / h', A.bph, B.bph, fmtRate, 1)}
+          ${row('Bribes / run', A.medBribes, B.medBribes, v => fmtNum(v), 1, 'médiane')}
+          ${row('Durée d’une run', A.medDur, B.medDur, v => fmtDur(v), 0, 'médiane')}
+          ${row('Vague moyenne', A.wave, B.wave, v => dec(v), 1)}
+          ${ecoConfigured() ? `<div class="cmp-sec">Kamas</div>
+          ${row('Kamas / h', A.kph, B.kph, v => fmtNum(v), 1)}
+          ${row('Kamas / run', A.kpr, B.kpr, v => fmtNum(v), 1)}
+          ${row('Total', A.kamas, B.kamas, v => fmtNum(v), 0)}
+          ${row('dont coffres', A.chests, B.chests, v => fmtNum(v), 0)}` : ''}
+          <div class="cmp-sec">Butin</div>
+          ${row('Légendes en run', A.legends, B.legends, v => fmtNum(v), 0)}
+          ${row('Runs / légende', A.runsPerLegend, B.runsPerLegend, v => dec(v), -1)}
+          ${row('Runes / run', A.runesPerRun, B.runesPerRun, v => dec(v, 2), 1)}
+          <div class="cmp-sec">Intensité</div>
+          ${text('Principale', A.intens[0] ? `${escapeHtml(A.intens[0].label)} · ${Math.round((A.intens[0].n / A.n) * 100)} %` : '—',
+                               B.intens[0] ? `${escapeHtml(B.intens[0].label)} · ${Math.round((B.intens[0].n / B.n) * 100)} %` : '—')}
+          ${warnings.length ? `<div class="insight warn">${warnings.join(' ')}</div>` : ''}
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-title">Compos utilisées</div>
+          <div class="chart-sub">Part des runs et bribes/h de chaque compo dans le palier</div>
+          <div class="chart-sub" style="margin:12px 0 4px;">Palier ${A.p.n}</div>
+          ${compoList(A)}
+          ${same ? '' : `<div class="chart-sub" style="margin:14px 0 4px;">Palier ${B.p.n}</div>${compoList(B)}`}
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-title">Tous les paliers</div>
+          <div class="chart-sub">Touche un palier pour le comparer au palier B</div>
+          ${list.slice().reverse().map(p => {
+            const st = stats.get(p.n);
+            return `<div class="chest-entry pal-entry${p.n === palierA || p.n === palierB ? ' on' : ''}" data-pal="${p.n}">
+              <span class="ic">🎁</span>
+              <span class="bd">
+                <span class="t1">${escapeHtml(palierLabel(p))}</span>
+                <span class="t2">${span(st)} · ${plural(st.n, 'run')} · ${fmtRate(st.bph)} b/h${ecoConfigured() && st.kph ? ` · ${fmtK(st.kph)}/h` : ''}</span>
+              </span>
+              ${p.status === 'current' ? `<span class="price-tag none">${Math.round(p.progress * 100)} %</span>` : `<span class="price-tag">${fmtDur(st.sec)}</span>`}
+            </div>`;
+          }).join('')}
+        </div>`;
+
+      document.getElementById('pal-a').addEventListener('change', e => { palierA = Number(e.target.value); renderPaliers(body); });
+      document.getElementById('pal-b').addEventListener('change', e => { palierB = Number(e.target.value); renderPaliers(body); });
+      body.querySelectorAll('[data-pal]').forEach(el => el.addEventListener('click', () => {
+        const n = Number(el.dataset.pal);
+        if (n === palierB) return;
+        palierA = n;
+        renderPaliers(body);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        haptic();
+      }));
+    }
 
     // ============================================================
     // SONGES : RUN EN COURS
@@ -9854,8 +10386,9 @@
       document.getElementById('bar-songes').classList.toggle('hidden', mod !== 'songes');
       document.getElementById('bar-farm').classList.toggle('hidden', mod !== 'farm');
       document.getElementById('bar-alma').classList.toggle('hidden', mod !== 'alma');
-      document.getElementById('fab-add').classList.toggle('hidden', mod === 'alma');
+      document.getElementById('fab-add').classList.toggle('hidden', mod === 'alma' || mod === 'home');
       const heads = {
+        home: ['Accueil', new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })],
         exos: ['Exo', 'Forgemagie'],
         farm: ['Farm', 'Rentabilité des zones'],
         alma: ['Almanax', 'Offrandes & bonus du jour'],
@@ -9865,13 +10398,50 @@
       document.getElementById('app-title').textContent = head[0];
       document.getElementById('app-sub').textContent = head[1];
       flushRender();
+      saveNav({ mod });
 
-      const nav = document.querySelector(`nav.tabs[data-mod="${mod}"]`);
-      const activeTab = nav.querySelector('.tab.active') || nav.querySelector('.tab');
-      activeTab.classList.add('active');
       document.querySelectorAll('.view').forEach(s => s.classList.remove('active'));
-      document.getElementById('view-' + activeTab.dataset.view).classList.add('active');
+      if (mod === 'home') {
+        document.getElementById('view-home').classList.add('active');
+      } else {
+        const nav = document.querySelector(`nav.tabs[data-mod="${mod}"]`);
+        const activeTab = nav.querySelector('.tab.active') || nav.querySelector('.tab');
+        activeTab.classList.add('active');
+        document.getElementById('view-' + activeTab.dataset.view).classList.add('active');
+      }
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ---- Mémoire de navigation ----
+    // L'app rouvre sur le module et l'onglet quittés en dernier.
+    function navCfg() {
+      const n = state.settings.nav;
+      return n && typeof n === 'object' ? n : { mod: 'home', tabs: {} };
+    }
+    function saveNav(patch) {
+      if (navRestoring) return;
+      const cur = navCfg();
+      state.settings.nav = { ...cur, ...patch, tabs: { ...(cur.tabs || {}), ...(patch.tabs || {}) } };
+      scheduleSave();
+    }
+    let navRestoring = false;
+    function restoreNav() {
+      const n = navCfg();
+      navRestoring = true;
+      Object.entries(n.tabs || {}).forEach(([mod, view]) => {
+        const nav = document.querySelector(`nav.tabs[data-mod="${mod}"]`);
+        const tab = nav && nav.querySelector(`.tab[data-view="${view}"]`);
+        if (!tab) return;
+        nav.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t === tab));
+      });
+      const mods = [...document.querySelectorAll('.mod-btn')].map(b => b.dataset.mod);
+      setModule(mods.includes(n.mod) ? n.mod : 'home');
+      navRestoring = false;
+    }
+    function goTo(mod, view) {
+      setModule(mod);
+      if (view) setView(view);
+      haptic();
     }
 
     // ============================================================
@@ -11990,7 +12560,11 @@
       draftTargets.forEach(t => {
         if (t.resId && t.price != null) {
           const r = resById(t.resId);
-          if (r) r.price = Math.max(0, t.price | 0);
+          if (r) {
+            const np = Math.max(0, t.price | 0);
+            if (np !== (r.price || 0)) touchPrice('res:' + r.id);
+            r.price = np;
+          }
         }
       });
 
@@ -12168,10 +12742,14 @@
       let id = editingResId;
       if (id) {
         const r = resById(id);
-        if (r) Object.assign(r, payload);
+        if (r) {
+          if (price !== (r.price || 0)) touchPrice('res:' + id);
+          Object.assign(r, payload);
+        }
       } else {
         id = uid();
         state.resources.push({ id, ...payload, createdAt: Date.now() });
+        touchPrice('res:' + id);
       }
       save();
       editingResId = null;
@@ -12235,8 +12813,48 @@
         document.querySelectorAll('.view').forEach(s => s.classList.remove('active'));
         document.getElementById('view-' + v).classList.add('active');
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        const mod = tab.parentElement.dataset.mod;
+        if (mod) saveNav({ tabs: { [mod]: v } });
       });
     });
+
+    // ---- Glisser entre les onglets d'un module ----
+    // Un geste franchement horizontal passe à l'onglet voisin. On l'ignore dans
+    // les champs, les modales, et tout élément qui défile lui-même en largeur.
+    (() => {
+      let sx = 0, sy = 0, st = 0, ok = false;
+      const scrollsX = el => {
+        for (let n = el; n && n !== document.body; n = n.parentElement) {
+          if (n.scrollWidth > n.clientWidth + 4) {
+            const ox = getComputedStyle(n).overflowX;
+            if (ox === 'auto' || ox === 'scroll') return true;
+          }
+        }
+        return false;
+      };
+      const main = document.querySelector('main');
+      main.addEventListener('touchstart', e => {
+        const t = e.touches[0];
+        ok = e.touches.length === 1
+          && !document.querySelector('.modal-overlay.active')
+          && !e.target.closest('input, select, textarea, [data-noswipe]')
+          && !scrollsX(e.target);
+        sx = t.clientX; sy = t.clientY; st = Date.now();
+      }, { passive: true });
+      main.addEventListener('touchend', e => {
+        if (!ok) return;
+        ok = false;
+        const t = e.changedTouches[0];
+        const dx = t.clientX - sx, dy = t.clientY - sy;
+        if (Date.now() - st > 600 || Math.abs(dx) < 70 || Math.abs(dy) > Math.abs(dx) * 0.5) return;
+        const nav = document.querySelector(`nav.tabs[data-mod="${activeModule}"]`);
+        if (!nav) return;
+        const tabs = [...nav.querySelectorAll('.tab')].filter(b => !b.classList.contains('hidden'));
+        const i = tabs.findIndex(b => b.classList.contains('active'));
+        const next = tabs[i + (dx < 0 ? 1 : -1)];
+        if (next) { next.click(); haptic(); }
+      }, { passive: true });
+    })();
 
     document.querySelectorAll('.mod-btn').forEach(b => {
       b.addEventListener('click', () => { setModule(b.dataset.mod); haptic(); });
@@ -12246,6 +12864,43 @@
       if (activeModule === 'songes') openRunForm();
       else if (activeModule === 'farm') openFarmForm();
       else openForm();
+    });
+
+    document.getElementById('pr-close').addEventListener('click', () => {
+      document.getElementById('modal-prices').classList.remove('active');
+      render();
+    });
+    document.getElementById('pr-all').addEventListener('click', () => {
+      reviewAll = !reviewAll;
+      document.getElementById('pr-all').textContent = reviewAll ? 'Seulement à revoir' : 'Tout afficher';
+      paintPriceReview();
+    });
+    const prStep = n => {
+      state.settings.priceMaxAge = Math.max(3, Math.min(120, priceMaxAge() + n));
+      save();
+      paintPriceReview();
+      haptic();
+    };
+    document.getElementById('pr-age-down').addEventListener('click', () => prStep(-7));
+    document.getElementById('pr-age-up').addEventListener('click', () => prStep(7));
+    document.getElementById('pr-confirm-all').addEventListener('click', () => {
+      const keys = [...document.querySelectorAll('#pr-body .pr-row')].map(r => r.dataset.key);
+      if (!keys.length) return;
+      keys.forEach(touchPrice);
+      save();
+      render();
+      paintPriceReview();
+      refreshPriceSurfaces();
+      toast(`${(keys.length) + ' prix'} confirmé${keys.length > 1 ? 's' : ''}`);
+    });
+    document.getElementById('pr-update').addEventListener('click', () => {
+      confirmDialog('Repasser tous les prix à revoir ?', 'Ils resteront utilisés tels quels jusqu\'à ce que tu les confirmes ou les modifies.', () => {
+        state.settings.pricesResetAt = Date.now();
+        save();
+        render();
+        openPriceReview(false);
+        toast('Prix à revoir après la mise à jour');
+      });
     });
 
     document.getElementById('run-cancel').addEventListener('click', () => {
@@ -12616,7 +13271,7 @@
     paintCatQual();
     renderCompoSelect();
     refreshNameList();
-    render();
+    restoreNav();   // rend le module rouvert ; les autres attendent d'être affichés
     handleSharedCompo();
     if (loadFailed) {
       setTimeout(() => toast('Données illisibles, mises de côté. Importe une sauvegarde.'), 600);
