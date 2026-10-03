@@ -3444,9 +3444,9 @@
 
   <nav class="tabs" data-mod="songes">
     <button class="tab active" data-view="runs">Runs</button>
-    <button class="tab" data-view="compos">Compos</button>
     <button class="tab" data-view="legends">Légendes</button>
     <button class="tab" data-view="sstats">Stats</button>
+    <button class="tab" data-view="sreglages">Réglages</button>
   </nav>
 
   <nav class="tabs hidden" data-mod="alma">
@@ -3553,33 +3553,39 @@
     </section>
 
     <!-- Songes : Compos -->
-    <section class="view" id="view-compos">
-      <div class="period-row hidden" id="intens-compos"></div>
-      <div id="compo-versus"></div>
-      <button class="btn btn-primary" id="add-compo" style="width:100%;margin-bottom:12px;">+ Nouvelle compo</button>
-      <div class="note-box" id="compo-note"></div>
-      <div id="list-compos"></div>
-      <div class="empty hidden" id="empty-compos">
-        <div class="icon">⚔️</div>
-        <div class="title">Aucune compo enregistrée</div>
-        <div>Crée tes sets pour pouvoir les comparer</div>
-      </div>
-    </section>
 
     <!-- Songes : Légendes & coffres -->
     <section class="view" id="view-legends">
       <div id="legends-body"></div>
     </section>
 
+    <!-- Songes : Réglages (team, coffre et palier, prix) -->
+    <section class="view" id="view-sreglages">
+      <div id="sreglages-body"></div>
+    </section>
+
     <!-- Songes : Stats -->
     <section class="view" id="view-sstats">
       <div class="subtabs" id="stats-subtabs">
         <button class="sub-btn on" data-s="general">Général</button>
+        <button class="sub-btn" data-s="compos">Compos</button>
         <button class="sub-btn" data-s="kamas">Kamas</button>
         <button class="sub-btn" data-s="vagues">Vagues</button>
         <button class="sub-btn" data-s="paliers">Paliers</button>
       </div>
       <div class="period-row hidden" id="intens-stats"></div>
+        <div id="stats-compos" class="hidden">
+        <div class="period-row hidden" id="intens-compos"></div>
+        <div id="compo-versus"></div>
+        <button class="btn btn-primary" id="add-compo" style="width:100%;margin-bottom:12px;">+ Nouvelle compo</button>
+        <div class="note-box" id="compo-note"></div>
+        <div id="list-compos"></div>
+        <div class="empty hidden" id="empty-compos">
+          <div class="icon">⚔️</div>
+          <div class="title">Aucune compo enregistrée</div>
+          <div>Crée tes sets pour pouvoir les comparer</div>
+        </div>
+        </div>
       <div id="sstats-body"></div>
       <div class="empty hidden" id="empty-sstats">
         <div class="icon">📊</div>
@@ -4286,12 +4292,7 @@
         <div class="hint">Réparti sur les runs qui ont fourni ses bribes, à son ouverture. Laisse à 0 pour compter le prix de la légende obtenue.</div>
       </div>
 
-      <div class="field">
-        <label for="eco-acc">Comptes dans la team</label>
-        <input type="text" id="eco-acc" maxlength="1" inputmode="numeric" autocomplete="off" placeholder="1" />
-        <div class="hint">Les bribes saisies sur une run sont celles d'un compte : chaque palier donne un coffre par compte.</div>
-        <div class="hint" id="eco-cp-hint"></div>
-      </div>
+      <div class="hint" id="eco-cp-hint" style="margin:-8px 0 14px;"></div>
 
       <div class="field">
         <label for="eco-rq">Reflets par run</label>
@@ -7022,7 +7023,7 @@
       if (!per) { flagInvalid('bt-per'); return; }
       state.settings.bribeTable = { ...(state.settings.bribeTable || {}), [editingBtab]: { from, at, per } };
       save();
-      renderSongesStats();
+      render('songes');   // palier, coffres, réglages et stats se recalculent
       applyBribePrediction();
       document.getElementById('modal-btab').classList.remove('active');
       editingBtab = null;
@@ -7037,7 +7038,7 @@
       // tous les paliers ont un barème officiel : effacer = revenir à celui-ci
       state.settings.bribeTable = t;
       save();
-      renderSongesStats();
+      render('songes');   // palier, coffres, réglages et stats se recalculent
       applyBribePrediction();
       document.getElementById('modal-btab').classList.remove('active');
       editingBtab = null;
@@ -7077,7 +7078,7 @@
     function ecoChestHint() {
       const el = document.getElementById('eco-cp-hint');
       const price = rawNum(document.getElementById('eco-cp'));
-      const acc = Math.min(8, Math.max(1, parseInt(document.getElementById('eco-acc').value, 10) || 1));
+      const acc = teamAccounts();
       if (!price) { el.textContent = ''; return; }
       const per = price / chestBribeCost();
       el.textContent = acc > 1
@@ -7088,7 +7089,6 @@
     function openEcoForm() {
       const e = eco();
       setNumberInput(document.getElementById('eco-cp'), e.chestPrice);
-      document.getElementById('eco-acc').value = e.accounts > 1 ? e.accounts : '';
       ecoChestHint();
       setNumberInput(document.getElementById('eco-rq'), e.refletsPerRun);
       setNumberInput(document.getElementById('eco-rp'), e.refletPrice);
@@ -7102,7 +7102,7 @@
       const before = eco();
       state.settings.eco = {
         chestPrice: rawNum(document.getElementById('eco-cp')),
-        accounts: Math.min(8, Math.max(1, parseInt(document.getElementById('eco-acc').value, 10) || 1)),
+        accounts: before.accounts,
         refletsPerRun: rawNum(document.getElementById('eco-rq')),
         refletPrice: rawNum(document.getElementById('eco-rp')),
         runeTypes: draftRunes
@@ -7118,7 +7118,7 @@
       });
       save();
       renderSonges();
-      renderSongesStats();
+      render('songes');   // palier, coffres, réglages et stats se recalculent
       document.getElementById('modal-eco').classList.remove('active');
       toast('Prix enregistrés');
     }
@@ -7157,7 +7157,7 @@
       }
       save();
       renderSonges();
-      renderSongesStats();
+      render('songes');   // palier, coffres, réglages et stats se recalculent
       document.getElementById('modal-spend').classList.remove('active');
       editingSpendId = null;
       toast('Dépense enregistrée');
@@ -7171,7 +7171,7 @@
         state.spends = state.spends.filter(x => x.id !== id);
         save();
         renderSonges();
-        renderSongesStats();
+        render('songes');   // palier, coffres, réglages et stats se recalculent
         editingSpendId = null;
         toast('Dépense supprimée');
       });
@@ -7303,7 +7303,7 @@
       refreshNameList();
       // un prix modifié se répercute sur les kamas, l'alerte et les stats
       renderSonges();
-      renderSongesStats();
+      render('songes');   // palier, coffres, réglages et stats se recalculent
       document.getElementById('modal-cat').classList.remove('active');
       editingCatId = null;
 
@@ -7387,7 +7387,7 @@
       save();
       refreshNameList();
       renderSonges();
-      renderSongesStats();
+      render('songes');   // palier, coffres, réglages et stats se recalculent
       document.getElementById('modal-chest').classList.remove('active');
       editingChestId = null;
       toast(wasEditing ? 'Coffre mis à jour' : 'Coffre enregistré');
@@ -7401,7 +7401,7 @@
         state.chests = state.chests.filter(x => x.id !== id);
         save();
         renderSonges();
-        renderSongesStats();
+        render('songes');   // palier, coffres, réglages et stats se recalculent
         editingChestId = null;
         toast('Coffre supprimé');
       });
@@ -7663,8 +7663,10 @@
       const unnamed = drops.filter(d => !d.name).length;
 
       body.innerHTML = `
+        ${state.songes.length ? goalCardHTML(statRuns()) : ''}
+
         <div class="chart-card">
-          <div class="chart-title">Coffres légendaires</div>
+          <div class="chart-title">Coffres ouverts</div>
           <div class="chart-sub">Chaque palier de ${fmtNum(target)} bribes en débloque un</div>
           <div class="counter-big" style="margin-bottom:4px;">
             <div class="num kamas-num">${nChests}</div>
@@ -7741,6 +7743,7 @@
       if (more) more.addEventListener('click', () => { salesShowAll = !salesShowAll; renderLegends(); });
       body.querySelectorAll('[data-csrc]').forEach(b =>
         b.addEventListener('click', () => { collSrc = b.dataset.csrc; renderLegends(); haptic(); }));
+      bindGoalCard();
       const addChest = document.getElementById('add-chest');
       if (addChest) addChest.addEventListener('click', () => openChestForm());
       const addCat = document.getElementById('add-cat');
@@ -8081,38 +8084,43 @@
               </div>`).join('')}
           </div>` : ''}` : ''}
           ${drift}
-
-          <div class="goal-cfg">
-            <div>
-              <div class="lbl">Ressource</div>
-              <select id="goal-metric">${opts}</select>
-            </div>
-            <div>
-              <div class="lbl">Palier</div>
-              <input type="text" id="goal-target" inputmode="numeric" value="${fmtNum(target)}" />
-            </div>
-            <div class="wide">
-              <div class="lbl">Déjà acquis avant le suivi</div>
-              <input type="text" id="goal-offset" inputmode="numeric" placeholder="0" value="${offset ? fmtNum(offset) : ''}" />
-            </div>
-            ${metric === 'bribes' ? `<div class="wide">
-              <div class="lbl">Ou recale avec ton solde en jeu${teamAccounts() > 1 ? ' (un compte)' : ''}</div>
-              <div class="recal-row">
-                <input type="text" id="goal-balance" inputmode="numeric" placeholder="bribes possédées aujourd'hui" />
-                <button class="btn btn-secondary" id="goal-recal">Recaler</button>
-              </div>
-            </div>` : ''}
-          </div>
         </div>
       `;
     }
 
+    // Réglages du palier : ressource suivie, taille, stock de départ, recalage
+    function goalSettingsCard() {
+      const { metric, target, offset } = goalCfg();
+      const opts = Object.entries(GOAL_METRICS)
+        .map(([k, v]) => `<option value="${k}"${k === metric ? ' selected' : ''}>${v.label}</option>`).join('');
+      return `<div class="chart-card">
+          <div class="chart-title">Coffre et palier</div>
+          <div class="chart-sub">Ce qui déclenche un coffre, et où tu en étais avant de suivre tes runs</div>
+          <div class="goal-cfg" style="margin-top:12px;border-top:none;padding-top:0;">
+            <div>
+              <div class="lbl">Ressource</div>
+              <select id="pal-metric">${opts}</select>
+            </div>
+            <div>
+              <div class="lbl">Palier</div>
+              <input type="text" id="pal-target" inputmode="numeric" value="${fmtNum(target)}" />
+            </div>
+            <div class="wide">
+              <div class="lbl">Déjà acquis avant le suivi</div>
+              <input type="text" id="pal-offset" inputmode="numeric" placeholder="0" value="${offset ? fmtNum(offset) : ''}" />
+            </div>
+            ${metric === 'bribes' ? `<div class="wide">
+              <div class="lbl">Ou recale avec ton solde en jeu${teamAccounts() > 1 ? ' (un compte)' : ''}</div>
+              <div class="recal-row">
+                <input type="text" id="pal-balance" inputmode="numeric" placeholder="bribes possédées aujourd'hui" />
+                <button class="btn btn-secondary" id="pal-recal">Recaler</button>
+              </div>
+            </div>` : ''}
+          </div>
+        </div>`;
+    }
+
     function bindGoalCard() {
-      const setGoal = patch => {
-        state.settings.goal = { ...goalCfg(), ...patch };
-        save();
-        renderSongesStats();
-      };
       document.querySelectorAll('[data-bt]').forEach(el =>
         el.addEventListener('click', () => openBtabForm(el.dataset.bt)));
       const chestBtn = document.getElementById('goal-chest');
@@ -8121,31 +8129,39 @@
       if (spendBtn) spendBtn.addEventListener('click', () => openSpendForm());
       document.querySelectorAll('[data-spend]').forEach(el =>
         el.addEventListener('click', () => openSpendForm(el.dataset.spend)));
-      const metricEl = document.getElementById('goal-metric');
+    }
+
+    function bindGoalSettings() {
+      const setGoal = patch => {
+        state.settings.goal = { ...goalCfg(), ...patch };
+        save();
+        render('songes');
+      };
+      const metricEl = document.getElementById('pal-metric');
       if (metricEl) {
         metricEl.addEventListener('change', () => {
           const m = metricEl.value;
           // changer de ressource remet le palier et le report par défaut
           state.settings.goal = { metric: m, target: GOAL_METRICS[m].target, offset: 0 };
           save();
-          renderSongesStats();
+          render('songes');
         });
       }
-      const targetEl = document.getElementById('goal-target');
+      const targetEl = document.getElementById('pal-target');
       if (targetEl) {
         wireNumberInput(targetEl);
         targetEl.addEventListener('change', () => setGoal({ target: Math.max(1, rawNum(targetEl)) }));
       }
-      const offsetEl = document.getElementById('goal-offset');
+      const offsetEl = document.getElementById('pal-offset');
       if (offsetEl) {
         wireNumberInput(offsetEl);
         offsetEl.addEventListener('change', () => setGoal({ offset: rawNum(offsetEl) }));
       }
-      const balEl = document.getElementById('goal-balance');
+      const balEl = document.getElementById('pal-balance');
       if (balEl) {
         wireNumberInput(balEl);
-        document.getElementById('goal-recal').addEventListener('click', () => {
-          if (!balEl.value.trim()) { flagInvalid('goal-balance'); toast('Indique ton solde de bribes en jeu'); return; }
+        document.getElementById('pal-recal').addEventListener('click', () => {
+          if (!balEl.value.trim()) { flagInvalid('pal-balance'); toast('Indique ton solde de bribes en jeu'); return; }
           const off = offsetFromBalance(rawNum(balEl));
           if (off < 0) {
             toast(`Incohérent de ${fmtNum(-off)} bribes : une dépense manque, ou un coffre est en trop`);
@@ -8297,7 +8313,7 @@
       ].sort((a, b) => a.date.localeCompare(b.date) || a.ts - b.ts);
 
       const share = {}, pending = {};
-      let attributed = 0, unattributed = 0, qi = 0;
+      let attributed = 0, unattributed = 0, uncovered = 0, uncoveredChests = 0, qi = 0;
       events.forEach(ev => {
         const chestNeed = cost / teamAccounts();
         let need = ev.chest ? chestNeed : Math.max(0, ev.spend.amount || 0);
@@ -8315,14 +8331,19 @@
           }
           if (q.left <= 1e-6) qi++;
         }
-        // coffre saisi sans assez de bribes enregistrées pour le payer
-        if (perBribe && need > 0) unattributed += need * perBribe;
+        // coffre saisi sans assez de bribes enregistrées pour le payer :
+        // signe d'un réglage faux (nombre de comptes, stock de départ) ou de runs manquantes
+        if (perBribe && need > 0) {
+          unattributed += need * perBribe;
+          uncovered += need * perBribe;
+          uncoveredChests++;
+        }
       });
       let pendingTotal = 0;
       queue.slice(qi).forEach(q => {
         if (q.id && q.left > 1e-6) { pending[q.id] = q.left; pendingTotal += q.left; }
       });
-      allocCache = { share, pending, pendingTotal, attributed, unattributed, cost };
+      allocCache = { share, pending, pendingTotal, attributed, unattributed, uncovered, uncoveredChests, cost };
       return allocCache;
     }
 
@@ -8389,8 +8410,11 @@
           const a = chestAllocation();
           const notes = [];
           if (a.pendingTotal > 0) notes.push(`<b>${fmtNum(a.pendingTotal)}</b> bribes attendent le prochain coffre : les runs qui les ont gagnées seront revalorisées à son ouverture.`);
-          if (a.unattributed > 0) notes.push(`${fmtNum(a.unattributed)} kamas de coffres viennent de bribes gagnées avant le suivi : ils ne sont rattachés à aucune run.`);
-          return notes.length ? `<div class="insight">${notes.join(' ')}</div>` : '';
+          const pre = a.unattributed - a.uncovered;
+          if (pre > 0) notes.push(`${fmtNum(pre)} kamas de coffres viennent de bribes gagnées avant le suivi : ils ne sont rattachés à aucune run.`);
+          const warn = a.uncovered > 0
+            ? `<div class="insight warn"><b>${plural(a.uncoveredChests, 'coffre')}</b> ne ${a.uncoveredChests > 1 ? 'sont' : 'est'} pas couvert${a.uncoveredChests > 1 ? 's' : ''} par les bribes de tes runs : <b>${fmtNum(a.uncovered)} kamas</b> ne sont comptés nulle part. Vérifie le nombre de comptes (réglé sur ${teamAccounts()}) et ton stock de départ dans Songes › Réglages.</div>` : '';
+          return (notes.length ? `<div class="insight">${notes.join(' ')}</div>` : '') + warn;
         })()}
 
         ${missing.length ? `<div class="insight warn"><b>${plural(missing.length, 'légende')}</b> obtenue${missing.length > 1 ? 's' : ''} sans prix : ${missing.slice(0, 3).map(c => escapeHtml(c.name)).join(', ')}${missing.length > 3 ? '…' : ''}. Ces drops ne comptent pas — ta rentabilité réelle est plus élevée que ce chiffre.</div>` : ''}
@@ -8834,11 +8858,19 @@
     function renderSongesStats() {
       const body = document.getElementById('sstats-body');
       const empty = document.getElementById('empty-sstats');
-      // Les paliers ont leur propre découpage : ni période ni filtre d'intensité
-      const onPaliers = state.settings.statsTab === 'paliers';
-      document.querySelectorAll('#stats-subtabs .sub-btn').forEach(b =>
-        b.classList.toggle('on', b.dataset.s === (onPaliers ? 'paliers' : (['vagues', 'kamas'].includes(state.settings.statsTab) ? state.settings.statsTab : 'general'))));
-      document.getElementById('intens-stats').style.display = onPaliers ? 'none' : '';
+      const tab = ['general', 'compos', 'kamas', 'vagues', 'paliers'].includes(state.settings.statsTab)
+        ? state.settings.statsTab : 'general';
+      document.querySelectorAll('#stats-subtabs .sub-btn').forEach(b => b.classList.toggle('on', b.dataset.s === tab));
+      // Les compos ont leur propre filtre, les paliers leur propre découpage
+      const onPaliers = tab === 'paliers';
+      document.getElementById('intens-stats').style.display = (onPaliers || tab === 'compos') ? 'none' : '';
+      document.getElementById('stats-compos').classList.toggle('hidden', tab !== 'compos');
+      body.classList.toggle('hidden', tab === 'compos');
+      if (tab === 'compos') {
+        empty.classList.add('hidden');
+        renderCompos();
+        return;
+      }
       if (onPaliers && state.songes.length) {
         empty.classList.add('hidden');
         renderPaliers(body);
@@ -8878,7 +8910,6 @@
         b.classList.toggle('on', b.dataset.s === sub));
 
       const general = `
-        ${goalCardHTML(runs)}
         <div class="chart-card">
           <div class="chart-title">Synthèse</div>
           <div class="chart-sub">${plural(runs.length, 'run')} · ${fmtDur(totalSec)} de jeu cumulé</div>
@@ -8928,7 +8959,7 @@
 
         ${activityCompareCard()}
 
-        ${priceSettingsCard()}
+        <button class="btn btn-secondary" id="go-reglages" style="width:100%;">⚙ Prix du butin et réglages</button>
       `;
 
       const vagues = `
@@ -8943,7 +8974,8 @@
       `;
 
       body.innerHTML = sub === 'vagues' ? vagues : sub === 'kamas' ? kamas : general;
-      bindGoalCard();
+      const goR = document.getElementById('go-reglages');
+      if (goR) goR.addEventListener('click', () => { setView('sreglages'); haptic(); });
       document.querySelectorAll('[data-gran]').forEach(b =>
         b.addEventListener('click', () => {
           state.settings.gran = b.dataset.gran;
@@ -8951,13 +8983,49 @@
           renderSongesStats();
           haptic();
         }));
+      const ecoOpen = document.getElementById('eco-open');
+      if (ecoOpen) ecoOpen.addEventListener('click', () => { setView('sreglages'); haptic(); });
+    }
+
+    // ---- Réglages des Songes : tout ce qui se configure, au même endroit ----
+    function renderSongesSettings() {
+      const box = document.getElementById('sreglages-body');
+      if (!box) return;
+      const acc = teamAccounts();
+      box.innerHTML = `
+        <div class="chart-card">
+          <div class="chart-title">Ta team</div>
+          <div class="chart-sub">Les bribes saisies sur une run sont celles d'un compte : chaque palier donne un coffre par compte.</div>
+          <div class="mult-row" style="margin-top:12px;">
+            <span class="mult-bd"><b>Comptes dans la team</b><span>${acc > 1 ? `${acc} coffres par palier` : '1 coffre par palier'}</span></span>
+            <span class="mult-ctrl">
+              <button class="mult-btn" id="team-down" aria-label="Un compte de moins"${acc <= 1 ? ' disabled' : ''}>−</button>
+              <b class="mult-val kamas-num" id="team-val">${acc}</b>
+              <button class="mult-btn" id="team-up" aria-label="Un compte de plus"${acc >= 8 ? ' disabled' : ''}>+</button>
+            </span>
+          </div>
+        </div>
+
+        ${goalSettingsCard()}
+
+        ${priceSettingsCard()}`;
+
+      const setAcc = n => {
+        state.settings.eco = { ...eco(), accounts: Math.min(8, Math.max(1, n)) };
+        save();
+        render('songes');
+        haptic();
+      };
+      document.getElementById('team-down').addEventListener('click', () => setAcc(acc - 1));
+      document.getElementById('team-up').addEventListener('click', () => setAcc(acc + 1));
+      bindGoalSettings();
       ['eco-open', 'eco-open2'].forEach(id => {
         const b = document.getElementById(id);
         if (b) b.addEventListener('click', openEcoForm);
       });
       const prOpen = document.getElementById('pr-open');
       if (prOpen) prOpen.addEventListener('click', () => openPriceReview(stalePrices().length === 0));
-      document.querySelectorAll('[data-catprice]').forEach(el =>
+      box.querySelectorAll('[data-catprice]').forEach(el =>
         el.addEventListener('click', () => openCatForm(el.dataset.catprice)));
     }
 
@@ -8968,6 +9036,7 @@
       renderRuns();
       renderCompos();
       renderSongesStats();
+      renderSongesSettings();
     }
 
     // ---- Formulaire de run ----
@@ -9978,9 +10047,13 @@
       if (g.metric === 'bribes') {
         const total = Math.max(0, g.offset + bribesEarnedAll() - spentTotal());
         const due = Math.floor(total / g.target) * accounts - (state.chests || []).length;
-        if (due > 0) todo.push(homeRow('data-go="songes:sstats" data-stab="general"', '🎁',
+        if (due > 0) todo.push(homeRow('data-go="songes:legends"', '🎁',
           `${plural(due, 'coffre')} à récupérer`, 'Palier atteint : enregistre-les pour répartir leur valeur'));
       }
+      const alloc = chestAllocation();
+      if (alloc.uncovered > 0) todo.push(homeRow('data-go="songes:sreglages"', '⚠︎',
+        `${plural(alloc.uncoveredChests, 'coffre')} non couvert${alloc.uncoveredChests > 1 ? 's' : ''} par tes bribes`,
+        `${fmtK(alloc.uncovered)} kamas non comptés · vérifie le nombre de comptes (${teamAccounts()})`));
       const stale = stalePrices();
       if (stale.length) todo.push(homeRow('data-act="prices"', '⏱', `${(stale.length) + ' prix'} à revoir`,
         stale.slice(0, 3).map(p => escapeHtml(p.label)).join(', ') + (stale.length > 3 ? '…' : '')));
@@ -10049,7 +10122,7 @@
         const med = median(recent);
         const left = med ? Math.ceil((g.target - cur) / med) : null;
         parts.push(`<div class="home-sec">Prochain coffre</div>
-          <button class="home-card home-goal" data-go="songes:sstats" data-stab="general">
+          <button class="home-card home-goal" data-go="songes:legends">
             <span class="hg-top"><span>Palier ${Math.floor(total / g.target) + 1}</span><b>${Math.round(pct)} %</b></span>
             <span class="progress"><span class="progress-bar" style="width:${pct.toFixed(1)}%"></span></span>
             <span class="hg-sub">Il manque <b>${fmtNum(g.target - cur)}</b> bribes${left ? ` · environ <b>${left}</b> ${left > 1 ? 'runs' : 'run'}` : ''}${accounts > 1 ? ` · ${accounts} coffres à la clé` : ''}</span>
@@ -12778,7 +12851,10 @@
       if (!(state.resources || []).length) {
         body.innerHTML = `<div class="empty"><div class="icon">🌾</div>
           <div class="title">Aucune ressource</div>
-          <div>Ajoute les ressources que tu viens chercher, avec leur prix unitaire</div></div>`;
+          <div>Ajoute les ressources que tu viens chercher, avec leur prix unitaire</div></div>
+          ${farmSettingsCard()}`;
+        const cfg0 = body.querySelector('#fcfg-open');
+        if (cfg0) cfg0.addEventListener('click', openFarmCfg);
         return;
       }
 
@@ -12816,10 +12892,13 @@
               <span class="yield-n">${fmtNum(x.qty)}</span>
             </div>`).join('')}
           <div class="insight warn">Ces parts ne portent que sur les ressources que tu as détaillées, pas sur l'ensemble de ton butin. Le total réel de chaque session reste celui que tu saisis à la main.</div>
-        </div>` : ''}`;
+        </div>` : ''}
+        ${farmSettingsCard()}`;
 
       body.querySelectorAll('[data-res]').forEach(el =>
         el.addEventListener('click', () => openResForm(el.dataset.res)));
+      const cfgBtn = body.querySelector('#fcfg-open');
+      if (cfgBtn) cfgBtn.addEventListener('click', openFarmCfg);
     }
 
     // ---- Évolution des prix ----
@@ -13221,7 +13300,7 @@
     function farmSettingsCard() {
       const cfg = farmCfg();
       return `<div class="chart-card">
-        <div class="chart-title">Réglages</div>
+        <div class="chart-title">Réglages du farm</div>
         <div class="chart-sub">Servent au calcul des coûts et du rendement normalisé</div>
         <div class="detail-stats">
           <div class="dstat"><div class="lbl">Bonus d'anomalie</div><div class="val small">${cfg.anomalyBonus}%</div></div>
@@ -13314,12 +13393,10 @@
 
       const kamas = `
         ${farmProfitCard(runs)}
-        ${activityCompareCard()}
-        ${farmSettingsCard()}`;
+        ${activityCompareCard()}`;
 
       const anomalies = `
-        ${anomalyCard(runs)}
-        ${farmSettingsCard()}`;
+        ${anomalyCard(runs)}`;
 
       body.innerHTML = sub === 'kamas' ? kamas : sub === 'anomalies' ? anomalies : general;
       const cfgBtn = document.getElementById('fcfg-open');
@@ -14037,8 +14114,7 @@
       el.addEventListener('input', ecoRefletPreview);
     });
     wireNumberInput(document.getElementById('eco-cp'));
-    ['eco-cp', 'eco-acc'].forEach(id => document.getElementById(id).addEventListener('input', ecoChestHint));
-    document.getElementById('eco-acc').addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, ''); });
+    document.getElementById('eco-cp').addEventListener('input', ecoChestHint);
     wireNumberInput(document.getElementById('cat-price'));
 
     document.getElementById('spend-cancel').addEventListener('click', () => {
