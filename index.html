@@ -619,6 +619,8 @@
       width: 100%;
       max-width: 640px;
       max-height: calc(92vh - var(--kb, 0px));
+      /* dvh = hauteur réellement visible (barres du navigateur déduites) */
+      max-height: calc(100dvh - env(safe-area-inset-top, 0px) - 28px - var(--kb, 0px));
       overflow-y: auto;
       overscroll-behavior: contain;
       /* pas de marge haute : c'est la poignée collante qui la fournit */
@@ -626,6 +628,7 @@
       transition: max-height .18s ease;
       animation: slideUp .25s ease;
       -webkit-overflow-scrolling: touch;
+      will-change: transform;
     }
     @keyframes slideUp {
       from { transform: translateY(100%); }
@@ -635,6 +638,8 @@
     /* Zone tactile large autour de la poignée : c'est le geste naturel pour fermer */
     .modal-grip {
       display: block;
+      touch-action: none;   /* le glissement sur la poignée sert à fermer, pas à défiler */
+      cursor: grab;
       position: sticky;
       top: 0;
       z-index: 6;
@@ -14671,9 +14676,63 @@
     // La poignée ferme la modale : accessible sans dérouler jusqu'au bas
     document.querySelectorAll('.modal-grip').forEach(g => {
       g.addEventListener('click', () => {
-        dismissModal(g.closest('.modal-overlay'));
+        const o = g.closest('.modal-overlay');
+        if (!o.classList.contains('active')) return;   // déjà fermée par le geste tactile
+        dismissModal(o);
         haptic();
       });
+    });
+
+    // Sur téléphone : glisser la fenêtre vers le bas la ferme. Le geste part de
+    // la poignée, ou de n'importe où quand le contenu est déjà tout en haut.
+    // Un simple appui sur la poignée ferme aussi (iOS ne déclenche pas toujours
+    // le clic sur un élément collant dans une zone qui défile).
+    document.querySelectorAll('.modal-overlay').forEach(o => {
+      const m = o.querySelector('.modal');
+      if (!m) return;
+      let y0 = null, dy = 0, t0 = 0, fromGrip = false, dragging = false;
+      const reset = () => { m.style.transform = ''; m.style.transition = ''; };
+      m.addEventListener('touchstart', e => {
+        y0 = null;
+        if (e.touches.length !== 1) return;
+        fromGrip = !!e.target.closest('.modal-grip');
+        if (!fromGrip && (m.scrollTop > 0 || e.target.closest('input, textarea, select'))) return;
+        y0 = e.touches[0].clientY; dy = 0; t0 = Date.now(); dragging = false;
+      }, { passive: true });
+      m.addEventListener('touchmove', e => {
+        if (y0 == null) return;
+        dy = e.touches[0].clientY - y0;
+        if (dy > 6 && (fromGrip || m.scrollTop <= 0)) {
+          dragging = true;
+          m.style.transition = 'none';
+          m.style.transform = `translateY(${dy}px)`;
+          if (e.cancelable) e.preventDefault();
+        } else if (!fromGrip && dy < 0) {
+          y0 = null;   // vers le haut : on laisse défiler le contenu
+          reset();
+        }
+      }, { passive: false });
+      const end = () => {
+        if (y0 == null) return;
+        const quick = dy > 50 && Date.now() - t0 < 260;
+        y0 = null;
+        if (dragging && (dy > 110 || quick)) {
+          m.style.transition = 'transform .18s ease';
+          m.style.transform = 'translateY(100%)';
+          setTimeout(() => { reset(); if (o.classList.contains('active')) dismissModal(o); }, 170);
+          haptic();
+        } else if (fromGrip && !dragging) {
+          reset();
+          dismissModal(o);
+          haptic();
+        } else if (dragging) {
+          m.style.transition = 'transform .2s ease';
+          m.style.transform = '';
+          setTimeout(reset, 200);
+        }
+      };
+      m.addEventListener('touchend', end);
+      m.addEventListener('touchcancel', () => { y0 = null; reset(); });
     });
 
     // Click overlay = close
