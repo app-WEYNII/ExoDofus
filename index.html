@@ -3314,6 +3314,22 @@
     .sr-dt { font-size: 11.5px; color: var(--text-dim); }
     .sr-st { flex-shrink: 0; font-size: 12px; color: var(--text-soft); }
     .sr-st.sold { color: var(--green); font-weight: 600; }
+
+    /* iOS zoome sur tout champ dont le texte fait moins de 16 px, et ne
+       dézoome pas en sortant. Sur écran tactile, tous les champs passent à
+       16 px : plus de zoom à la saisie, le pincement reste possible. */
+    @media (pointer: coarse) {
+      input, select, textarea { font-size: 16px !important; }
+    }
+
+    .chest-verdict { margin-top: 12px; padding: 10px 12px; border-radius: var(--radius-sm); font-weight: 700; text-align: center; font-size: 14px; }
+    .chest-verdict.open { background: var(--green-soft); color: var(--green); border: 1px solid rgba(74, 222, 128, 0.35); }
+    .chest-verdict.sell { background: var(--gold-soft); color: var(--gold-bright); border: 1px solid var(--gold-deep); }
+    .chest-verdict.even { background: var(--bg-soft); color: var(--text-soft); border: 1px solid var(--border-hi); }
+
+    /* Les grands montants en kamas ne doivent jamais déborder sur téléphone */
+    .counter-big .num.long { font-size: clamp(30px, 11vw, 60px); white-space: nowrap; padding: 0 2px; }
+    .counter-big .num { max-width: 100%; overflow-wrap: anywhere; }
   </style>
 </head>
 <body>
@@ -4182,14 +4198,27 @@
         <button class="trash-btn hidden" id="chest-delete" aria-label="Supprimer ce coffre">🗑</button>
       </div>
 
-      <div class="field">
-        <label for="ch-date">Date d'ouverture</label>
-        <input type="date" id="ch-date" />
+      <div id="ch-advice"></div>
+
+      <div class="seg" id="ch-mode">
+        <button class="seg-btn on" data-cm="open">Ouvert</button>
+        <button class="seg-btn" data-cm="sold">Vendu fermé</button>
       </div>
 
       <div class="field">
+        <label for="ch-date" id="ch-date-lbl">Date d'ouverture</label>
+        <input type="date" id="ch-date" />
+      </div>
+
+      <div class="field" id="ch-legend-field">
         <label>Légende obtenue</label>
         <div class="qual-list" id="ch-legends"></div>
+      </div>
+
+      <div class="field hidden" id="ch-sold-field">
+        <label for="ch-sold-price">Prix de vente du coffre</label>
+        <input type="text" id="ch-sold-price" maxlength="13" inputmode="numeric" placeholder="0" autocomplete="off" />
+        <div class="hint">Figé : il sera réparti sur les runs qui ont fourni les bribes du coffre.</div>
       </div>
 
       <div class="field">
@@ -4287,9 +4316,9 @@
       <div class="hint" style="margin-bottom:16px;">Un prix modifié s'applique à partir de maintenant : tes runs et coffres passés gardent le prix en vigueur à leur date.</div>
 
       <div class="field">
-        <label for="eco-cp">Prix d'un coffre</label>
+        <label for="eco-cp">Prix de vente d'un coffre fermé</label>
         <input type="text" id="eco-cp" maxlength="13" inputmode="numeric" autocomplete="off" placeholder="0" />
-        <div class="hint">Réparti sur les runs qui ont fourni ses bribes, à son ouverture. Laisse à 0 pour compter le prix de la légende obtenue.</div>
+        <div class="hint">Sa cote à l'HDV. Sert à comparer ouvrir ou vendre, et à valoriser un coffre dont la légende n'est pas renseignée.</div>
       </div>
 
       <div class="hint" id="eco-cp-hint" style="margin:-8px 0 14px;"></div>
@@ -4737,7 +4766,8 @@
       // Coffres
       st.chests = st.chests.filter(c => c && typeof c === 'object')
         .map(c => ({ ...c, id: c.id || uid(), date: c.date || todayISO(),
-                     note: String(c.note || '').slice(0, 80), createdAt: c.createdAt || Date.now() }));
+                     note: String(c.note || '').slice(0, 80), createdAt: c.createdAt || Date.now(),
+                     soldPrice: int(c.soldPrice) }));
       st.chests.forEach(linkLegends);
 
       // Objectifs de la semaine
@@ -4758,6 +4788,8 @@
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
         state = normalizeState(raw ? JSON.parse(raw) : null);
+        // anciens coffres : on fige leur répartition telle qu'elle est aujourd'hui
+        if ((state.chests || []).some(c => !c.funding)) lockFunding();
         collapsedDays = new Set(Array.isArray(state.settings.collapsedDays) ? state.settings.collapsedDays : []);
         // une migration a modifié quelque chose : on l'écrit tout de suite
         if (raw && JSON.stringify(state) !== raw) save();
@@ -5722,6 +5754,7 @@
               loadFailed = false;   // repartir d'un état choisi lève le blocage d'écriture
               const { schema, exportedAt, ...payload } = data;
               state = normalizeState(payload);
+              if ((state.chests || []).some(c => !c.funding)) lockFunding();
 
               draftCompoId = null;
               activeFilters.clear();
@@ -7354,9 +7387,21 @@
     }
 
 
+    let draftChestMode = 'open';
+    function paintChestMode() {
+      document.querySelectorAll('#ch-mode .seg-btn').forEach(b => b.classList.toggle('on', b.dataset.cm === draftChestMode));
+      const sold = draftChestMode === 'sold';
+      document.getElementById('ch-legend-field').classList.toggle('hidden', sold);
+      document.getElementById('ch-sold-field').classList.toggle('hidden', !sold);
+      document.getElementById('ch-date-lbl').textContent = sold ? 'Date de la vente' : 'Date d\'ouverture';
+    }
     function openChestForm(id) {
       editingChestId = id || null;
       const c = id ? state.chests.find(x => x.id === id) : null;
+      draftChestMode = c && c.soldPrice > 0 ? 'sold' : 'open';
+      setNumberInput(document.getElementById('ch-sold-price'), c && c.soldPrice ? c.soldPrice : (eco().chestPrice || 0));
+      const adv = chestAdvice();
+      document.getElementById('ch-advice').innerHTML = !c && adv ? chestAdviceInline(adv) : '';
       document.getElementById('chest-title').textContent = c ? 'Modifier le coffre' : 'Coffre légendaire';
       document.getElementById('ch-date').value = c ? (c.date || todayISO()) : todayISO();
       document.getElementById('ch-note').value = c ? (c.note || '') : '';
@@ -7364,17 +7409,20 @@
         ? [{ catId: c.legends[0].catId || null, name: c.legends[0].name || '', ...(c.legends[0].sold ? { sold: c.legends[0].sold } : {}) }]
         : [{ catId: null, name: '' }];
       paintChestLegends();
+      paintChestMode();
       document.getElementById('chest-delete').classList.toggle('hidden', !c);
       document.getElementById('modal-chest').classList.add('active');
-      // à la création, on propose directement de choisir la légende
-      if (!c) openPicker('chest', 0);
     }
 
     function saveChest() {
+      const sold = draftChestMode === 'sold';
+      const soldPrice = sold ? rawNum(document.getElementById('ch-sold-price')) : 0;
+      if (sold && !soldPrice) { flagInvalid('ch-sold-price'); toast('Indique le prix de vente du coffre'); return; }
       const payload = {
         date: document.getElementById('ch-date').value || todayISO(),
         note: document.getElementById('ch-note').value.trim(),
-        legends: draftChestLegends.filter(l => l.catId || l.name)
+        soldPrice,
+        legends: sold ? [] : draftChestLegends.filter(l => l.catId || l.name)
           .map(l => ({ catId: l.catId || null, name: (l.name || '').trim(), ...(l.sold ? { sold: l.sold } : {}) })),
       };
       const wasEditing = !!editingChestId;
@@ -7384,6 +7432,8 @@
       } else {
         state.chests.push({ id: uid(), ...payload, createdAt: Date.now() });
       }
+      // la répartition du coffre est figée dès son enregistrement
+      lockFunding();
       save();
       refreshNameList();
       renderSonges();
@@ -7398,7 +7448,9 @@
       if (!id) return;
       document.getElementById('modal-chest').classList.remove('active');
       confirmDialog('Supprimer ce coffre ?', 'Les légendes qu\'il contenait ne seront plus comptées.', () => {
+        const origin = originStock();
         state.chests = state.chests.filter(x => x.id !== id);
+        relockAllFunding(origin);   // ses bribes repartent dans la file, le stock d'origine est conservé
         save();
         renderSonges();
         render('songes');   // palier, coffres, réglages et stats se recalculent
@@ -7456,7 +7508,7 @@
       const chestDrops = drops.filter(d => d.src === 'chest');
       const nRuns = runs.length;
       const nRd = runDrops.length;
-      const nChests = (state.chests || []).length;
+      const nChests = (state.chests || []).filter(chestOpened).length;
       const nCd = chestDrops.length;
       if (!nRuns && !nChests) return '';
 
@@ -7632,6 +7684,74 @@
       toast(sellKind === 'sold' ? 'Vente enregistrée' : 'Légende gardée');
     }
 
+
+    // ---- Ouvrir ou vendre un coffre ? ----
+    // Le coffre donne une légende tirée au hasard parmi les 26 : ouvrir vaut en
+    // moyenne la cote moyenne des légendes (× légendes par coffre observées).
+    function chestAdvice() {
+      const cat = (state.catalogue || []).filter(c => LEGENDS_DB.some(n => normName(n) === normName(c.name)));
+      const pool = cat.length >= 10 ? cat : (state.catalogue || []);
+      const priced = pool.filter(c => c.price > 0);
+      if (!priced.length) return null;
+      const opened = (state.chests || []).filter(chestOpened);
+      const nLeg = opened.reduce((a, c) => a + (c.legends || []).length, 0);
+      const perChest = opened.length >= 3 && nLeg ? nLeg / opened.length : 1;
+      const mean = priced.reduce((a, c) => a + c.price, 0) / priced.length;
+      const openEV = mean * perChest;
+      const sell = eco().chestPrice;
+      const better = priced.filter(c => c.price * perChest > sell).length;
+      const prices = priced.map(c => c.price).sort((a, b) => a - b);
+      return { openEV, sell, mean, perChest, nPriced: priced.length, nPool: pool.length,
+               pBetter: sell > 0 ? better / priced.length : null,
+               min: prices[0], max: prices[prices.length - 1],
+               median: prices.length % 2 ? prices[(prices.length - 1) / 2] : (prices[prices.length / 2 - 1] + prices[prices.length / 2]) / 2 };
+    }
+    function chestVerdict(a) {
+      if (!a.sell) return null;
+      const diff = a.openEV - a.sell;
+      const pct = (diff / a.sell) * 100;
+      if (Math.abs(pct) < 5) return { k: 'even', txt: 'Quasi équivalent', pct };
+      return diff > 0 ? { k: 'open', txt: 'Plutôt ouvrir', pct } : { k: 'sell', txt: 'Plutôt vendre', pct };
+    }
+    function chestAdviceInline(a) {
+      const v = chestVerdict(a);
+      if (!v) return '';
+      return `<div class="insight${v.k === 'sell' ? ' warn' : ''}" style="margin-bottom:12px;">
+        <b>${v.txt}</b> : ouvrir rapporte en moyenne ${fmtK(a.openEV)}, le vendre fermé ${fmtK(a.sell)}.</div>`;
+    }
+    function chestAdviceCard() {
+      const a = chestAdvice();
+      if (!a) return `<div class="chart-card">
+          <div class="chart-title">Ouvrir ou vendre ?</div>
+          <div class="note-box">Renseigne la cote de tes légendes dans la collection : l'app calculera ce que rapporte un coffre ouvert en moyenne.</div>
+        </div>`;
+      const v = chestVerdict(a);
+      return `<div class="chart-card">
+        <div class="chart-title">Ouvrir ou vendre ?</div>
+        <div class="chart-sub">Un coffre donne une légende au hasard parmi les ${a.nPool}</div>
+        <div class="src-split" style="margin-top:10px;">
+          <div class="src-panel">
+            <div class="sp-head">Ouvrir</div>
+            <div class="sp-big kamas-num">${fmtK(a.openEV)}</div>
+            <div class="sp-lbl">en moyenne${a.perChest !== 1 ? ` · ${String(Math.round(a.perChest * 100) / 100).replace('.', ',')} légende par coffre` : ''}</div>
+          </div>
+          <div class="src-panel">
+            <div class="sp-head">Vendre fermé</div>
+            <div class="sp-big kamas-num">${a.sell ? fmtK(a.sell) : '—'}</div>
+            <div class="sp-lbl">${a.sell ? `prix du coffre · ${priceAgeOf('eco:chest') || 'à jour'}` : 'prix non renseigné'}</div>
+          </div>
+        </div>
+        ${v ? `<div class="chest-verdict ${v.k}">${v.txt}${v.k !== 'even' ? ` · ${v.pct > 0 ? '+' : ''}${Math.round(v.pct)} % en ouvrant` : ''}</div>` : `<button class="btn btn-secondary" id="adv-set-price" style="width:100%;margin-top:10px;">Indiquer le prix de vente d'un coffre</button>`}
+        <div class="ak-lines" style="margin-top:10px;">
+          ${a.pBetter != null ? `<span>Chance de tirer mieux que la vente : <b>${Math.round(a.pBetter * 100)} %</b></span>` : ''}
+          <span>Légende la moins chère <b>${fmtK(a.min)}</b> · médiane <b>${fmtK(a.median)}</b> · la plus chère <b>${fmtK(a.max)}</b></span>
+        </div>
+        ${a.nPriced < a.nPool ? `<div class="insight warn">${a.nPool - a.nPriced} légende${a.nPool - a.nPriced > 1 ? 's' : ''} sans cote : la moyenne ne porte que sur ${a.nPriced}. Complète la collection pour un calcul fiable.</div>` : ''}
+        ${v && v.k === 'open' && a.pBetter != null && a.pBetter < 0.5 ? `<div class="insight">Ouvrir est meilleur <b>en moyenne</b>, mais tu tireras moins que le prix de vente ${Math.round((1 - a.pBetter) * 100)} fois sur 100 : quelques légendes très chères tirent la moyenne vers le haut. Sur plusieurs coffres, ça s'équilibre ; sur un seul, c'est un pari.</div>` : ''}
+        <div class="orphan-note">Calcul à la cote de tes légendes, sans compter le temps ni la difficulté de les revendre.</div>
+      </div>`;
+    }
+
     // ---- Rendu de l'onglet Légendes ----
     let collSrc = 'all';   // filtre de provenance de la collection : all | run | chest
     function renderLegends() {
@@ -7640,13 +7760,12 @@
       if (!Array.isArray(state.chests)) state.chests = [];
       if (!Array.isArray(state.catalogue)) state.catalogue = [];
       const nChests = state.chests.length;
+      const nSoldChests = state.chests.filter(c => !chestOpened(c)).length;
 
 
       // Cohérence entre les bribes cumulées et les coffres réellement ouverts
       const { metric, target, offset } = goalCfg();
-      const earned = bribesEarnedAll() - spentTotal() + (metric === 'bribes' ? offset : 0);
-      const expected = metric === 'bribes' ? Math.floor(earned / target) * teamAccounts() : null;
-      const gap = expected != null ? expected - nChests : null;
+      const expected = null, gap = null;   // remplacé par les coffres à récupérer et l'alerte « non couverts »
 
       const pool = collSrc === 'all' ? drops : drops.filter(d => d.src === collSrc);
       const catRows = state.catalogue.map(e => {
@@ -7666,18 +7785,24 @@
         ${state.songes.length ? goalCardHTML(statRuns()) : ''}
 
         <div class="chart-card">
-          <div class="chart-title">Coffres ouverts</div>
+          <div class="chart-title">Tes coffres</div>
           <div class="chart-sub">Chaque palier de ${fmtNum(target)} bribes en débloque un</div>
           <div class="counter-big" style="margin-bottom:4px;">
             <div class="num kamas-num">${nChests}</div>
-            <div class="lbl">coffre${nChests > 1 ? 's' : ''} ouvert${nChests > 1 ? 's' : ''}</div>
+            <div class="lbl">coffre${nChests > 1 ? 's' : ''}${nSoldChests ? ` · ${nSoldChests} vendu${nSoldChests > 1 ? 's' : ''} fermé${nSoldChests > 1 ? 's' : ''}` : ''}</div>
           </div>
           ${gap != null && gap !== 0 ? `<div class="insight warn">Tes bribes cumulées correspondent à <b>${expected}</b> ${expected > 1 ? 'paliers' : 'palier'}, mais tu as enregistré <b>${nChests}</b> ${nChests > 1 ? 'coffres' : 'coffre'}. ${gap > 0 ? `Il t'en manque ${gap} à saisir.` : `Tu en as saisi ${-gap} de plus — peut-être des coffres obtenus avant le suivi.`}</div>` : ''}
-          <button class="btn btn-primary" id="add-chest" style="width:100%;margin-top:12px;">+ J'ai ouvert un coffre</button>
+          <button class="btn btn-primary" id="add-chest" style="width:100%;margin-top:12px;">+ Enregistrer un coffre</button>
           ${nChests ? `<div class="chart-sub" style="margin-top:14px;">Historique des coffres</div>
           <div style="margin-top:6px;">
             ${[...state.chests].sort((a, b) => (b.date || '').localeCompare(a.date || '')).map(c => `
-              <div class="chest-entry" data-chest="${c.id}">
+              ${!chestOpened(c) ? `<div class="chest-entry" data-chest="${c.id}">
+                <span class="ic">💰</span>
+                <span class="bd">
+                  <span class="t1">${fmtDateShort(c.date)} — vendu fermé</span>
+                  <span class="t2">${fmtNum(c.soldPrice)} kamas${c.note ? ' · ' + escapeHtml(c.note) : ''}</span>
+                </span>
+              </div>` : `<div class="chest-entry" data-chest="${c.id}">
                 ${(c.legends || []).map(l => {
                   const q = resolveLegend(l).q;
                   return `<span class="qdot ${q || 'none'}"></span>`;
@@ -7689,9 +7814,11 @@
                     return q && QMAP[q] ? QMAP[q].label : 'non classée';
                   }).join(', ')}${c.note ? ' · ' + escapeHtml(c.note) : ''}</span>
                 </span>
-              </div>`).join('')}
+              </div>`}`).join('')}
           </div>` : ''}
         </div>
+
+        ${chestAdviceCard()}
 
         ${legendSourceCard(statRuns(), drops)}
 
@@ -7744,6 +7871,8 @@
       body.querySelectorAll('[data-csrc]').forEach(b =>
         b.addEventListener('click', () => { collSrc = b.dataset.csrc; renderLegends(); haptic(); }));
       bindGoalCard();
+      const advBtn = document.getElementById('adv-set-price');
+      if (advBtn) advBtn.addEventListener('click', () => { openEcoForm(); haptic(); });
       const addChest = document.getElementById('add-chest');
       if (addChest) addChest.addEventListener('click', () => openChestForm());
       const addCat = document.getElementById('add-cat');
@@ -8006,6 +8135,11 @@
     // Stock de départ qui fait coller l'app à ton solde en jeu :
     // solde = départ + gagné − dépensé − coffres × palier
     function offsetFromBalance(balance) {
+      // solde en jeu = stock du palier + bribes libres des runs − dépenses non figées
+      const a = chestAllocation();
+      return balance - (a.pool - palierStock());
+    }
+    function offsetFromBalanceLegacy(balance) {
       return balance - bribesEarnedAll() + spentTotal()
         + ((state.chests || []).length / teamAccounts()) * chestBribeCost();
     }
@@ -8013,13 +8147,17 @@
     function goalCardHTML(runs) {
       const { metric, target, offset } = goalCfg();
       const meta = GOAL_METRICS[metric];
-      const earned = metric === 'bribes' ? bribesEarnedAll() : runs.reduce((s, r) => s + (r[metric] || 0), 0);
       // les bribes dépensées chez un marchand ne comptent pas pour le palier
       const spent = metric === 'bribes' ? spentTotal() : 0;
-      const total = Math.max(0, earned + offset - spent);
-      const cycles = Math.floor(total / target);
-      const current = total % target;
-      const remaining = target - current;
+      let cycles, current, remaining, due;
+      if (metric === 'bribes') {
+        // palier en cours = bribes non consommées par les coffres déjà figés
+        const ps = palierState();
+        cycles = ps.number - 1; current = ps.current; remaining = ps.remaining; due = ps.due;
+      } else {
+        const total = Math.max(0, runs.reduce((s, r) => s + (r[metric] || 0), 0) + offset);
+        cycles = Math.floor(total / target); current = total % target; remaining = target - current; due = 0;
+      }
       const pct = (current / target) * 100;
 
       const all = projectFrom(runs, metric);
@@ -8041,11 +8179,6 @@
       const opts = Object.entries(GOAL_METRICS)
         .map(([k, v]) => `<option value="${k}"${k === metric ? ' selected' : ''}>${v.label}</option>`).join('');
 
-      // Le compteur repart à zéro à chaque palier ; on signale ceux qui n'ont
-      // pas encore été enregistrés comme coffres ouverts
-      const due = metric === 'bribes'
-        ? Math.max(0, cycles * teamAccounts() - (state.chests || []).length)
-        : 0;
 
       return `
         <div class="chart-card">
@@ -8056,7 +8189,7 @@
             <div class="lbl">Palier atteint</div>
             <div class="val">${due} coffre${due > 1 ? 's' : ''} à récupérer</div>
           </div>
-          <button class="btn btn-primary" id="goal-chest" style="width:100%;margin-bottom:12px;">+ J'ai ouvert le coffre</button>
+          <button class="btn btn-primary" id="goal-chest" style="width:100%;margin-bottom:12px;">+ Enregistrer le coffre</button>
           ` : `<div class="counter-big" style="margin-bottom:12px;">
             <div class="num kamas-num">${runsLeft != null ? runsLeft : '—'}</div>
             <div class="lbl">${runsLeft > 1 ? 'runs restantes' : 'run restante'} à ton rythme actuel</div>
@@ -8095,7 +8228,7 @@
         .map(([k, v]) => `<option value="${k}"${k === metric ? ' selected' : ''}>${v.label}</option>`).join('');
       return `<div class="chart-card">
           <div class="chart-title">Coffre et palier</div>
-          <div class="chart-sub">Ce qui déclenche un coffre, et où tu en étais avant de suivre tes runs</div>
+          <div class="chart-sub">Les coffres enregistrés gardent leur répartition : le stock et le recalage ne touchent que le palier en cours.</div>
           <div class="goal-cfg" style="margin-top:12px;border-top:none;padding-top:0;">
             <div>
               <div class="lbl">Ressource</div>
@@ -8106,7 +8239,7 @@
               <input type="text" id="pal-target" inputmode="numeric" value="${fmtNum(target)}" />
             </div>
             <div class="wide">
-              <div class="lbl">Déjà acquis avant le suivi</div>
+              <div class="lbl">Stock au début du palier en cours</div>
               <input type="text" id="pal-offset" inputmode="numeric" placeholder="0" value="${offset ? fmtNum(offset) : ''}" />
             </div>
             ${metric === 'bribes' ? `<div class="wide">
@@ -8117,6 +8250,8 @@
               </div>
             </div>` : ''}
           </div>
+          ${metric === 'bribes' && (state.chests || []).length ? `<button class="btn btn-secondary" id="pal-relock" style="width:100%;margin-top:12px;">Recalculer la répartition de tous les coffres</button>
+          <div class="hint">À n'utiliser que pour corriger une erreur : le stock indiqué devient alors celui du tout début du suivi.</div>` : ''}
         </div>`;
     }
 
@@ -8133,7 +8268,10 @@
 
     function bindGoalSettings() {
       const setGoal = patch => {
+        const origin = originStock();
         state.settings.goal = { ...goalCfg(), ...patch };
+        // la taille du palier change la part de chaque coffre : on recalcule
+        if ('target' in patch) relockAllFunding(origin);
         save();
         render('songes');
       };
@@ -8143,6 +8281,7 @@
           const m = metricEl.value;
           // changer de ressource remet le palier et le report par défaut
           state.settings.goal = { metric: m, target: GOAL_METRICS[m].target, offset: 0 };
+          relockAllFunding(0);
           save();
           render('songes');
         });
@@ -8157,6 +8296,16 @@
         wireNumberInput(offsetEl);
         offsetEl.addEventListener('change', () => setGoal({ offset: rawNum(offsetEl) }));
       }
+      const relock = document.getElementById('pal-relock');
+      if (relock) relock.addEventListener('click', () => {
+        confirmDialog('Recalculer tous les coffres ?',
+          'Leur répartition sur les runs sera refaite depuis le début, avec le stock indiqué comme point de départ du suivi.', () => {
+            relockAllFunding();
+            save();
+            render('songes');
+            toast('Répartition recalculée');
+          });
+      });
       const balEl = document.getElementById('pal-balance');
       if (balEl) {
         wireNumberInput(balEl);
@@ -8274,13 +8423,17 @@
     }
     // Un prix de coffre fixé l'emporte sur la légende tirée : la chance est lissée.
     // À 0, c'est le prix de la légende réellement obtenue qui compte.
+    // Valeur d'un coffre, du plus concret au plus estimé :
+    // vendu fermé → son prix de vente ; ouvert → sa légende (prix de vente si
+    // vendue, cote actuelle si gardée) ; légende inconnue → prix du coffre à sa date.
     function chestValue(c) {
-      // une légende vendue donne la vraie valeur du coffre
-      const sold = (c.legends || []).filter(l => l && l.sold && l.sold.price > 0);
-      if (sold.length) return sold.reduce((a, l) => a + l.sold.price, 0);
-      const p = priceAt('eco:chest', itemTime(c.date, c.createdAt), eco().chestPrice);
-      return p > 0 ? p : legendsValue(c.legends);
+      if (c.soldPrice > 0) return c.soldPrice;
+      const legs = (c.legends || []).filter(l => l && (l.catId || l.name));
+      const v = legendsValue(legs);
+      if (v > 0) return v;
+      return priceAt('eco:chest', itemTime(c.date, c.createdAt), eco().chestPrice);
     }
+    function chestOpened(c) { return !(c.soldPrice > 0); }
     // Chaque compte a ses propres bribes et ouvre son propre coffre au palier.
     // Les bribes saisies sur une run sont celles d'UN compte : un palier atteint
     // donne donc autant de coffres que de comptes.
@@ -8291,60 +8444,157 @@
     }
 
     // ---- Redistribution des coffres sur les runs ----
-    // Les bribes forment une file, dans l'ordre où elles ont été gagnées : le
-    // stock d'avant le suivi d'abord, puis chaque run. Chaque coffre ouvert
-    // consomme un palier de bribes en tête de file et reverse sa valeur réelle
-    // aux runs consommées, au prorata des bribes que chacune a fournies. Les
-    // dépenses chez un marchand consomment aussi la file, sans rien reverser.
-    // Ce qui reste en file attend le prochain coffre.
+    // Chaque coffre enregistré fige sa répartition : les runs qui ont fourni
+    // ses bribes, et la part venue du stock. Rien ne la remet en cause ensuite,
+    // ni un changement de stock ni un recalage. Les bribes non consommées
+    // forment le palier en cours : le stock de départ (« déjà acquis ») en
+    // tête de file, puis les runs dans l'ordre. Une dépense chez un marchand
+    // consomme la file sans rien reverser, et se fige avec le coffre suivant.
     let allocCache = null;   // remis à zéro à chaque sauvegarde
+    function chestNeed() { return chestBribeCost() / teamAccounts(); }
+    function palierStock() {
+      const g = goalCfg();
+      return g.metric === 'bribes' ? Math.max(0, g.offset || 0) : 0;
+    }
+    function chestOrder(a, b) {
+      return (a.date || '').localeCompare(b.date || '') || (a.createdAt || 0) - (b.createdAt || 0);
+    }
     function chestAllocation() {
       if (allocCache) return allocCache;
-      const cost = chestBribeCost();
-      const g = goalCfg();
-      const offset = g.metric === 'bribes' ? g.offset : 0;
+      const need = chestNeed();
+      const share = {}, pending = {}, used = {};
+      let attributed = 0, unattributed = 0, uncovered = 0, uncoveredChests = 0;
+      const chests = state.chests || [], spends = state.spends || [];
+
+      // 1. Coffres et dépenses déjà figés
+      const lockedUse = f => Object.entries((f && f.runs) || {}).forEach(([id, b]) => { used[id] = (used[id] || 0) + b; });
+      chests.filter(c => c.funding).forEach(c => {
+        lockedUse(c.funding);
+        const funded = (c.funding.pre || 0) + Object.values(c.funding.runs || {}).reduce((t, b) => t + b, 0);
+        // toute la valeur est répartie sur ce que le coffre a consommé, jamais plus
+        const per = chestValue(c) / Math.max(need, funded);
+        Object.entries(c.funding.runs || {}).forEach(([id, b]) => {
+          const k = b * per;
+          share[id] = (share[id] || 0) + k;
+          attributed += k;
+        });
+        unattributed += (c.funding.pre || 0) * per;
+        const gap = need - funded;
+        if (gap > 1e-6) { unattributed += gap * per; uncovered += gap * per; uncoveredChests++; }
+      });
+      spends.filter(sp => sp.funding).forEach(sp => lockedUse(sp.funding));
+
+      // 2. File du palier en cours : stock, puis bribes encore libres des runs
+      const stock = palierStock();
       const queue = [];
-      if (offset > 0) queue.push({ id: null, left: offset });
-      sortedRuns().forEach(r => { if ((r.bribes || 0) > 0) queue.push({ id: r.id, left: r.bribes }); });
+      if (stock > 0) queue.push({ id: null, left: stock });
+      sortedRuns().forEach(r => {
+        const free = Math.max(0, (r.bribes || 0) - (used[r.id] || 0));
+        if (free > 0) queue.push({ id: r.id, left: free });
+      });
 
+      // 3. Ce qui n'est pas encore figé se sert dans la file, par date
       const events = [
-        ...(state.chests || []).map(c => ({ chest: c, date: c.date || '', ts: c.createdAt || 0 })),
-        ...(state.spends || []).map(sp => ({ spend: sp, date: sp.date || '', ts: sp.createdAt || 0 })),
+        ...chests.filter(c => !c.funding).map(c => ({ chest: c, date: c.date || '', ts: c.createdAt || 0 })),
+        ...spends.filter(sp => !sp.funding).map(sp => ({ spend: sp, date: sp.date || '', ts: sp.createdAt || 0 })),
       ].sort((a, b) => a.date.localeCompare(b.date) || a.ts - b.ts);
-
-      const share = {}, pending = {};
-      let attributed = 0, unattributed = 0, uncovered = 0, uncoveredChests = 0, qi = 0;
+      const plan = [];   // répartition que prendrait chaque élément s'il était figé maintenant
+      let qi = 0;
       events.forEach(ev => {
-        const chestNeed = cost / teamAccounts();
-        let need = ev.chest ? chestNeed : Math.max(0, ev.spend.amount || 0);
-        const perBribe = ev.chest ? chestValue(ev.chest) / chestNeed : 0;
-        while (need > 0 && qi < queue.length) {
+        let left = ev.chest ? need : Math.max(0, ev.spend.amount || 0);
+        const per = ev.chest ? chestValue(ev.chest) / need : 0;
+        const funding = { runs: {}, pre: 0 };
+        while (left > 1e-6 && qi < queue.length) {
           const q = queue[qi];
-          const take = Math.min(q.left, need);
+          const take = Math.min(q.left, left);
           q.left -= take;
-          need -= take;
-          if (need < 1e-6) need = 0;   // paliers non entiers (ex. 3 comptes)
-          if (perBribe) {
-            const k = take * perBribe;
+          left -= take;
+          if (q.id) funding.runs[q.id] = (funding.runs[q.id] || 0) + take;
+          else funding.pre += take;
+          if (per) {
+            const k = take * per;
             if (q.id) { share[q.id] = (share[q.id] || 0) + k; attributed += k; }
-            else unattributed += k;   // bribes gagnées avant le suivi
+            else unattributed += k;
           }
           if (q.left <= 1e-6) qi++;
         }
-        // coffre saisi sans assez de bribes enregistrées pour le payer :
-        // signe d'un réglage faux (nombre de comptes, stock de départ) ou de runs manquantes
-        if (perBribe && need > 0) {
-          unattributed += need * perBribe;
-          uncovered += need * perBribe;
-          uncoveredChests++;
-        }
+        if (per && left > 1e-6) { unattributed += left * per; uncovered += left * per; uncoveredChests++; }
+        plan.push({ item: ev.chest || ev.spend, isChest: !!ev.chest, funding });
       });
-      let pendingTotal = 0;
+
+      // 4. Ce qui reste attend le prochain coffre
+      let pendingTotal = 0, stockLeft = 0;
+      const open = [];
       queue.slice(qi).forEach(q => {
-        if (q.id && q.left > 1e-6) { pending[q.id] = q.left; pendingTotal += q.left; }
+        if (q.left <= 1e-6) return;
+        if (q.id) { pending[q.id] = q.left; pendingTotal += q.left; }
+        else stockLeft += q.left;
+        open.push({ id: q.id, left: q.left });
       });
-      allocCache = { share, pending, pendingTotal, attributed, unattributed, uncovered, uncoveredChests, cost };
+      allocCache = { share, pending, pendingTotal, attributed, unattributed, uncovered, uncoveredChests,
+                     cost: chestBribeCost(), need, plan, open, stockLeft, pool: stockLeft + pendingTotal, used };
       return allocCache;
+    }
+
+    // Fige la répartition de tout coffre pas encore figé (et des dépenses qui
+    // le précèdent). Le stock consommé est retiré du « déjà acquis » : il ne
+    // reste que celui du palier en cours.
+    function lockFunding() {
+      allocCache = null;
+      const a = chestAllocation();
+      const lastChest = a.plan.map(x => x.isChest).lastIndexOf(true);
+      if (lastChest < 0) return false;
+      let preUsed = 0;
+      a.plan.slice(0, lastChest + 1).forEach(x => {
+        x.item.funding = x.funding;
+        preUsed += x.funding.pre;
+      });
+      if (preUsed > 0 && goalCfg().metric === 'bribes') {
+        state.settings.goal = { ...goalCfg(), offset: Math.max(0, Math.round(palierStock() - preUsed)) };
+      }
+      allocCache = null;
+      return true;
+    }
+    // Recalcule toutes les répartitions depuis zéro, avec le stock indiqué
+    // comme point de départ du suivi (action volontaire, depuis les Réglages).
+    // Le stock d'origine = celui déjà consommé par les éléments figés + celui
+    // du palier en cours. Le recalcul repart de là : seuls la structure (comptes,
+    // taille du palier) ou les données corrigées changent le résultat.
+    function originStock() {
+      const pre = x => (x.funding && x.funding.pre) || 0;
+      return palierStock() + (state.chests || []).reduce((t, c) => t + pre(c), 0)
+                           + (state.spends || []).reduce((t, sp) => t + pre(sp), 0);
+    }
+    function relockAllFunding(stock) {
+      const origin = stock != null ? stock : originStock();
+      (state.chests || []).forEach(c => { delete c.funding; });
+      (state.spends || []).forEach(sp => { delete sp.funding; });
+      if (goalCfg().metric === 'bribes') state.settings.goal = { ...goalCfg(), offset: Math.max(0, Math.round(origin)) };
+      lockFunding();
+    }
+
+    // État du palier en cours, à partir des bribes non consommées
+    function palierState() {
+      const g = goalCfg();
+      const acc = teamAccounts();
+      const target = g.target;
+      const nChests = (state.chests || []).length;
+      const a = chestAllocation();
+      const P = a.pool;
+      const partial = nChests % acc;
+      const need1 = partial ? (acc - partial) * a.need : 0;
+      let due, current;
+      if (P + 1e-6 >= need1) {
+        const rest = P - need1;
+        const full = Math.floor(rest / target + 1e-9);
+        due = (partial ? acc - partial : 0) + full * acc;
+        current = rest - full * target;
+      } else {
+        due = partial ? Math.floor(P / a.need + 1e-9) : 0;
+        current = P;
+      }
+      return { pool: P, due, current: Math.max(0, current), target, remaining: Math.max(0, target - current),
+               number: Math.floor((nChests + due) / acc) + 1, partial, need1 };
     }
 
     // Rentabilité globale
@@ -8390,7 +8640,7 @@
         <div class="chart-sub">${plural(runs.length, 'run')} · ${fmtDur(t.sec)} de jeu</div>
 
         <div class="counter-big" style="margin-bottom:12px;">
-          <div class="num kamas-num">${t.perHour != null ? fmtNum(t.perHour) : '—'}</div>
+          <div class="num kamas-num long">${t.perHour != null ? fmtNum(t.perHour) : '—'}</div>
           <div class="lbl">kamas par heure</div>
         </div>
 
@@ -8444,9 +8694,9 @@
         <div class="chart-title">Prix du butin</div>
         <div class="chart-sub">Ce sur quoi reposent tous les calculs de kamas</div>
 
-        ${row('Coffre', e.chestPrice, e.chestPrice
-          ? `${fmtNum((e.chestPrice / chestBribeCost()) * e.accounts)} kamas par bribe saisie${e.accounts > 1 ? ` (${e.accounts} comptes)` : ''} · ${priceAgeOf('eco:chest')}`
-          : 'prix de la légende obtenue')}
+        ${row('Coffre fermé (HDV)', e.chestPrice, e.chestPrice
+          ? `pour comparer ouvrir ou vendre · ${priceAgeOf('eco:chest')}`
+          : 'sert à comparer ouvrir ou vendre')}
         ${row('Reflet', e.refletPrice, `${fmtNum(e.refletsPerRun)} par run → ${fmtNum(e.refletsPerRun * e.refletPrice)} kamas${e.refletPrice ? ' · ' + priceAgeOf('eco:reflet') : ''}`)}
         ${e.runeTypes.map(t => row(t.name, t.price, t.price ? `à l'unité · ${priceAgeOf('rune:' + t.id)}` : 'à l\'unité')).join('')}
         <button class="btn btn-secondary" id="eco-open2" style="width:100%;margin-top:10px;">Modifier coffre, reflets et runes</button>
@@ -9011,7 +9261,9 @@
         ${priceSettingsCard()}`;
 
       const setAcc = n => {
+        const origin = originStock();
         state.settings.eco = { ...eco(), accounts: Math.min(8, Math.max(1, n)) };
+        relockAllFunding(origin);   // chaque coffre consomme désormais une autre part du palier
         save();
         render('songes');
         haptic();
@@ -9496,7 +9748,15 @@
       const wasEditing = !!editingRunId;
       if (editingRunId) {
         const r = state.songes.find(x => x.id === editingRunId);
-        if (r) Object.assign(r, payload);
+        if (r) {
+          // une run qui a payé un coffre figé : corriger ses bribes ou sa date
+          // refait la répartition, à stock d'origine constant
+          const funded = (chestAllocation().used || {})[r.id] > 0;
+          const changed = r.bribes !== payload.bribes || r.date !== payload.date;
+          const origin = originStock();
+          Object.assign(r, payload);
+          if (funded && changed) relockAllFunding(origin);
+        }
       } else {
         state.songes.push({ id: uid(), ...payload, createdAt: Date.now() });
         delete state.settings.runDraft;   // la run est close : son brouillon disparaît
@@ -9513,7 +9773,10 @@
       if (!id) return;
       closeAllModals();
       confirmDialog('Supprimer cette run ?', 'Elle ne sera plus comptée dans tes statistiques.', () => {
+        const funded = (chestAllocation().used || {})[id] > 0;
+        const origin = originStock();
         state.songes = state.songes.filter(x => x.id !== id);
+        if (funded) relockAllFunding(origin);   // elle avait payé un coffre figé
         save();
         renderSonges();
         editingRunId = null;
@@ -10045,8 +10308,7 @@
       const g = goalCfg();
       const accounts = teamAccounts();
       if (g.metric === 'bribes') {
-        const total = Math.max(0, g.offset + bribesEarnedAll() - spentTotal());
-        const due = Math.floor(total / g.target) * accounts - (state.chests || []).length;
+        const due = palierState().due;
         if (due > 0) todo.push(homeRow('data-go="songes:legends"', '🎁',
           `${plural(due, 'coffre')} à récupérer`, 'Palier atteint : enregistre-les pour répartir leur valeur'));
       }
@@ -10115,15 +10377,15 @@
 
       // ---- Palier des Songes ----
       if (state.songes.length && g.metric === 'bribes') {
-        const total = Math.max(0, g.offset + bribesEarnedAll() - spentTotal());
-        const cur = total % g.target;
+        const ps = palierState();
+        const cur = ps.current;
         const pct = (cur / g.target) * 100;
         const recent = sortedRuns().slice(-10).map(r => r.bribes || 0).filter(b => b > 0);
         const med = median(recent);
         const left = med ? Math.ceil((g.target - cur) / med) : null;
         parts.push(`<div class="home-sec">Prochain coffre</div>
           <button class="home-card home-goal" data-go="songes:legends">
-            <span class="hg-top"><span>Palier ${Math.floor(total / g.target) + 1}</span><b>${Math.round(pct)} %</b></span>
+            <span class="hg-top"><span>Palier ${ps.number}</span><b>${Math.round(pct)} %</b></span>
             <span class="progress"><span class="progress-bar" style="width:${pct.toFixed(1)}%"></span></span>
             <span class="hg-sub">Il manque <b>${fmtNum(g.target - cur)}</b> bribes${left ? ` · environ <b>${left}</b> ${left > 1 ? 'runs' : 'run'}` : ''}${accounts > 1 ? ` · ${accounts} coffres à la clé` : ''}</span>
           </button>`);
@@ -10365,42 +10627,63 @@
     // ============================================================
     // SONGES : PALIERS (les runs qui ont payé chaque coffre)
     // ============================================================
-    // Chaque run est rattachée au palier où tombe le milieu de ses bribes, en
-    // suivant la même progression que la carte Objectif : stock de départ, puis
-    // bribes gagnées, moins les dépenses marchand. Toutes les runs comptent pour
-    // le découpage (en jeu, une run exclue a quand même rapporté ses bribes) ;
-    // les stats d'un palier, elles, écartent les runs exclues.
+    // Un palier = les coffres d'un même seuil (un par compte). Une run est
+    // rattachée au palier des coffres qui ont consommé la plus grande part de
+    // ses bribes ; ses bribes encore libres sont placées sur le palier en cours
+    // ou les suivants. Le découpage suit la répartition figée des coffres : un
+    // changement de stock ne déplace pas les runs des paliers déjà validés.
+    // Les stats d'un palier écartent les runs exclues.
     let palierCache = null;
     function paliers() {
       if (palierCache) return palierCache;
-      const cost = chestBribeCost();
-      const g = goalCfg();
-      const offset = g.metric === 'bribes' ? g.offset : 0;
-      const spends = [...(state.spends || [])].sort((a, b) =>
-        (a.date || '').localeCompare(b.date || '') || (a.createdAt || 0) - (b.createdAt || 0));
-      let progress = offset, si = 0, last = 0;
+      const a = chestAllocation();
+      const acc = teamAccounts();
+      const target = goalCfg().target;
+      const ps = palierState();
+      const chests = [...(state.chests || [])].sort(chestOrder);
+      const groupOf = {};   // chestId → index de palier
+      chests.forEach((c, k) => { groupOf[c.id] = Math.floor(k / acc); });
+
+      // bribes de chaque run par palier
+      const per = {};   // runId → { idx: bribes }
+      const add = (id, idx, b) => { if (!id || !(b > 0)) return; (per[id] = per[id] || {})[idx] = (per[id][idx] || 0) + b; };
+      const fundOf = c => c.funding || ((a.plan.find(x => x.item === c) || {}).funding) || { runs: {}, pre: 0 };
+      const preOf = {};
+      chests.forEach(c => {
+        const f = fundOf(c);
+        Object.entries(f.runs || {}).forEach(([id, b]) => add(id, groupOf[c.id], b));
+        if (f.pre > 0) preOf[groupOf[c.id]] = true;
+      });
+      // bribes libres : palier en cours (à compléter), puis les suivants
+      const base = Math.floor(chests.length / acc);
+      let pos = 0;
+      a.open.forEach(q => {
+        const mid = pos + q.left / 2;
+        let idx;
+        if (ps.partial) idx = mid < ps.need1 ? base : base + 1 + Math.floor((mid - ps.need1) / target);
+        else idx = base + Math.floor(mid / target);
+        if (q.id) add(q.id, idx, q.left);
+        else preOf[idx] = true;
+        pos += q.left;
+      });
+
       const byRun = {}, list = [];
+      let last = 0;
       sortedRuns().forEach(r => {
-        while (si < spends.length && (spends[si].date || '') <= (r.date || '')) {
-          progress -= Math.max(0, spends[si].amount || 0);
-          si++;
-        }
-        const b = r.bribes || 0;
-        let idx = Math.floor(Math.max(0, progress + b / 2) / cost);
-        if (idx < last) idx = last;   // une dépense ne fait pas reculer d'un palier
+        const m = per[r.id];
+        let idx = last;
+        if (m) idx = +Object.entries(m).sort((x, y) => y[1] - x[1] || x[0] - y[0])[0][0];
         last = idx;
-        progress += b;
         byRun[r.id] = idx;
         if (!list[idx]) list[idx] = { idx, n: idx + 1, all: [] };
         list[idx].all.push(r);
       });
-      const total = Math.max(0, offset + bribesEarnedAll() - spentTotal());
-      const done = Math.floor(total / cost);
+      const done = Math.floor((chests.length + ps.due) / acc);   // paliers atteints
       const out = list.filter(Boolean).map(p => ({
         ...p,
         status: p.idx < done ? 'complete' : 'current',
-        partial: p.idx * cost < offset,   // commencé avant le suivi
-        progress: p.idx < done ? 1 : (total - p.idx * cost) / cost,
+        partial: !!preOf[p.idx],   // commencé avec du stock d'avant le suivi
+        progress: p.idx < done ? 1 : Math.min(1, ps.current / target),
       }));
       palierCache = { list: out, byRun };
       return palierCache;
@@ -11477,7 +11760,7 @@
       document.getElementById('bar-songes').classList.toggle('hidden', mod !== 'songes');
       document.getElementById('bar-farm').classList.toggle('hidden', mod !== 'farm');
       document.getElementById('bar-alma').classList.toggle('hidden', mod !== 'alma');
-      document.getElementById('fab-add').classList.toggle('hidden', mod === 'alma' || mod === 'home');
+      // le bouton + suit l'onglet affiché (voir updateFab)
       const heads = {
         home: ['Accueil', new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })],
         exos: ['Exo', 'Forgemagie'],
@@ -11498,7 +11781,17 @@
       const activeTab = nav.querySelector('.tab.active') || nav.querySelector('.tab');
       activeTab.classList.add('active');
       document.getElementById('view-' + activeTab.dataset.view).classList.add('active');
+      updateFab();
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Le bouton + n'apparaît que sur l'onglet de la liste qu'il alimente :
+    // Runs pour les Songes, Sessions pour le Farm, En cours pour les Exos.
+    const FAB_VIEWS = { songes: 'runs', farm: 'sessions', exos: 'current' };
+    function updateFab() {
+      const view = document.querySelector('.view.active');
+      const show = !!view && FAB_VIEWS[activeModule] === view.id.replace('view-', '');
+      document.getElementById('fab-add').classList.toggle('hidden', !show);
     }
 
     // ---- Mémoire de navigation ----
@@ -13908,6 +14201,7 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
         const mod = tab.parentElement.dataset.mod;
         if (mod) saveNav({ tabs: { [mod]: v } });
+        updateFab();
       });
     });
 
@@ -14081,6 +14375,12 @@
       editingChestId = null;
     });
     document.getElementById('chest-save').addEventListener('click', saveChest);
+    document.querySelectorAll('#ch-mode .seg-btn').forEach(b => b.addEventListener('click', () => {
+      draftChestMode = b.dataset.cm;
+      paintChestMode();
+      haptic();
+    }));
+    wireNumberInput(document.getElementById('ch-sold-price'));
     document.getElementById('chest-delete').addEventListener('click', deleteChest);
     document.getElementById('cat-cancel').addEventListener('click', () => {
       document.getElementById('modal-cat').classList.remove('active');
