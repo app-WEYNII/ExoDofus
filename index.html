@@ -3318,7 +3318,9 @@
     .sr-nm { font-size: 13.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .sr-dt { font-size: 11.5px; color: var(--text-dim); }
     .sr-st { flex-shrink: 0; font-size: 12px; color: var(--text-soft); }
-    .sr-st.sold { color: var(--green); font-weight: 600; }
+    .sr-st.sold { display: flex; flex-direction: column; align-items: flex-end; text-align: right; }
+    .sr-gross { color: var(--text-soft); font-size: 12px; }
+    .sr-net { color: var(--green); font-weight: 600; font-size: 12.5px; }
 
     /* iOS zoome sur tout champ dont le texte fait moins de 16 px, et ne
        dézoome pas en sortant. Sur écran tactile, tous les champs passent à
@@ -3339,6 +3341,28 @@
     .ok-line { display: block; margin-top: 6px; font-size: 12px; color: var(--text-soft); }
     .eta-line { flex-basis: 100%; color: var(--gold-bright); }
     .eta-line b { color: var(--gold-bright); }
+
+    .tax-field { margin-top: 10px; }
+    .tax-field label { display: block; font-size: 12.5px; color: var(--text-soft); margin-bottom: 5px; }
+    .tax-ctl { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: stretch; }
+    .tax-mode { display: flex; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 999px; padding: 3px; }
+    .tax-mode button {
+      border: none; background: none; color: var(--text-dim); font-family: var(--font-body);
+      font-weight: 600; font-size: 13px; padding: 6px 12px; border-radius: 999px; cursor: pointer;
+    }
+    .tax-mode button.on { background: linear-gradient(135deg, var(--gold-deep), var(--gold)); color: #14100a; }
+
+    .inv-list { padding: 4px 12px; }
+    .inv-row {
+      display: flex; align-items: center; gap: 8px; width: 100%; text-align: left;
+      padding: 10px 0; background: none; border: none; border-bottom: 1px solid var(--border);
+      color: var(--text); font-family: var(--font-body); cursor: pointer;
+    }
+    .inv-row:last-child { border-bottom: none; }
+    .inv-rank { width: 20px; flex-shrink: 0; font-size: 11.5px; color: var(--text-dim); text-align: right; font-variant-numeric: tabular-nums; }
+    .inv-ic { font-size: 14px; flex-shrink: 0; }
+    .sr-st:not(.sold) { display: flex; flex-direction: column; align-items: flex-end; text-align: right; }
+    .sr-kept { color: var(--gold-bright); font-weight: 600; font-size: 12.5px; }
   </style>
 </head>
 <body>
@@ -3581,6 +3605,11 @@
 
     <!-- Songes : Légendes & coffres -->
     <section class="view" id="view-legends">
+      <div class="subtabs" id="leg-subtabs">
+        <button class="sub-btn on" data-ls="overview">Coffres et stats</button>
+        <button class="sub-btn" data-ls="inv">Inventaire</button>
+      </div>
+      <div id="legends-inv" class="hidden"></div>
       <div id="legends-body"></div>
     </section>
 
@@ -4002,6 +4031,17 @@
           <label for="sell-price">Prix de vente</label>
           <input type="text" id="sell-price" maxlength="13" inputmode="numeric" placeholder="0" autocomplete="off" />
           <div class="hint">Figé : changer la cote de la légende plus tard ne le modifiera pas.</div>
+          <div class="tax-field">
+            <label for="sell-tax">Taxe HDV</label>
+            <div class="tax-ctl">
+              <input type="text" id="sell-tax" maxlength="13" inputmode="decimal" autocomplete="off" placeholder="0" />
+              <div class="tax-mode" id="sell-taxmode">
+                <button type="button" data-tm="pct">%</button>
+                <button type="button" data-tm="k">kamas</button>
+              </div>
+            </div>
+          </div>
+          <div class="hint" id="sell-net"></div>
         </div>
         <div class="field">
           <label for="sell-date">Date de la vente</label>
@@ -4228,6 +4268,17 @@
         <label for="ch-sold-price">Prix de vente du coffre</label>
         <input type="text" id="ch-sold-price" maxlength="13" inputmode="numeric" placeholder="0" autocomplete="off" />
         <div class="hint">Figé : il sera réparti sur les runs qui ont fourni les bribes du coffre.</div>
+        <div class="tax-field">
+            <label for="ch-sold-tax">Taxe HDV</label>
+            <div class="tax-ctl">
+              <input type="text" id="ch-sold-tax" maxlength="13" inputmode="decimal" autocomplete="off" placeholder="0" />
+              <div class="tax-mode" id="ch-sold-taxmode">
+                <button type="button" data-tm="pct">%</button>
+                <button type="button" data-tm="k">kamas</button>
+              </div>
+            </div>
+          </div>
+        <div class="hint" id="ch-sold-net"></div>
       </div>
 
       <div class="field">
@@ -4333,9 +4384,9 @@
       <div class="hint" id="eco-cp-hint" style="margin:-8px 0 14px;"></div>
 
       <div class="field">
-        <label for="eco-tax">Taxe de vente à l'HDV (%)</label>
+        <label for="eco-tax">Taxe HDV par défaut (%)</label>
         <input type="text" id="eco-tax" maxlength="5" inputmode="decimal" autocomplete="off" placeholder="0" />
-        <div class="hint">Retirée des montants de « Ouvrir ou vendre ». Laisse à 0 si tes prix sont déjà nets.</div>
+        <div class="hint">Proposée à chaque vente, où tu peux la corriger en % ou en kamas. Sert aussi aux montants de « Ouvrir ou vendre ».</div>
       </div>
 
       <div class="field">
@@ -4737,7 +4788,9 @@
         holder.legends = holder.legends.filter(l => l && typeof l === 'object').map(l => {
           const name = String(l.name || '').slice(0, 60);
           const sold = l.sold && typeof l.sold === 'object' && parseInt(l.sold.price, 10) > 0
-            ? { price: parseInt(l.sold.price, 10), date: l.sold.date || null, at: l.sold.at || null } : null;
+            ? { price: parseInt(l.sold.price, 10), date: l.sold.date || null, at: l.sold.at || null,
+                ...(l.sold.tax != null ? { tax: Math.min(50, Math.max(0, Number(l.sold.tax) || 0)) } : {}),
+                ...(l.sold.taxK != null ? { taxK: Math.max(0, parseInt(l.sold.taxK, 10) || 0) } : {}) } : null;
           const out = ref => sold ? { ...ref, sold } : ref;
           if (l.catId && catIds.has(l.catId)) return out({ catId: l.catId, name });
           let e = name ? byName(name) : null;
@@ -7419,6 +7472,63 @@
     }
 
 
+
+    // ---- Taxe d'une vente : en % ou en kamas, saisie à chaque vente ----
+    const taxModes = {};   // préfixe → 'pct' | 'k'
+    function paintTaxMode(pfx) {
+      document.querySelectorAll(`#${pfx}-taxmode button`).forEach(b => b.classList.toggle('on', b.dataset.tm === taxModes[pfx]));
+      const inp = document.getElementById(`${pfx}-tax`);
+      inp.setAttribute('inputmode', taxModes[pfx] === 'k' ? 'numeric' : 'decimal');
+      inp.placeholder = taxModes[pfx] === 'k' ? 'kamas' : '%';
+    }
+    function setTaxUI(pfx, rec) {
+      const inp = document.getElementById(`${pfx}-tax`);
+      if (rec && rec.taxK != null) {
+        taxModes[pfx] = 'k';
+        inp.value = rec.taxK ? fmtNum(rec.taxK) : '';
+      } else {
+        taxModes[pfx] = 'pct';
+        const t = rec && rec.tax != null ? rec.tax : eco().hdvTax;
+        inp.value = t ? String(t).replace('.', ',') : '';
+      }
+      paintTaxMode(pfx);
+    }
+    function readTax(pfx) {
+      const raw = document.getElementById(`${pfx}-tax`).value;
+      if (taxModes[pfx] === 'k') return { tax: undefined, taxK: rawNum(raw) };
+      const t = Math.min(50, Math.max(0, parseFloat(raw.replace(/\s/g, '').replace(',', '.')) || 0));
+      return { tax: t, taxK: undefined };
+    }
+    function paintTaxNet(pfx, priceId) {
+      const el = document.getElementById(`${pfx}-net`);
+      const p = rawNum(document.getElementById(priceId));
+      const t = readTax(pfx);
+      const hasTax = t.taxK != null ? t.taxK > 0 : t.tax > 0;
+      el.textContent = p && hasTax ? `Vendue ${fmtNum(p)} · bénéfice ${fmtNum(netSale(p, t.tax, t.taxK))} kamas après taxe.` : '';
+    }
+    function wireTax(pfx, priceId) {
+      const inp = document.getElementById(`${pfx}-tax`);
+      inp.addEventListener('input', () => {
+        if (taxModes[pfx] === 'k') {
+          const d = inp.value.replace(/\D/g, '');
+          inp.value = d ? fmtNum(parseInt(d, 10)) : '';
+        } else inp.value = inp.value.replace(/[^\d,.]/g, '');
+        paintTaxNet(pfx, priceId);
+      });
+      document.getElementById(priceId).addEventListener('input', () => paintTaxNet(pfx, priceId));
+      document.querySelectorAll(`#${pfx}-taxmode button`).forEach(b => b.addEventListener('click', () => {
+        if (taxModes[pfx] === b.dataset.tm) return;
+        // conversion de la valeur saisie d'une unité à l'autre, au prix indiqué
+        const p = rawNum(document.getElementById(priceId));
+        const cur = readTax(pfx);
+        taxModes[pfx] = b.dataset.tm;
+        if (b.dataset.tm === 'k') inp.value = p && cur.tax ? fmtNum(Math.round(p * cur.tax / 100)) : '';
+        else inp.value = p && cur.taxK ? String(Math.round((cur.taxK / p) * 1000) / 10).replace('.', ',') : '';
+        paintTaxMode(pfx);
+        paintTaxNet(pfx, priceId);
+        haptic();
+      }));
+    }
     let draftChestMode = 'open';
     function paintChestMode() {
       document.querySelectorAll('#ch-mode .seg-btn').forEach(b => b.classList.toggle('on', b.dataset.cm === draftChestMode));
@@ -7442,6 +7552,8 @@
         : [{ catId: null, name: '' }];
       paintChestLegends();
       paintChestMode();
+      setTaxUI('ch-sold', c && c.soldPrice > 0 ? { tax: c.soldTax, taxK: c.soldTaxK } : null);
+      paintTaxNet('ch-sold', 'ch-sold-price');
       document.getElementById('chest-delete').classList.toggle('hidden', !c);
       document.getElementById('modal-chest').classList.add('active');
     }
@@ -7454,6 +7566,8 @@
         date: document.getElementById('ch-date').value || todayISO(),
         note: document.getElementById('ch-note').value.trim(),
         soldPrice,
+        soldTax: sold ? readTax('ch-sold').tax : undefined,
+        soldTaxK: sold ? readTax('ch-sold').taxK : undefined,
         legends: sold ? [] : draftChestLegends.filter(l => l.catId || l.name)
           .map(l => ({ catId: l.catId || null, name: (l.name || '').trim(), ...(l.sold ? { sold: l.sold } : {}) })),
       };
@@ -7632,17 +7746,17 @@
       if (!drops.length) return '';
       const sold = drops.filter(d => d.l.sold && d.l.sold.price > 0);
       const kept = drops.filter(d => !(d.l.sold && d.l.sold.price > 0));
-      const soldK = sold.reduce((a, d) => a + d.l.sold.price, 0);
+      const soldK = sold.reduce((a, d) => a + legendDropValue(d.l), 0);
       const keptK = kept.reduce((a, d) => a + legendDropValue(d.l), 0);
-      const shown = salesShowAll ? drops : drops.slice(0, 8);
+      const shown = drops.slice(0, 5);
       return `<div class="chart-card">
         <div class="chart-title">Vendues ou gardées</div>
-        <div class="chart-sub">Touche une légende pour indiquer si tu l'as vendue</div>
+        <div class="chart-sub">Les 5 dernières · touche une légende pour indiquer si tu l'as vendue</div>
         <div class="src-split" style="margin-top:10px;">
           <div class="src-panel">
             <div class="sp-head">Vendues</div>
             <div class="sp-big kamas-num">${fmtK(soldK)}</div>
-            <div class="sp-lbl">${plural(sold.length, 'légende')} · prix figés</div>
+            <div class="sp-lbl">${plural(sold.length, 'légende')} · prix figés${eco().hdvTax ? ', nets de taxe' : ''}</div>
           </div>
           <div class="src-panel">
             <div class="sp-head">Gardées</div>
@@ -7659,11 +7773,11 @@
                 <span class="sr-nm">${escapeHtml(d.name || 'sans nom')}</span>
                 <span class="sr-dt">${fmtDateShort(d.date)} · ${d.src === 'chest' ? 'coffre' : 'run'}</span>
               </span>
-              <span class="sr-st${isSold ? ' sold' : ''}">${isSold ? `Vendue ${fmtK(d.l.sold.price)}` : `Gardée${legendDropValue(d.l) ? ' · ' + fmtK(legendDropValue(d.l)) : ''}`}</span>
+              <span class="sr-st${isSold ? ' sold' : ''}">${isSold ? `<span class="sr-gross">Vendue ${fmtNum(d.l.sold.price)}</span><span class="sr-net">bénéfice ${fmtNum(legendDropValue(d.l))}</span>` : `Gardée${legendDropValue(d.l) ? ' · ' + fmtK(legendDropValue(d.l)) : ''}`}</span>
             </button>`;
           }).join('')}
         </div>
-        ${drops.length > 8 ? `<button class="wk-today" id="sales-more">${salesShowAll ? 'Réduire' : `Tout afficher (${drops.length})`}</button>` : ''}
+        <button class="btn btn-secondary" id="sales-more" style="width:100%;margin-top:10px;">Voir l'inventaire complet</button>
       </div>`;
     }
 
@@ -7695,6 +7809,8 @@
       sellKind = t.l.sold && t.l.sold.price > 0 ? 'sold' : 'kept';
       setNumberInput(document.getElementById('sell-price'), t.l.sold ? t.l.sold.price : (info.entry && info.entry.price) || 0);
       document.getElementById('sell-date').value = (t.l.sold && t.l.sold.date) || todayISO();
+      setTaxUI('sell', t.l.sold ? t.l.sold : null);
+      paintTaxNet('sell', 'sell-price');
       paintSellKind();
       document.getElementById('modal-sell').classList.add('active');
     }
@@ -7704,7 +7820,9 @@
       if (sellKind === 'sold') {
         const price = rawNum(document.getElementById('sell-price'));
         if (!price) { flagInvalid('sell-price'); toast('Indique le prix de vente'); return; }
-        t.l.sold = { price, date: document.getElementById('sell-date').value || todayISO(), at: Date.now() };
+        const tx = readTax('sell');
+        t.l.sold = { price, date: document.getElementById('sell-date').value || todayISO(), at: Date.now(),
+                     ...(tx.taxK != null ? { taxK: tx.taxK } : { tax: tx.tax }) };
       } else {
         delete t.l.sold;
       }
@@ -7787,10 +7905,104 @@
       </div>`;
     }
 
+
+    // ---- Inventaire : toutes les légendes et ventes, classées ----
+    let invFilter = 'all', invSort = 'value';
+    function inventoryItems() {
+      const legs = allDropsForSale().map(d => {
+        const sold = !!(d.l.sold && d.l.sold.price > 0);
+        return { kind: 'legend', key: `${d.src}:${d.holder.id}:${d.idx}`, name: d.name || 'sans nom', q: d.q,
+                 src: d.src, date: (sold && d.l.sold.date) || d.date, dropDate: d.date, sold,
+                 gross: sold ? d.l.sold.price : null, value: legendDropValue(d.l) };
+      });
+      const chests = (state.chests || []).filter(c => !chestOpened(c)).map(c => ({
+        kind: 'chest', key: c.id, name: 'Coffre fermé', q: null, src: 'chest', date: c.date, dropDate: c.date,
+        sold: true, gross: c.soldPrice, value: chestValue(c),
+      }));
+      return [...legs, ...chests];
+    }
+    function renderInventory() {
+      const box = document.getElementById('legends-inv');
+      const all = inventoryItems();
+      if (!all.length) {
+        box.innerHTML = `<div class="empty"><div class="icon">★</div><div class="title">Inventaire vide</div>
+          <div>Tes légendes droppées en run ou en coffre, et tes coffres vendus, apparaîtront ici.</div></div>`;
+        return;
+      }
+      const sold = all.filter(x => x.sold), kept = all.filter(x => !x.sold);
+      const sum = arr => arr.reduce((t, x) => t + x.value, 0);
+      const grossSold = sold.reduce((t, x) => t + (x.gross || 0), 0);
+      let list = invFilter === 'sold' ? sold : invFilter === 'kept' ? kept : all;
+      list = [...list].sort(invSort === 'date'
+        ? (a, b) => (b.date || '').localeCompare(a.date || '') || b.value - a.value
+        : (a, b) => b.value - a.value || (b.date || '').localeCompare(a.date || ''));
+      const unpriced = kept.filter(x => !x.value).length;
+      box.innerHTML = `
+        <div class="chart-card">
+          <div class="chart-title">Inventaire</div>
+          <div class="chart-sub">${plural(all.length, 'objet')} · ${fmtNum(sum(all))} kamas au total</div>
+          <div class="src-split" style="margin-top:10px;">
+            <div class="src-panel">
+              <div class="sp-head">Vendus</div>
+              <div class="sp-big kamas-num">${fmtK(sum(sold))}</div>
+              <div class="sp-lbl">${plural(sold.length, 'vente')} · bénéfice${grossSold > sum(sold) ? ` sur ${fmtK(grossSold)} vendus` : ''}</div>
+            </div>
+            <div class="src-panel">
+              <div class="sp-head">Gardés</div>
+              <div class="sp-big kamas-num">${fmtK(sum(kept))}</div>
+              <div class="sp-lbl">${plural(kept.length, 'légende')} · à la cote actuelle</div>
+            </div>
+          </div>
+          ${unpriced ? `<div class="insight warn">${plural(unpriced, 'légende gardée', 'légendes gardées')} sans cote : elles comptent pour 0 et ferment le classement.</div>` : ''}
+        </div>
+        <div class="period-row" id="inv-filter">
+          <button class="per-btn${invFilter === 'all' ? ' on' : ''}" data-if="all">Tout · ${all.length}</button>
+          <button class="per-btn${invFilter === 'sold' ? ' on' : ''}" data-if="sold">Vendus · ${sold.length}</button>
+          <button class="per-btn${invFilter === 'kept' ? ' on' : ''}" data-if="kept">Gardés · ${kept.length}</button>
+        </div>
+        <div class="period-row" id="inv-sort">
+          <button class="per-btn${invSort === 'value' ? ' on' : ''}" data-is="value">Valeur ↓</button>
+          <button class="per-btn${invSort === 'date' ? ' on' : ''}" data-is="date">Plus récents</button>
+        </div>
+        <div class="chart-card inv-list">
+          ${list.length ? list.map((x, k) => `
+            <button class="inv-row" data-inv="${x.kind}:${escapeHtml(x.key)}">
+              <span class="inv-rank">${invSort === 'value' ? k + 1 : ''}</span>
+              ${x.kind === 'chest' ? '<span class="inv-ic">💰</span>' : `<span class="src-dot ${x.src}"></span>${x.q ? `<span class="qdot ${x.q}"></span>` : ''}`}
+              <span class="sr-bd">
+                <span class="sr-nm">${escapeHtml(x.name)}</span>
+                <span class="sr-dt">${x.kind === 'chest' ? 'vendu fermé' : x.src === 'chest' ? 'coffre' : 'run'} · ${fmtDateShort(x.dropDate)}${x.sold && x.kind === 'legend' && x.date !== x.dropDate ? ` · vendue le ${fmtDateShort(x.date)}` : ''}</span>
+              </span>
+              <span class="sr-st${x.sold ? ' sold' : ''}">${x.sold
+                ? `<span class="sr-gross">Vendu${x.kind === 'legend' ? 'e' : ''} ${fmtNum(x.gross)}</span><span class="sr-net">bénéfice ${fmtNum(x.value)}</span>`
+                : `<span class="sr-gross">Gardée</span><span class="sr-kept">${x.value ? 'cote ' + fmtNum(x.value) : 'sans cote'}</span>`}</span>
+            </button>`).join('') : '<div class="orphan-note">Rien dans cette catégorie.</div>'}
+        </div>`;
+      box.querySelectorAll('[data-if]').forEach(b => b.addEventListener('click', () => { invFilter = b.dataset.if; renderInventory(); haptic(); }));
+      box.querySelectorAll('[data-is]').forEach(b => b.addEventListener('click', () => { invSort = b.dataset.is; renderInventory(); haptic(); }));
+      box.querySelectorAll('[data-inv]').forEach(b => b.addEventListener('click', () => {
+        const [kind, ...rest] = b.dataset.inv.split(':');
+        const key = rest.join(':');
+        if (kind === 'chest') openChestForm(key); else openSell(key);
+        haptic();
+      }));
+    }
+    function setLegTab(t) {
+      state.settings.legTab = t;
+      scheduleSave();
+      renderLegends();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     // ---- Rendu de l'onglet Légendes ----
     let collSrc = 'all';   // filtre de provenance de la collection : all | run | chest
     function renderLegends() {
       const body = document.getElementById('legends-body');
+      const legTab = state.settings.legTab === 'inv' ? 'inv' : 'overview';
+      document.querySelectorAll('#leg-subtabs .sub-btn').forEach(b => b.classList.toggle('on', b.dataset.ls === legTab));
+      document.getElementById('legends-inv').classList.toggle('hidden', legTab !== 'inv');
+      body.classList.toggle('hidden', legTab === 'inv');
+      if (legTab === 'inv') { renderInventory(); return; }
       const drops = allLegendDrops();
       if (!Array.isArray(state.chests)) state.chests = [];
       if (!Array.isArray(state.catalogue)) state.catalogue = [];
@@ -7835,7 +8047,7 @@
                 <span class="ic">💰</span>
                 <span class="bd">
                   <span class="t1">${fmtDateShort(c.date)} — vendu fermé</span>
-                  <span class="t2">${fmtNum(c.soldPrice)} kamas${c.note ? ' · ' + escapeHtml(c.note) : ''}</span>
+                  <span class="t2">Vendu ${fmtNum(c.soldPrice)} · bénéfice ${fmtNum(chestValue(c))}${c.note ? ' · ' + escapeHtml(c.note) : ''}</span>
                 </span>
               </div>` : `<div class="chest-entry" data-chest="${c.id}">
                 ${(c.legends || []).map(l => {
@@ -7902,7 +8114,7 @@
       body.querySelectorAll('[data-sale]').forEach(b =>
         b.addEventListener('click', () => { openSell(b.dataset.sale); haptic(); }));
       const more = document.getElementById('sales-more');
-      if (more) more.addEventListener('click', () => { salesShowAll = !salesShowAll; renderLegends(); });
+      if (more) more.addEventListener('click', () => { setLegTab('inv'); haptic(); });
       body.querySelectorAll('[data-csrc]').forEach(b =>
         b.addEventListener('click', () => { collSrc = b.dataset.csrc; renderLegends(); haptic(); }));
       bindGoalCard();
@@ -8465,8 +8677,23 @@
     // Valeur d'un lot de légendes, d'après le prix figé sur chaque entrée du catalogue
     // Une légende vendue vaut son prix de vente, figé ; une légende gardée
     // vaut sa cote actuelle dans le catalogue.
+    // Taxe HDV d'une vente : celle figée au moment de la vente ; une vente
+    // enregistrée avant l'existence du réglage suit la taxe actuelle.
+    // Une vente porte soit un taux (tax, en %), soit le montant de la taxe en
+    // kamas (taxK), tel que lu dans le jeu. Sans l'un ni l'autre (vente d'avant
+    // le réglage), elle suit le taux par défaut actuel.
+    function saleTax(t) { return t != null ? t : eco().hdvTax; }
+    function netSale(price, tax, taxK) {
+      if (taxK != null) return Math.max(0, Math.round(price - taxK));
+      return Math.round(price * (1 - saleTax(tax) / 100));
+    }
+    function saleTaxText(price, tax, taxK) {
+      if (taxK != null) return taxK ? `${fmtNum(price)} − ${fmtNum(taxK)} de taxe` : '';
+      const t = saleTax(tax);
+      return t ? `${fmtNum(price)} − ${String(t).replace('.', ',')} %` : '';
+    }
     function legendDropValue(l) {
-      if (l && l.sold && l.sold.price > 0) return l.sold.price;
+      if (l && l.sold && l.sold.price > 0) return netSale(l.sold.price, l.sold.tax, l.sold.taxK);
       const e = resolveLegend(l).entry;
       return e && e.price ? e.price : 0;
     }
@@ -8493,7 +8720,7 @@
     // vendu fermé → son prix de vente ; ouvert → sa légende (prix de vente si
     // vendue, cote actuelle si gardée) ; légende inconnue → prix du coffre à sa date.
     function chestValue(c) {
-      if (c.soldPrice > 0) return c.soldPrice;
+      if (c.soldPrice > 0) return netSale(c.soldPrice, c.soldTax, c.soldTaxK);
       const legs = (c.legends || []).filter(l => l && (l.catId || l.name));
       const v = legendsValue(legs);
       if (v > 0) return v;
@@ -14364,6 +14591,8 @@
       sellKind = b.dataset.sk; paintSellKind(); haptic();
     }));
     wireNumberInput(document.getElementById('sell-price'));
+    wireTax('sell', 'sell-price');
+    document.querySelectorAll('#leg-subtabs .sub-btn').forEach(b => b.addEventListener('click', () => { setLegTab(b.dataset.ls); haptic(); }));
     document.getElementById('sell-save').addEventListener('click', saveSell);
     document.getElementById('sell-cancel').addEventListener('click', () => {
       document.getElementById('modal-sell').classList.remove('active'); sellCtx = null;
@@ -14448,6 +14677,7 @@
       haptic();
     }));
     wireNumberInput(document.getElementById('ch-sold-price'));
+    wireTax('ch-sold', 'ch-sold-price');
     document.getElementById('chest-delete').addEventListener('click', deleteChest);
     document.getElementById('cat-cancel').addEventListener('click', () => {
       document.getElementById('modal-cat').classList.remove('active');
